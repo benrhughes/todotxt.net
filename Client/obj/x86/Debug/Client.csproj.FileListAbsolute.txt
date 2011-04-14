@@ -1,0 +1,15 @@
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\bin\Debug\Client.exe
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\bin\Debug\Client.pdb
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\obj\x86\Debug\MainWindow.baml
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\obj\x86\Debug\MainWindow.g.cs
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\obj\x86\Debug\App.g.cs
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\obj\x86\Debug\Client_MarkupCompile.cache
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\obj\x86\Debug\Client.g.resources
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\obj\x86\Debug\Client.Properties.Resources.resources
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\obj\x86\Debug\Client.exe
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\obj\x86\Debug\Client.pdb
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\bin\Debug\ToDoLib.dll
+C:\Users\ben\Dropbox\hughesoft\source\dev\ToDo.Net\Client\bin\Debug\ToDoLib.pdb
