@@ -20,15 +20,13 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
-        IEnumerable<Task> _tasks;
+        TaskList _taskList = new TaskList();
 
         public MainWindow()
         {
             InitializeComponent();
 
-            _tasks = Task.LoadAll();
-
-            taskList.ItemsSource = _tasks;
+            taskList.ItemsSource = _taskList.Tasks;
         }
 
         private void sortBy_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -41,16 +39,16 @@ namespace Client
             switch (text)
             {
                 case "Priority":
-                    tasks = _tasks.OrderBy(x => x.Priority);
+                    tasks = _taskList.Tasks.OrderBy(x => x.Priority);
                     break;
                 case "Project":
-                    tasks = _tasks.OrderBy(x => x.Project);
+                    tasks = _taskList.Tasks.OrderBy(x => x.Project);
                     break;
                 case "Context":
-                    tasks = _tasks.OrderBy(x => x.Context);
+                    tasks = _taskList.Tasks.OrderBy(x => x.Context);
                     break;
                 default:
-                    tasks = _tasks;
+                    tasks = _taskList.Tasks;
                     break;
             }
 

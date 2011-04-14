@@ -1,0 +1,5 @@
+﻿(A) Do some stuff @home
+(A) Do more stuff +car @home
+Do even more stuff
+Stuff is cool
+I love stuff @home

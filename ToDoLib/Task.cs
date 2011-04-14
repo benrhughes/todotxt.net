@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using ToDoTests;
 
 namespace ToDoLib
 {
@@ -54,15 +53,6 @@ namespace ToDoLib
             return Raw;
         }
 
-        public static IEnumerable<Task> LoadAll()
-        {
-            var tasks = new List<Task>();
-            foreach (var rawText in FileAccess.RawTaskText())
-            {
-                tasks.Add(new Task(rawText));
-            }
-
-            return tasks;
-        }
+        
     }
 }

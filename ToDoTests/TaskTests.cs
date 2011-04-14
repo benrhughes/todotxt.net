@@ -10,13 +10,13 @@ namespace ToDoTests
     [TestFixture]
     public class TaskTests
     {
-        [Test]
-        public void LoadAll()
-        {
-            var tasks = Task.LoadAll().OrderBy(x => x.Priority);
-            foreach (var task in tasks)
-                Console.WriteLine(task.ToString());
-        }
+        //[Test]
+        //public void LoadAll()
+        //{
+        //    var tasks = Task.LoadAll().OrderBy(x => x.Priority);
+        //    foreach (var task in tasks)
+        //        Console.WriteLine(task.ToString());
+        //}
 
         [Test]
         public void Create_Priority_Body_Project_Context()
