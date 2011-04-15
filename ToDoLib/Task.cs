@@ -24,6 +24,7 @@ namespace ToDoLib
 
         //TODO need to allow for multiple projects and context per task
         //TODO priority regex need to only recognice upper case single chars
+        //TODO created/due date properties
         public Task(string raw)
         {
             Raw = raw;
