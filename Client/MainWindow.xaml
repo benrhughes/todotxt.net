@@ -3,15 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="todo.net" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="384" Width="562">
     <Grid Name="grid1" Margin="0,0,0,0">
-        <ListBox Name="taskList" Margin="0,29,0,0" BorderBrush="White" />
-        <Menu Height="23" Name="menu1" VerticalAlignment="Top" IsMainMenu="True">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="312*" />
+            <ColumnDefinition Width="228*" />
+        </Grid.ColumnDefinitions>
+        <ListBox Name="taskList" Margin="0,56,0,0" BorderBrush="White" Grid.ColumnSpan="2" />
+        <Menu Height="23" Name="menu1" VerticalAlignment="Top" IsMainMenu="True" Grid.ColumnSpan="2">
             <MenuItem Header="_File" />
-            <MenuItem Header="_Sort">
+            <MenuItem Header="_Sort" Name="sortMenu">
                 <MenuItem Header="Priority" IsCheckable="True" Click="Sort_Priority" />
                 <MenuItem Header="Project" IsCheckable="True" Click="Sort_Project" />
                 <MenuItem Header="Context" IsCheckable="True" Click="Sort_Context" />
                 <MenuItem Header="Order in file" IsCheckable="True" Click="Sort_None" IsChecked="True" />
             </MenuItem>
         </Menu>
+        <TextBox Height="23" Margin="0,27,0,0" Name="taskText" VerticalAlignment="Top" AcceptsReturn="True" PreviewKeyUp="taskText_PreviewKeyUp" Grid.ColumnSpan="2" Cursor="IBeam" />
     </Grid>
 </Window>

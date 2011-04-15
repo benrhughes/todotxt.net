@@ -2,5 +2,6 @@
 (A) Do more stuff +car @home
 Do even more stuff
 Stuff is cool
-(B) This is a test task +test @task
-(B) This is a test task +test @task
+(B) A new task
+(C) Stuff
+More stuff @work

@@ -22,35 +22,44 @@ namespace Client
     {
         TaskList _taskList = new TaskList(@"..\..\..\ToDoTests\testtasks.txt");
 
+        Func<IEnumerable<Task>, IEnumerable<Task>> CurrentSort;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            taskList.ItemsSource = _taskList.Tasks;
+            CurrentSort = x => x;
+            taskList.ItemsSource = CurrentSort(_taskList.Tasks);
         }
 
 
         private void Sort_Priority(object sender, RoutedEventArgs e)
         {
-            taskList.ItemsSource = _taskList.Tasks.OrderBy(x => x.Priority);
+            CurrentSort = x => x.OrderBy(t => t.Priority);
+            taskList.ItemsSource = CurrentSort(_taskList.Tasks);
+
             SetSelected((MenuItem)sender);
         }
 
         private void Sort_None(object sender, RoutedEventArgs e)
         {
-            taskList.ItemsSource = _taskList.Tasks;
+            CurrentSort = x => x;
+            taskList.ItemsSource = CurrentSort(_taskList.Tasks);
+
             SetSelected((MenuItem)sender);
         }
 
         private void Sort_Context(object sender, RoutedEventArgs e)
         {
-            taskList.ItemsSource = _taskList.Tasks.OrderBy(x => string.IsNullOrEmpty(x.Context) ? "zzz" : x.Context.Substring(1)); //ignore the @
+            CurrentSort = x => x.OrderBy(t => string.IsNullOrEmpty(t.Context) ? "zzz" : t.Context.Substring(1)); //ignore the @
+            taskList.ItemsSource = CurrentSort(_taskList.Tasks);
             SetSelected((MenuItem)sender);
         }
 
         private void Sort_Project(object sender, RoutedEventArgs e)
         {
-            taskList.ItemsSource = _taskList.Tasks.OrderBy(x => string.IsNullOrEmpty(x.Project) ? "zzz" : x.Project.Substring(1)); //ignore the +
+            CurrentSort = x => x.OrderBy(t => string.IsNullOrEmpty(t.Project) ? "zzz" : t.Project.Substring(1)); //ignore the +
+            taskList.ItemsSource = CurrentSort(_taskList.Tasks);
             SetSelected((MenuItem)sender);
         }
 
@@ -63,5 +72,17 @@ namespace Client
             item.IsChecked = true;
 
         }
+
+        private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            var tb = (TextBox)sender;
+            if (e.Key == Key.Enter)
+            {
+                _taskList.Add(new Task(tb.Text.Trim()));
+                tb.Text = "";
+                taskList.ItemsSource = CurrentSort(_taskList.Tasks);
+            }
+        }
+
     }
 }
