@@ -30,6 +30,8 @@ namespace Client
 
             CurrentSort = x => x;
             taskList.ItemsSource = CurrentSort(_taskList.Tasks);
+
+            taskText.Focus();
         }
 
 

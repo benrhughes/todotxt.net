@@ -11,13 +11,19 @@ namespace ToDoLib
         const string priorityPattern = @"^(?<priority>\(\w\)).*";
         const string projectPattern = @".*(?<proj>\+\w*\s?).*";
         const string contextPattern = @".*(?<context>\@\w*\s?).*";
+        const string completedPattern = @"^X";
 
         public string Project { get; set; }
         public string Context { get; set; }
         public string Priority { get; set; }
         public string Body { get; set; }
         public string Raw { get; set; }
+        public bool Completed { get; set; }
 
+        // Parsing needs to comply with these rules: https://github.com/ginatrapani/todo.txt-touch/wiki/Todo.txt-File-Format
+
+        //TODO need to allow for multiple projects and context per task
+        //TODO priority regex need to only recognice upper case single chars
         public Task(string raw)
         {
             Raw = raw;
@@ -39,20 +45,26 @@ namespace ToDoLib
             if (Context.Length >0)
                 raw = raw.Replace(Context, "");
 
+            reg = new Regex(completedPattern);
+            Completed = reg.IsMatch(raw);
+            if (Completed)
+                raw = raw.Substring(1); //remove the first char
+
             Body = raw.Trim();
         }
 
-        public Task(string priority, string project, string context, string body)
+        public Task(string priority, string project, string context, string body, bool completed = false)
         {
             Priority = priority;
             Project = project;
             Context = context;
             Body = body;
+            Completed = completed;
         }
 
         public override string ToString()
         {
-            return Raw ?? string.Format("{0} {1} {2} {3}", Priority, Body, Project, Context);
+            return Raw ?? string.Format("{0} {1} {2} {3} {4}", Completed?"X":"", Priority, Body, Project, Context);
         }
 
         

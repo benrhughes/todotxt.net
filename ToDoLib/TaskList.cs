@@ -51,6 +51,22 @@ namespace ToDoLib
 
         public void Delete(Task task)
         {
+            try
+            {
+                LoadTasks(); // make sure we're working on the latest file
+                if (_tasks.Remove(_tasks.First(t => t.Raw == task.Raw)))
+                    File.WriteAllLines(_filePath, _tasks.Select(t => t.ToString()));
+
+                LoadTasks();
+            }
+            catch (IOException ex)
+            {
+                throw new TaskException("An error occurred while trying to remove your task from the task list file", ex);
+            }
+        }
+
+        public void Complete(Task task)
+        {
 
         }
 
