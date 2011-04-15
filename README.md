@@ -24,3 +24,11 @@ The main things missing (that I know of) are
  - mark (un)completed in the UI
  - user prefs for the file location, default sort order etc
  - UI prettiness
+
+Stuff I'm aiming for:
+
+ - minimalist, keyboard-driven UI
+ - gmail-like keyboard nav
+ - re-usable library that other projects can use as a todo.txt API
+ - API (but not UI) runs under Mono
+ - full compliance with Gina's specs
