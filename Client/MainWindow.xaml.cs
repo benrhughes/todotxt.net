@@ -29,30 +29,39 @@ namespace Client
             taskList.ItemsSource = _taskList.Tasks;
         }
 
-        private void sortBy_SelectionChanged(object sender, SelectionChangedEventArgs e)
+
+        private void Sort_Priority(object sender, RoutedEventArgs e)
         {
-            IEnumerable<Task> tasks;
+            taskList.ItemsSource = _taskList.Tasks.OrderBy(x => x.Priority);
+            SetSelected((MenuItem)sender);
+        }
 
-            var item = (ComboBoxItem)e.AddedItems[0];
+        private void Sort_None(object sender, RoutedEventArgs e)
+        {
+            taskList.ItemsSource = _taskList.Tasks;
+            SetSelected((MenuItem)sender);
+        }
 
-            var text = item.Content.ToString();
-            switch (text)
-            {
-                case "Priority":
-                    tasks = _taskList.Tasks.OrderBy(x => x.Priority);
-                    break;
-                case "Project":
-                    tasks = _taskList.Tasks.OrderBy(x => string.IsNullOrEmpty(x.Project) ? "zzz" : x.Project.Substring(1)); //ignore the +
-                    break;
-                case "Context":
-                    tasks = _taskList.Tasks.OrderBy(x => string.IsNullOrEmpty(x.Context) ? "zzz": x.Context.Substring(1)); //ignore the @
-                    break;
-                default:
-                    tasks = _taskList.Tasks;
-                    break;
-            }
+        private void Sort_Context(object sender, RoutedEventArgs e)
+        {
+            taskList.ItemsSource = _taskList.Tasks.OrderBy(x => string.IsNullOrEmpty(x.Context) ? "zzz" : x.Context.Substring(1)); //ignore the @
+            SetSelected((MenuItem)sender);
+        }
 
-            taskList.ItemsSource = tasks;
+        private void Sort_Project(object sender, RoutedEventArgs e)
+        {
+            taskList.ItemsSource = _taskList.Tasks.OrderBy(x => string.IsNullOrEmpty(x.Project) ? "zzz" : x.Project.Substring(1)); //ignore the +
+            SetSelected((MenuItem)sender);
+        }
+
+        void SetSelected(MenuItem item)
+        {
+            var sortMenu = (MenuItem)item.Parent;
+            foreach (MenuItem i in sortMenu.Items)
+                i.IsChecked = false;
+            
+            item.IsChecked = true;
+
         }
     }
 }
