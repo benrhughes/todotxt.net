@@ -10,14 +10,6 @@ namespace ToDoTests
     [TestFixture]
     public class TaskTests
     {
-        //[Test]
-        //public void LoadAll()
-        //{
-        //    var tasks = Task.LoadAll().OrderBy(x => x.Priority);
-        //    foreach (var task in tasks)
-        //        Console.WriteLine(task.ToString());
-        //}
-
         [Test]
         public void Create_Priority_Body_Project_Context()
         {
@@ -46,11 +38,21 @@ namespace ToDoTests
         }
 
         [Test]
+        public void Create_Null_Priority()
+        {
+            var task = new Task("This is a test task @work +test ");
+
+            var expectedTask = new Task("z", "+test", "@work", "This is a test task");
+            AssertEquivalence(expectedTask, task);
+        }
+
+        
+        [Test]
         public void Create_Priority_In_Body()
         {
             var task = new Task("Oh (A) This is a test task @work +test ");
 
-            var expectedTask = new Task("", "+test", "@work", "Oh (A) This is a test task");
+            var expectedTask = new Task("z", "+test", "@work", "Oh (A) This is a test task");
             AssertEquivalence(expectedTask, task);
         }
 
@@ -61,6 +63,20 @@ namespace ToDoTests
 
             var expectedTask = new Task("(A)", "+test", "@work", "This is a test task");
             AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void ToString_From_Raw()
+        {
+            var task = new Task("(A) @work +test This is a test task");
+            Assert.AreEqual("(A) @work +test This is a test task", task.ToString());
+        }
+
+        [Test]
+        public void ToString_From_Parameters()
+        {
+            var task = new Task("(A)", "+test", "@work", "This is a test task");
+            Assert.AreEqual("(A) This is a test task +test @work", task.ToString());
         }
 
         void AssertEquivalence(Task t1, Task t2)

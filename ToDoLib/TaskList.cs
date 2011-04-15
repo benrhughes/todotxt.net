@@ -9,33 +9,50 @@ namespace ToDoLib
     public class TaskList
     {
         List<Task> _tasks;
+        string _filePath;
 
         public IEnumerable<Task> Tasks { get { return _tasks; } }
 
-        public TaskList()
+        public TaskList(string filePath)
+        {
+            _filePath = filePath;
+            LoadTasks();    
+        }
+
+        private void LoadTasks()
         {
             _tasks = new List<Task>();
-            foreach (var rawText in RawTaskText())
+            foreach (var line in File.ReadAllLines(_filePath))
             {
-                _tasks.Add(new Task(rawText));
+                _tasks.Add(new Task(line));
             }
         }
 
+        public void Add(Task task)
+        {
+            try
+            {
+                var output = task.ToString();
 
-        public static void Add(Task task)
+                var text = File.ReadAllText(_filePath);
+                if (!text.EndsWith(Environment.NewLine))
+                    output = Environment.NewLine + output;
+
+                File.AppendAllLines(_filePath, new string[] {output});
+                
+                LoadTasks();
+            }
+            catch (IOException ex)
+            {
+                throw new TaskException("An error occurred while trying to add your task to the task list file", ex);
+            }
+
+        }
+
+        public void Delete(Task task)
         {
 
         }
 
-        public static void Delete(Task task)
-        {
-
-        }
-
-
-        static IEnumerable<string> RawTaskText()
-        {
-            return File.ReadAllLines(@"..\..\..\ToDoTests\testtasks.txt");
-        }
     }
 }

@@ -20,7 +20,7 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
-        TaskList _taskList = new TaskList();
+        TaskList _taskList = new TaskList(@"..\..\..\ToDoTests\testtasks.txt");
 
         public MainWindow()
         {
@@ -42,10 +42,10 @@ namespace Client
                     tasks = _taskList.Tasks.OrderBy(x => x.Priority);
                     break;
                 case "Project":
-                    tasks = _taskList.Tasks.OrderBy(x => x.Project);
+                    tasks = _taskList.Tasks.OrderBy(x => string.IsNullOrEmpty(x.Project) ? "zzz" : x.Project.Substring(1)); //ignore the +
                     break;
                 case "Context":
-                    tasks = _taskList.Tasks.OrderBy(x => x.Context);
+                    tasks = _taskList.Tasks.OrderBy(x => string.IsNullOrEmpty(x.Context) ? "zzz": x.Context.Substring(1)); //ignore the @
                     break;
                 default:
                     tasks = _taskList.Tasks;

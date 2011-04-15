@@ -24,8 +24,10 @@ namespace ToDoLib
 
             var reg = new Regex(priorityPattern);
             Priority = reg.Match(raw).Groups["priority"].Value.Trim();
-            if (Priority.Length >0)
+            if (Priority.Length > 0)
                 raw = raw.Replace(Priority, "");
+            else
+                Priority = "z";
 
             reg = new Regex(projectPattern);
             Project = reg.Match(raw).Groups["proj"].Value.Trim();
@@ -50,7 +52,7 @@ namespace ToDoLib
 
         public override string ToString()
         {
-            return Raw;
+            return Raw ?? string.Format("{0} {1} {2} {3}", Priority, Body, Project, Context);
         }
 
         

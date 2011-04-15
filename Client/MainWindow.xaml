@@ -6,7 +6,7 @@
         <ListBox Name="taskList" Margin="0,29,0,0" BorderBrush="White" />
         <Button HorizontalAlignment="Left" Margin="12,0,0,0" Name="button1" Width="75" Height="23" VerticalAlignment="Top" />
         <Button Content="Button" Height="23" HorizontalAlignment="Left" Margin="93,0,0,0" Name="button2" VerticalAlignment="Top" Width="75" />
-        <ComboBox Height="23" HorizontalAlignment="Left" Margin="408,0,0,0" Name="sortBy" VerticalAlignment="Top" Width="120" SelectionChanged="sortBy_SelectionChanged">
+        <ComboBox Height="23" HorizontalAlignment="Right" Margin="0,0,12,0" Name="sortBy" VerticalAlignment="Top" Width="120" SelectionChanged="sortBy_SelectionChanged">
             <ComboBoxItem Content="Priority" />
             <ComboBoxItem Content="Project" />
             <ComboBoxItem Content="Context" />
