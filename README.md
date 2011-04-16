@@ -14,7 +14,8 @@ Current features:
 	- J: next task
 	- K: prev task
 	- X: toggle task completion
-	- D: delete taks (with confirmation)
+	- D: delete task (with confirmation)
+	- U: update task
 	- .: reload tasks from file
 
 The main things missing (that I know of) are
@@ -23,7 +24,6 @@ The main things missing (that I know of) are
  - created date support
  - due date support
  - filtering in the UI
- - updating in the UI
  - UI prettiness
 
 Stuff I'm aiming for:

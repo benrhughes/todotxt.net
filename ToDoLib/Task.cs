@@ -28,7 +28,7 @@ namespace ToDoLib
         //TODO created/due date properties
         public Task(string raw)
         {
-            Raw = raw;
+            Raw = raw.Replace(Environment.NewLine, ""); //make sure it's just on one line
 
             var reg = new Regex(priorityPattern, RegexOptions.IgnoreCase);
             Priority = reg.Match(raw).Groups["priority"].Value.Trim();

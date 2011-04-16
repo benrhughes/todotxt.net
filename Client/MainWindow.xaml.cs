@@ -40,6 +40,8 @@ namespace Client
 
         Sort CurrentSort;
 
+        Task _updating;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -50,9 +52,9 @@ namespace Client
             SortActions = new Dictionary<Sort, Func<IEnumerable<Task>, IEnumerable<Task>>>()
             {
                 {Sort.Completed, x => x.OrderBy(t => t.Completed)} ,
-                {Sort.Context, x => x.OrderBy(t => string.IsNullOrEmpty(t.Context) ? "zzz" : t.Context.Substring(1))}, //ignore the @
-                {Sort.Priority, x => x.OrderBy(t => t.Priority)},
-                {Sort.Project, x => x.OrderBy(t => string.IsNullOrEmpty(t.Project) ? "zzz" : t.Project.Substring(1))}, //ignore the +
+                {Sort.Context, x => x.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Context) ? "zzz" : t.Context.Substring(1)))}, //ignore the @
+                {Sort.Priority, x => x.OrderBy(t => (t.Completed? "z" : "a") + (t.Priority))},
+                {Sort.Project, x => x.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Project) ? "zzz" : t.Project.Substring(1)))}, //ignore the +
                 {Sort.None, x => x}
             };
 
@@ -68,14 +70,13 @@ namespace Client
                 {Key.K, () => lbTasks.SelectedIndex = lbTasks.SelectedIndex > 0 ? lbTasks.SelectedIndex - 1 : 0},
                 {Key.OemPeriod, () => 
                     {
-                        _taskList.ReloadTasks(); 
-                        lbTasks.ItemsSource = SortActions[CurrentSort](_taskList.Tasks);
+                        _taskList.ReloadTasks();
+                        SetSort(CurrentSort);
                     }},
                 {Key.X, () => 
                     {
                         _taskList.ToggleComplete((Task)lbTasks.SelectedItem);
-                        lbTasks.ItemsSource = SortActions[CurrentSort](_taskList.Tasks);
-                        lbTasks.SelectedItem = lbTasks.Items[0];
+                        SetSort(CurrentSort);
                     }},
                 {Key.D, () => 
                     {
@@ -86,10 +87,15 @@ namespace Client
                         if (res == MessageBoxResult.Yes)
                         {
                             _taskList.Delete((Task)lbTasks.SelectedItem);
-                            lbTasks.ItemsSource = SortActions[CurrentSort](_taskList.Tasks);
-                            lbTasks.SelectedItem = lbTasks.Items[0];
+                            SetSort(CurrentSort);
                         }
-                    }}
+                    }},
+                    {Key.U, () =>
+                        {
+                            _updating = (Task)lbTasks.SelectedItem;
+                            taskText.Text = _updating.ToString();
+                            taskText.Focus();
+                        }}
             };
 
             SetSort((Sort)User.Default.CurrentSort);
@@ -126,7 +132,7 @@ namespace Client
             SetSelected((MenuItem)sender);
         }
 
-        void SetSort(Sort sort)
+        void SetSort(Sort sort, Task task = null)
         {
             User.Default.CurrentSort = (int)sort;
             User.Default.Save();
@@ -136,7 +142,11 @@ namespace Client
             if (_taskList != null)
             {
                 lbTasks.ItemsSource = SortActions[CurrentSort](_taskList.Tasks);
-                lbTasks.SelectedItem = lbTasks.Items[0];
+
+                if (task == null)
+                    lbTasks.SelectedIndex = 0;
+                else
+                    lbTasks.SelectedItem = task;
             }
             lbTasks.Focus();
         }
@@ -156,9 +166,18 @@ namespace Client
             var tb = (TextBox)sender;
             if (e.Key == Key.Enter)
             {
-                _taskList.Add(new Task(tb.Text.Trim()));
+                if (_updating == null)
+                {
+                    _taskList.Add(new Task(tb.Text.Trim()));
+                }
+                else
+                {
+                    _taskList.Update(_updating, new Task(tb.Text.Trim()));
+                    _updating = null;
+                }
+
                 tb.Text = "";
-                lbTasks.ItemsSource = SortActions[CurrentSort](_taskList.Tasks);
+                SetSort(CurrentSort);
             }
         }
 

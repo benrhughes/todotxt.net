@@ -30,7 +30,7 @@ namespace ToDoTests
         [Test]
         public void Add_ToCollection()
         {
-            var task = new Task("(B) This is a test task +test @task");
+            var task = new Task("(B) Add_ToCollection +test @task");
 
             var tl = new TaskList(Data.TestDataPath);
 
@@ -51,7 +51,7 @@ namespace ToDoTests
         public void Add_ToFile()
         {
             var fileContents = File.ReadAllLines(Data.TestDataPath).ToList();
-            fileContents.Add("(B) This is a test task +test @task");
+            fileContents.Add("(B) Add_ToFile +test @task");
 
             var task = new Task(fileContents.Last());
             var tl = new TaskList(Data.TestDataPath);
@@ -64,7 +64,7 @@ namespace ToDoTests
         [Test]
         public void Delete_InCollection()
         {
-            var task = new Task("(B) This is a test task +test @task");
+            var task = new Task("(B) Delete_InCollection +test @task");
             var tl = new TaskList(Data.TestDataPath);
             tl.Add(task);
 
@@ -99,7 +99,7 @@ namespace ToDoTests
         [Test]
         public void ToggleComplete_On_InCollection()
         {
-            var task = new Task("(B) This is a test task +test @task");
+            var task = new Task("(B ToggleComplete_On_InCollection +test @task");
             var tl = new TaskList(Data.TestDataPath);
             tl.Add(task);
 
@@ -116,7 +116,7 @@ namespace ToDoTests
         [Test]
         public void ToggleComplete_Off_InCollection()
         {
-            var task = new Task("X (B) This is a test task +test @task");
+            var task = new Task("X (B) ToggleComplete_Off_InCollection +test @task");
             var tl = new TaskList(Data.TestDataPath);
             tl.Add(task);
 
@@ -127,6 +127,23 @@ namespace ToDoTests
             task = tl.Tasks.Last();
 
             Assert.IsFalse(task.Completed);
+        }
+
+        [Test]
+        public void Update_InCollection()
+        {
+            var task = new Task("(B) Update_InCollection +test @task");
+
+            var tl = new TaskList(Data.TestDataPath);
+            tl.Add(task);
+
+            var task2 = new Task(task.Raw);
+            task2.Completed = true;
+
+            tl.Update(task, task2);
+
+            var newTask = tl.Tasks.Last();
+            Assert.IsTrue(newTask.Completed);
         }
     }
 }

@@ -74,16 +74,29 @@ namespace ToDoLib
 
         public void ToggleComplete(Task task)
         {
-            task.Completed = !task.Completed;
-
-            ReloadTasks();
-
-            Delete(task);
-
-
-            Add(task);
-            ReloadTasks();
+            var newTask = new Task(task.Raw);
+            newTask.Completed = !newTask.Completed;
+            Update(task, newTask);
         }
 
+
+        public void Update(Task currentTask, Task newTask)
+        {
+            try
+            {
+                ReloadTasks();
+                var currentIndex = _tasks.IndexOf(_tasks.First(t => t.Raw == currentTask.Raw));
+
+                _tasks[currentIndex] = newTask;
+
+                File.WriteAllLines(_filePath, _tasks.Select(t => t.ToString()));
+            }
+            catch (IOException ex)
+            {
+                throw new TaskException("An error occurred while trying to update your task int the task list file", ex);
+            }
+
+            ReloadTasks();
+        }
     }
 }
