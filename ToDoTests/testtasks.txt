@@ -3,7 +3,7 @@
 X A new completed task @home
 X (C) A new thingo
 (A) Oh yeah +test @task
-(B) Add_ToCollection +test @task
+(C) Add_ToCollection +test @task
 (B) ToggleComplete_On_InCollection +test @task
 X (B) Update_InCollection +test @task
 (B) Add_ToCollection +test @task
@@ -22,3 +22,4 @@ This is a new task
 (V) A new task
 (A) Oh yeah
 (AAA) Stuff
+A new task +atask
