@@ -66,6 +66,24 @@ namespace ToDoTests
         }
 
         [Test]
+        public void Create_Completed()
+        {
+            var task = new Task("X (A) @work +test This is a test task");
+
+            var expectedTask = new Task("(A)", "+test", "@work", "This is a test task", true);
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_UnCompleted()
+        {
+            var task = new Task("(A) @work +test This is a test task");
+
+            var expectedTask = new Task("(A)", "+test", "@work", "This is a test task", false);
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
         public void ToString_From_Raw()
         {
             var task = new Task("(A) @work +test This is a test task");

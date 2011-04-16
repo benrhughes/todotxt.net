@@ -8,11 +8,12 @@ namespace ToDoLib
 {
     public class Task
     {
-        const string priorityPattern = @"^(?<priority>\(\w\)).*";
+        const string priorityPattern = @"^(X\s)?(?<priority>\(\w\)).*";
         const string projectPattern = @".*(?<proj>\+\w*\s?).*";
         const string contextPattern = @".*(?<context>\@\w*\s?).*";
         const string completedPattern = @"^X";
 
+        
         public string Project { get; set; }
         public string Context { get; set; }
         public string Priority { get; set; }
@@ -29,7 +30,7 @@ namespace ToDoLib
         {
             Raw = raw;
 
-            var reg = new Regex(priorityPattern);
+            var reg = new Regex(priorityPattern, RegexOptions.IgnoreCase);
             Priority = reg.Match(raw).Groups["priority"].Value.Trim();
             if (Priority.Length > 0)
                 raw = raw.Replace(Priority, "");
@@ -38,15 +39,15 @@ namespace ToDoLib
 
             reg = new Regex(projectPattern);
             Project = reg.Match(raw).Groups["proj"].Value.Trim();
-            if (Project.Length >0)
+            if (Project.Length > 0)
                 raw = raw.Replace(Project, "");
 
             reg = new Regex(contextPattern);
             Context = reg.Match(raw).Groups["context"].Value.Trim();
-            if (Context.Length >0)
+            if (Context.Length > 0)
                 raw = raw.Replace(Context, "");
 
-            reg = new Regex(completedPattern);
+            reg = new Regex(completedPattern, RegexOptions.IgnoreCase);
             Completed = reg.IsMatch(raw);
             if (Completed)
                 raw = raw.Substring(1); //remove the first char
@@ -65,9 +66,26 @@ namespace ToDoLib
 
         public override string ToString()
         {
-            return Raw ?? string.Format("{0} {1} {2} {3} {4}", Completed?"X":"", Priority, Body, Project, Context);
+            string str ="";
+            if (!string.IsNullOrEmpty(Raw))
+            {
+                var reg = new Regex(completedPattern, RegexOptions.IgnoreCase);
+                var rawCompleted = reg.IsMatch(Raw);
+                if (Completed && !rawCompleted)
+                    str = "X " + Raw;
+                else if (!Completed && rawCompleted)
+                    str = Raw.Substring(1).TrimStart();
+                else
+                    str = Raw;
+            }
+            else
+            {
+                str = string.Format("{0}{1} {2} {3} {4}", Completed ? "X " : "", Priority, Body, Project, Context);
+            }
+
+            return str;
         }
 
-        
+
     }
 }

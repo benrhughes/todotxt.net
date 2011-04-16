@@ -7,14 +7,15 @@
             <ColumnDefinition Width="312*" />
             <ColumnDefinition Width="228*" />
         </Grid.ColumnDefinitions>
-        <ListBox Name="taskList" Margin="0,56,0,0" BorderBrush="White" Grid.ColumnSpan="2" />
+        <ListBox Name="lbTasks" Margin="0,56,0,0" BorderBrush="White" Grid.ColumnSpan="2" PreviewKeyUp="taskList_PreviewKeyUp" SelectedIndex="0" IsTextSearchEnabled="False" />
         <Menu Height="23" Name="menu1" VerticalAlignment="Top" IsMainMenu="True" Grid.ColumnSpan="2">
             <MenuItem Header="_File" />
             <MenuItem Header="_Sort" Name="sortMenu">
+                <MenuItem Header="Completed" IsCheckable="True" Click="Sort_Completed" IsChecked="True" />
+                <MenuItem Header="Context" IsCheckable="True" Click="Sort_Context" />
                 <MenuItem Header="Priority" IsCheckable="True" Click="Sort_Priority" />
                 <MenuItem Header="Project" IsCheckable="True" Click="Sort_Project" />
-                <MenuItem Header="Context" IsCheckable="True" Click="Sort_Context" />
-                <MenuItem Header="Order in file" IsCheckable="True" Click="Sort_None" IsChecked="True" />
+                <MenuItem Header="Order in file" IsCheckable="True" Click="Sort_None" />
             </MenuItem>
         </Menu>
         <TextBox Height="23" Margin="0,27,0,0" Name="taskText" VerticalAlignment="Top" AcceptsReturn="True" PreviewKeyUp="taskText_PreviewKeyUp" Grid.ColumnSpan="2" Cursor="IBeam" />

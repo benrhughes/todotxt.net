@@ -1,10 +1,5 @@
-(A) Do some stuff @home
-(A) Do more stuff +car @home
-Do even more stuff
-Stuff is cool
-(B) A new task
-(C) Stuff
-More stuff @work
-Stuff @home
+(A) A Task
 (B) This is a test task +test @task
-(B) This is a test task +test @task
+X (B) This is a test task +test @task
+X (B) Another task @home
+X A new completed task @home

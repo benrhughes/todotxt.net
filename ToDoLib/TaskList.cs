@@ -65,9 +65,17 @@ namespace ToDoLib
             }
         }
 
-        public void Complete(Task task)
+        public void ToggleComplete(Task task)
         {
+            task.Completed = !task.Completed;
 
+            LoadTasks();
+
+            Delete(task);
+
+            
+            Add(task);
+            LoadTasks();
         }
 
     }
