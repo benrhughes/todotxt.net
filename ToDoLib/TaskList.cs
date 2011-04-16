@@ -16,15 +16,22 @@ namespace ToDoLib
         public TaskList(string filePath)
         {
             _filePath = filePath;
-            LoadTasks();    
+            ReloadTasks();
         }
 
-        private void LoadTasks()
+        public void ReloadTasks()
         {
-            _tasks = new List<Task>();
-            foreach (var line in File.ReadAllLines(_filePath))
+            try
             {
-                _tasks.Add(new Task(line));
+                _tasks = new List<Task>();
+                foreach (var line in File.ReadAllLines(_filePath))
+                {
+                    _tasks.Add(new Task(line));
+                }
+            }
+            catch (IOException ex)
+            {
+                throw new TaskException("There was a problem trying to read from your todo.txt file", ex);
             }
         }
 
@@ -38,9 +45,9 @@ namespace ToDoLib
                 if (!text.EndsWith(Environment.NewLine))
                     output = Environment.NewLine + output;
 
-                File.AppendAllLines(_filePath, new string[] {output});
-                
-                LoadTasks();
+                File.AppendAllLines(_filePath, new string[] { output });
+
+                ReloadTasks();
             }
             catch (IOException ex)
             {
@@ -53,11 +60,11 @@ namespace ToDoLib
         {
             try
             {
-                LoadTasks(); // make sure we're working on the latest file
+                ReloadTasks(); // make sure we're working on the latest file
                 if (_tasks.Remove(_tasks.First(t => t.Raw == task.Raw)))
                     File.WriteAllLines(_filePath, _tasks.Select(t => t.ToString()));
 
-                LoadTasks();
+                ReloadTasks();
             }
             catch (IOException ex)
             {
@@ -69,13 +76,13 @@ namespace ToDoLib
         {
             task.Completed = !task.Completed;
 
-            LoadTasks();
+            ReloadTasks();
 
             Delete(task);
 
-            
+
             Add(task);
-            LoadTasks();
+            ReloadTasks();
         }
 
     }

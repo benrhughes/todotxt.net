@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ToDoLib
 {
-    class TaskException : Exception
+    public class TaskException : Exception
     {
 
         public TaskException(string message)

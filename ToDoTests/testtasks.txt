@@ -1,5 +1,6 @@
 (A) A Task
 (B) This is a test task +test @task
-X (B) This is a test task +test @task
 X (B) Another task @home
-X A new completed task @home
+(B) This is a test task +test @task
+A new completed task @home
+A new thingo

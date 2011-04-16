@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Client.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="todo.net" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="384" Width="562">
+        Title="todo.net" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="384" Width="562" SizeChanged="Window_SizeChanged">
     <Grid Name="grid1" Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="312*" />
@@ -9,7 +9,9 @@
         </Grid.ColumnDefinitions>
         <ListBox Name="lbTasks" Margin="0,56,0,0" BorderBrush="White" Grid.ColumnSpan="2" PreviewKeyUp="taskList_PreviewKeyUp" SelectedIndex="0" IsTextSearchEnabled="False" />
         <Menu Height="23" Name="menu1" VerticalAlignment="Top" IsMainMenu="True" Grid.ColumnSpan="2">
-            <MenuItem Header="_File" />
+            <MenuItem Header="_File">
+                <MenuItem Header="_Open" Click="File_Open" />
+            </MenuItem>
             <MenuItem Header="_Sort" Name="sortMenu">
                 <MenuItem Header="Completed" IsCheckable="True" Click="Sort_Completed" IsChecked="True" />
                 <MenuItem Header="Context" IsCheckable="True" Click="Sort_Context" />

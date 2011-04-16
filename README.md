@@ -7,12 +7,15 @@ Current features:
  - Displays tasks (from a hard-coded file location)
  - Sorts by completed, priority, project, context or the order in the file
  - Has an input box for creating tasks, which are written to the file
+ - Preferences for the todo.txt file, window size and sort order are persisted
  - Keyboard shortcuts
+	- O: open todo.txt file
 	- N: new task
 	- J: next task
 	- K: prev task
 	- X: toggle task completion
 	- D: delete taks (with confirmation)
+	- .: reload tasks from file
 
 The main things missing (that I know of) are
 
@@ -21,7 +24,6 @@ The main things missing (that I know of) are
  - due date support
  - filtering in the UI
  - updating in the UI
- - user prefs for the file location, default sort order etc
  - UI prettiness
 
 Stuff I'm aiming for:
