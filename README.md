@@ -1,6 +1,6 @@
 ### todotxt.net
 
-This is my very rough first cut at implementing [todo.txt](http://todotxt.com/) for the .NET framework. It's in no way usable yet. The aim is for it to be fully complient with [this spec](https://github.com/ginatrapani/todo.txt-touch/wiki/Todo.txt-File-Format). 
+This is an implemention of [todo.txt](http://todotxt.com/) on the .NET framework. It is currently at v0.1 and is marginally usable. The aim is for it to be fully complient with [this spec](https://github.com/ginatrapani/todo.txt-touch/wiki/Todo.txt-File-Format). 
 
 Current features:
 
