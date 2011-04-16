@@ -2,6 +2,8 @@
 
 This is an implemention of [todo.txt](http://todotxt.com/) on the .NET framework. It is currently at v0.1 and is marginally usable. The aim is for it to be fully complient with [this spec](https://github.com/ginatrapani/todo.txt-touch/wiki/Todo.txt-File-Format). 
 
+There is installer for the latest version available from the github download page.
+
 Current features:
 
  - Displays tasks (from a hard-coded file location)
