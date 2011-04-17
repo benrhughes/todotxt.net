@@ -10,6 +10,7 @@ namespace ToDoTests
     [TestFixture]
     public class TaskTests
     {
+        #region Create
         [Test]
         public void Create_Priority_Body_Project_Context()
         {
@@ -42,7 +43,7 @@ namespace ToDoTests
         {
             var task = new Task("This is a test task @work +test ");
 
-            var expectedTask = new Task("z", "+test", "@work", "This is a test task");
+            var expectedTask = new Task("", "+test", "@work", "This is a test task");
             AssertEquivalence(expectedTask, task);
         }
 
@@ -52,7 +53,7 @@ namespace ToDoTests
         {
             var task = new Task("Oh (A) This is a test task @work +test ");
 
-            var expectedTask = new Task("z", "+test", "@work", "Oh (A) This is a test task");
+            var expectedTask = new Task("", "+test", "@work", "Oh (A) This is a test task");
             AssertEquivalence(expectedTask, task);
         }
 
@@ -83,6 +84,9 @@ namespace ToDoTests
             AssertEquivalence(expectedTask, task);
         }
 
+        #endregion
+
+        #region ToString
         [Test]
         public void ToString_From_Raw()
         {
@@ -96,6 +100,7 @@ namespace ToDoTests
             var task = new Task("(A)", "+test", "@work", "This is a test task");
             Assert.AreEqual("(A) This is a test task +test @work", task.ToString());
         }
+        #endregion
 
         void AssertEquivalence(Task t1, Task t2)
         {

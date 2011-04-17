@@ -27,3 +27,19 @@ A new task +atask
 (B) ToggleComplete_Off_InCollection +test @task
 X (B ToggleComplete_On_InCollection +test @task
 X (B) Update_InCollection +test @task
+Add_Multiple task one
+Add_Multiple task one
+Add_Multiple task one
+Add_Multiple task one
+Add_Multiple task one
+Add_Multiple task two
+(B) Add_ToCollection +test @task
+(B) ToggleComplete_Off_InCollection +test @task
+X (B ToggleComplete_On_InCollection +test @task
+X (B) Update_InCollection +test @task
+Add_Multiple task one
+Add_Multiple task two
+(B) Add_ToCollection +test @task
+(B) ToggleComplete_Off_InCollection +test @task
+X (B ToggleComplete_On_InCollection +test @task
+X (B) Update_InCollection +test @task

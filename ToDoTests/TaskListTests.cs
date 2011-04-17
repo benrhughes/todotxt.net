@@ -24,7 +24,7 @@ namespace ToDoTests
             var tl = new TaskList(Data.TestDataPath);
             var tasks = tl.Tasks;
 
-            Assert.AreEqual(2, tasks.Count(x => x.Priority == "(A)"));
+            Assert.AreEqual(3, tasks.Count(x => x.Priority == "(A)"));
         }
 
         [Test]
@@ -59,6 +59,21 @@ namespace ToDoTests
 
             var newFileContents = File.ReadAllLines(Data.TestDataPath);
             CollectionAssert.AreEquivalent(fileContents, newFileContents);
+        }
+
+        [Test]
+        public void Add_Multiple()
+        {
+            var tl = new TaskList(Data.TestDataPath);
+            var c = tl.Tasks.Count();
+
+            var task = new Task("Add_Multiple task one");
+            tl.Add(task);
+
+            var task2 = new Task("Add_Multiple task two");
+            tl.Add(task2);
+
+            Assert.AreEqual(c + 2, tl.Tasks.Count());
         }
 
         [Test]
