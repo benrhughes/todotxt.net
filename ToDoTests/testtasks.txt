@@ -1,4 +1,4 @@
-(A) A Task
+X (A) A Task
 (B) Another task @home
 X A new completed task @home
 X (C) A new thingo
@@ -20,6 +20,10 @@ X (B ToggleComplete_On_InCollection +test @task
 X (B) Update_InCollection +test @task
 This is a new task
 (V) A new task
-(A) Oh yeah
+(A) Oh yeah, it's great
 (AAA) Stuff
 A new task +atask
+(B) Add_ToCollection +test @task
+(B) ToggleComplete_Off_InCollection +test @task
+X (B ToggleComplete_On_InCollection +test @task
+X (B) Update_InCollection +test @task

@@ -70,12 +70,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="FilterDialog.xaml.cs">
+      <DependentUpon>FilterDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="User.cs" />
     <Compile Include="User.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>User.settings</DependentUpon>
     </Compile>
+    <Page Include="FilterDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

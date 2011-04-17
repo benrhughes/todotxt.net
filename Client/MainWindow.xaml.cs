@@ -22,7 +22,6 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
-
         enum Sort
         {
             Completed,
@@ -36,11 +35,13 @@ namespace Client
 
         Dictionary<Key, Action> KeyboardShortcuts;
 
-        Dictionary<Sort, Func<IEnumerable<Task>, IEnumerable<Task>> > SortActions;
+        Dictionary<Sort, Func<IEnumerable<Task>, IEnumerable<Task>>> SortActions;
 
         Sort CurrentSort;
 
         Task _updating;
+
+        string _filterText;
 
         public MainWindow()
         {
@@ -49,25 +50,26 @@ namespace Client
             this.Height = User.Default.WindowHeight;
             this.Width = User.Default.WindowWidth;
 
-            SortActions = new Dictionary<Sort, Func<IEnumerable<Task>, IEnumerable<Task>>>()
-            {
-                {Sort.Completed, x => x.OrderBy(t => t.Completed)} ,
-                {Sort.Context, x => x.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Context) ? "zzz" : t.Context.Substring(1)))}, //ignore the @
-                {Sort.Priority, x => x.OrderBy(t => (t.Completed? "z" : "a") + (t.Priority))},
-                {Sort.Project, x => x.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Project) ? "zzz" : t.Project.Substring(1)))}, //ignore the +
-                {Sort.None, x => x}
-            };
+            RegisterSortActions();
+
+            RegisterKeyboardShortcuts();
 
             if (!string.IsNullOrEmpty(User.Default.FilePath))
                 TryOpen(User.Default.FilePath);
 
+            SetSort((Sort)User.Default.CurrentSort);
+        }
 
+        private void RegisterKeyboardShortcuts()
+        {
             KeyboardShortcuts = new Dictionary<Key, Action>()
             {
                 {Key.O, () => File_Open(null, null)},
                 {Key.N, () => taskText.Focus()},
                 {Key.J, () => lbTasks.SelectedIndex = lbTasks.SelectedIndex < lbTasks.Items.Count ? lbTasks.SelectedIndex + 1 : lbTasks.SelectedIndex},
                 {Key.K, () => lbTasks.SelectedIndex = lbTasks.SelectedIndex > 0 ? lbTasks.SelectedIndex - 1 : 0},
+                {Key.OemQuestion, () => Help(null, null)},
+                {Key.F, () => Filter(null, null)},
                 {Key.OemPeriod, () => 
                     {
                         _taskList.ReloadTasks();
@@ -76,7 +78,7 @@ namespace Client
                 {Key.X, () => 
                     {
                         _taskList.ToggleComplete((Task)lbTasks.SelectedItem);
-                        SetSort(CurrentSort);
+                        ApplyFilter();
                     }},
                 {Key.D, () => 
                     {
@@ -87,18 +89,29 @@ namespace Client
                         if (res == MessageBoxResult.Yes)
                         {
                             _taskList.Delete((Task)lbTasks.SelectedItem);
-                            SetSort(CurrentSort);
+                            ApplyFilter();
                         }
                     }},
-                    {Key.U, () =>
-                        {
-                            _updating = (Task)lbTasks.SelectedItem;
-                            taskText.Text = _updating.ToString();
-                            taskText.Focus();
-                        }}
+                {Key.U, () =>
+                    {
+                        _updating = (Task)lbTasks.SelectedItem;
+                        taskText.Text = _updating.ToString();
+                        taskText.Focus();
+                    }}
             };
+        }
 
-            SetSort((Sort)User.Default.CurrentSort);
+        private void RegisterSortActions()
+        {
+            // nb, we sub-sort by completed for most sorts by prepending eithe a or z
+            SortActions = new Dictionary<Sort, Func<IEnumerable<Task>, IEnumerable<Task>>>()
+            {
+                {Sort.Completed, x => x.OrderBy(t => t.Completed)} ,
+                {Sort.Context, x => x.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Context) ? "zzz" : t.Context.Substring(1)))}, //ignore the @
+                {Sort.Priority, x => x.OrderBy(t => (t.Completed? "z" : "a") + (t.Priority))},
+                {Sort.Project, x => x.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Project) ? "zzz" : t.Project.Substring(1)))}, //ignore the +
+                {Sort.None, x => x}
+            };
         }
 
 
@@ -132,22 +145,30 @@ namespace Client
             SetSelected((MenuItem)sender);
         }
 
-        void SetSort(Sort sort, Task task = null)
+        void SetSort(Sort sort, IEnumerable<Task> tasks = null, Task task = null)
         {
+            if (tasks == null && _taskList == null)
+                return;
+
+            IEnumerable<Task> t = null;
+            if (_taskList != null)
+                t = _taskList.Tasks;
+
+            if (tasks != null)
+                t = tasks;
+
             User.Default.CurrentSort = (int)sort;
             User.Default.Save();
 
             CurrentSort = sort;
 
-            if (_taskList != null)
-            {
-                lbTasks.ItemsSource = SortActions[CurrentSort](_taskList.Tasks);
+            lbTasks.ItemsSource = SortActions[CurrentSort](t);
 
-                if (task == null)
-                    lbTasks.SelectedIndex = 0;
-                else
-                    lbTasks.SelectedItem = task;
-            }
+            if (task == null)
+                lbTasks.SelectedIndex = 0;
+            else
+                lbTasks.SelectedItem = task;
+
             lbTasks.Focus();
         }
 
@@ -177,7 +198,7 @@ namespace Client
                 }
 
                 tb.Text = "";
-                SetSort(CurrentSort);
+                ApplyFilter();
             }
         }
 
@@ -222,6 +243,67 @@ namespace Client
             User.Default.WindowHeight = e.NewSize.Height;
             User.Default.WindowWidth = e.NewSize.Width;
             User.Default.Save();
+        }
+
+        private void Help(object sender, RoutedEventArgs e)
+        {
+            var msg =
+@"todotxt.net: a Windows UI for todo.txt
+
+Keyboard shortcuts:
+	- O: open todo.txt file
+	- N: new task
+	- J: next task
+	- K: prev task
+	- X: toggle task completion
+	- D: delete task (with confirmation)
+	- U: update task
+	- F: filter tasks (free-text, one filter condition per line)
+	- .: reload tasks from file
+	- ?: show help
+
+
+More info at http://bit.ly/todotxtnet
+
+Copyright 2011 Ben Hughes";
+            MessageBox.Show(msg);
+        }
+
+        private void Filter(object sender, RoutedEventArgs e)
+        {
+            var f = new FilterDialog();
+            f.FilterText = _filterText;
+            if (f.ShowDialog().Value)
+            {
+                _filterText = f.FilterText;
+                ApplyFilter();
+            }
+        }
+
+        private void ApplyFilter()
+        {
+            List<Task> tasks = new List<Task>();
+
+            if(string.IsNullOrEmpty(_filterText))
+            {
+                tasks = _taskList.Tasks.ToList();
+            }
+            else
+            {
+                foreach (var task in _taskList.Tasks)
+                {
+                    bool include = true;
+                    foreach (var filter in _filterText.Split(new string[]{Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (!task.Raw.Contains(filter))
+                            include = false;
+                    }
+
+                    if (include)
+                        tasks.Add(task);
+                }
+            }
+            SetSort(CurrentSort, tasks);
         }
 
     }

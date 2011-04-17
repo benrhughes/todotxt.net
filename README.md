@@ -6,9 +6,8 @@ There is installer for the latest version available from the github download pag
 
 Current features:
 
- - Displays tasks (from a hard-coded file location)
+ - Displays tasks
  - Sorts by completed, priority, project, context or the order in the file
- - Has an input box for creating tasks, which are written to the file
  - Preferences for the todo.txt file, window size and sort order are persisted
  - Keyboard shortcuts
 	- O: open todo.txt file
@@ -18,14 +17,15 @@ Current features:
 	- X: toggle task completion
 	- D: delete task (with confirmation)
 	- U: update task
+	- F: filter tasks (free-text, one filter condition per line)
 	- .: reload tasks from file
+	- ?: show help
 
 The main things missing (that I know of) are
 
  - multiple projects and contexts per task
  - created date support
  - due date support
- - filtering in the UI
  - UI prettiness
 
 Stuff I'm aiming for:
