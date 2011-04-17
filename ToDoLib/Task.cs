@@ -34,8 +34,6 @@ namespace ToDoLib
             Priority = reg.Match(raw).Groups["priority"].Value.Trim();
             if (Priority.Length > 0)
                 raw = raw.Replace(Priority, "");
-            else
-                Priority = "z";
 
             reg = new Regex(projectPattern);
             Project = reg.Match(raw).Groups["proj"].Value.Trim();

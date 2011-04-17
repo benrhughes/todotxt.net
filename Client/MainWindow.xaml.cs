@@ -108,7 +108,7 @@ namespace Client
             {
                 {Sort.Completed, x => x.OrderBy(t => t.Completed)} ,
                 {Sort.Context, x => x.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Context) ? "zzz" : t.Context.Substring(1)))}, //ignore the @
-                {Sort.Priority, x => x.OrderBy(t => (t.Completed? "z" : "a") + (t.Priority))},
+                {Sort.Priority, x => x.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "zzz" : t.Priority))},
                 {Sort.Project, x => x.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Project) ? "zzz" : t.Project.Substring(1)))}, //ignore the +
                 {Sort.None, x => x}
             };
