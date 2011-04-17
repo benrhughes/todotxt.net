@@ -73,12 +73,12 @@ namespace Client
                 {Key.OemPeriod, () => 
                     {
                         _taskList.ReloadTasks();
-                        SetSort(CurrentSort);
+                        FilterAndSort(CurrentSort);
                     }},
                 {Key.X, () => 
                     {
                         _taskList.ToggleComplete((Task)lbTasks.SelectedItem);
-                        ApplyFilter();
+                        FilterAndSort(CurrentSort);
                     }},
                 {Key.D, () => 
                     {
@@ -89,7 +89,7 @@ namespace Client
                         if (res == MessageBoxResult.Yes)
                         {
                             _taskList.Delete((Task)lbTasks.SelectedItem);
-                            ApplyFilter();
+                            FilterAndSort(CurrentSort);
                         }
                     }},
                 {Key.U, () =>
@@ -117,31 +117,31 @@ namespace Client
 
         private void Sort_Priority(object sender, RoutedEventArgs e)
         {
-            SetSort(Sort.Priority);
+            FilterAndSort(Sort.Priority);
             SetSelected((MenuItem)sender);
         }
 
         private void Sort_None(object sender, RoutedEventArgs e)
         {
-            SetSort(Sort.None);
+            FilterAndSort(Sort.None);
             SetSelected((MenuItem)sender);
         }
 
         private void Sort_Context(object sender, RoutedEventArgs e)
         {
-            SetSort(Sort.Context);
+            FilterAndSort(Sort.Context);
             SetSelected((MenuItem)sender);
         }
 
         private void Sort_Completed(object sender, RoutedEventArgs e)
         {
-            SetSort(Sort.Completed);
+            FilterAndSort(Sort.Completed);
             SetSelected((MenuItem)sender);
         }
 
         private void Sort_Project(object sender, RoutedEventArgs e)
         {
-            SetSort(Sort.Project);
+            FilterAndSort(Sort.Project);
             SetSelected((MenuItem)sender);
         }
 
@@ -198,7 +198,7 @@ namespace Client
                 }
 
                 tb.Text = "";
-                ApplyFilter();
+                FilterAndSort(CurrentSort);
             }
         }
 
@@ -276,11 +276,11 @@ Copyright 2011 Ben Hughes";
             if (f.ShowDialog().Value)
             {
                 _filterText = f.FilterText;
-                ApplyFilter();
+                FilterAndSort(CurrentSort);
             }
         }
 
-        private void ApplyFilter()
+        private void FilterAndSort(Sort sort)
         {
             List<Task> tasks = new List<Task>();
 
@@ -303,7 +303,7 @@ Copyright 2011 Ben Hughes";
                         tasks.Add(task);
                 }
             }
-            SetSort(CurrentSort, tasks);
+            SetSort(sort, tasks);
         }
 
     }
