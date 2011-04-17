@@ -1,44 +1,4 @@
-X (A) A Task
-(B) Another task @home
-X A new completed task @home
-X (C) A new thingo
-(A) Oh yeah +test @task
-(C) Add_ToCollection +test @task
-(B) ToggleComplete_On_InCollection +test @task
-X (B) Update_InCollection +test @task
-(B) Add_ToCollection +test @task
-(B) ToggleComplete_Off_InCollection +test @task
-X (B ToggleComplete_On_InCollection +test @task
-X (B) Update_InCollection +test @task
-(B) Add_ToCollection +test @task
-(B) ToggleComplete_Off_InCollection +test @task
-X (B ToggleComplete_On_InCollection +test @task
-X (B) Update_InCollection +test @task
-(B) Add_ToCollection +test @task
-(B) ToggleComplete_Off_InCollection +test @task
-X (B ToggleComplete_On_InCollection +test @task
-X (B) Update_InCollection +test @task
-This is a new task
-(V) A new task
-(A) Oh yeah, it's great
-(AAA) Stuff
-A new task +atask
-(B) Add_ToCollection +test @task
-(B) ToggleComplete_Off_InCollection +test @task
-X (B ToggleComplete_On_InCollection +test @task
-X (B) Update_InCollection +test @task
-Add_Multiple task one
-Add_Multiple task one
-Add_Multiple task one
-Add_Multiple task one
-Add_Multiple task one
-Add_Multiple task two
-(B) Add_ToCollection +test @task
-(B) ToggleComplete_Off_InCollection +test @task
-X (B ToggleComplete_On_InCollection +test @task
-X (B) Update_InCollection +test @task
-Add_Multiple task one
-Add_Multiple task two
+A task
 (B) Add_ToCollection +test @task
 (B) ToggleComplete_Off_InCollection +test @task
 X (B ToggleComplete_On_InCollection +test @task

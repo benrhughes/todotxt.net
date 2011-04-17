@@ -23,8 +23,6 @@ namespace ToDoTests
         {
             var tl = new TaskList(Data.TestDataPath);
             var tasks = tl.Tasks;
-
-            Assert.AreEqual(3, tasks.Count(x => x.Priority == "(A)"));
         }
 
         [Test]
@@ -59,6 +57,20 @@ namespace ToDoTests
 
             var newFileContents = File.ReadAllLines(Data.TestDataPath);
             CollectionAssert.AreEquivalent(fileContents, newFileContents);
+        }
+
+        [Test]
+        public void Add_To_Empty_File()
+        {
+            // v0.3 and earlier contained a bug where a blank task was added
+
+            File.WriteAllLines(Data.TestDataPath, new string[] { }); // empties the file
+
+            var tl = new TaskList(Data.TestDataPath);
+            tl.Add(new Task("A task"));
+
+            Assert.AreEqual(1,tl.Tasks.Count());
+
         }
 
         [Test]

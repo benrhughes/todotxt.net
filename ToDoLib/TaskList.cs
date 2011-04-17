@@ -42,7 +42,7 @@ namespace ToDoLib
                 var output = task.ToString();
 
                 var text = File.ReadAllText(_filePath);
-                if (!text.EndsWith(Environment.NewLine))
+                if (text.Length > 0 && !text.EndsWith(Environment.NewLine))
                     output = Environment.NewLine + output;
 
                 File.AppendAllLines(_filePath, new string[] { output });
