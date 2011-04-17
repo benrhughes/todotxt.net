@@ -22,7 +22,7 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
-        enum Sort
+        enum SortType
         {
             Completed,
             Context,
@@ -32,16 +32,10 @@ namespace Client
         }
 
         TaskList _taskList;
-
-        Dictionary<Key, Action> KeyboardShortcuts;
-
-        Dictionary<Sort, Func<IEnumerable<Task>, IEnumerable<Task>>> SortActions;
-
-        Sort CurrentSort;
-
+        SortType _currentSort;
         Task _updating;
-
         string _filterText;
+
 
         public MainWindow()
         {
@@ -50,102 +44,114 @@ namespace Client
             this.Height = User.Default.WindowHeight;
             this.Width = User.Default.WindowWidth;
 
-            RegisterSortActions();
-
-            RegisterKeyboardShortcuts();
-
             if (!string.IsNullOrEmpty(User.Default.FilePath))
                 TryOpen(User.Default.FilePath);
 
-            SetSort((Sort)User.Default.CurrentSort);
+            SetSort((SortType)User.Default.CurrentSort);
         }
 
-        private void RegisterKeyboardShortcuts()
+        private void KeyboardShortcut(Key key)
         {
-            KeyboardShortcuts = new Dictionary<Key, Action>()
+            switch (key)
             {
-                {Key.O, () => File_Open(null, null)},
-                {Key.N, () => taskText.Focus()},
-                {Key.J, () => lbTasks.SelectedIndex = lbTasks.SelectedIndex < lbTasks.Items.Count ? lbTasks.SelectedIndex + 1 : lbTasks.SelectedIndex},
-                {Key.K, () => lbTasks.SelectedIndex = lbTasks.SelectedIndex > 0 ? lbTasks.SelectedIndex - 1 : 0},
-                {Key.OemQuestion, () => Help(null, null)},
-                {Key.F, () => Filter(null, null)},
-                {Key.OemPeriod, () => 
-                    {
-                        _taskList.ReloadTasks();
-                        FilterAndSort(CurrentSort);
-                    }},
-                {Key.X, () => 
-                    {
-                        _taskList.ToggleComplete((Task)lbTasks.SelectedItem);
-                        FilterAndSort(CurrentSort);
-                    }},
-                {Key.D, () => 
-                    {
-                        var res = MessageBox.Show("Permanently delete the selected task?", 
-                                    "Confirm Delete",
-                                    MessageBoxButton.YesNo);
+                case Key.O:
+                    File_Open(null, null);
+                    break;
+                case Key.N:
+                    taskText.Focus();
+                    break;
+                case Key.J:
+                    lbTasks.SelectedIndex = lbTasks.SelectedIndex < lbTasks.Items.Count ? lbTasks.SelectedIndex + 1 : lbTasks.SelectedIndex;
+                    break;
+                case Key.K:
+                    lbTasks.SelectedIndex = lbTasks.SelectedIndex > 0 ? lbTasks.SelectedIndex - 1 : 0;
+                    break;
+                case Key.OemQuestion:
+                    Help(null, null);
+                    break;
+                case Key.F:
+                    Filter(null, null);
+                    break;
+                case Key.OemPeriod:
+                    _taskList.ReloadTasks();
+                    FilterAndSort(_currentSort);
+                    break;
+                case Key.X:
+                    _taskList.ToggleComplete((Task)lbTasks.SelectedItem);
+                    FilterAndSort(_currentSort);
+                    break;
+                case Key.D:
+                    var res = MessageBox.Show("Permanently delete the selected task?",
+                                 "Confirm Delete",
+                                 MessageBoxButton.YesNo);
 
-                        if (res == MessageBoxResult.Yes)
-                        {
-                            _taskList.Delete((Task)lbTasks.SelectedItem);
-                            FilterAndSort(CurrentSort);
-                        }
-                    }},
-                {Key.U, () =>
+                    if (res == MessageBoxResult.Yes)
                     {
-                        _updating = (Task)lbTasks.SelectedItem;
-                        taskText.Text = _updating.ToString();
-                        taskText.Focus();
-                    }}
-            };
+                        _taskList.Delete((Task)lbTasks.SelectedItem);
+                        FilterAndSort(_currentSort);
+                    }
+                    break;
+                case Key.U:
+                    _updating = (Task)lbTasks.SelectedItem;
+                    taskText.Text = _updating.ToString();
+                    taskText.Focus();
+                    break;
+                default:
+                    break;
+            }
         }
 
-        private void RegisterSortActions()
+        private IEnumerable<Task> Sort(IEnumerable<Task> tasks, SortType sort)
         {
-            // nb, we sub-sort by completed for most sorts by prepending eithe a or z
-            SortActions = new Dictionary<Sort, Func<IEnumerable<Task>, IEnumerable<Task>>>()
+            switch (sort)
             {
-                {Sort.Completed, x => x.OrderBy(t => t.Completed)} ,
-                {Sort.Context, x => x.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Context) ? "zzz" : t.Context.Substring(1)))}, //ignore the @
-                {Sort.Priority, x => x.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "zzz" : t.Priority))},
-                {Sort.Project, x => x.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Project) ? "zzz" : t.Project.Substring(1)))}, //ignore the +
-                {Sort.None, x => x}
-            };
+               // nb, we sub-sort by completed for most sorts by prepending eithe a or z
+                case SortType.Completed:
+                    return tasks.OrderBy(t => t.Completed);
+                case SortType.Context:
+                    return tasks.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Context) ? "zzz" : t.Context.Substring(1)));
+                case SortType.Priority:
+                    return tasks.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "zzz" : t.Priority));
+                case SortType.Project:
+                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.Project) ? "zzz" : t.Project.Substring(1)));
+                case SortType.None:
+                default:
+                    return tasks;
+            }
         }
 
 
         private void Sort_Priority(object sender, RoutedEventArgs e)
         {
-            FilterAndSort(Sort.Priority);
+            FilterAndSort(SortType.Priority);
             SetSelected((MenuItem)sender);
         }
 
         private void Sort_None(object sender, RoutedEventArgs e)
         {
-            FilterAndSort(Sort.None);
+            FilterAndSort(SortType.None);
             SetSelected((MenuItem)sender);
         }
 
         private void Sort_Context(object sender, RoutedEventArgs e)
         {
-            FilterAndSort(Sort.Context);
+            FilterAndSort(SortType.Context);
             SetSelected((MenuItem)sender);
         }
 
         private void Sort_Completed(object sender, RoutedEventArgs e)
         {
-            FilterAndSort(Sort.Completed);
+            FilterAndSort(SortType.Completed);
             SetSelected((MenuItem)sender);
         }
 
         private void Sort_Project(object sender, RoutedEventArgs e)
         {
-            FilterAndSort(Sort.Project);
+            FilterAndSort(SortType.Project);
             SetSelected((MenuItem)sender);
         }
 
-        void SetSort(Sort sort, IEnumerable<Task> tasks = null, Task task = null)
+        void SetSort(SortType sort, IEnumerable<Task> tasks = null, Task task = null)
         {
             if (tasks == null && _taskList == null)
                 return;
@@ -160,9 +166,9 @@ namespace Client
             User.Default.CurrentSort = (int)sort;
             User.Default.Save();
 
-            CurrentSort = sort;
+            _currentSort = sort;
 
-            lbTasks.ItemsSource = SortActions[CurrentSort](t);
+            lbTasks.ItemsSource = Sort(t, _currentSort);
 
             if (task == null)
                 lbTasks.SelectedIndex = 0;
@@ -198,14 +204,13 @@ namespace Client
                 }
 
                 tb.Text = "";
-                FilterAndSort(CurrentSort);
+                FilterAndSort(_currentSort);
             }
         }
 
         private void taskList_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-            if (KeyboardShortcuts.ContainsKey(e.Key))
-                KeyboardShortcuts[e.Key]();
+            KeyboardShortcut(e.Key);
         }
 
         private void File_Open(object sender, RoutedEventArgs e)
@@ -229,7 +234,7 @@ namespace Client
                 _taskList = new TaskList(filePath);
                 User.Default.FilePath = filePath;
                 User.Default.Save();
-                lbTasks.ItemsSource = SortActions[CurrentSort](_taskList.Tasks);
+                lbTasks.ItemsSource = Sort(_taskList.Tasks, _currentSort);
             }
             catch (Exception ex)
             {
@@ -276,15 +281,15 @@ Copyright 2011 Ben Hughes";
             if (f.ShowDialog().Value)
             {
                 _filterText = f.FilterText;
-                FilterAndSort(CurrentSort);
+                FilterAndSort(_currentSort);
             }
         }
 
-        private void FilterAndSort(Sort sort)
+        private void FilterAndSort(SortType sort)
         {
             List<Task> tasks = new List<Task>();
 
-            if(string.IsNullOrEmpty(_filterText))
+            if (string.IsNullOrEmpty(_filterText))
             {
                 tasks = _taskList.Tasks.ToList();
             }
@@ -293,7 +298,7 @@ Copyright 2011 Ben Hughes";
                 foreach (var task in _taskList.Tasks)
                 {
                     bool include = true;
-                    foreach (var filter in _filterText.Split(new string[]{Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (var filter in _filterText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         if (!task.Raw.Contains(filter))
                             include = false;
