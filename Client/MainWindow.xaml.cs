@@ -105,15 +105,31 @@ namespace Client
         {
             switch (sort)
             {
-               // nb, we sub-sort by completed for most sorts by prepending eithe a or z
+                // nb, we sub-sort by completed for most sorts by prepending eithe a or z
                 case SortType.Completed:
                     return tasks.OrderBy(t => t.Completed);
                 case SortType.Context:
-                    return tasks.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Context) ? "zzz" : t.Context.Substring(1)));
+                    return tasks.OrderBy(t =>
+                        {
+                            var s = t.Completed ? "z" : "a";
+                            if (t.Contexts != null && t.Contexts.Count > 0)
+                                s += t.Contexts.Min().Substring(1);
+                            else
+                                s += "zzz";
+                            return s;
+                        });
                 case SortType.Priority:
-                    return tasks.OrderBy(t => (t.Completed? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "zzz" : t.Priority));
+                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "zzz" : t.Priority));
                 case SortType.Project:
-                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.Project) ? "zzz" : t.Project.Substring(1)));
+                    return tasks.OrderBy(t =>
+                        {
+                            var s = t.Completed ? "z" : "a";
+                            if (t.Projects != null && t.Projects.Count > 0)
+                                s += t.Projects.Min().Substring(1);
+                            else
+                                s += "zzz";
+                            return s;
+                        });
                 case SortType.None:
                 default:
                     return tasks;

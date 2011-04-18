@@ -10,13 +10,16 @@ namespace ToDoTests
     [TestFixture]
     public class TaskTests
     {
+        List<string> _projects = new List<string>() { "+test" };
+        List<string> _contexts = new List<string>() { "@work" };
+
         #region Create
         [Test]
         public void Create_Priority_Body_Project_Context()
         {
             var task = new Task("(A) This is a test task +test @work");
 
-            var expectedTask = new Task("(A)", "+test", "@work", "This is a test task");
+            var expectedTask = new Task("(A)", _projects, _contexts, "This is a test task");
             AssertEquivalence(expectedTask, task);
         }
 
@@ -25,7 +28,7 @@ namespace ToDoTests
         {
             var task = new Task("(A) This is a test task @work +test");
 
-            var expectedTask = new Task("(A)", "+test", "@work", "This is a test task");
+            var expectedTask = new Task("(A)", _projects, _contexts, "This is a test task");
             AssertEquivalence(expectedTask, task);
         }
 
@@ -34,7 +37,7 @@ namespace ToDoTests
         {
             var task = new Task("(A) This is a test task @work +test  ");
 
-            var expectedTask = new Task("(A)", "+test", "@work", "This is a test task");
+            var expectedTask = new Task("(A)", _projects, _contexts, "This is a test task");
             AssertEquivalence(expectedTask, task);
         }
 
@@ -43,7 +46,7 @@ namespace ToDoTests
         {
             var task = new Task("This is a test task @work +test ");
 
-            var expectedTask = new Task("", "+test", "@work", "This is a test task");
+            var expectedTask = new Task("", _projects, _contexts, "This is a test task");
             AssertEquivalence(expectedTask, task);
         }
 
@@ -53,7 +56,7 @@ namespace ToDoTests
         {
             var task = new Task("Oh (A) This is a test task @work +test ");
 
-            var expectedTask = new Task("", "+test", "@work", "Oh (A) This is a test task");
+            var expectedTask = new Task("", _projects, _contexts, "Oh (A) This is a test task");
             AssertEquivalence(expectedTask, task);
         }
 
@@ -62,7 +65,7 @@ namespace ToDoTests
         {
             var task = new Task("(A) @work +test This is a test task");
 
-            var expectedTask = new Task("(A)", "+test", "@work", "This is a test task");
+            var expectedTask = new Task("(A)", _projects, _contexts, "This is a test task");
             AssertEquivalence(expectedTask, task);
         }
 
@@ -71,7 +74,7 @@ namespace ToDoTests
         {
             var task = new Task("X (A) @work +test This is a test task");
 
-            var expectedTask = new Task("(A)", "+test", "@work", "This is a test task", true);
+            var expectedTask = new Task("(A)", _projects, _contexts, "This is a test task", true);
             AssertEquivalence(expectedTask, task);
         }
 
@@ -80,7 +83,7 @@ namespace ToDoTests
         {
             var task = new Task("(A) @work +test This is a test task");
 
-            var expectedTask = new Task("(A)", "+test", "@work", "This is a test task", false);
+            var expectedTask = new Task("(A)", _projects, _contexts, "This is a test task", false);
             AssertEquivalence(expectedTask, task);
         }
 
@@ -97,7 +100,7 @@ namespace ToDoTests
         [Test]
         public void ToString_From_Parameters()
         {
-            var task = new Task("(A)", "+test", "@work", "This is a test task");
+            var task = new Task("(A)", _projects, _contexts, "This is a test task");
             Assert.AreEqual("(A) This is a test task +test @work", task.ToString());
         }
         #endregion
@@ -105,8 +108,8 @@ namespace ToDoTests
         void AssertEquivalence(Task t1, Task t2)
         {
             Assert.AreEqual(t1.Priority, t2.Priority);
-            Assert.AreEqual(t1.Project, t2.Project);
-            Assert.AreEqual(t1.Context, t2.Context);
+            CollectionAssert.AreEquivalent(t1.Projects, t2.Projects);
+            CollectionAssert.AreEquivalent(t1.Contexts, t2.Contexts);
             Assert.AreEqual(t1.Body, t2.Body);
         }
     }

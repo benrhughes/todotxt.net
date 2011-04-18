@@ -14,8 +14,8 @@ namespace ToDoLib
         const string completedPattern = @"^X";
 
         
-        public string Project { get; set; }
-        public string Context { get; set; }
+        public List<string> Projects { get; set; }
+        public List<string> Contexts { get; set; }
         public string Priority { get; set; }
         public string Body { get; set; }
         public string Raw { get; set; }
@@ -35,15 +35,35 @@ namespace ToDoLib
             if (Priority.Length > 0)
                 raw = raw.Replace(Priority, "");
 
+            Projects = new List<string>();
             reg = new Regex(projectPattern);
-            Project = reg.Match(raw).Groups["proj"].Value.Trim();
-            if (Project.Length > 0)
-                raw = raw.Replace(Project, "");
+            var projects = reg.Matches(raw);
+ 
+            foreach (Match project in projects)
+            {
+                var p = project.Groups["proj"].Value.Trim();
+                if (p.Length > 0)
+                {
+                    raw = raw.Replace(p, "");
+                    Projects.Add(p);
+                }
+            }
 
+
+            Contexts = new List<string>();
             reg = new Regex(contextPattern);
-            Context = reg.Match(raw).Groups["context"].Value.Trim();
-            if (Context.Length > 0)
-                raw = raw.Replace(Context, "");
+            var contexts = reg.Matches(raw);
+
+            foreach (Match context in contexts)
+            {
+                var c = context.Groups["context"].Value.Trim();
+                if (c.Length > 0)
+                {
+                    raw = raw.Replace(c, "");
+                    Contexts.Add(c);
+                }
+            }
+            
 
             reg = new Regex(completedPattern, RegexOptions.IgnoreCase);
             Completed = reg.IsMatch(raw);
@@ -53,11 +73,11 @@ namespace ToDoLib
             Body = raw.Trim();
         }
 
-        public Task(string priority, string project, string context, string body, bool completed = false)
+        public Task(string priority, List<string> projects, List<string> contexts, string body, bool completed = false)
         {
             Priority = priority;
-            Project = project;
-            Context = context;
+            Projects = projects;
+            Contexts = contexts;
             Body = body;
             Completed = completed;
         }
@@ -78,7 +98,8 @@ namespace ToDoLib
             }
             else
             {
-                str = string.Format("{0}{1} {2} {3} {4}", Completed ? "X " : "", Priority, Body, Project, Context);
+                str = string.Format("{0}{1} {2} {3} {4}", 
+                    Completed ? "X " : "", Priority, Body, string.Join(" ", Projects), string.Join(" ", Contexts));
             }
 
             return str;
