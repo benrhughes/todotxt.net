@@ -87,6 +87,15 @@ namespace ToDoTests
             AssertEquivalence(expectedTask, task);
         }
 
+        [Test]
+        public void Create_Multiple_Projects()
+        {
+            var task = new Task("(A) @work +test +test2 This is a test task");
+
+            var expectedTask = new Task("(A)", new List<string>(){"+test", "+test2"}, _contexts, "This is a test task", false);
+            AssertEquivalence(expectedTask, task);
+        }
+
         #endregion
 
         #region ToString

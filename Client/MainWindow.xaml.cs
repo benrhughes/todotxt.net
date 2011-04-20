@@ -34,8 +34,6 @@ namespace Client
         TaskList _taskList;
         SortType _currentSort;
         Task _updating;
-        string _filterText;
-
 
         public MainWindow()
         {
@@ -47,7 +45,7 @@ namespace Client
             if (!string.IsNullOrEmpty(User.Default.FilePath))
                 TryOpen(User.Default.FilePath);
 
-            SetSort((SortType)User.Default.CurrentSort);
+            FilterAndSort((SortType)User.Default.CurrentSort);
         }
 
         private void KeyboardShortcut(Key key)
@@ -293,10 +291,10 @@ Copyright 2011 Ben Hughes";
         private void Filter(object sender, RoutedEventArgs e)
         {
             var f = new FilterDialog();
-            f.FilterText = _filterText;
+            f.FilterText = User.Default.FilterText;
             if (f.ShowDialog().Value)
             {
-                _filterText = f.FilterText;
+                User.Default.FilterText = f.FilterText;
                 FilterAndSort(_currentSort);
             }
         }
@@ -305,25 +303,29 @@ Copyright 2011 Ben Hughes";
         {
             List<Task> tasks = new List<Task>();
 
-            if (string.IsNullOrEmpty(_filterText))
+            if (_taskList != null)
             {
-                tasks = _taskList.Tasks.ToList();
-            }
-            else
-            {
-                foreach (var task in _taskList.Tasks)
+                if (string.IsNullOrEmpty(User.Default.FilterText))
                 {
-                    bool include = true;
-                    foreach (var filter in _filterText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                    tasks = _taskList.Tasks.ToList();
+                }
+                else
+                {
+                    foreach (var task in _taskList.Tasks)
                     {
-                        if (!task.Raw.Contains(filter))
-                            include = false;
-                    }
+                        bool include = true;
+                        foreach (var filter in User.Default.FilterText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            if (!task.Raw.Contains(filter))
+                                include = false;
+                        }
 
-                    if (include)
-                        tasks.Add(task);
+                        if (include)
+                            tasks.Add(task);
+                    }
                 }
             }
+
             SetSort(sort, tasks);
         }
 
