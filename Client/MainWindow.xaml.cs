@@ -91,6 +91,7 @@ namespace Client
                         FilterAndSort(_currentSort);
                     }
                     break;
+                case Key.Enter:
                 case Key.U:
                     _updating = (Task)lbTasks.SelectedItem;
                     taskText.Text = _updating.ToString();

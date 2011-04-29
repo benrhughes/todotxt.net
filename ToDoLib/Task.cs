@@ -100,7 +100,7 @@ namespace ToDoLib
                 var reg = new Regex(completedPattern, RegexOptions.IgnoreCase);
                 var rawCompleted = reg.IsMatch(Raw);
                 if (Completed && !rawCompleted)
-                    str = "X " + Raw;
+                    str = "x " + Raw;
                 else if (!Completed && rawCompleted)
                     str = Raw.Substring(1).TrimStart();
                 else
@@ -109,7 +109,7 @@ namespace ToDoLib
             else
             {
                 str = string.Format("{0}{1} {2} {3} {4}", 
-                    Completed ? "X " : "", Priority, Body, string.Join(" ", Projects), string.Join(" ", Contexts));
+                    Completed ? "x " : "", Priority, Body, string.Join(" ", Projects), string.Join(" ", Contexts));
             }
 
             return str;
