@@ -8,19 +8,37 @@ namespace ToDoLib
 {
     public class Task
     {
-        const string completedPattern = @"^X\s";
+        const string completedPattern = @"^X\s((\d{4})-(\d{2})-(\d{2}))?";
         const string priorityPattern = @"^(?<priority>\([A-Z]\)\s)";
-        const string datePattern = @"^(?<date>(\d{4})-(\d{2})-(\d{2}))";        
+        const string datePattern = @"^(?<date>(\d{4})-(\d{2})-(\d{2}))";
         const string projectPattern = @"(?<proj>\+\w+)";
         const string contextPattern = @"(?<context>\@\w+)";
-        
+
         public List<string> Projects { get; set; }
         public List<string> Contexts { get; set; }
-        public string DueDate{ get; set; }
+        public string DueDate { get; set; }
+        public string CompletedDate { get; set; }
         public string Priority { get; set; }
         public string Body { get; set; }
         public string Raw { get; set; }
-        public bool Completed { get; set; }
+
+        private bool _completed;
+        public bool Completed
+        {
+            get
+            {
+                return _completed;
+            }
+
+            set
+            {
+                _completed = value;
+                if (_completed)
+                    this.CompletedDate = DateTime.Now.ToString("yyyy-dd-MM");
+                else
+                    this.CompletedDate = "";
+            }
+        }
 
         // Parsing needs to comply with these rules: https://github.com/ginatrapani/todo.txt-touch/wiki/Todo.txt-File-Format
 
@@ -54,7 +72,7 @@ namespace ToDoLib
             Projects = new List<string>();
             reg = new Regex(projectPattern);
             var projects = reg.Matches(raw);
- 
+
             foreach (Match project in projects)
             {
                 var p = project.Groups["proj"].Value.Trim();
@@ -64,7 +82,7 @@ namespace ToDoLib
 
             raw = reg.Replace(raw, "");
 
-            
+
             Contexts = new List<string>();
             reg = new Regex(contextPattern);
             var contexts = reg.Matches(raw);
@@ -94,22 +112,22 @@ namespace ToDoLib
 
         public override string ToString()
         {
-            string str ="";
+            string str = "";
             if (!string.IsNullOrEmpty(Raw))
             {
                 var reg = new Regex(completedPattern, RegexOptions.IgnoreCase);
                 var rawCompleted = reg.IsMatch(Raw);
                 if (Completed && !rawCompleted)
-                    str = "x " + Raw;
+                    str = "x " + CompletedDate + " " + Raw;
                 else if (!Completed && rawCompleted)
-                    str = Raw.Substring(1).TrimStart();
+                    str = reg.Replace(Raw, "").Trim();
                 else
                     str = Raw;
             }
             else
             {
-                str = string.Format("{0}{1} {2} {3} {4}", 
-                    Completed ? "x " : "", Priority, Body, string.Join(" ", Projects), string.Join(" ", Contexts));
+                str = string.Format("{0}{1} {2} {3} {4}",
+                    Completed ? "x " + CompletedDate + " " : "", Priority, Body, string.Join(" ", Projects), string.Join(" ", Contexts));
             }
 
             return str;
