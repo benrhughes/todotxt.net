@@ -49,6 +49,7 @@ namespace Client
             FilterAndSort((SortType)User.Default.CurrentSort);
         }
 
+        #region private methods
         private void KeyboardShortcut(Key key)
         {
             switch (key)
@@ -137,43 +138,6 @@ namespace Client
             }
         }
 
-
-        private void Sort_Priority(object sender, RoutedEventArgs e)
-        {
-            FilterAndSort(SortType.Priority);
-            SetSelected((MenuItem)sender);
-        }
-
-        private void Sort_None(object sender, RoutedEventArgs e)
-        {
-            FilterAndSort(SortType.None);
-            SetSelected((MenuItem)sender);
-        }
-
-        private void Sort_Context(object sender, RoutedEventArgs e)
-        {
-            FilterAndSort(SortType.Context);
-            SetSelected((MenuItem)sender);
-        }
-
-        private void Sort_Completed(object sender, RoutedEventArgs e)
-        {
-            FilterAndSort(SortType.Completed);
-            SetSelected((MenuItem)sender);
-        }
-
-        private void Sort_DueDate(object sender, RoutedEventArgs e)
-        {
-            FilterAndSort(SortType.DueDate);
-            SetSelected((MenuItem)sender);
-        }
-
-        private void Sort_Project(object sender, RoutedEventArgs e)
-        {
-            FilterAndSort(SortType.Project);
-            SetSelected((MenuItem)sender);
-        }
-
         void SetSort(SortType sort, IEnumerable<Task> tasks = null, Task task = null)
         {
             if (tasks == null && _taskList == null)
@@ -211,30 +175,6 @@ namespace Client
 
         }
 
-        private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
-        {
-            var tb = (TextBox)sender;
-            if (e.Key == Key.Enter)
-            {
-                if (_updating == null)
-                {
-                    _taskList.Add(new Task(tb.Text.Trim()));
-                }
-                else
-                {
-                    _taskList.Update(_updating, new Task(tb.Text.Trim()));
-                    _updating = null;
-                }
-
-                tb.Text = "";
-                FilterAndSort(_currentSort);
-            }
-        }
-
-        private void taskList_PreviewKeyUp(object sender, KeyEventArgs e)
-        {
-            KeyboardShortcut(e.Key);
-        }
 
         private void File_Open(object sender, RoutedEventArgs e)
         {
@@ -337,9 +277,76 @@ Copyright 2011 Ben Hughes";
 
             SetSort(sort, tasks);
         }
+        #endregion
 
-        
+        #region UI event handling
+        private void Sort_Priority(object sender, RoutedEventArgs e)
+        {
+            FilterAndSort(SortType.Priority);
+            SetSelected((MenuItem)sender);
+        }
 
+        private void Sort_None(object sender, RoutedEventArgs e)
+        {
+            FilterAndSort(SortType.None);
+            SetSelected((MenuItem)sender);
+        }
+
+        private void Sort_Context(object sender, RoutedEventArgs e)
+        {
+            FilterAndSort(SortType.Context);
+            SetSelected((MenuItem)sender);
+        }
+
+        private void Sort_Completed(object sender, RoutedEventArgs e)
+        {
+            FilterAndSort(SortType.Completed);
+            SetSelected((MenuItem)sender);
+        }
+
+        private void Sort_DueDate(object sender, RoutedEventArgs e)
+        {
+            FilterAndSort(SortType.DueDate);
+            SetSelected((MenuItem)sender);
+        }
+
+        private void Sort_Project(object sender, RoutedEventArgs e)
+        {
+            FilterAndSort(SortType.Project);
+            SetSelected((MenuItem)sender);
+        }
+
+        private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            var tb = (TextBox)sender;
+            if (e.Key == Key.Enter)
+            {
+                if (_updating == null)
+                {
+                    _taskList.Add(new Task(tb.Text.Trim()));
+                }
+                else
+                {
+                    _taskList.Update(_updating, new Task(tb.Text.Trim()));
+                    _updating = null;
+                }
+
+                tb.Text = "";
+                FilterAndSort(_currentSort);
+            }
+        }
+
+        private void taskList_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            KeyboardShortcut(e.Key);
+        }
+
+        private void taskList_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            KeyboardShortcut(Key.U);
+        }
+
+        #endregion
     }
 }
 
