@@ -9,7 +9,7 @@
                 <MenuItem Header="_Open" Click="File_Open" />
             </MenuItem>
             <MenuItem Header="_Sort" Name="sortMenu">
-                <MenuItem Header="Completed" IsCheckable="True" Click="Sort_Completed" IsChecked="True" />
+                <MenuItem Header="Completed" IsCheckable="True" Click="Sort_Completed" />
                 <MenuItem Header="Context" IsCheckable="True" Click="Sort_Context" />
                 <MenuItem Header="Due Date" IsCheckable="True" Click="Sort_DueDate" />
                 <MenuItem Header="Priority" IsCheckable="True" Click="Sort_Priority" />
