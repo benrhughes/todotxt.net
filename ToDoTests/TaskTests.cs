@@ -96,6 +96,14 @@ namespace ToDoTests
             AssertEquivalence(expectedTask, task);
         }
 
+        [Test]
+        public void Create_Multiple_Contexts()
+        {
+            var task = new Task("(A) @work @home +test This is a test task");
+
+            var expectedTask = new Task("(A)", _projects, new List<string>(){"@work" , "@home"} , "This is a test task", false);
+            AssertEquivalence(expectedTask, task);
+        }
         #endregion
 
         #region ToString

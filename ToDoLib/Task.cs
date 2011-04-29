@@ -9,8 +9,8 @@ namespace ToDoLib
     public class Task
     {
         const string priorityPattern = @"^(X\s)?(?<priority>\(\w\)).*";
-        const string projectPattern = @".*(?<proj>\+\w*\s?).*";
-        const string contextPattern = @".*(?<context>\@\w*\s?).*";
+        const string projectPattern = @"\s(?<proj>\+\w+)";
+        const string contextPattern = @"\s(?<context>\@\w+)";
         const string completedPattern = @"^X";
 
         
@@ -43,12 +43,10 @@ namespace ToDoLib
             {
                 var p = project.Groups["proj"].Value.Trim();
                 if (p.Length > 0)
-                {
-                    raw = raw.Replace(p, "");
                     Projects.Add(p);
-                }
             }
 
+            raw = reg.Replace(raw, "");
 
             Contexts = new List<string>();
             reg = new Regex(contextPattern);
@@ -58,11 +56,10 @@ namespace ToDoLib
             {
                 var c = context.Groups["context"].Value.Trim();
                 if (c.Length > 0)
-                {
-                    raw = raw.Replace(c, "");
                     Contexts.Add(c);
-                }
             }
+
+            raw = reg.Replace(raw, "");
             
 
             reg = new Regex(completedPattern, RegexOptions.IgnoreCase);
