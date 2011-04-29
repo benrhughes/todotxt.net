@@ -26,6 +26,7 @@ namespace Client
         {
             Completed,
             Context,
+            DueDate,
             Priority,
             Project,
             None
@@ -116,6 +117,8 @@ namespace Client
                                 s += "zzz";
                             return s;
                         });
+                case SortType.DueDate:
+                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.DueDate) ? "zzz" : t.DueDate));
                 case SortType.Priority:
                     return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "zzz" : t.Priority));
                 case SortType.Project:
@@ -156,6 +159,12 @@ namespace Client
         private void Sort_Completed(object sender, RoutedEventArgs e)
         {
             FilterAndSort(SortType.Completed);
+            SetSelected((MenuItem)sender);
+        }
+
+        private void Sort_DueDate(object sender, RoutedEventArgs e)
+        {
+            FilterAndSort(SortType.DueDate);
             SetSelected((MenuItem)sender);
         }
 
@@ -328,6 +337,8 @@ Copyright 2011 Ben Hughes";
 
             SetSort(sort, tasks);
         }
+
+        
 
     }
 }

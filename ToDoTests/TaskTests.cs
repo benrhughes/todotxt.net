@@ -74,7 +74,7 @@ namespace ToDoTests
         {
             var task = new Task("X (A) @work +test This is a test task");
 
-            var expectedTask = new Task("(A)", _projects, _contexts, "This is a test task", true);
+            var expectedTask = new Task("(A)", _projects, _contexts, "This is a test task", "", true);
             AssertEquivalence(expectedTask, task);
         }
 
@@ -83,7 +83,7 @@ namespace ToDoTests
         {
             var task = new Task("(A) @work +test This is a test task");
 
-            var expectedTask = new Task("(A)", _projects, _contexts, "This is a test task", false);
+            var expectedTask = new Task("(A)", _projects, _contexts, "This is a test task");
             AssertEquivalence(expectedTask, task);
         }
 
@@ -92,7 +92,7 @@ namespace ToDoTests
         {
             var task = new Task("(A) @work +test +test2 This is a test task");
 
-            var expectedTask = new Task("(A)", new List<string>(){"+test", "+test2"}, _contexts, "This is a test task", false);
+            var expectedTask = new Task("(A)", new List<string>(){"+test", "+test2"}, _contexts, "This is a test task");
             AssertEquivalence(expectedTask, task);
         }
 
@@ -101,9 +101,19 @@ namespace ToDoTests
         {
             var task = new Task("(A) @work @home +test This is a test task");
 
-            var expectedTask = new Task("(A)", _projects, new List<string>(){"@work" , "@home"} , "This is a test task", false);
+            var expectedTask = new Task("(A)", _projects, new List<string>(){"@work" , "@home"} , "This is a test task");
             AssertEquivalence(expectedTask, task);
         }
+
+        [Test]
+        public void Create_DueDate()
+        {
+            var task = new Task("(A) 2011-05-08 @work @home +test This is a test task");
+
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task","2011-05-08", false);
+            AssertEquivalence(expectedTask, task);
+        }
+
         #endregion
 
         #region ToString
@@ -127,6 +137,8 @@ namespace ToDoTests
             Assert.AreEqual(t1.Priority, t2.Priority);
             CollectionAssert.AreEquivalent(t1.Projects, t2.Projects);
             CollectionAssert.AreEquivalent(t1.Contexts, t2.Contexts);
+            Assert.AreEqual(t1.DueDate, t2.DueDate);
+            Assert.AreEqual(t1.Completed, t2.Completed);
             Assert.AreEqual(t1.Body, t2.Body);
         }
     }

@@ -8,14 +8,15 @@ namespace ToDoLib
 {
     public class Task
     {
-        const string priorityPattern = @"^(X\s)?(?<priority>\(\w\)).*";
-        const string projectPattern = @"\s(?<proj>\+\w+)";
-        const string contextPattern = @"\s(?<context>\@\w+)";
-        const string completedPattern = @"^X";
-
+        const string completedPattern = @"^X\s";
+        const string priorityPattern = @"^(?<priority>\([A-Z]\)\s)";
+        const string datePattern = @"^(?<date>(\d{4})-(\d{2})-(\d{2}))";        
+        const string projectPattern = @"(?<proj>\+\w+)";
+        const string contextPattern = @"(?<context>\@\w+)";
         
         public List<string> Projects { get; set; }
         public List<string> Contexts { get; set; }
+        public string DueDate{ get; set; }
         public string Priority { get; set; }
         public string Body { get; set; }
         public string Raw { get; set; }
@@ -23,17 +24,32 @@ namespace ToDoLib
 
         // Parsing needs to comply with these rules: https://github.com/ginatrapani/todo.txt-touch/wiki/Todo.txt-File-Format
 
-        //TODO need to allow for multiple projects and context per task
         //TODO priority regex need to only recognice upper case single chars
         //TODO created/due date properties
         public Task(string raw)
         {
             Raw = raw.Replace(Environment.NewLine, ""); //make sure it's just on one line
 
-            var reg = new Regex(priorityPattern, RegexOptions.IgnoreCase);
+            // because we are removing matches as we go, the order we process is important. It must be:
+            // - completed
+            // - priority
+            // - due date
+            // - projects | contexts
+            // What we have left is the body
+
+            var reg = new Regex(completedPattern, RegexOptions.IgnoreCase);
+            Completed = reg.IsMatch(raw);
+            raw = reg.Replace(raw, "");
+
+
+            reg = new Regex(priorityPattern, RegexOptions.IgnoreCase);
             Priority = reg.Match(raw).Groups["priority"].Value.Trim();
-            if (Priority.Length > 0)
-                raw = raw.Replace(Priority, "");
+            raw = reg.Replace(raw, "");
+
+
+            reg = new Regex(datePattern);
+            DueDate = reg.Match(raw).Groups["date"].Value.Trim();
+            raw = reg.Replace(raw, "");
 
             Projects = new List<string>();
             reg = new Regex(projectPattern);
@@ -48,6 +64,7 @@ namespace ToDoLib
 
             raw = reg.Replace(raw, "");
 
+            
             Contexts = new List<string>();
             reg = new Regex(contextPattern);
             var contexts = reg.Matches(raw);
@@ -60,21 +77,17 @@ namespace ToDoLib
             }
 
             raw = reg.Replace(raw, "");
-            
 
-            reg = new Regex(completedPattern, RegexOptions.IgnoreCase);
-            Completed = reg.IsMatch(raw);
-            if (Completed)
-                raw = raw.Substring(1); //remove the first char
 
             Body = raw.Trim();
         }
 
-        public Task(string priority, List<string> projects, List<string> contexts, string body, bool completed = false)
+        public Task(string priority, List<string> projects, List<string> contexts, string body, string dueDate = "", bool completed = false)
         {
             Priority = priority;
             Projects = projects;
             Contexts = contexts;
+            DueDate = dueDate;
             Body = body;
             Completed = completed;
         }

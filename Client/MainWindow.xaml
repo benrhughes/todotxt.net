@@ -11,6 +11,7 @@
             <MenuItem Header="_Sort" Name="sortMenu">
                 <MenuItem Header="Completed" IsCheckable="True" Click="Sort_Completed" IsChecked="True" />
                 <MenuItem Header="Context" IsCheckable="True" Click="Sort_Context" />
+                <MenuItem Header="Due Date" IsCheckable="True" Click="Sort_DueDate" />
                 <MenuItem Header="Priority" IsCheckable="True" Click="Sort_Priority" />
                 <MenuItem Header="Project" IsCheckable="True" Click="Sort_Project" />
                 <MenuItem Header="Order in file" IsCheckable="True" Click="Sort_None" />
