@@ -335,6 +335,12 @@ Copyright 2011 Ben Hughes";
                 tb.Text = "";
                 FilterAndSort(_currentSort);
             }
+            else if (e.Key == Key.Escape)
+            {
+                _updating = null;
+                tb.Text = "";
+                this.lbTasks.Focus();
+            }
         }
 
         private void taskList_PreviewKeyUp(object sender, KeyEventArgs e)
