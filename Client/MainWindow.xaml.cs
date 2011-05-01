@@ -42,6 +42,8 @@ namespace Client
 
             this.Height = User.Default.WindowHeight;
             this.Width = User.Default.WindowWidth;
+            this.Left = User.Default.WindowLeft;
+            this.Top = User.Default.WindowTop;
 
             if (!string.IsNullOrEmpty(User.Default.FilePath))
                 LoadTasks(User.Default.FilePath);
@@ -272,6 +274,13 @@ Copyright 2011 Ben Hughes";
         {
             User.Default.WindowHeight = e.NewSize.Height;
             User.Default.WindowWidth = e.NewSize.Width;
+            User.Default.Save();
+        }
+
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            User.Default.WindowLeft = this.Left;
+            User.Default.WindowTop = this.Top;
             User.Default.Save();
         }
 

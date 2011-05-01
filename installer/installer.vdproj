@@ -21,18 +21,18 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_7C0C5A8CF62EC57B643E6A9BA84E3ABE"
-        "OwnerKey" = "8:_350923F6521A4E33839FBDC1B1DD4E48"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_AC0EBF5840E34BB6A36AF375AB7CA932"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
+        "MsmKey" = "8:_F384E1CB9E82650A34A13A452F81990E"
+        "OwnerKey" = "8:_350923F6521A4E33839FBDC1B1DD4E48"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_350923F6521A4E33839FBDC1B1DD4E48"
         "MsmSig" = "8:_UNDEFINED"
@@ -40,7 +40,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7C0C5A8CF62EC57B643E6A9BA84E3ABE"
+        "OwnerKey" = "8:_F384E1CB9E82650A34A13A452F81990E"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -68,6 +68,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
         "Release"
@@ -135,14 +148,34 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7C0C5A8CF62EC57B643E6A9BA84E3ABE"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AC0EBF5840E34BB6A36AF375AB7CA932"
+            {
+            "SourcePath" = "8:..\\Client\\images\\Task Report Hot.ico"
+            "TargetName" = "8:Task Report Hot.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_F5DACF27B3C449B6A16796A11BEB428E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F384E1CB9E82650A34A13A452F81990E"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:ToDoLib, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_7C0C5A8CF62EC57B643E6A9BA84E3ABE"
+                    "_F384E1CB9E82650A34A13A452F81990E"
                     {
                     "Name" = "8:ToDoLib.dll"
                     "Attributes" = "3:512"
@@ -164,26 +197,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AC0EBF5840E34BB6A36AF375AB7CA932"
-            {
-            "SourcePath" = "8:..\\Client\\images\\Task Report Hot.ico"
-            "TargetName" = "8:Task Report Hot.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_F5DACF27B3C449B6A16796A11BEB428E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -242,15 +255,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
-        "ProductCode" = "8:{1EBB71DF-BBC5-4F07-AA25-D7BE2585B778}"
-        "PackageCode" = "8:{44181C44-27EF-4140-A2E4-0BD75B208A75}"
+        "ProductCode" = "8:{C3675B43-153F-4983-B9F6-3A6E666A7B06}"
+        "PackageCode" = "8:{A0CC06B8-82EE-4B26-8474-E774DA464C73}"
         "UpgradeCode" = "8:{15841F7C-B984-443B-B478-9324BBC33BCC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.5"
+        "ProductVersion" = "8:0.5.1"
         "Manufacturer" = "8:Hughesoft"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
