@@ -28,13 +28,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7C0C5A8CF62EC57B643E6A9BA84E3ABE"
+        "OwnerKey" = "8:_350923F6521A4E33839FBDC1B1DD4E48"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_350923F6521A4E33839FBDC1B1DD4E48"
+        "OwnerKey" = "8:_7C0C5A8CF62EC57B643E6A9BA84E3ABE"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -86,6 +86,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
     }
@@ -123,6 +136,11 @@
             "AssemblyAsmDisplayName" = "8:ToDoLib, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_7C0C5A8CF62EC57B643E6A9BA84E3ABE"
+                    {
+                    "Name" = "8:ToDoLib.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:ToDoLib.dll"
             "TargetName" = "8:"
@@ -198,15 +216,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
-        "ProductCode" = "8:{17E0F406-08D9-43D4-BE7A-5D8D146F87EE}"
-        "PackageCode" = "8:{D5ADFFB0-9AA8-4A12-8396-BF180686DAA1}"
+        "ProductCode" = "8:{1EBB71DF-BBC5-4F07-AA25-D7BE2585B778}"
+        "PackageCode" = "8:{F10DB230-21AC-4F6A-AAD7-C28898083EFB}"
         "UpgradeCode" = "8:{15841F7C-B984-443B-B478-9324BBC33BCC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.4"
+        "ProductVersion" = "8:0.5"
         "Manufacturer" = "8:Hughesoft"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
