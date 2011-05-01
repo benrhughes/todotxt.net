@@ -27,6 +27,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_AC0EBF5840E34BB6A36AF375AB7CA932"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_350923F6521A4E33839FBDC1B1DD4E48"
         "MsmSig" = "8:_UNDEFINED"
@@ -133,7 +139,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_7C0C5A8CF62EC57B643E6A9BA84E3ABE"
@@ -158,6 +164,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AC0EBF5840E34BB6A36AF375AB7CA932"
+            {
+            "SourcePath" = "8:..\\Client\\images\\Task Report Hot.ico"
+            "TargetName" = "8:Task Report Hot.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_F5DACF27B3C449B6A16796A11BEB428E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -217,7 +243,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
         "ProductCode" = "8:{1EBB71DF-BBC5-4F07-AA25-D7BE2585B778}"
-        "PackageCode" = "8:{F10DB230-21AC-4F6A-AAD7-C28898083EFB}"
+        "PackageCode" = "8:{44181C44-27EF-4140-A2E4-0BD75B208A75}"
         "UpgradeCode" = "8:{15841F7C-B984-443B-B478-9324BBC33BCC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -234,7 +260,7 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:http://hughesoft.com"
-        "ARPPRODUCTICON" = "8:"
+        "ARPPRODUCTICON" = "8:_AC0EBF5840E34BB6A36AF375AB7CA932"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
@@ -348,7 +374,7 @@
             "Target" = "8:_350923F6521A4E33839FBDC1B1DD4E48"
             "Folder" = "8:_E38D9B14BDC74A3693F6CE5833D08D24"
             "WorkingFolder" = "8:_F5DACF27B3C449B6A16796A11BEB428E"
-            "Icon" = "8:"
+            "Icon" = "8:_AC0EBF5840E34BB6A36AF375AB7CA932"
             "Feature" = "8:"
             }
         }
