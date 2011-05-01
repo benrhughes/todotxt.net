@@ -76,8 +76,7 @@ namespace ToDoLib
             foreach (Match project in projects)
             {
                 var p = project.Groups["proj"].Value.Trim();
-                if (p.Length > 0)
-                    Projects.Add(p);
+                Projects.Add(p);
             }
 
             raw = reg.Replace(raw, "");
@@ -90,8 +89,7 @@ namespace ToDoLib
             foreach (Match context in contexts)
             {
                 var c = context.Groups["context"].Value.Trim();
-                if (c.Length > 0)
-                    Contexts.Add(c);
+                Contexts.Add(c);
             }
 
             raw = reg.Replace(raw, "");

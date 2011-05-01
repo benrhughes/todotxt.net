@@ -44,7 +44,7 @@ namespace Client
             this.Width = User.Default.WindowWidth;
 
             if (!string.IsNullOrEmpty(User.Default.FilePath))
-                TryOpen(User.Default.FilePath);
+                LoadTasks(User.Default.FilePath);
 
             FilterAndSort((SortType)User.Default.CurrentSort);
         }
@@ -59,12 +59,6 @@ namespace Client
                     break;
                 case Key.N:
                     taskText.Focus();
-                    break;
-                case Key.J:
-                    lbTasks.SelectedIndex = lbTasks.SelectedIndex < lbTasks.Items.Count ? lbTasks.SelectedIndex + 1 : lbTasks.SelectedIndex;
-                    break;
-                case Key.K:
-                    lbTasks.SelectedIndex = lbTasks.SelectedIndex > 0 ? lbTasks.SelectedIndex - 1 : 0;
                     break;
                 case Key.OemQuestion:
                     Help(null, null);
@@ -91,7 +85,6 @@ namespace Client
                         FilterAndSort(_currentSort);
                     }
                     break;
-                case Key.Enter:
                 case Key.U:
                     _updating = (Task)lbTasks.SelectedItem;
                     taskText.Text = _updating.ToString();
@@ -106,7 +99,7 @@ namespace Client
         {
             switch (sort)
             {
-                // nb, we sub-sort by completed for most sorts by prepending eithe a or z
+                // nb, we sub-sort by completed for most sorts by prepending either a or z
                 case SortType.Completed:
                     return tasks.OrderBy(t => t.Completed);
                 case SortType.Context:
@@ -187,11 +180,11 @@ namespace Client
 
             if (res.Value)
             {
-                TryOpen(dialog.FileName);
+                LoadTasks(dialog.FileName);
             }
         }
 
-        private void TryOpen(string filePath)
+        private void LoadTasks(string filePath)
         {
             try
             {
@@ -207,12 +200,6 @@ namespace Client
             }
         }
 
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            User.Default.WindowHeight = e.NewSize.Height;
-            User.Default.WindowWidth = e.NewSize.Width;
-            User.Default.Save();
-        }
 
         private void Help(object sender, RoutedEventArgs e)
         {
@@ -281,6 +268,13 @@ Copyright 2011 Ben Hughes";
         #endregion
 
         #region UI event handling
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            User.Default.WindowHeight = e.NewSize.Height;
+            User.Default.WindowWidth = e.NewSize.Width;
+            User.Default.Save();
+        }
+
         private void Sort_Priority(object sender, RoutedEventArgs e)
         {
             FilterAndSort(SortType.Priority);
@@ -343,17 +337,34 @@ Copyright 2011 Ben Hughes";
             }
         }
 
-        private void taskList_PreviewKeyUp(object sender, KeyEventArgs e)
+        private void lbTasks_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             KeyboardShortcut(e.Key);
         }
 
-        private void taskList_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        //this is just for j and k - the nav keys
+        private void lbTasks_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.J:
+                    lbTasks.SelectedIndex = lbTasks.SelectedIndex < lbTasks.Items.Count ? lbTasks.SelectedIndex + 1 : lbTasks.SelectedIndex;
+                    break;
+                case Key.K:
+                    lbTasks.SelectedIndex = lbTasks.SelectedIndex > 0 ? lbTasks.SelectedIndex - 1 : 0;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void lbTasks_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             KeyboardShortcut(Key.U);
         }
 
         #endregion
+
     }
 }
 

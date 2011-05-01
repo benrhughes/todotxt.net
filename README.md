@@ -19,7 +19,6 @@ Current features:
 	- X: toggle task completion
 	- D: delete task (with confirmation)
 	- U: update task
-	- Enter: update task
 	- F: filter tasks (free-text, one filter condition per line)
 	- .: reload tasks from file
 	- ?: show help
