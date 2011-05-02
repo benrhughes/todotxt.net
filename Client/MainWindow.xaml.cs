@@ -230,6 +230,8 @@ Copyright 2011 Ben Hughes";
         private void Filter(object sender, RoutedEventArgs e)
         {
             var f = new FilterDialog();
+            f.Left = this.Left + 10;
+            f.Top = this.Top + 10;
             f.FilterText = User.Default.FilterText;
             if (f.ShowDialog().Value)
             {
