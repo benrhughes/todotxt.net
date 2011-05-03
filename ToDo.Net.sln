@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "installer", "installer\installer.vdproj", "{6558954F-2EFA-4612-B8F7-52AAF7A2A901}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NewInstaller", "NewInstaller\NewInstaller.vdproj", "{5ACB819D-A073-4645-8035-339B28276310}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,12 +55,12 @@ Global
 		{FC3F905A-DEE1-454E-8746-936492D66CF2}.Release|Mixed Platforms.Build.0 = Release|x86
 		{FC3F905A-DEE1-454E-8746-936492D66CF2}.Release|x86.ActiveCfg = Release|x86
 		{FC3F905A-DEE1-454E-8746-936492D66CF2}.Release|x86.Build.0 = Release|x86
-		{6558954F-2EFA-4612-B8F7-52AAF7A2A901}.Debug|Any CPU.ActiveCfg = Debug
-		{6558954F-2EFA-4612-B8F7-52AAF7A2A901}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{6558954F-2EFA-4612-B8F7-52AAF7A2A901}.Debug|x86.ActiveCfg = Debug
-		{6558954F-2EFA-4612-B8F7-52AAF7A2A901}.Release|Any CPU.ActiveCfg = Release
-		{6558954F-2EFA-4612-B8F7-52AAF7A2A901}.Release|Mixed Platforms.ActiveCfg = Release
-		{6558954F-2EFA-4612-B8F7-52AAF7A2A901}.Release|x86.ActiveCfg = Release
+		{5ACB819D-A073-4645-8035-339B28276310}.Debug|Any CPU.ActiveCfg = Debug
+		{5ACB819D-A073-4645-8035-339B28276310}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{5ACB819D-A073-4645-8035-339B28276310}.Debug|x86.ActiveCfg = Debug
+		{5ACB819D-A073-4645-8035-339B28276310}.Release|Any CPU.ActiveCfg = Release
+		{5ACB819D-A073-4645-8035-339B28276310}.Release|Mixed Platforms.ActiveCfg = Release
+		{5ACB819D-A073-4645-8035-339B28276310}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
