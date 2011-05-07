@@ -322,7 +322,7 @@ Copyright 2011 Ben Hughes";
             SetSelected((MenuItem)sender);
         }
 
-        private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
+        private void taskText_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             var tb = (TextBox)sender;
             if (e.Key == Key.Enter)

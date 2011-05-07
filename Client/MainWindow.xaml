@@ -19,6 +19,6 @@
             <MenuItem Header="F_ilter" Click="Filter" />
             <MenuItem Header="_Help" Click="Help" />
         </Menu>
-        <TextBox Height="23" Margin="0,27,0,0" Name="taskText" VerticalAlignment="Top" AcceptsReturn="True" PreviewKeyUp="taskText_PreviewKeyUp" Cursor="IBeam" />
+        <TextBox Height="23" Margin="0,27,0,0" Name="taskText" VerticalAlignment="Top" AcceptsReturn="True" Cursor="IBeam" PreviewKeyDown="taskText_PreviewKeyDown" />
     </Grid>
 </Window>
