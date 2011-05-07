@@ -60,6 +60,7 @@ namespace Client
                     File_Open(null, null);
                     break;
                 case Key.N:
+                    taskText.Text = User.Default.FilterText; 
                     taskText.Focus();
                     break;
                 case Key.OemQuestion:
