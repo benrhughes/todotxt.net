@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using ToDoLib;
 using Client.Properties;
 using Microsoft.Win32;
+using System.IO;
 
 namespace Client
 {
@@ -45,6 +46,8 @@ namespace Client
             this.Left = User.Default.WindowLeft;
             this.Top = User.Default.WindowTop;
 
+            AutoArchiveMenuItem.IsChecked = User.Default.AutoArchive;
+
             if (!string.IsNullOrEmpty(User.Default.FilePath))
                 LoadTasks(User.Default.FilePath);
 
@@ -74,7 +77,7 @@ namespace Client
                     FilterAndSort(_currentSort);
                     break;
                 case Key.X:
-                    _taskList.ToggleComplete((Task)lbTasks.SelectedItem);
+                    ToggleComplete((Task)lbTasks.SelectedItem);
                     FilterAndSort(_currentSort);
                     break;
                 case Key.D:
@@ -95,6 +98,23 @@ namespace Client
                     break;
                 default:
                     break;
+            }
+        }
+
+        private void ToggleComplete(Task task)
+        {
+            var newTask = new Task(task.Raw);
+            newTask.Completed = !newTask.Completed;
+
+            if (User.Default.AutoArchive && newTask.Completed)
+            {
+                var archiveList = new TaskList(User.Default.ArchiveFilePath);
+                archiveList.Add(newTask);
+                _taskList.Delete(task);
+            }
+            else
+            {
+                _taskList.Update(task, newTask);
             }
         }
 
@@ -170,22 +190,7 @@ namespace Client
 
             item.IsChecked = true;
 
-        }
-
-
-        private void File_Open(object sender, RoutedEventArgs e)
-        {
-            var dialog = new OpenFileDialog();
-            dialog.DefaultExt = ".txt";
-            dialog.Filter = "Text documents (.txt)|*.txt";
-
-            var res = dialog.ShowDialog();
-
-            if (res.Value)
-            {
-                LoadTasks(dialog.FileName);
-            }
-        }
+        }        
 
         private void LoadTasks(string filePath)
         {
@@ -287,6 +292,59 @@ Copyright 2011 Ben Hughes";
             User.Default.Save();
         }
 
+        #region file menu
+        private void File_Open(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog();
+            dialog.DefaultExt = ".txt";
+            dialog.Filter = "Text documents (.txt)|*.txt";
+
+            var res = dialog.ShowDialog();
+
+            if (res.Value)
+                LoadTasks(dialog.FileName);
+        }
+
+        private void File_Select_Archive_File(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog();
+            dialog.DefaultExt = ".txt";
+            dialog.Filter = "Text documents (.txt)|*.txt";
+
+            var res = dialog.ShowDialog();
+
+            if (res.Value)
+            {
+                User.Default.ArchiveFilePath = dialog.FileName;
+                User.Default.Save();
+            }
+        }
+
+        private void File_Archive_Completed(object sender, RoutedEventArgs e)
+        {
+            if (!File.Exists(User.Default.ArchiveFilePath))
+                File_Select_Archive_File(this, null);
+            
+            var archiveList = new TaskList(User.Default.ArchiveFilePath);
+            var completed = _taskList.Tasks.Where(t => t.Completed);
+            foreach (var task in completed)
+            {
+                archiveList.Add(task);
+                _taskList.Delete(task);
+            }
+
+            FilterAndSort(_currentSort);
+        }
+
+        private void File_AutoArchive(object sender, RoutedEventArgs e)
+        {
+            User.Default.AutoArchive = ((MenuItem)sender).IsChecked;
+            User.Default.Save();
+        }
+
+        #endregion
+
+        #region sort menu
         private void Sort_Priority(object sender, RoutedEventArgs e)
         {
             FilterAndSort(SortType.Priority);
@@ -322,6 +380,7 @@ Copyright 2011 Ben Hughes";
             FilterAndSort(SortType.Project);
             SetSelected((MenuItem)sender);
         }
+        #endregion
 
         private void taskText_PreviewKeyDown(object sender, KeyEventArgs e)
         {

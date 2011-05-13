@@ -106,5 +106,29 @@ namespace Client {
                 this["WindowTop"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ArchiveFilePath {
+            get {
+                return ((string)(this["ArchiveFilePath"]));
+            }
+            set {
+                this["ArchiveFilePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoArchive {
+            get {
+                return ((bool)(this["AutoArchive"]));
+            }
+            set {
+                this["AutoArchive"] = value;
+            }
+        }
     }
 }

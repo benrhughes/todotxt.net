@@ -1,12 +1,16 @@
 ﻿<Window x:Class="Client.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="todotxt.net" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="384" Width="562" SizeChanged="Window_SizeChanged" LocationChanged="Window_LocationChanged">
+        Title="todotxt.net" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="384" Width="562" SizeChanged="Window_SizeChanged" LocationChanged="Window_LocationChanged" DataContext="{Binding}">
     <Grid Name="grid1" Margin="0,0,0,0">
         <ListBox Name="lbTasks" Margin="0,56,0,0" BorderBrush="White" SelectedIndex="0" IsTextSearchEnabled="False" PreviewMouseDoubleClick="lbTasks_PreviewMouseDoubleClick" PreviewKeyUp="lbTasks_PreviewKeyUp" PreviewKeyDown="lbTasks_PreviewKeyDown" />
         <Menu Height="23" Name="menu1" VerticalAlignment="Top" IsMainMenu="True" Margin="2,2,-2,0">
             <MenuItem Header="_File">
                 <MenuItem Header="_Open" Click="File_Open" />
+                <Separator />
+                <MenuItem Header="Select Archive File" Click="File_Select_Archive_File" />
+                <MenuItem Header="Archive Completed Tasks" Click="File_Archive_Completed" />
+                <MenuItem Header="Auto-archive Completed Tasks" IsCheckable="True" Name="AutoArchiveMenuItem" Click="File_AutoArchive" />
             </MenuItem>
             <MenuItem Header="_Sort" Name="sortMenu">
                 <MenuItem Header="Completed" IsCheckable="True" Click="Sort_Completed" />

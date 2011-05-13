@@ -6,8 +6,19 @@ using System.IO;
 
 namespace ToDoLib
 {
+    /// <summary>
+    /// A thin data access abstraction over the actual todo.txt file
+    /// </summary>
     public class TaskList
     {
+        // It may look like an overly simple approach has been taken here, but it's well considered. This class
+        // represents *the file itself* - when you call a method it should be as though you directly edited the file.
+        // This reduces the liklihood of concurrent update conflicts my making each action as autonomous as possible.
+        // Although this does lead to some extra IO, it's a small price for maintaining the integrity of the file.
+
+        // NB, this is not the place for higher-level functions like searching, task manipulation etc. It's simply 
+        // for CRUDing the todo.txt file. 
+        
         List<Task> _tasks;
         string _filePath;
 
@@ -25,9 +36,7 @@ namespace ToDoLib
             {
                 _tasks = new List<Task>();
                 foreach (var line in File.ReadAllLines(_filePath))
-                {
                     _tasks.Add(new Task(line));
-                }
             }
             catch (IOException ex)
             {
@@ -72,14 +81,7 @@ namespace ToDoLib
             }
         }
 
-        public void ToggleComplete(Task task)
-        {
-            var newTask = new Task(task.Raw);
-            newTask.Completed = !newTask.Completed;
-            Update(task, newTask);
-        }
-
-
+      
         public void Update(Task currentTask, Task newTask)
         {
             try

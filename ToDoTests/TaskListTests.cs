@@ -123,38 +123,38 @@ namespace ToDoTests
             CollectionAssert.AreEquivalent(fileContents, newFileContents);
         }
 
-        [Test]
-        public void ToggleComplete_On_InCollection()
-        {
-            var task = new Task("(B ToggleComplete_On_InCollection +test @task");
-            var tl = new TaskList(Data.TestDataPath);
-            tl.Add(task);
+        //[Test]
+        //public void ToggleComplete_On_InCollection()
+        //{
+        //    var task = new Task("(B ToggleComplete_On_InCollection +test @task");
+        //    var tl = new TaskList(Data.TestDataPath);
+        //    tl.Add(task);
 
-            task = tl.Tasks.Last();
+        //    task = tl.Tasks.Last();
 
-            tl.ToggleComplete(task);
+        //    tl.ToggleComplete(task);
 
-            task = tl.Tasks.Last();
+        //    task = tl.Tasks.Last();
 
-            Assert.IsTrue(task.Completed);
-        }
+        //    Assert.IsTrue(task.Completed);
+        //}
 
 
-        [Test]
-        public void ToggleComplete_Off_InCollection()
-        {
-            var task = new Task("X (B) ToggleComplete_Off_InCollection +test @task");
-            var tl = new TaskList(Data.TestDataPath);
-            tl.Add(task);
+        //[Test]
+        //public void ToggleComplete_Off_InCollection()
+        //{
+        //    var task = new Task("X (B) ToggleComplete_Off_InCollection +test @task");
+        //    var tl = new TaskList(Data.TestDataPath);
+        //    tl.Add(task);
 
-            task = tl.Tasks.Last();
+        //    task = tl.Tasks.Last();
 
-            tl.ToggleComplete(task);
+        //    tl.ToggleComplete(task);
 
-            task = tl.Tasks.Last();
+        //    task = tl.Tasks.Last();
 
-            Assert.IsFalse(task.Completed);
-        }
+        //    Assert.IsFalse(task.Completed);
+        //}
 
         [Test]
         public void Update_InCollection()
