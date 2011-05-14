@@ -12,7 +12,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ToDoLib;
-using Client.Properties;
 using Microsoft.Win32;
 using System.IO;
 

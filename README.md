@@ -18,7 +18,8 @@ There is installer for the latest version available from the [github download pa
 
  - Sorting by completed status, priority, project, context, due date or the order in the file
  - Sorting respects multiple projects and contexts
- - Remembers preferences for the todo.txt file, window size and sort order
+ - Remembers preferences for the todo.txt file, sort order, window size and postiion
+ - Manual or automatic moving of completed tasks into an archive (done.txt) file
  - Keyboard shortcuts
 	- O: open todo.txt file
 	- N: new task

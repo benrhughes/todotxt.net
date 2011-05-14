@@ -3,6 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style  TargetType="{x:Type ListBoxItem}">
+            <Style.Triggers>                                
+                <Trigger Property="ItemsControl.AlternationIndex"
+                 Value="0">
+                    <Setter Property="Background"
+                    Value="White"></Setter>
+                </Trigger>
+                <Trigger Property="ItemsControl.AlternationIndex"
+                 Value="1">
+                    <Setter Property="Background"
+                    Value="#f8f8f8"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
     </Application.Resources>
 </Application>
