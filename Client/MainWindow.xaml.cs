@@ -37,8 +37,6 @@ namespace Client
         SortType _currentSort;
         Task _updating;
 
-        bool _inIntellisense = false;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -420,7 +418,8 @@ Copyright 2011 Ben Hughes";
 
         private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-            if (_inIntellisense)
+            bool exit = false;
+            if (Intellisense.IsOpen && !IntellisenseList.IsFocused)
             {
                 switch (e.Key)
                 {
@@ -432,20 +431,27 @@ Copyright 2011 Ben Hughes";
                     case Key.Escape:
                     case Key.Space:
                         Intellisense.IsOpen = false;
-                        _inIntellisense = false;
                         break;
                     default:
                         // find the word being typed
                         var at = taskText.Text.LastIndexOf("@", taskText.CaretIndex);
                         var plus = taskText.Text.LastIndexOf("+", taskText.CaretIndex);
                         var index = at > plus ? at : plus;
-                        var word = taskText.Text.Substring(index+1, taskText.CaretIndex-index-1);
+                        var word = taskText.Text.Substring(index+1, taskText.CaretIndex - index - 1);
                         IntellisenseList.Items.Filter = (o) => o.ToString().Contains(word);
                         break;
                 }
-
-                return;
+                exit = true;
             }
+
+            if (Intellisense.IsOpen && IntellisenseList.IsFocused)
+            {
+                if (e.Key == Key.Enter)
+                    return;
+            }
+
+            if (exit && e.Key != Key.Enter)
+                return;
 
             switch (e.Key)
             {
@@ -513,7 +519,6 @@ Copyright 2011 Ben Hughes";
             if (s.Count() == 0)
                 return;
 
-            _inIntellisense = true;
             Intellisense.PlacementTarget = taskText;
             Intellisense.PlacementRectangle = placement;
 
