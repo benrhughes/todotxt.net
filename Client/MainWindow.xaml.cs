@@ -418,10 +418,18 @@ Copyright 2011 Ben Hughes";
             switch (e.Key)
             {
                 case Key.J:
-                    lbTasks.SelectedIndex = lbTasks.SelectedIndex < lbTasks.Items.Count ? lbTasks.SelectedIndex + 1 : lbTasks.SelectedIndex;
+                    if (lbTasks.SelectedIndex < lbTasks.Items.Count - 1)
+                    {
+                        lbTasks.ScrollIntoView(lbTasks.Items[lbTasks.SelectedIndex + 1]);
+                        lbTasks.SelectedIndex = lbTasks.SelectedIndex + 1;
+                    }
                     break;
                 case Key.K:
-                    lbTasks.SelectedIndex = lbTasks.SelectedIndex > 0 ? lbTasks.SelectedIndex - 1 : 0;
+                    if (lbTasks.SelectedIndex > 0)
+                    {
+                        lbTasks.ScrollIntoView(lbTasks.Items[lbTasks.SelectedIndex - 1]);
+                        lbTasks.SelectedIndex = lbTasks.SelectedIndex - 1;
+                    }
                     break;
                 default:
                     break;
