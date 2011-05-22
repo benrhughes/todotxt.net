@@ -28,7 +28,17 @@
                 </LinearGradientBrush>
             </Menu.Background>
         </Menu>
-        <TextBox Height="23" Margin="0,23,0,0" Name="taskText" AcceptsReturn="True" Cursor="IBeam" PreviewKeyDown="taskText_PreviewKeyDown" VerticalAlignment="Top" />
+        <TextBox Height="23" Margin="0,23,0,0" Name="taskText" AcceptsReturn="True" Cursor="IBeam" KeyUp="taskText_PreviewKeyUp" VerticalAlignment="Top"/>
+        <Popup Name="Intellisense" Width="150" Height="auto" StaysOpen="False" Placement="Bottom" IsOpen="False">
+            <Grid>
+                <ListBox Name="IntellisenseList"
+                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                    ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                    KeyDown="Intellisense_KeyDown"
+                    />
+            </Grid>
+            
+        </Popup>
         <ListBox Name="lbTasks" Margin="0,46,0,0" SelectedIndex="0" IsTextSearchEnabled="False" PreviewMouseDoubleClick="lbTasks_PreviewMouseDoubleClick" PreviewKeyUp="lbTasks_PreviewKeyUp" PreviewKeyDown="lbTasks_PreviewKeyDown" AlternationCount="2" BorderBrush="{x:Null}"  >
         </ListBox>
     </Grid>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -36,6 +37,8 @@ namespace Client
         SortType _currentSort;
         Task _updating;
 
+        bool _inIntellisense = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -62,7 +65,7 @@ namespace Client
                     File_Open(null, null);
                     break;
                 case Key.N:
-                    taskText.Text = User.Default.FilterText; 
+                    taskText.Text = User.Default.FilterText;
                     taskText.Focus();
                     break;
                 case Key.OemQuestion:
@@ -189,7 +192,7 @@ namespace Client
 
             item.IsChecked = true;
 
-        }        
+        }
 
         private void LoadTasks(string filePath)
         {
@@ -323,7 +326,7 @@ Copyright 2011 Ben Hughes";
         {
             if (!File.Exists(User.Default.ArchiveFilePath))
                 File_Select_Archive_File(this, null);
-            
+
             var archiveList = new TaskList(User.Default.ArchiveFilePath);
             var completed = _taskList.Tasks.Where(t => t.Completed);
             foreach (var task in completed)
@@ -381,32 +384,6 @@ Copyright 2011 Ben Hughes";
         }
         #endregion
 
-        private void taskText_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            var tb = (TextBox)sender;
-            if (e.Key == Key.Enter)
-            {
-                if (_updating == null)
-                {
-                    _taskList.Add(new Task(tb.Text.Trim()));
-                }
-                else
-                {
-                    _taskList.Update(_updating, new Task(tb.Text.Trim()));
-                    _updating = null;
-                }
-
-                tb.Text = "";
-                FilterAndSort(_currentSort);
-            }
-            else if (e.Key == Key.Escape)
-            {
-                _updating = null;
-                tb.Text = "";
-                this.lbTasks.Focus();
-            }
-        }
-
         private void lbTasks_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             KeyboardShortcut(e.Key);
@@ -441,7 +418,81 @@ Copyright 2011 Ben Hughes";
             KeyboardShortcut(Key.U);
         }
 
+        private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            var tb = (TextBox)sender;
+
+            if (_inIntellisense)
+            {
+                _inIntellisense = false;
+                return;
+            }
+
+            switch (e.Key)
+            {
+                case Key.Enter:
+                    if (_updating == null)
+                    {
+                        _taskList.Add(new Task(tb.Text.Trim()));
+                    }
+                    else
+                    {
+                        _taskList.Update(_updating, new Task(tb.Text.Trim()));
+                        _updating = null;
+                    }
+
+                    tb.Text = "";
+                    FilterAndSort(_currentSort);
+                    break;
+                case Key.Escape:
+                    _updating = null;
+                    tb.Text = "";
+                    this.lbTasks.Focus();
+                    break;
+                case Key.OemPlus:
+                    List<string> projects = new List<string>();
+                    foreach (var task in _taskList.Tasks)
+                        projects = projects.Concat(task.Projects).ToList();
+
+                    var pos = taskText.CaretIndex;
+
+                    ShowIntellisense(projects.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(pos));
+
+
+                    break;
+            }
+        }
+
+        private void Intellisense_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Enter:
+                    Intellisense.IsOpen = false;
+                    var i = taskText.CaretIndex -1;
+                    taskText.Text = taskText.Text.Remove(i, 1);
+                    taskText.Text = taskText.Text.Insert(i, IntellisenseList.SelectedItem.ToString());
+                    taskText.CaretIndex = taskText.Text.Length;
+                    taskText.Focus();
+                    //_inIntellisense = false;
+                    break;
+            }
+        }
+
+        private void ShowIntellisense(IEnumerable<string> s, Rect placement)
+        {
+            _inIntellisense = true;
+            Intellisense.PlacementTarget = taskText;
+            Intellisense.PlacementRectangle = placement;
+
+            IntellisenseList.ItemsSource = s;
+            Intellisense.IsOpen = true;
+            IntellisenseList.Focus();
+        }
+
         #endregion
+
+       
 
     }
 }
