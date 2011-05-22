@@ -35,9 +35,10 @@
                     ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
                     KeyDown="Intellisense_KeyDown"
+                    IsTextSearchEnabled="True"
                     />
             </Grid>
-            
+
         </Popup>
         <ListBox Name="lbTasks" Margin="0,46,0,0" SelectedIndex="0" IsTextSearchEnabled="False" PreviewMouseDoubleClick="lbTasks_PreviewMouseDoubleClick" PreviewKeyUp="lbTasks_PreviewKeyUp" PreviewKeyDown="lbTasks_PreviewKeyDown" AlternationCount="2" BorderBrush="{x:Null}"  >
         </ListBox>

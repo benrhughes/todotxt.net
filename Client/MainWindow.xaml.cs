@@ -420,11 +420,30 @@ Copyright 2011 Ben Hughes";
 
         private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-            var tb = (TextBox)sender;
-
             if (_inIntellisense)
             {
-                _inIntellisense = false;
+                switch (e.Key)
+                {
+                    case Key.Down:
+                        IntellisenseList.Focus();
+                        IntellisenseList.SelectedIndex = 0;
+                        break;
+                    case Key.Enter:
+                    case Key.Escape:
+                    case Key.Space:
+                        Intellisense.IsOpen = false;
+                        _inIntellisense = false;
+                        break;
+                    default:
+                        // find the word being typed
+                        var at = taskText.Text.LastIndexOf("@", taskText.CaretIndex);
+                        var plus = taskText.Text.LastIndexOf("+", taskText.CaretIndex);
+                        var index = at > plus ? at : plus;
+                        var word = taskText.Text.Substring(index+1, taskText.CaretIndex-index-1);
+                        IntellisenseList.Items.Filter = (o) => o.ToString().Contains(word);
+                        break;
+                }
+
                 return;
             }
 
@@ -433,20 +452,20 @@ Copyright 2011 Ben Hughes";
                 case Key.Enter:
                     if (_updating == null)
                     {
-                        _taskList.Add(new Task(tb.Text.Trim()));
+                        _taskList.Add(new Task(taskText.Text.Trim()));
                     }
                     else
                     {
-                        _taskList.Update(_updating, new Task(tb.Text.Trim()));
+                        _taskList.Update(_updating, new Task(taskText.Text.Trim()));
                         _updating = null;
                     }
 
-                    tb.Text = "";
+                    taskText.Text = "";
                     FilterAndSort(_currentSort);
                     break;
                 case Key.Escape:
                     _updating = null;
-                    tb.Text = "";
+                    taskText.Text = "";
                     this.lbTasks.Focus();
                     break;
                 case Key.OemPlus:
@@ -474,30 +493,38 @@ Copyright 2011 Ben Hughes";
             {
                 case Key.Enter:
                     Intellisense.IsOpen = false;
-                    var i = taskText.CaretIndex -1;
+                    var i = taskText.CaretIndex - 1;
                     taskText.Text = taskText.Text.Remove(i, 1);
-                    taskText.Text = taskText.Text.Insert(i, IntellisenseList.SelectedItem.ToString());
+                    var newText = IntellisenseList.SelectedItem.ToString();
+                    taskText.Text = taskText.Text.Insert(i, newText);
+                    taskText.CaretIndex = i + newText.Length;
+                    taskText.Focus();
+                    break;
+                case Key.Escape:
+                    Intellisense.IsOpen = false;
                     taskText.CaretIndex = taskText.Text.Length;
                     taskText.Focus();
-                    //_inIntellisense = false;
                     break;
             }
         }
 
         private void ShowIntellisense(IEnumerable<string> s, Rect placement)
         {
+            if (s.Count() == 0)
+                return;
+
             _inIntellisense = true;
             Intellisense.PlacementTarget = taskText;
             Intellisense.PlacementRectangle = placement;
 
             IntellisenseList.ItemsSource = s;
             Intellisense.IsOpen = true;
-            IntellisenseList.Focus();
+            taskText.Focus();
         }
 
         #endregion
 
-       
+
 
     }
 }
