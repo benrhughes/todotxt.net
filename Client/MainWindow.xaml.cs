@@ -455,10 +455,15 @@ Copyright 2011 Ben Hughes";
                         projects = projects.Concat(task.Projects).ToList();
 
                     var pos = taskText.CaretIndex;
-
                     ShowIntellisense(projects.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(pos));
+                    break;
+                case Key.D2:
+                    List<string> contexts = new List<string>();
+                    foreach (var task in _taskList.Tasks)
+                        contexts = contexts.Concat(task.Contexts).ToList();
 
-
+                    pos = taskText.CaretIndex;
+                    ShowIntellisense(contexts.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(pos));
                     break;
             }
         }
