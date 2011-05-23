@@ -278,6 +278,8 @@ Copyright 2011 Ben Hughes";
         #endregion
 
         #region UI event handling
+
+        #region windows
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             User.Default.WindowHeight = e.NewSize.Height;
@@ -291,6 +293,8 @@ Copyright 2011 Ben Hughes";
             User.Default.WindowTop = this.Top;
             User.Default.Save();
         }
+
+        #endregion
 
         #region file menu
         private void File_Open(object sender, RoutedEventArgs e)
@@ -382,6 +386,7 @@ Copyright 2011 Ben Hughes";
         }
         #endregion
 
+        #region lbTasks
         private void lbTasks_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             KeyboardShortcut(e.Key);
@@ -416,94 +421,124 @@ Copyright 2011 Ben Hughes";
             KeyboardShortcut(Key.U);
         }
 
+        #endregion
+
+        #region taskText
+
         private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-            bool exit = false;
+            if (e.Key == Key.Enter)
+            {
+                if (_updating == null)
+                {
+                    _taskList.Add(new Task(taskText.Text.Trim()));
+                }
+                else
+                {
+                    _taskList.Update(_updating, new Task(taskText.Text.Trim()));
+                    _updating = null;
+                }
+
+                taskText.Text = "";
+                FilterAndSort(_currentSort);
+
+                Intellisense.IsOpen = false;
+                return;
+            }
+
             if (Intellisense.IsOpen && !IntellisenseList.IsFocused)
             {
                 switch (e.Key)
                 {
                     case Key.Down:
                         IntellisenseList.Focus();
+                        Keyboard.Focus(IntellisenseList);
                         IntellisenseList.SelectedIndex = 0;
                         break;
-                    case Key.Enter:
                     case Key.Escape:
                     case Key.Space:
                         Intellisense.IsOpen = false;
                         break;
                     default:
-                        // find the word being typed
-                        var at = taskText.Text.LastIndexOf("@", taskText.CaretIndex);
-                        var plus = taskText.Text.LastIndexOf("+", taskText.CaretIndex);
-                        var index = at > plus ? at : plus;
-                        var word = taskText.Text.Substring(index+1, taskText.CaretIndex - index - 1);
+                        var word = FindIntelliWord();
                         IntellisenseList.Items.Filter = (o) => o.ToString().Contains(word);
+
                         break;
                 }
-                exit = true;
             }
-
-            if (Intellisense.IsOpen && IntellisenseList.IsFocused)
+            else
             {
-                if (e.Key == Key.Enter)
-                    return;
-            }
+                switch (e.Key)
+                {
+                    case Key.Enter:
+                        if (_updating == null)
+                        {
+                            _taskList.Add(new Task(taskText.Text.Trim()));
+                        }
+                        else
+                        {
+                            _taskList.Update(_updating, new Task(taskText.Text.Trim()));
+                            _updating = null;
+                        }
 
-            if (exit && e.Key != Key.Enter)
-                return;
-
-            switch (e.Key)
-            {
-                case Key.Enter:
-                    if (_updating == null)
-                    {
-                        _taskList.Add(new Task(taskText.Text.Trim()));
-                    }
-                    else
-                    {
-                        _taskList.Update(_updating, new Task(taskText.Text.Trim()));
+                        taskText.Text = "";
+                        FilterAndSort(_currentSort);
+                        break;
+                    case Key.Escape:
                         _updating = null;
-                    }
+                        taskText.Text = "";
+                        this.lbTasks.Focus();
+                        break;
+                    case Key.OemPlus:
+                        List<string> projects = new List<string>();
+                        foreach (var task in _taskList.Tasks)
+                            projects = projects.Concat(task.Projects).ToList();
 
-                    taskText.Text = "";
-                    FilterAndSort(_currentSort);
-                    break;
-                case Key.Escape:
-                    _updating = null;
-                    taskText.Text = "";
-                    this.lbTasks.Focus();
-                    break;
-                case Key.OemPlus:
-                    List<string> projects = new List<string>();
-                    foreach (var task in _taskList.Tasks)
-                        projects = projects.Concat(task.Projects).ToList();
+                        var pos = taskText.CaretIndex;
+                        ShowIntellisense(projects.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(pos));
+                        break;
+                    case Key.D2:
+                        List<string> contexts = new List<string>();
+                        foreach (var task in _taskList.Tasks)
+                            contexts = contexts.Concat(task.Contexts).ToList();
 
-                    var pos = taskText.CaretIndex;
-                    ShowIntellisense(projects.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(pos));
-                    break;
-                case Key.D2:
-                    List<string> contexts = new List<string>();
-                    foreach (var task in _taskList.Tasks)
-                        contexts = contexts.Concat(task.Contexts).ToList();
-
-                    pos = taskText.CaretIndex;
-                    ShowIntellisense(contexts.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(pos));
-                    break;
+                        pos = taskText.CaretIndex;
+                        ShowIntellisense(contexts.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(pos));
+                        break;
+                }
             }
         }
 
+        private int FindIntelliSymbol()
+        {
+            var at = taskText.Text.LastIndexOf("@", taskText.CaretIndex);
+            var plus = taskText.Text.LastIndexOf("+", taskText.CaretIndex);
+            return at > plus ? at : plus;
+        }
+
+        private string FindIntelliWord()
+        {
+            var index = FindIntelliSymbol();
+            return taskText.Text.Substring(index + 1, taskText.CaretIndex - index - 1);
+        }
+        #endregion
+
+        #region intellisense
         private void Intellisense_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
             {
                 case Key.Enter:
                     Intellisense.IsOpen = false;
-                    var i = taskText.CaretIndex - 1;
-                    taskText.Text = taskText.Text.Remove(i, 1);
+
+
+                    var i = FindIntelliSymbol();
+                    taskText.Text = taskText.Text.Remove(i, taskText.CaretIndex-i);
+
                     var newText = IntellisenseList.SelectedItem.ToString();
                     taskText.Text = taskText.Text.Insert(i, newText);
                     taskText.CaretIndex = i + newText.Length;
+
                     taskText.Focus();
                     break;
                 case Key.Escape:
@@ -512,12 +547,16 @@ Copyright 2011 Ben Hughes";
                     taskText.Focus();
                     break;
             }
+
+            e.Handled = true;
         }
 
         private void ShowIntellisense(IEnumerable<string> s, Rect placement)
         {
             if (s.Count() == 0)
                 return;
+
+            //_allowCreateTask = false;
 
             Intellisense.PlacementTarget = taskText;
             Intellisense.PlacementRectangle = placement;
@@ -526,10 +565,9 @@ Copyright 2011 Ben Hughes";
             Intellisense.IsOpen = true;
             taskText.Focus();
         }
-
         #endregion
 
-
+        #endregion
 
     }
 }

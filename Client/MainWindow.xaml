@@ -34,7 +34,7 @@
                 <ListBox Name="IntellisenseList"
                     ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                    KeyDown="Intellisense_KeyDown"
+                    PreviewKeyUp="Intellisense_KeyDown"
                     IsTextSearchEnabled="True"
                     />
             </Grid>
