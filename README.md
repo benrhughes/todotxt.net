@@ -1,6 +1,6 @@
 ### todotxt.net
 
-This is an implemention of [todo.txt](http://todotxt.com/) on the .NET framework. It is currently at v0.7 and is fairly 
+This is an implemention of [todo.txt](http://todotxt.com/) on the .NET framework. It is currently at v0.8 and is fairly 
 usable. As far as I am aware, it is fully complient with [Gina's spec](https://github.com/ginatrapani/todo.txt-touch/wiki/Todo.txt-File-Format). 
 
 There is installer for the latest version available from the [github download page](https://github.com/benrhughes/todotxt.net/downloads).
@@ -20,6 +20,7 @@ There is installer for the latest version available from the [github download pa
  - Sorting respects multiple projects and contexts
  - Remembers preferences for the todo.txt file, sort order, window size and postiion
  - Manual or automatic moving of completed tasks into an archive (done.txt) file
+ - Intellisense for projects and contexts
  - Keyboard shortcuts
 	- O: open todo.txt file
 	- N: new task

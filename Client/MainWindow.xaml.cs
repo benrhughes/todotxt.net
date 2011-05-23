@@ -521,6 +521,7 @@ Copyright 2011 Ben Hughes";
             var index = FindIntelliSymbol();
             return taskText.Text.Substring(index + 1, taskText.CaretIndex - index - 1);
         }
+
         #endregion
 
         #region intellisense
@@ -530,7 +531,6 @@ Copyright 2011 Ben Hughes";
             {
                 case Key.Enter:
                     Intellisense.IsOpen = false;
-
 
                     var i = FindIntelliSymbol();
                     taskText.Text = taskText.Text.Remove(i, taskText.CaretIndex-i);
@@ -555,8 +555,6 @@ Copyright 2011 Ben Hughes";
         {
             if (s.Count() == 0)
                 return;
-
-            //_allowCreateTask = false;
 
             Intellisense.PlacementTarget = taskText;
             Intellisense.PlacementRectangle = placement;
