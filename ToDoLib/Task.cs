@@ -34,9 +34,14 @@ namespace ToDoLib
             {
                 _completed = value;
                 if (_completed)
-                    this.CompletedDate = DateTime.Now.ToString("yyyy-dd-MM");
+                {
+                    this.CompletedDate = DateTime.Now.ToString("yyyy-MM-dd");
+                    this.Priority = ""; 
+                }
                 else
+                {
                     this.CompletedDate = "";
+                }
             }
         }
 
@@ -115,12 +120,19 @@ namespace ToDoLib
             {
                 var reg = new Regex(completedPattern, RegexOptions.IgnoreCase);
                 var rawCompleted = reg.IsMatch(Raw);
-                if (Completed && !rawCompleted)
-                    str = "x " + CompletedDate + " " + Raw;
+                if (Completed && !rawCompleted) // we've just completed the task
+                {
+                    str = Regex.Replace(Raw, priorityPattern, "");
+                    str = "x " + CompletedDate + " " + str;
+                }
                 else if (!Completed && rawCompleted)
+                {
                     str = reg.Replace(Raw, "").Trim();
+                }
                 else
+                {
                     str = Raw;
+                }
             }
             else
             {

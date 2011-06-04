@@ -1,5 +1,3 @@
 A task
 (B) Add_ToCollection +test @task
-(B) ToggleComplete_Off_InCollection +test @task
-x 2011-01-05 (B ToggleComplete_On_InCollection +test @task
-x 2011-01-05 (B) Update_InCollection +test @task
+x 2011-06-04 (B) Update_InCollection +test @task

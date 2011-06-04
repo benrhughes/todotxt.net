@@ -132,6 +132,15 @@ namespace ToDoTests
         }
         #endregion
 
+        [Test]
+        public void Completed_adds_x_to_begining()
+        {
+            var t = new Task("A new task");
+            t.Completed = true;
+
+
+        }
+
         void AssertEquivalence(Task t1, Task t2)
         {
             Assert.AreEqual(t1.Priority, t2.Priority);

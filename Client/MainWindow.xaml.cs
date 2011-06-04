@@ -36,7 +36,8 @@ namespace Client
         TaskList _taskList;
         SortType _currentSort;
         Task _updating;
-
+        Key _intelliKey;
+ 
         public MainWindow()
         {
             InitializeComponent();
