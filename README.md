@@ -23,6 +23,7 @@ There is installer for the latest version available from the [github download pa
  - Intellisense for projects and contexts
  - Keyboard shortcuts
 	- O: open todo.txt file
+	- C: new todo.txt file
 	- N: new task
 	- J: next task
 	- K: prev task
