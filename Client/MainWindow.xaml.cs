@@ -60,6 +60,9 @@ namespace Client
         {
             switch (key)
             {
+                case Key.C:
+                    File_New(null, null);
+                    break;
                 case Key.O:
                     File_Open(null, null);
                     break;
