@@ -5,6 +5,7 @@
     <Grid Name="stackPanel1" Margin="0,0,0,0" >
         <Menu Height="23" Name="menu1" VerticalAlignment="Top" IsMainMenu="True">
             <MenuItem Header="_File">
+                <MenuItem Header="_New" Click="File_New" />
                 <MenuItem Header="_Open" Click="File_Open" />
                 <Separator />
                 <MenuItem Header="Select Archive File" Click="File_Select_Archive_File" />
