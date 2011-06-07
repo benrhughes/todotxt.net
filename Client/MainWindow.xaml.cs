@@ -311,6 +311,9 @@ Copyright 2011 Ben Hughes";
             var res = dialog.ShowDialog();
             if (res.Value)
                 SaveFileDialog(dialog.FileName);
+
+            if (File.Exists(dialog.FileName))
+                LoadTasks(dialog.FileName);
                 
         }
 
@@ -320,6 +323,8 @@ Copyright 2011 Ben Hughes";
             {
                 todofile.Write("");
             }
+            
+            
         }
 
 
