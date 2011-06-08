@@ -43,6 +43,7 @@
     <Compile Include="..\Client\Properties\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="OrderedList.cs" />
     <Compile Include="TaskException.cs" />
     <Compile Include="TaskList.cs" />
     <Compile Include="Task.cs" />

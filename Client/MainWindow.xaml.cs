@@ -36,7 +36,6 @@ namespace Client
         TaskList _taskList;
         SortType _currentSort;
         Task _updating;
-        Key _intelliKey;
         int _intelliPos;
  
         public MainWindow()
@@ -221,6 +220,7 @@ namespace Client
 
 Keyboard shortcuts:
 	- O: open todo.txt file
+	- C: new todo.txt file
 	- N: new task
 	- J: next task
 	- K: prev task
