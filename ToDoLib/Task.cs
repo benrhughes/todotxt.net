@@ -36,7 +36,7 @@ namespace ToDoLib
                 if (_completed)
                 {
                     this.CompletedDate = DateTime.Now.ToString("yyyy-MM-dd");
-                    this.Priority = ""; 
+                    this.Priority = "";
                 }
                 else
                 {
@@ -116,23 +116,27 @@ namespace ToDoLib
         public override string ToString()
         {
             string str = "";
-            if (!string.IsNullOrEmpty(Raw))
+            if (!string.IsNullOrEmpty(Raw)) // always use Raw if possible as it will preserve placement of projects and contexts
             {
                 var reg = new Regex(completedPattern, RegexOptions.IgnoreCase);
                 var rawCompleted = reg.IsMatch(Raw);
-                if (Completed && !rawCompleted) // we've just completed the task
+
+                str = Raw;
+
+                // we only need to mess with the raw string if its completed status has changed
+                if (rawCompleted != Completed)
                 {
-                    str = Regex.Replace(Raw, priorityPattern, "");
-                    str = "x " + CompletedDate + " " + str;
+                    if (Completed)
+                    {
+                        str = Regex.Replace(Raw, priorityPattern, "");
+                        str = "x " + CompletedDate + " " + str;
+                    }
+                    else
+                    {
+                        str = reg.Replace(Raw, "").Trim();
+                    }
                 }
-                else if (!Completed && rawCompleted)
-                {
-                    str = reg.Replace(Raw, "").Trim();
-                }
-                else
-                {
-                    str = Raw;
-                }
+
             }
             else
             {

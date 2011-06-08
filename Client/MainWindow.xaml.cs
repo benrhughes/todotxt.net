@@ -37,6 +37,7 @@ namespace Client
         SortType _currentSort;
         Task _updating;
         Key _intelliKey;
+        int _intelliPos;
  
         public MainWindow()
         {
@@ -525,32 +526,25 @@ Copyright 2011 Ben Hughes";
                         foreach (var task in _taskList.Tasks)
                             projects = projects.Concat(task.Projects).ToList();
 
-                        var pos = taskText.CaretIndex;
-                        ShowIntellisense(projects.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(pos));
+                        _intelliPos = taskText.CaretIndex-1;
+                        ShowIntellisense(projects.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(_intelliPos));
                         break;
                     case Key.D2:
                         List<string> contexts = new List<string>();
                         foreach (var task in _taskList.Tasks)
                             contexts = contexts.Concat(task.Contexts).ToList();
 
-                        pos = taskText.CaretIndex;
-                        ShowIntellisense(contexts.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(pos));
+                        _intelliPos = taskText.CaretIndex-1;
+                        ShowIntellisense(contexts.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(_intelliPos));
                         break;
                 }
             }
         }
 
-        private int FindIntelliSymbol()
-        {
-            var at = taskText.Text.LastIndexOf("@", taskText.CaretIndex);
-            var plus = taskText.Text.LastIndexOf("+", taskText.CaretIndex);
-            return at > plus ? at : plus;
-        }
 
         private string FindIntelliWord()
         {
-            var index = FindIntelliSymbol();
-            return taskText.Text.Substring(index + 1, taskText.CaretIndex - index - 1);
+            return taskText.Text.Substring(_intelliPos + 1, taskText.CaretIndex - _intelliPos - 1);
         }
 
         #endregion
@@ -563,12 +557,11 @@ Copyright 2011 Ben Hughes";
                 case Key.Enter:
                     Intellisense.IsOpen = false;
 
-                    var i = FindIntelliSymbol();
-                    taskText.Text = taskText.Text.Remove(i, taskText.CaretIndex-i);
+                    taskText.Text = taskText.Text.Remove(_intelliPos, taskText.CaretIndex - _intelliPos);
 
                     var newText = IntellisenseList.SelectedItem.ToString();
-                    taskText.Text = taskText.Text.Insert(i, newText);
-                    taskText.CaretIndex = i + newText.Length;
+                    taskText.Text = taskText.Text.Insert(_intelliPos, newText);
+                    taskText.CaretIndex = _intelliPos + newText.Length;
 
                     taskText.Focus();
                     break;
