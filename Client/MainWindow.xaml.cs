@@ -60,6 +60,9 @@ namespace Client
         {
             switch (key)
             {
+                case Key.C:
+                    File_New(null, null);
+                    break;
                 case Key.O:
                     File_Open(null, null);
                     break;
@@ -298,6 +301,33 @@ Copyright 2011 Ben Hughes";
         #endregion
 
         #region file menu
+
+        private void File_New(object sender, RoutedEventArgs e)
+        {
+            var dialog = new SaveFileDialog();
+            dialog.FileName = "todo.txt";
+            dialog.DefaultExt = ".txt";
+            dialog.Filter = "Text documents (.txt)|*.txt";
+            var res = dialog.ShowDialog();
+            if (res.Value)
+                SaveFileDialog(dialog.FileName);
+
+            if (File.Exists(dialog.FileName))
+                LoadTasks(dialog.FileName);
+                
+        }
+
+        private static void SaveFileDialog(string filename)
+        {
+            using (StreamWriter todofile = new StreamWriter(filename))
+            {
+                todofile.Write("");
+            }
+            
+            
+        }
+
+
         private void File_Open(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog();
