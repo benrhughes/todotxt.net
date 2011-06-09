@@ -25,6 +25,7 @@ namespace Client
     {
         enum SortType
         {
+            Alphabetical,
             Completed,
             Context,
             DueDate,
@@ -139,6 +140,8 @@ namespace Client
                                 s += "zzz";
                             return s;
                         });
+                case SortType.Alphabetical:
+                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + t.Raw);
                 case SortType.DueDate:
                     return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.DueDate) ? "zzz" : t.DueDate));
                 case SortType.Priority:
@@ -424,6 +427,12 @@ Copyright 2011 Ben Hughes";
         private void Sort_Project(object sender, RoutedEventArgs e)
         {
             FilterAndSort(SortType.Project);
+            SetSelected((MenuItem)sender);
+        }
+
+        private void Sort_Alphabetical(object sender, RoutedEventArgs e)
+        {
+            FilterAndSort(SortType.Alphabetical);
             SetSelected((MenuItem)sender);
         }
         #endregion

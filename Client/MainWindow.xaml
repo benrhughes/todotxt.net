@@ -13,12 +13,13 @@
                 <MenuItem Header="Auto-archive Completed Tasks" IsCheckable="True" Name="AutoArchiveMenuItem" Click="File_AutoArchive" />
             </MenuItem>
             <MenuItem Header="_Sort" Name="sortMenu">
-                <MenuItem Header="Completed" IsCheckable="True" Click="Sort_Completed" />
-                <MenuItem Header="Context" IsCheckable="True" Click="Sort_Context" />
-                <MenuItem Header="Due Date" IsCheckable="True" Click="Sort_DueDate" />
-                <MenuItem Header="Priority" IsCheckable="True" Click="Sort_Priority" />
-                <MenuItem Header="Project" IsCheckable="True" Click="Sort_Project" />
-                <MenuItem Header="Order in file" IsCheckable="True" Click="Sort_None" />
+                <MenuItem Header="_Alphabetical" IsCheckable="True" Click="Sort_Alphabetical" />
+                <MenuItem Header="_Completed" IsCheckable="True" Click="Sort_Completed" />
+                <MenuItem Header="Con_text" IsCheckable="True" Click="Sort_Context" />
+                <MenuItem Header="_Due Date" IsCheckable="True" Click="Sort_DueDate" />
+                <MenuItem Header="_Priority" IsCheckable="True" Click="Sort_Priority" />
+                <MenuItem Header="Pro_ject" IsCheckable="True" Click="Sort_Project" />
+                <MenuItem Header="_Order in file" IsCheckable="True" Click="Sort_None" />
             </MenuItem>
             <MenuItem Header="F_ilter" Click="Filter" />
             <MenuItem Header="_Help" Click="Help" />
