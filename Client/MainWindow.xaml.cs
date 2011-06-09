@@ -268,8 +268,18 @@ Copyright 2011 Ben Hughes";
                         bool include = true;
                         foreach (var filter in User.Default.FilterText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                         {
-                            if (!task.Raw.Contains(filter))
-                                include = false;
+                            if (filter.Substring(0, 1) != "-")
+                            {   // if the filter does not start with a minus and filter is contained in task then filter out
+                                if (!task.Raw.Contains(filter))
+                                    include = false;
+                            }
+                            else
+                            {   // if the filter starts with a minus then (ignoring the minus) check if the filter is contained in the task then filter out if so
+                                if (task.Raw.Contains(filter.Substring(1)))
+                                {
+                                    include = false;
+                                }
+                            }
                         }
 
                         if (include)
