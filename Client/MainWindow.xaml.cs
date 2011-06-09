@@ -471,9 +471,25 @@ Copyright 2011 Ben Hughes";
         {
             if (e.Key == Key.Enter)
             {
+                if (_taskList == null)
+                {
+                    MessageBox.Show("You don't have a todo.txt file open - please use File\\New or File\\Open",
+                        "Please open a file", MessageBoxButton.OK, MessageBoxImage.Error);
+                    e.Handled = true;
+                    lbTasks.Focus();
+                    return;
+                }
+
                 if (_updating == null)
                 {
-                    _taskList.Add(new Task(taskText.Text.Trim()));
+                    try
+                    {
+                        _taskList.Add(new Task(taskText.Text.Trim()));
+                    }
+                    catch (TaskException ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
                 }
                 else
                 {
