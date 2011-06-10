@@ -11,7 +11,7 @@
                 <MenuItem Header="Select Archive File" Click="File_Select_Archive_File" />
                 <MenuItem Header="Archive Completed Tasks" Click="File_Archive_Completed" />
                 <MenuItem Header="Auto-archive Completed Tasks" IsCheckable="True" Name="AutoArchiveMenuItem" Click="File_AutoArchive" />
-                <MenuItem Header="Auto Refresh Every Minute" IsCheckable="True" Name="AutoRefreshMenuItem" Click="File_AutoRefresh" />
+                <MenuItem Header="Auto Refresh Data File" IsCheckable="True" Name="AutoRefreshMenuItem" Click="File_AutoRefresh" />
             </MenuItem>
             <MenuItem Header="_Sort" Name="sortMenu">
                 <MenuItem Header="Completed" IsCheckable="True" Click="Sort_Completed" />

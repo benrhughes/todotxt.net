@@ -611,7 +611,7 @@ Copyright 2011 Ben Hughes";
             {
                 dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
                 dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-                dispatcherTimer.Interval = new TimeSpan(0, 0, 60);
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 20);
                 dispatcherTimer.Start();
             }
             else if (_autoRefresh == false && dispatcherTimer != null)
