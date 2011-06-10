@@ -130,5 +130,20 @@ namespace Client {
                 this["AutoArchive"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoRefresh
+        {
+            get
+            {
+                return ((bool)(this["AutoRefresh"]));
+            }
+            set
+            {
+                this["AutoRefresh"] = value;
+            }
+        }
     }
 }

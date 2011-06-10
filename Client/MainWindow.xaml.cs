@@ -25,7 +25,6 @@ namespace Client
     {
         enum SortType
         {
-            Alphabetical,
             Completed,
             Context,
             DueDate,
@@ -38,6 +37,8 @@ namespace Client
         SortType _currentSort;
         Task _updating;
         int _intelliPos;
+        bool _autoRefresh;
+        System.Windows.Threading.DispatcherTimer dispatcherTimer;
  
         public MainWindow()
         {
@@ -49,11 +50,15 @@ namespace Client
             this.Top = User.Default.WindowTop;
 
             AutoArchiveMenuItem.IsChecked = User.Default.AutoArchive;
+            AutoRefreshMenuItem.IsChecked = User.Default.AutoRefresh;
+            _autoRefresh = User.Default.AutoRefresh;
 
             if (!string.IsNullOrEmpty(User.Default.FilePath))
                 LoadTasks(User.Default.FilePath);
 
             FilterAndSort((SortType)User.Default.CurrentSort);
+
+            TimerCheck();
         }
 
         #region private methods
@@ -140,8 +145,6 @@ namespace Client
                                 s += "zzz";
                             return s;
                         });
-                case SortType.Alphabetical:
-                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + t.Raw);
                 case SortType.DueDate:
                     return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.DueDate) ? "zzz" : t.DueDate));
                 case SortType.Priority:
@@ -271,18 +274,8 @@ Copyright 2011 Ben Hughes";
                         bool include = true;
                         foreach (var filter in User.Default.FilterText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                         {
-                            if (filter.Substring(0, 1) != "-")
-                            {   // if the filter does not start with a minus and filter is contained in task then filter out
-                                if (!task.Raw.Contains(filter))
-                                    include = false;
-                            }
-                            else
-                            {   // if the filter starts with a minus then (ignoring the minus) check if the filter is contained in the task then filter out if so
-                                if (task.Raw.Contains(filter.Substring(1)))
-                                {
-                                    include = false;
-                                }
-                            }
+                            if (!task.Raw.Contains(filter))
+                                include = false;
                         }
 
                         if (include)
@@ -391,6 +384,13 @@ Copyright 2011 Ben Hughes";
             User.Default.Save();
         }
 
+        private void File_AutoRefresh(object sender, RoutedEventArgs e)
+        {
+            User.Default.AutoRefresh = ((MenuItem)sender).IsChecked;
+            User.Default.Save();
+            TimerCheck();
+        }
+
         #endregion
 
         #region sort menu
@@ -427,12 +427,6 @@ Copyright 2011 Ben Hughes";
         private void Sort_Project(object sender, RoutedEventArgs e)
         {
             FilterAndSort(SortType.Project);
-            SetSelected((MenuItem)sender);
-        }
-
-        private void Sort_Alphabetical(object sender, RoutedEventArgs e)
-        {
-            FilterAndSort(SortType.Alphabetical);
             SetSelected((MenuItem)sender);
         }
         #endregion
@@ -480,25 +474,9 @@ Copyright 2011 Ben Hughes";
         {
             if (e.Key == Key.Enter)
             {
-                if (_taskList == null)
-                {
-                    MessageBox.Show("You don't have a todo.txt file open - please use File\\New or File\\Open",
-                        "Please open a file", MessageBoxButton.OK, MessageBoxImage.Error);
-                    e.Handled = true;
-                    lbTasks.Focus();
-                    return;
-                }
-
                 if (_updating == null)
                 {
-                    try
-                    {
-                        _taskList.Add(new Task(taskText.Text.Trim()));
-                    }
-                    catch (TaskException ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
+                    _taskList.Add(new Task(taskText.Text.Trim()));
                 }
                 else
                 {
@@ -626,6 +604,28 @@ Copyright 2011 Ben Hughes";
 
         #endregion
 
+        #region timer
+        private void TimerCheck()
+        {
+            if (_autoRefresh == true)
+            {
+                dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+                dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 20);
+                dispatcherTimer.Start();
+            }
+            else if (_autoRefresh == false && dispatcherTimer != null)
+            {
+                dispatcherTimer.Stop();
+            }
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            _taskList.ReloadTasks();
+            FilterAndSort(_currentSort);
+        }
+        #endregion
     }
 }
 
