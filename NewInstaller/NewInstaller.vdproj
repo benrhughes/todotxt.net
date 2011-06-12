@@ -255,7 +255,7 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
-        "ProductCode" = "8:{9F3D4A2A-050D-4877-A8BE-78012A2A2E25}"
+        "ProductCode" = "8:{0231EBC4-2A0F-461C-887D-77ECD792EBFC}"
         "PackageCode" = "8:{94DABAE9-3484-44BA-AE94-D80B785E8B0C}"
         "UpgradeCode" = "8:{16D204EA-4E20-46D6-8C18-227DE56996D4}"
         "AspNetVersion" = "8:4.0.30319.0"
