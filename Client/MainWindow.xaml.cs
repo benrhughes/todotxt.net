@@ -76,15 +76,15 @@ namespace Client
                     break;
                 case Key.N:
                     // create one-line string of all filter but not ones beginning with a minus, and use as the starting text for a new task
-                    string _filters = "";
+                    string filters = "";
                     foreach (var filter in User.Default.FilterText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         if (filter.Substring(0, 1) != "-")
                         {
-                            _filters = _filters + " " + filter;
+                            filters = filters + " " + filter;
                         }
                     }
-                    taskText.Text = _filters;
+                    taskText.Text = filters;
                     taskText.Focus();
                     break;
                 case Key.OemQuestion:
