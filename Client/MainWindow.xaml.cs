@@ -39,6 +39,8 @@ namespace Client
         SortType _currentSort;
         Task _updating;
         int _intelliPos;
+        bool _autoRefresh;
+        System.Windows.Threading.DispatcherTimer dispatcherTimer;
  
         public MainWindow()
         {
@@ -50,11 +52,15 @@ namespace Client
             this.Top = User.Default.WindowTop;
 
             AutoArchiveMenuItem.IsChecked = User.Default.AutoArchive;
+            AutoRefreshMenuItem.IsChecked = User.Default.AutoRefresh;
+            _autoRefresh = User.Default.AutoRefresh;
 
             if (!string.IsNullOrEmpty(User.Default.FilePath))
                 LoadTasks(User.Default.FilePath);
 
             FilterAndSort((SortType)User.Default.CurrentSort);
+
+            TimerCheck();
         }
 
         #region private methods
@@ -69,7 +75,16 @@ namespace Client
                     File_Open(null, null);
                     break;
                 case Key.N:
-                    taskText.Text = User.Default.FilterText;
+                    // create one-line string of all filter but not ones beginning with a minus, and use as the starting text for a new task
+                    string _filters = "";
+                    foreach (var filter in User.Default.FilterText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (filter.Substring(0, 1) != "-")
+                        {
+                            _filters = _filters + " " + filter;
+                        }
+                    }
+                    taskText.Text = _filters;
                     taskText.Focus();
                     break;
                 case Key.OemQuestion:
@@ -395,6 +410,13 @@ Copyright 2011 Ben Hughes";
             User.Default.Save();
         }
 
+        private void File_AutoRefresh(object sender, RoutedEventArgs e)
+        {
+            User.Default.AutoRefresh = ((MenuItem)sender).IsChecked;
+            User.Default.Save();
+            TimerCheck();
+        }
+
         #endregion
 
         #region sort menu
@@ -630,6 +652,28 @@ Copyright 2011 Ben Hughes";
 
         #endregion
 
+        #region timer
+        private void TimerCheck()
+        {
+            if (_autoRefresh == true)
+            {
+                dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+                dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 20);
+                dispatcherTimer.Start();
+            }
+            else if (_autoRefresh == false && dispatcherTimer != null)
+            {
+                dispatcherTimer.Stop();
+            }
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            _taskList.ReloadTasks();
+            FilterAndSort(_currentSort);
+        }
+        #endregion
     }
 }
 
