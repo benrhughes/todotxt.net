@@ -393,6 +393,9 @@ Copyright 2011 Ben Hughes";
             if (!File.Exists(User.Default.ArchiveFilePath))
                 File_Select_Archive_File(this, null);
 
+            if (!File.Exists(User.Default.ArchiveFilePath))
+                return;
+
             var archiveList = new TaskList(User.Default.ArchiveFilePath);
             var completed = _taskList.Tasks.Where(t => t.Completed);
             foreach (var task in completed)
