@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using ToDoLib;
 using Microsoft.Win32;
 using System.IO;
+using System.Reflection;
 
 namespace Client
 {
@@ -218,8 +219,11 @@ namespace Client
 
         private void Help(object sender, RoutedEventArgs e)
         {
-            var msg =
+            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            var msg = 
 @"todotxt.net: a Windows UI for todo.txt
+
+Version " + version + @"
 
 Keyboard shortcuts:
 	- O: open todo.txt file

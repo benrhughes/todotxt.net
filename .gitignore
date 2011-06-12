@@ -17,3 +17,11 @@ TestResults
 
 # generated installer packages
 *.msi
+
+# finalbuilder log/tmp files
+*.fbl7
+*.fb7lck
+*.fbpInf
+
+# backup files
+*.bak

@@ -1,4 +1,4 @@
-﻿"DeployProject"
+"DeployProject"
 {
 "VSVersion" = "3:800"
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
@@ -172,7 +172,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=0.8.1.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=0.8.2.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_D9EBCBB33A4E4AEA0DFCD674286FB2BB"
@@ -256,14 +256,14 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
         "ProductCode" = "8:{9F3D4A2A-050D-4877-A8BE-78012A2A2E25}"
-        "PackageCode" = "8:{D15DABDA-6976-4C6A-BB46-98567BD3EAA2}"
-        "UpgradeCode" = "8:{5CAB99F3-D5C6-43E3-8F86-34B17C1849A1}"
+        "PackageCode" = "8:{94DABAE9-3484-44BA-AE94-D80B785E8B0C}"
+        "UpgradeCode" = "8:{6DF6B961-3062-4144-B00A-8B669E56B731}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:TRUE"
+        "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.8.2"
+        "ProductVersion" = "8:0.8.4"
         "Manufacturer" = "8:Hughesoft"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
