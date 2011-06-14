@@ -396,6 +396,9 @@ Copyright 2011 Ben Hughes";
             if (!File.Exists(User.Default.ArchiveFilePath))
                 return;
 
+            if (!File.Exists(User.Default.ArchiveFilePath))
+                return;
+
             var archiveList = new TaskList(User.Default.ArchiveFilePath);
             var completed = _taskList.Tasks.Where(t => t.Completed);
             foreach (var task in completed)
@@ -544,6 +547,12 @@ Copyright 2011 Ben Hughes";
 
             if (Intellisense.IsOpen && !IntellisenseList.IsFocused)
             {
+                if (taskText.CaretIndex <= _intelliPos) // we've moved behind the symbol, drop out of intellisense
+                {
+                    Intellisense.IsOpen = false;
+                    return;
+                }
+
                 switch (e.Key)
                 {
                     case Key.Down:
@@ -587,16 +596,14 @@ Copyright 2011 Ben Hughes";
                         break;
                     case Key.OemPlus:
                         List<string> projects = new List<string>();
-                        foreach (var task in _taskList.Tasks)
-                            projects = projects.Concat(task.Projects).ToList();
+                        _taskList.Tasks.Each(task => projects = projects.Concat(task.Projects).ToList());
 
                         _intelliPos = taskText.CaretIndex-1;
                         ShowIntellisense(projects.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(_intelliPos));
                         break;
                     case Key.D2:
                         List<string> contexts = new List<string>();
-                        foreach (var task in _taskList.Tasks)
-                            contexts = contexts.Concat(task.Contexts).ToList();
+                        _taskList.Tasks.Each(task => contexts = contexts.Concat(task.Contexts).ToList());
 
                         _intelliPos = taskText.CaretIndex-1;
                         ShowIntellisense(contexts.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(_intelliPos));
