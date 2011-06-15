@@ -426,19 +426,77 @@ Copyright 2011 Ben Hughes";
         private void File_Print(object sender, RoutedEventArgs e)
         {
             string printContents = "";
-            printContents = "<html><head><title>todotxt.net</title></head><body><h2>todotxt.net</h2>";
+            string taskdetail = "";
+            string printstyle = "";
+            
+            printstyle += "body{font-family:Cambria,Courier New;font-size:11px;} ";
+            printstyle += "span.priority{font-weight:bold;} ";
+            printstyle += "span.project{color:red;} ";
+            printstyle += "span.context{color:blue;} ";
+            printstyle += "span.isdate{font-style:italic;} ";
+
+            printContents = "<html><head><title>todotxt.net</title><style>" + printstyle + "</style></head><body><h2>todotxt.net</h2>";
             foreach (var task in lbTasks.Items)
             {
-                printContents = printContents + task.ToString() + "<br>";
+                taskdetail = task.ToString();
+                taskdetail = taskdetail.Trim();
+                if (taskdetail.Substring(0, 2) == "x ")
+                {
+                    printContents += "<span class='completedTask'>";
+                }
+                else
+                {
+                    printContents += "<span class='uncompletedTask'>";
+                }
+                string[] split = taskdetail.Split(new Char[] { ' ' });
+                
+
+                foreach (string s in split)
+                {
+                    if (s.Substring(0, 1) == "(" && s.Substring(2, 1) == ")" && s.Length == 3)
+                    {
+                        printContents += "<span class='priority'>" + s + "</span> ";
+                    }
+                    else if (s.Substring(0, 1) == "+")
+                    {
+                        printContents += "<span class='project'>" + s + "</span> ";
+                    }
+                    else if (s.Substring(0, 1) == "@")
+                    {
+                        printContents += "<span class='context'>" + s + "</span> ";
+                    }
+                    else if (IsDate(s) != false)
+                    {
+                        printContents += "<span class='isdate'>" + s + "</span> ";
+                    }
+                    else
+                    {
+                        printContents += s + " ";
+                    }
+                }
+                printContents = printContents.Trim();
+                printContents += "</span><br>";
             }
             printContents += "</body></html>";
-
+            
             webBrowser1.Navigate("about:blank");
             mshtml.IHTMLDocument2 doc = webBrowser1.Document as mshtml.IHTMLDocument2;
             doc.clear();
             doc.write(printContents);
             doc.execCommand("Print", true, 0);
             doc.close();
+        }
+
+        public bool IsDate(string sdate)
+        {   DateTime dt;
+            bool isDate = true;
+            try
+            {   dt = DateTime.Parse(sdate);
+            }
+            catch
+            {   isDate = false;
+            }
+            return isDate;
         }
 
         #endregion

@@ -46,6 +46,6 @@
         </Popup>
         <ListBox Name="lbTasks" Margin="0,46,0,0" SelectedIndex="0" IsTextSearchEnabled="False" PreviewMouseDoubleClick="lbTasks_PreviewMouseDoubleClick" PreviewKeyUp="lbTasks_PreviewKeyUp" PreviewKeyDown="lbTasks_PreviewKeyDown" AlternationCount="2" BorderBrush="{x:Null}"  >
         </ListBox>
-        <WebBrowser Height="100" HorizontalAlignment="Left" Margin="-370,216,0,0" Name="webBrowser1" VerticalAlignment="Top" Width="200" Visibility="Hidden" />
+        <WebBrowser Height="143" HorizontalAlignment="Left" Margin="-360,190,0,0" Name="webBrowser1" VerticalAlignment="Top" Width="211" Visibility="Hidden" />
     </Grid>
 </Window>
