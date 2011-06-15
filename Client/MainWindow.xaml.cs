@@ -423,6 +423,24 @@ Copyright 2011 Ben Hughes";
             TimerCheck();
         }
 
+        private void File_Print(object sender, RoutedEventArgs e)
+        {
+            string printContents = "";
+            printContents = "<html><head><title>todotxt.net</title></head><body><h2>todotxt.net</h2>";
+            foreach (var task in lbTasks.Items)
+            {
+                printContents = printContents + task.ToString() + "<br>";
+            }
+            printContents += "</body></html>";
+
+            webBrowser1.Navigate("about:blank");
+            mshtml.IHTMLDocument2 doc = webBrowser1.Document as mshtml.IHTMLDocument2;
+            doc.clear();
+            doc.write(printContents);
+            doc.execCommand("Print", true, 0);
+            doc.close();
+        }
+
         #endregion
 
         #region sort menu
