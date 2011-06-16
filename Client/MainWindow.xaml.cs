@@ -61,6 +61,8 @@ namespace Client
             FilterAndSort((SortType)User.Default.CurrentSort);
 
             TimerCheck();
+
+            webBrowser1.Navigate("about:blank");
         }
 
         #region private methods
@@ -423,39 +425,100 @@ Copyright 2011 Ben Hughes";
             TimerCheck();
         }
 
-        private void File_Print(object sender, RoutedEventArgs e)
+        #region printing
+
+        private void btnPrint_Click(object sender, RoutedEventArgs e)
+        {
+            mshtml.IHTMLDocument2 doc = webBrowser1.Document as mshtml.IHTMLDocument2;
+            doc.execCommand("Print", true, 0);
+            doc.close();
+
+            Set_PrintControlsVisibility(false);
+        }
+
+        private void btnCancelPrint_Click(object sender, RoutedEventArgs e)
+        {
+            Set_PrintControlsVisibility(false);
+        }
+
+        private void Set_PrintControlsVisibility(bool PrintControlsVisibility)
+        {
+            if (PrintControlsVisibility)
+            {   // Show Printer Controls
+                webBrowser1.Visibility = Visibility.Visible;
+                btnPrint.Visibility = Visibility.Visible;
+                btnCancelPrint.Visibility = Visibility.Visible;
+                lbTasks.Visibility = Visibility.Hidden;
+                menu1.Visibility = Visibility.Hidden;
+                taskText.Visibility = Visibility.Hidden;
+            }
+            else
+            {   // Hide Printer Controls
+                webBrowser1.Visibility = Visibility.Hidden;
+                btnPrint.Visibility = Visibility.Hidden;
+                btnCancelPrint.Visibility = Visibility.Hidden;
+                lbTasks.Visibility = Visibility.Visible;
+                menu1.Visibility = Visibility.Visible;
+                taskText.Visibility = Visibility.Visible;
+            }
+        }
+
+        private string Get_PrintContents(object sender, RoutedEventArgs e)
         {
             string printContents = "";
             string taskdetail = "";
             string printstyle = "";
-            
-            printstyle += "body{font-family:Cambria,Courier New;font-size:11px;} ";
-            printstyle += "span.priority{font-weight:bold;} ";
+
+            // CSS Presentation
+            printstyle += "body, table, tr, th, td {font-family:Cambria,Courier New;font-size:11px;} ";
+            printstyle += "td.priority{font-weight:bold;} ";
+            printstyle += "tr.tbhead td {font-weight:bold;} ";
             printstyle += "span.project{color:red;} ";
             printstyle += "span.context{color:blue;} ";
-            printstyle += "span.isdate{font-style:italic;} ";
+            printstyle += "span.isdate{font-style:italic;color:#FF6600;font-weight:bold;} ";
+            printstyle += "td.startdate{font-style:italic;color:red;} ";
+            printstyle += "td.completeddate{font-style:italic;color:green;} ";
 
-            printContents = "<html><head><title>todotxt.net</title><style>" + printstyle + "</style></head><body><h2>todotxt.net</h2>";
+            // CSS Layout
+            printstyle += "table, tr {width:7in;} ";
+            printstyle += "td {vertical-align:top;} ";
+            printstyle += "td.priority{text-align:center;width:20px;} ";
+            printstyle += "td.startdate{width:60px;} ";
+            printstyle += "td.completeddate{width:60px;} ";
+
+            printContents = "<html><head><title>todotxt.net</title><style>" + printstyle + "</style></head><body><h2>todotxt.net</h2><table>";
+            printContents += "<tr class='tbhead'><th>&nbsp;</th><th>Done</th><th>Created</th><td>Details</td></tr>";
             foreach (var task in lbTasks.Items)
             {
+                bool isComplete = false;
+
                 taskdetail = task.ToString();
                 taskdetail = taskdetail.Trim();
+
                 if (taskdetail.Substring(0, 2) == "x ")
                 {
-                    printContents += "<span class='completedTask'>";
+                    printContents += "<tr class='completedTask'>";
+                    isComplete = true;
                 }
                 else
                 {
-                    printContents += "<span class='uncompletedTask'>";
+                    printContents += "<tr class='uncompletedTask'>";
+                    isComplete = false;
                 }
                 string[] split = taskdetail.Split(new Char[] { ' ' });
-                
+
+                int c = 0;
 
                 foreach (string s in split)
                 {
+                    c++;
                     if (s.Substring(0, 1) == "(" && s.Substring(2, 1) == ")" && s.Length == 3)
                     {
-                        printContents += "<span class='priority'>" + s + "</span> ";
+                        printContents += "<td class='priority'>" + s + "</td><td>&nbsp;</td>";
+                    }
+                    else if (s.Substring(0, 1) == "x" && c == 1)
+                    {
+                        printContents += "<td class='priority'>" + s + "</td> ";
                     }
                     else if (s.Substring(0, 1) == "+")
                     {
@@ -467,19 +530,63 @@ Copyright 2011 Ben Hughes";
                     }
                     else if (IsDate(s) != false)
                     {
-                        printContents += "<span class='isdate'>" + s + "</span> ";
+                        if (c == 2 && isComplete) // then its completed date
+                        {
+                            printContents += "<td class='completeddate'>" + s + "</td> ";
+                        }
+                        else if (c == 2 && !isComplete) // then its start date
+                        {
+                            printContents += "<td class='startdate'>" + s + "</td> ";
+                        }
+                        else if (c == 3)    //then must be start date
+                        {
+                            printContents += "<td class='startdate'>" + s + "</td> ";
+                        }
+                        else
+                        {
+                            printContents += "<span class='isdate'>" + s + "</span> ";
+                        }
+
                     }
                     else
                     {
-                        printContents += s + " ";
+                        if ((isComplete && c == 4) || (!isComplete && c == 3)) // should be the start of the task's details
+                        {
+                            printContents += "<td>" + s + " ";
+                        }
+                        else
+                        {
+                            printContents += s + " ";
+                        }
                     }
                 }
                 printContents = printContents.Trim();
-                printContents += "</span><br>";
+                printContents += "</td></tr>";
             }
-            printContents += "</body></html>";
-            
-            webBrowser1.Navigate("about:blank");
+            printContents += "</table></body></html>";
+
+            return printContents;
+        }
+
+        private void File_PrintPreview(object sender, RoutedEventArgs e)
+        {
+            string printContents;
+            printContents = Get_PrintContents(sender, e);
+
+            mshtml.IHTMLDocument2 doc = webBrowser1.Document as mshtml.IHTMLDocument2;
+            doc.clear();
+            doc.write(printContents);
+            doc.close();
+
+            Set_PrintControlsVisibility(true);
+
+        }
+
+        private void File_Print(object sender, RoutedEventArgs e)
+        {
+            string printContents;
+            printContents = Get_PrintContents(sender, e);
+
             mshtml.IHTMLDocument2 doc = webBrowser1.Document as mshtml.IHTMLDocument2;
             doc.clear();
             doc.write(printContents);
@@ -488,18 +595,23 @@ Copyright 2011 Ben Hughes";
         }
 
         public bool IsDate(string sdate)
-        {   DateTime dt;
+        {
+            DateTime dt;
             bool isDate = true;
             try
-            {   dt = DateTime.Parse(sdate);
+            {
+                dt = DateTime.Parse(sdate);
             }
             catch
-            {   isDate = false;
+            {
+                isDate = false;
             }
             return isDate;
         }
 
-        #endregion
+        #endregion  //printing
+
+        #endregion  //file menu
 
         #region sort menu
         private void Sort_Priority(object sender, RoutedEventArgs e)
@@ -736,7 +848,7 @@ Copyright 2011 Ben Hughes";
         }
         #endregion
 
-        #endregion
+        #endregion  //UI event handling
 
         #region timer
         private void TimerCheck()
@@ -760,6 +872,7 @@ Copyright 2011 Ben Hughes";
             FilterAndSort(_currentSort);
         }
         #endregion
+
     }
 }
 

@@ -3,11 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="todotxt.net" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="384" Width="562" SizeChanged="Window_SizeChanged" LocationChanged="Window_LocationChanged" DataContext="{Binding}">
     <Grid Name="stackPanel1" Margin="0,0,0,0" >
-        <Menu Height="23" Name="menu1" VerticalAlignment="Top" IsMainMenu="True">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="299*" />
+            <ColumnDefinition Width="241*" />
+        </Grid.ColumnDefinitions>
+        <TextBox Height="23" Margin="0,23,0,0" Name="taskText" AcceptsReturn="True" Cursor="IBeam" KeyUp="taskText_PreviewKeyUp" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+        <Button Content="PRINT" Height="23" HorizontalAlignment="Left" Margin="0,23,207,0" Name="btnPrint" VerticalAlignment="Top" Width="92" Visibility="Hidden" Click="btnPrint_Click" />
+        <Button Content="CANCEL" Height="23" HorizontalAlignment="Left" Margin="97,23,0,0" Name="btnCancelPrint" VerticalAlignment="Top" Width="92" Visibility="Hidden" Click="btnCancelPrint_Click" />
+        <Menu Height="23" Name="menu1" VerticalAlignment="Top" IsMainMenu="True" Grid.ColumnSpan="2">
             <MenuItem Header="_File">
                 <MenuItem Header="_New" Click="File_New" />
                 <MenuItem Header="_Open" Click="File_Open" />
                 <MenuItem Header="_Print" Name="Print" Click="File_Print" />
+                <MenuItem Header="Print Pre_view" Name="PrintPreview" Click="File_PrintPreview" />
                 <Separator />
                 <MenuItem Header="Select Archive File" Click="File_Select_Archive_File" />
                 <MenuItem Header="Archive Completed Tasks" Click="File_Archive_Completed" />
@@ -32,8 +40,7 @@
                 </LinearGradientBrush>
             </Menu.Background>
         </Menu>
-        <TextBox Height="23" Margin="0,23,0,0" Name="taskText" AcceptsReturn="True" Cursor="IBeam" KeyUp="taskText_PreviewKeyUp" VerticalAlignment="Top"/>
-        <Popup Name="Intellisense" Width="150" Height="auto" StaysOpen="False" Placement="Bottom" IsOpen="False">
+        <Popup Name="Intellisense" Width="150" Height="auto" StaysOpen="False" Placement="Bottom" IsOpen="False" Grid.ColumnSpan="2" Margin="195,0">
             <Grid>
                 <ListBox Name="IntellisenseList"
                     ScrollViewer.HorizontalScrollBarVisibility="Hidden"
@@ -44,8 +51,8 @@
             </Grid>
 
         </Popup>
-        <ListBox Name="lbTasks" Margin="0,46,0,0" SelectedIndex="0" IsTextSearchEnabled="False" PreviewMouseDoubleClick="lbTasks_PreviewMouseDoubleClick" PreviewKeyUp="lbTasks_PreviewKeyUp" PreviewKeyDown="lbTasks_PreviewKeyDown" AlternationCount="2" BorderBrush="{x:Null}"  >
+        <ListBox Name="lbTasks" Margin="0,46,0,0" SelectedIndex="0" IsTextSearchEnabled="False" PreviewMouseDoubleClick="lbTasks_PreviewMouseDoubleClick" PreviewKeyUp="lbTasks_PreviewKeyUp" PreviewKeyDown="lbTasks_PreviewKeyDown" AlternationCount="2" BorderBrush="{x:Null}" Grid.ColumnSpan="2">
         </ListBox>
-        <WebBrowser Height="143" HorizontalAlignment="Left" Margin="-360,190,0,0" Name="webBrowser1" VerticalAlignment="Top" Width="211" Visibility="Hidden" />
+        <WebBrowser Height="Auto" HorizontalAlignment="Stretch" Margin="0,46,0,0" Name="webBrowser1" VerticalAlignment="Stretch" Width="Auto" Visibility="Hidden" Grid.ColumnSpan="2" />
     </Grid>
 </Window>
