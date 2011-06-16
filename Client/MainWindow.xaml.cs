@@ -62,11 +62,14 @@ namespace Client
             FilterAndSort((SortType)User.Default.CurrentSort);
 
             TimerCheck();
+        }
 
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
             CheckForUpdates();
         }
         
-
         #region private methods
         private void KeyboardShortcut(Key key)
         {
@@ -321,7 +324,6 @@ Copyright 2011 Ben Hughes";
         {
             const string updateXMLUrl = @"https://raw.github.com/benrhughes/todotxt.net/master/Updates.xml";
 
-
             var xDoc = new XmlDocument();
 
             try
@@ -335,7 +337,8 @@ Copyright 2011 Ben Hughes";
 
                 if (version != assemblyVersion)
                 {
-                    MessageBox.Show(@"A new version of todotxt.net is available from http://bit.ly/downloadtdtn", "Update Available", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Version " + version + " of todotxt.net is available from http://bit.ly/downloadtdtn", 
+                        "Update Available", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception)
