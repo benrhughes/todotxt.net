@@ -16,6 +16,7 @@ using ToDoLib;
 using Microsoft.Win32;
 using System.IO;
 using System.Reflection;
+using System.Xml;
 
 namespace Client
 {
@@ -61,7 +62,10 @@ namespace Client
             FilterAndSort((SortType)User.Default.CurrentSort);
 
             TimerCheck();
+
+            CheckForUpdates();
         }
+        
 
         #region private methods
         private void KeyboardShortcut(Key key)
@@ -311,6 +315,34 @@ Copyright 2011 Ben Hughes";
             }
 
             SetSort(sort, tasks);
+        }
+
+        private void CheckForUpdates()
+        {
+            const string updateXMLUrl = @"https://raw.github.com/benrhughes/todotxt.net/master/Updates.xml";
+
+
+            var xDoc = new XmlDocument();
+
+            try
+            {
+                xDoc.Load(new XmlTextReader(updateXMLUrl));
+
+                var version = xDoc.SelectSingleNode("//version").InnerText;
+                var changelog = xDoc.SelectSingleNode("//changelog").InnerText;
+
+                var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+                if (version != assemblyVersion)
+                {
+                    MessageBox.Show(@"A new version of todotxt.net is available from http://bit.ly/downloadtdtn", "Update Available", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception)
+            {
+                // swallowing excepitons is bad, mmmk? But it really doesn't matter if the auto-update fails, so lets make an exception...
+            }
+
         }
         #endregion
 
