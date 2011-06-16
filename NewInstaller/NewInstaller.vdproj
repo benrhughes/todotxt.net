@@ -250,7 +250,7 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
-        "ProductCode" = "8:{4859C9D2-A127-4B43-8CB2-FACB40AF87FE}"
+        "ProductCode" = "8:{C946230C-6D50-428D-B77E-5E5E8E211EF9}"
         "PackageCode" = "8:{B3B54C2A-8904-42AA-A5AA-D45D6BB229BB}"
         "UpgradeCode" = "8:{16D204EA-4E20-46D6-8C18-227DE56996D4}"
         "AspNetVersion" = "8:4.0.30319.0"
@@ -258,7 +258,7 @@
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.8.4"
+        "ProductVersion" = "8:0.8.5"
         "Manufacturer" = "8:Hughesoft"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
