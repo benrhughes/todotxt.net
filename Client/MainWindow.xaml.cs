@@ -17,6 +17,8 @@ using Microsoft.Win32;
 using System.IO;
 using System.Reflection;
 using System.Xml;
+using System.Threading;
+using System.Diagnostics;
 
 namespace Client
 {
@@ -62,13 +64,10 @@ namespace Client
             FilterAndSort((SortType)User.Default.CurrentSort);
 
             TimerCheck();
+
+            ThreadPool.QueueUserWorkItem(x => CheckForUpdates());
         }
 
-        protected override void OnInitialized(EventArgs e)
-        {
-            base.OnInitialized(e);
-            CheckForUpdates();
-        }
         
         #region private methods
         private void KeyboardShortcut(Key key)
@@ -337,8 +336,7 @@ Copyright 2011 Ben Hughes";
 
                 if (version != assemblyVersion)
                 {
-                    MessageBox.Show("Version " + version + " of todotxt.net is available from http://bit.ly/downloadtdtn", 
-                        "Update Available", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Dispatcher.Invoke(new Action<string>(ShowUpdateMenu), version);
                 }
             }
             catch (Exception)
@@ -346,6 +344,12 @@ Copyright 2011 Ben Hughes";
                 // swallowing excepitons is bad, mmmk? But it really doesn't matter if the auto-update fails, so lets make an exception...
             }
 
+        }
+
+        private void ShowUpdateMenu(string version)
+        {
+            this.UpdateMenu.Header = "New version: " + version;
+            this.UpdateMenu.Visibility = Visibility.Visible;
         }
         #endregion
 
@@ -519,6 +523,13 @@ Copyright 2011 Ben Hughes";
         {
             FilterAndSort(SortType.Alphabetical);
             SetSelected((MenuItem)sender);
+        }
+        #endregion
+
+        #region Update notification
+        private void Get_Update(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://github.com/benrhughes/todotxt.net/downloads");
         }
         #endregion
 

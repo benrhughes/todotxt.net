@@ -25,6 +25,7 @@
             </MenuItem>
             <MenuItem Header="F_ilter" Click="Filter" />
             <MenuItem Header="_Help" Click="Help" />
+            <MenuItem Name="UpdateMenu" Header="*Update available*" Visibility="Hidden" Click="Get_Update" />
             <Menu.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#f8f8f8" Offset="0" />
