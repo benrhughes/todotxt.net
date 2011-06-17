@@ -408,6 +408,11 @@ Copyright 2011 Ben Hughes";
                 LoadTasks(dialog.FileName);
         }
 
+        private void File_Exit(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
         private void File_Archive_Completed(object sender, RoutedEventArgs e)
         {
             if (!File.Exists(User.Default.ArchiveFilePath))
