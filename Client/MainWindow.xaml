@@ -9,10 +9,8 @@
                 <MenuItem Header="_Open" Click="File_Open" />
                 <MenuItem Header="_Print" Name="Print" Click="File_Print" />
                 <Separator />
-                <MenuItem Header="Select Archive File" Click="File_Select_Archive_File" />
                 <MenuItem Header="Archive Completed Tasks" Click="File_Archive_Completed" />
-                <MenuItem Header="Auto-archive Completed Tasks" IsCheckable="True" Name="AutoArchiveMenuItem" Click="File_AutoArchive" />
-                <MenuItem Header="Auto Refresh" IsCheckable="True" Name="AutoRefreshMenuItem" Click="File_AutoRefresh" />
+                <MenuItem Header="_Options..." Click="File_Options" />
             </MenuItem>
             <MenuItem Header="_Sort" Name="sortMenu">
                 <MenuItem Header="_Alphabetical" IsCheckable="True" Click="Sort_Alphabetical" />

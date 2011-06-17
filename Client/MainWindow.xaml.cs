@@ -19,6 +19,7 @@ using System.Reflection;
 using System.Xml;
 using System.Threading;
 using System.Diagnostics;
+using System.Windows.Threading;
 
 namespace Client
 {
@@ -42,8 +43,7 @@ namespace Client
         SortType _currentSort;
         Task _updating;
         int _intelliPos;
-        bool _autoRefresh;
-        System.Windows.Threading.DispatcherTimer dispatcherTimer;
+        DispatcherTimer _dispatcherTimer;
  
         public MainWindow()
         {
@@ -53,10 +53,6 @@ namespace Client
             this.Width = User.Default.WindowWidth;
             this.Left = User.Default.WindowLeft;
             this.Top = User.Default.WindowTop;
-
-            AutoArchiveMenuItem.IsChecked = User.Default.AutoArchive;
-            AutoRefreshMenuItem.IsChecked = User.Default.AutoRefresh;
-            _autoRefresh = User.Default.AutoRefresh;
 
             if (!string.IsNullOrEmpty(User.Default.FilePath))
                 LoadTasks(User.Default.FilePath);
@@ -394,9 +390,7 @@ Copyright 2011 Ben Hughes";
             using (StreamWriter todofile = new StreamWriter(filename))
             {
                 todofile.Write("");
-            }
-            
-            
+            }            
         }
 
 
@@ -412,28 +406,10 @@ Copyright 2011 Ben Hughes";
                 LoadTasks(dialog.FileName);
         }
 
-        private void File_Select_Archive_File(object sender, RoutedEventArgs e)
-        {
-            var dialog = new OpenFileDialog();
-            dialog.DefaultExt = ".txt";
-            dialog.Filter = "Text documents (.txt)|*.txt";
-
-            var res = dialog.ShowDialog();
-
-            if (res.Value)
-            {
-                User.Default.ArchiveFilePath = dialog.FileName;
-                User.Default.Save();
-            }
-        }
-
         private void File_Archive_Completed(object sender, RoutedEventArgs e)
         {
             if (!File.Exists(User.Default.ArchiveFilePath))
-                File_Select_Archive_File(this, null);
-
-            if (!File.Exists(User.Default.ArchiveFilePath))
-                return;
+                File_Options(this, null);
 
             if (!File.Exists(User.Default.ArchiveFilePath))
                 return;
@@ -449,18 +425,6 @@ Copyright 2011 Ben Hughes";
             FilterAndSort(_currentSort);
         }
 
-        private void File_AutoArchive(object sender, RoutedEventArgs e)
-        {
-            User.Default.AutoArchive = ((MenuItem)sender).IsChecked;
-            User.Default.Save();
-        }
-
-        private void File_AutoRefresh(object sender, RoutedEventArgs e)
-        {
-            User.Default.AutoRefresh = ((MenuItem)sender).IsChecked;
-            User.Default.Save();
-            TimerCheck();
-        }
 
         private void File_Print(object sender, RoutedEventArgs e)
         {
@@ -480,6 +444,23 @@ Copyright 2011 Ben Hughes";
             doc.close();
         }
 
+        private void File_Options(object sender, RoutedEventArgs e)
+        {
+            var o = new Options();
+
+            var res = o.ShowDialog();
+
+            if (res.Value)
+            {
+                User.Default.ArchiveFilePath = o.tbArchiveFile.Text;
+                User.Default.AutoArchive = o.cbAutoArchive.IsChecked.Value;
+                User.Default.AutoRefresh = o.cbAutoRefresh.IsChecked.Value;
+
+                User.Default.Save();
+
+                TimerCheck();
+            }
+        }
         #endregion
 
         #region sort menu
@@ -729,16 +710,16 @@ Copyright 2011 Ben Hughes";
         #region timer
         private void TimerCheck()
         {
-            if (_autoRefresh == true)
+            if (User.Default.AutoRefresh == true)
             {
-                dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-                dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-                dispatcherTimer.Interval = new TimeSpan(0, 0, 20);
-                dispatcherTimer.Start();
+                _dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+                _dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+                _dispatcherTimer.Interval = new TimeSpan(0, 0, 20);
+                _dispatcherTimer.Start();
             }
-            else if (_autoRefresh == false && dispatcherTimer != null)
+            else if (User.Default.AutoRefresh == false && _dispatcherTimer != null)
             {
-                dispatcherTimer.Stop();
+                _dispatcherTimer.Stop();
             }
         }
 
@@ -748,6 +729,7 @@ Copyright 2011 Ben Hughes";
             FilterAndSort(_currentSort);
         }
         #endregion
+
     }
 }
 
