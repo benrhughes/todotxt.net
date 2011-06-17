@@ -32,7 +32,7 @@ namespace ToDoTests
 
             var tl = new TaskList(Data.TestDataPath);
 
-            var tasks = tl.Tasks.ToList();
+            var tasks = new OrderedList<Task>(tl.Tasks);
             tasks.Add(task);
 
             tl.Add(task);
@@ -95,8 +95,8 @@ namespace ToDoTests
             var tl = new TaskList(Data.TestDataPath);
             tl.Add(task);
 
-            var tasks = tl.Tasks.ToList();
-            tasks.Remove(tasks.Last());
+            var tasks = new OrderedList<Task>(tl.Tasks);
+            tasks.Remove(tasks.Where(x => x.Raw == task.Raw).First());
 
             
             tl.Delete(task);

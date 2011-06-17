@@ -19,10 +19,10 @@ namespace ToDoLib
         // NB, this is not the place for higher-level functions like searching, task manipulation etc. It's simply 
         // for CRUDing the todo.txt file. 
         
-        List<Task> _tasks;
+        OrderedList<Task> _tasks;
         string _filePath;
 
-        public IEnumerable<Task> Tasks { get { return _tasks; } }
+        public OrderedList<Task> Tasks { get { return _tasks; } }
 
         public TaskList(string filePath)
         {
@@ -34,7 +34,7 @@ namespace ToDoLib
         {
             try
             {
-                _tasks = new List<Task>();
+                _tasks = new OrderedList<Task>();
                 foreach (var line in File.ReadAllLines(_filePath))
                     _tasks.Add(new Task(line));
             }

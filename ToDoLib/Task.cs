@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace ToDoLib
 {
-    public class Task
+    public class Task : IComparable
     {
         const string completedPattern = @"^X\s((\d{4})-(\d{2})-(\d{2}))?";
         const string priorityPattern = @"^(?<priority>\([A-Z]\)\s)";
@@ -148,5 +148,12 @@ namespace ToDoLib
         }
 
 
+
+        public int CompareTo(object obj)
+        {
+            var other = (Task)obj;
+
+            return string.Compare(this.Raw, other.Raw);
+        }
     }
 }

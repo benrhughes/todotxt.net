@@ -49,5 +49,20 @@ namespace ToDoTests
             CollectionAssert.AreEqual(new string[] { "Cheese", "Blah", "Acorn" }, ol);
 
         }
+
+        [Test]
+        public void Remove_removes_items()
+        {
+            var s = "a string";
+            var list = new OrderedList<string>();
+
+            list.Add(s);
+
+            Assert.IsTrue(list.Contains(s));
+
+            Assert.IsTrue(list.Remove(s));
+
+            Assert.IsFalse(list.Contains(s));
+        }
     }
 }

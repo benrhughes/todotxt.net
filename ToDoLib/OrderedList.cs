@@ -11,13 +11,18 @@ namespace ToDoLib
 
         Func<T, T> _sort;
 
-        public OrderedList()
+        public OrderedList() : this(x => x)
         {
-            _list = new List<T>();
         }
 
-        public OrderedList(Func<T,T> sortFunc) : this()
+        public OrderedList(IEnumerable<T> items) : this(x => x, items)
         {
+
+        }
+
+        public OrderedList(Func<T,T> sortFunc, IEnumerable<T> items = null)
+        {
+            _list = items == null ? new List<T>() : new List<T>(items);
             _sort = sortFunc;
         }
 
