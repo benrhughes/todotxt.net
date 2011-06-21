@@ -13,6 +13,8 @@
                 <Separator />
                 <MenuItem Header="Archive Completed Tasks" Click="File_Archive_Completed" />
                 <MenuItem Header="_Options..." Click="File_Options" />
+                <Separator />
+                <MenuItem Header="E_xit" Click="File_Exit" />
             </MenuItem>
             <MenuItem Header="_Sort" Name="sortMenu">
                 <MenuItem Header="_Alphabetical" IsCheckable="True" Click="Sort_Alphabetical" />
