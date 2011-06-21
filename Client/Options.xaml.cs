@@ -26,6 +26,7 @@ namespace Client
             tbArchiveFile.Text = User.Default.ArchiveFilePath;
             cbAutoArchive.IsChecked = User.Default.AutoArchive;
             cbAutoRefresh.IsChecked = User.Default.AutoRefresh;
+            cbCaseSensitiveFilter.IsChecked = User.Default.FilterCaseSensitive;
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)

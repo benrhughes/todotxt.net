@@ -289,6 +289,7 @@ Copyright 2011 Ben Hughes";
                 }
                 else
                 {
+                    var comparer = User.Default.FilterCaseSensitive ? StringComparison.InvariantCulture: StringComparison.InvariantCultureIgnoreCase;
                     foreach (var task in _taskList.Tasks)
                     {
                         bool include = true;
@@ -296,15 +297,13 @@ Copyright 2011 Ben Hughes";
                         {
                             if (filter.Substring(0, 1) != "-")
                             {   // if the filter does not start with a minus and filter is contained in task then filter out
-                                if (!task.Raw.Contains(filter))
+                                if (!task.Raw.Contains(filter, comparer))
                                     include = false;
                             }
                             else
                             {   // if the filter starts with a minus then (ignoring the minus) check if the filter is contained in the task then filter out if so
-                                if (task.Raw.Contains(filter.Substring(1)))
-                                {
+                                if (task.Raw.Contains(filter.Substring(1), comparer))
                                     include = false;
-                                }
                             }
                         }
 
@@ -443,10 +442,13 @@ Copyright 2011 Ben Hughes";
                 User.Default.ArchiveFilePath = o.tbArchiveFile.Text;
                 User.Default.AutoArchive = o.cbAutoArchive.IsChecked.Value;
                 User.Default.AutoRefresh = o.cbAutoRefresh.IsChecked.Value;
+                User.Default.FilterCaseSensitive = o.cbCaseSensitiveFilter.IsChecked.Value;
 
                 User.Default.Save();
 
                 TimerCheck();
+
+                FilterAndSort(_currentSort);
             }
         }
 
