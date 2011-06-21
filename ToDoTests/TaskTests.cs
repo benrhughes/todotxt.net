@@ -108,7 +108,7 @@ namespace ToDoTests
         [Test]
         public void Create_DueDate()
         {
-            var task = new Task("(A) 2011-05-08 @work @home +test This is a test task");
+            var task = new Task("(A) due:2011-05-08 @work @home +test This is a test task");
 
             var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task","2011-05-08", false);
             AssertEquivalence(expectedTask, task);

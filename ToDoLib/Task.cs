@@ -10,7 +10,7 @@ namespace ToDoLib
     {
         const string completedPattern = @"^X\s((\d{4})-(\d{2})-(\d{2}))?";
         const string priorityPattern = @"^(?<priority>\([A-Z]\)\s)";
-        const string datePattern = @"^(?<date>(\d{4})-(\d{2})-(\d{2}))";
+        const string datePattern = @"due:(?<date>(\d{4})-(\d{2})-(\d{2}))";
         const string projectPattern = @"(?<proj>\+\w+)";
         const string contextPattern = @"(?<context>\@\w+)";
 
@@ -68,7 +68,6 @@ namespace ToDoLib
             reg = new Regex(priorityPattern, RegexOptions.IgnoreCase);
             Priority = reg.Match(raw).Groups["priority"].Value.Trim();
             raw = reg.Replace(raw, "");
-
 
             reg = new Regex(datePattern);
             DueDate = reg.Match(raw).Groups["date"].Value.Trim();

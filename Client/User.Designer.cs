@@ -142,5 +142,17 @@ namespace Client {
                 this["AutoRefresh"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FilterCaseSensitive {
+            get {
+                return ((bool)(this["FilterCaseSensitive"]));
+            }
+            set {
+                this["FilterCaseSensitive"] = value;
+            }
+        }
     }
 }
