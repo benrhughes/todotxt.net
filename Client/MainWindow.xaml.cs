@@ -44,11 +44,11 @@ namespace Client
         Task _updating;
         int _intelliPos;
         DispatcherTimer _dispatcherTimer;
- 
+
         public MainWindow()
         {
             InitializeComponent();
-            
+
             webBrowser1.Navigate("about:blank");
 
             this.Height = User.Default.WindowHeight;
@@ -66,18 +66,26 @@ namespace Client
             ThreadPool.QueueUserWorkItem(x => CheckForUpdates());
         }
 
-        
+
         #region private methods
         private void KeyboardShortcut(Key key)
         {
+            // if there's no task list open, we only want to allow open and create shortcuts
             switch (key)
             {
                 case Key.C:
                     File_New(null, null);
-                    break;
+                    return;
                 case Key.O:
                     File_Open(null, null);
-                    break;
+                    return;
+            }
+
+            if (_taskList == null)
+                return;
+
+            switch (key)
+            {
                 case Key.N:
                     // create one-line string of all filter but not ones beginning with a minus, and use as the starting text for a new task
                     string filters = "";
@@ -239,7 +247,7 @@ namespace Client
         private void Help(object sender, RoutedEventArgs e)
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            var msg = 
+            var msg =
 @"todotxt.net: a Windows UI for todo.txt
 
 Version " + version + @"
@@ -289,7 +297,7 @@ Copyright 2011 Ben Hughes";
                 }
                 else
                 {
-                    var comparer = User.Default.FilterCaseSensitive ? StringComparison.InvariantCulture: StringComparison.InvariantCultureIgnoreCase;
+                    var comparer = User.Default.FilterCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
                     foreach (var task in _taskList.Tasks)
                     {
                         bool include = true;
@@ -383,7 +391,7 @@ Copyright 2011 Ben Hughes";
 
             if (File.Exists(dialog.FileName))
                 LoadTasks(dialog.FileName);
-                
+
         }
 
         private static void SaveFileDialog(string filename)
@@ -391,7 +399,7 @@ Copyright 2011 Ben Hughes";
             using (StreamWriter todofile = new StreamWriter(filename))
             {
                 todofile.Write("");
-            }            
+            }
         }
 
 
@@ -732,17 +740,17 @@ Copyright 2011 Ben Hughes";
 
         private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
         {
+            if (_taskList == null)
+            {
+                MessageBox.Show("You don't have a todo.txt file open - please use File\\New or File\\Open",
+                    "Please open a file", MessageBoxButton.OK, MessageBoxImage.Error);
+                e.Handled = true;
+                lbTasks.Focus();
+                return;
+            }
+
             if (e.Key == Key.Enter)
             {
-                if (_taskList == null)
-                {
-                    MessageBox.Show("You don't have a todo.txt file open - please use File\\New or File\\Open",
-                        "Please open a file", MessageBoxButton.OK, MessageBoxImage.Error);
-                    e.Handled = true;
-                    lbTasks.Focus();
-                    return;
-                }
-
                 if (_updating == null)
                 {
                     try
@@ -789,7 +797,6 @@ Copyright 2011 Ben Hughes";
                     default:
                         var word = FindIntelliWord();
                         IntellisenseList.Items.Filter = (o) => o.ToString().Contains(word);
-
                         break;
                 }
             }
@@ -797,20 +804,6 @@ Copyright 2011 Ben Hughes";
             {
                 switch (e.Key)
                 {
-                    case Key.Enter:
-                        if (_updating == null)
-                        {
-                            _taskList.Add(new Task(taskText.Text.Trim()));
-                        }
-                        else
-                        {
-                            _taskList.Update(_updating, new Task(taskText.Text.Trim()));
-                            _updating = null;
-                        }
-
-                        taskText.Text = "";
-                        FilterAndSort(_currentSort);
-                        break;
                     case Key.Escape:
                         _updating = null;
                         taskText.Text = "";
@@ -820,14 +813,14 @@ Copyright 2011 Ben Hughes";
                         List<string> projects = new List<string>();
                         _taskList.Tasks.Each(task => projects = projects.Concat(task.Projects).ToList());
 
-                        _intelliPos = taskText.CaretIndex-1;
+                        _intelliPos = taskText.CaretIndex - 1;
                         ShowIntellisense(projects.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(_intelliPos));
                         break;
                     case Key.D2:
                         List<string> contexts = new List<string>();
                         _taskList.Tasks.Each(task => contexts = contexts.Concat(task.Contexts).ToList());
 
-                        _intelliPos = taskText.CaretIndex-1;
+                        _intelliPos = taskText.CaretIndex - 1;
                         ShowIntellisense(contexts.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(_intelliPos));
                         break;
                 }
