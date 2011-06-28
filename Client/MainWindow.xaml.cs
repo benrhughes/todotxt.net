@@ -51,6 +51,14 @@ namespace Client
 
             webBrowser1.Navigate("about:blank");
 
+            // migrate the user settings from the previous version
+            if (User.Default.FirstRun)
+            {
+                User.Default.Upgrade();
+                User.Default.FirstRun = false;
+                User.Default.Save();
+            }
+
             this.Height = User.Default.WindowHeight;
             this.Width = User.Default.WindowWidth;
             this.Left = User.Default.WindowLeft;
