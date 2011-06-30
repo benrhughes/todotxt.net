@@ -515,6 +515,7 @@ Copyright 2011 Ben Hughes";
             // CSS Presentation
             printstyle += "body, table, tr, th, td {font-family:Cambria,Courier New;font-size:11px;} ";
             printstyle += "td.priority{font-weight:bold;} ";
+            printstyle += "td.complete{font-weight:bold;} ";
             printstyle += "tr.tbhead td {font-weight:bold;} ";
             printstyle += "span.project{color:red;} ";
             printstyle += "span.context{color:blue;} ";
@@ -533,82 +534,399 @@ Copyright 2011 Ben Hughes";
             printContents += "<tr class='tbhead'><th>&nbsp;</th><th>Done</th><th>Created</th><td>Details</td></tr>";
             foreach (var task in lbTasks.Items)
             {
-                bool isComplete = false;
+                // Determine which scenario the task fits
+                //   Scenario 1 - Completed task (1st word is "x", 2nd word is Date_Completed, 3rd word starts Task_Details
+                //   Scenario 2 - Uncompleted task with Priority with Creation_Date
+                //   Scenario 3 - Uncompleted task with Priority without Creation_Date
+                //   Scenario 4 - Uncompleted task without Priority with Creation_Date
+                //   Scenario 5 - Uncompleted task without Priority without Creation_Date
+                int scenario = 0;
 
-                taskdetail = task.ToString();
-                taskdetail = taskdetail.Trim();
+                taskdetail = task.ToString().Trim();
+                string[] split = taskdetail.Split(new char[] { ' ' });
 
-                if (taskdetail.Substring(0, 2) == "x ")
+                if (isCompletedField(split[0]))  // completed
+                {
+                    scenario = 1;
+                }
+                if (!isCompletedField(split[0]))  // not completed
+                {
+                    if (isPriorityField(split[0]))  // with priority
+                    {
+                        if (isDateField(split[1]))  // with creation date
+                        {
+                            scenario = 2;
+                        }
+                        else  // without creation date
+                        {
+                            scenario = 3;
+                        }
+                    }
+                    else   // without priority
+                    {
+                        if (isDateField(split[0]))  // with creation date
+                        {
+                            scenario = 4;
+                        }
+                        else  // without creation date
+                        {
+                            scenario = 5;
+                        }
+                    }
+                }
+
+                if (scenario == 1)
                 {
                     printContents += "<tr class='completedTask'>";
-                    isComplete = true;
                 }
                 else
                 {
                     printContents += "<tr class='uncompletedTask'>";
-                    isComplete = false;
                 }
-                string[] split = taskdetail.Split(new Char[] { ' ' });
 
-                int c = 0;
 
-                foreach (string s in split)
+                switch(scenario)
                 {
-                    c++;
-                    if (s.Substring(0, 1) == "(" && s.Substring(2, 1) == ")" && s.Length == 3)
-                    {
-                        printContents += "<td class='priority'>" + s + "</td><td>&nbsp;</td>";
-                    }
-                    else if (s.Substring(0, 1) == "x" && c == 1)
-                    {
-                        printContents += "<td class='priority'>" + s + "</td> ";
-                    }
-                    else if (s.Substring(0, 1) == "+")
-                    {
-                        printContents += "<span class='project'>" + s + "</span> ";
-                    }
-                    else if (s.Substring(0, 1) == "@")
-                    {
-                        printContents += "<span class='context'>" + s + "</span> ";
-                    }
-                    else if (IsDate(s) != false)
-                    {
-                        if (c == 2 && isComplete) // then its completed date
+                    case 1:
+                        printContents += "<td class='complete'>" + split[0] + "</td> ";
+                        printContents += "<td class='completeddate'>" + split[1] + "</td> ";
+                        
+                        for (int i = 2; i < split.Count(); i++)
                         {
-                            printContents += "<td class='completeddate'>" + s + "</td> ";
+                            if (isDateField(split[i]) && i==2)
+                            {
+                                printContents += "<td class='startdate'>" + split[i] + "</td> <td>";
+                            }
+                            else
+                            {
+                                if (i == 2)
+                                {
+                                    printContents += "<td>&nbsp;</td><td>";
+                                }
+                                if (isProjectField(split[i]))
+                                {
+                                    printContents += "<span class='project'>" + split[i] + "</span> ";
+                                }
+                                else
+                                {
+                                    if (isContextField(split[i]))
+                                    {
+                                        printContents += "<span class='context'>" + split[i] + "</span> ";
+                                    }
+                                    else
+                                    {
+                                        if (isDateField(split[i]))
+                                        {
+                                            printContents += "<span class='isdate'>" + split[i] + "</span> ";
+                                        }
+                                        else
+                                        {
+                                            printContents += split[i] + " ";
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        else if (c == 2 && !isComplete) // then its start date
-                        {
-                            printContents += "<td class='startdate'>" + s + "</td> ";
-                        }
-                        else if (c == 3)    //then must be start date
-                        {
-                            printContents += "<td class='startdate'>" + s + "</td> ";
-                        }
-                        else
-                        {
-                            printContents += "<span class='isdate'>" + s + "</span> ";
-                        }
+                        printContents = printContents.Trim();
+                        printContents += "</td></tr>";
+                        break;
 
-                    }
-                    else
-                    {
-                        if ((isComplete && c == 4) || (!isComplete && c == 3)) // should be the start of the task's details
+                    case 2:
+                        printContents += "<td class='priority'>" + split[0] + "</td> <td>&nbsp;</td> ";
+                        printContents += "<td class='startdate'>" + split[1] + "</td> ";
+                        printContents += "<td>";
+
+                        for (int i = 2; i < split.Count(); i++)
                         {
-                            printContents += "<td>" + s + " ";
+                            if (isProjectField(split[i]))
+                            {
+                                printContents += "<span class='project'>" + split[i] + "</span> ";
+                            }
+                            else
+                            {
+                                if (isContextField(split[i]))
+                                {
+                                    printContents += "<span class='context'>" + split[i] + "</span> ";
+                                }
+                                else
+                                {
+                                    if (isDateField(split[i]))
+                                    {
+                                        printContents += "<span class='isdate'>" + split[i] + "</span> ";
+                                    }
+                                    else
+                                    {
+                                        printContents += split[i] + " ";
+                                    }
+                                }
+                            }
                         }
-                        else
+                        printContents = printContents.Trim();
+                        printContents += "</td></tr>";
+                        break;
+
+                    case 3:
+                        printContents += "<td class='priority'>" + split[0] + "</td><td>&nbsp;</td><td>&nbsp;</td> ";
+                        printContents += "<td>";
+
+                        for (int i = 1; i < split.Count(); i++)
                         {
-                            printContents += s + " ";
+                            if (isProjectField(split[i]))
+                            {
+                                printContents += "<span class='project'>" + split[i] + "</span> ";
+                            }
+                            else
+                            {
+                                if (isContextField(split[i]))
+                                {
+                                    printContents += "<span class='context'>" + split[i] + "</span> ";
+                                }
+                                else
+                                {
+                                    if (isDateField(split[i]))
+                                    {
+                                        printContents += "<span class='isdate'>" + split[i] + "</span> ";
+                                    }
+                                    else
+                                    {
+                                        printContents += split[i] + " ";
+                                    }
+                                }
+                            }
                         }
-                    }
+                        printContents = printContents.Trim();
+                        printContents += "</td></tr>";
+                        break;
+
+                    case 4:
+                        printContents += "<td>&nbsp;</td><td>&nbsp;</td><td class='startdate'>" + split[0] + "</td> ";
+                        printContents += "<td>";
+
+                        for (int i = 1; i < split.Count(); i++)
+                        {
+                            if (isProjectField(split[i]))
+                            {
+                                printContents += "<span class='project'>" + split[i] + "</span> ";
+                            }
+                            else
+                            {
+                                if (isContextField(split[i]))
+                                {
+                                    printContents += "<span class='context'>" + split[i] + "</span> ";
+                                }
+                                else
+                                {
+                                    if (isDateField(split[i]))
+                                    {
+                                        printContents += "<span class='isdate'>" + split[i] + "</span> ";
+                                    }
+                                    else
+                                    {
+                                        printContents += split[i] + " ";
+                                    }
+                                }
+                            }
+                        }
+                        printContents = printContents.Trim();
+                        printContents += "</td></tr>";
+                        break;
+
+                    case 5:
+                        printContents += "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>";
+
+                        for (int i = 0; i < split.Count(); i++)
+                        {
+                            if (isProjectField(split[i]))
+                            {
+                                printContents += "<span class='project'>" + split[i] + "</span> ";
+                            }
+                            else
+                            {
+                                if (isContextField(split[i]))
+                                {
+                                    printContents += "<span class='context'>" + split[i] + "</span> ";
+                                }
+                                else
+                                {
+                                    if (isDateField(split[i]))
+                                    {
+                                        printContents += "<span class='isdate'>" + split[i] + "</span> ";
+                                    }
+                                    else
+                                    {
+                                        printContents += split[i] + " ";
+                                    }
+                                }
+                            }
+                        }
+                        printContents = printContents.Trim();
+                        printContents += "</td></tr>";
+                        break;
+
+                    default:
+
+                        // we should not hit this section
+
+                        break;
                 }
-                printContents = printContents.Trim();
-                printContents += "</td></tr>";
+
+                //---------
+                //bool isComplete = false;
+
+                //taskdetail = task.ToString();
+                //taskdetail = taskdetail.Trim();
+
+                //if (taskdetail.Substring(0, 2) == "x ")
+                //{
+                //    printContents += "<tr class='completedTask'>";
+                //    isComplete = true;
+                //}
+                //else
+                //{
+                //    printContents += "<tr class='uncompletedTask'>";
+                //    isComplete = false;
+                //}
+               
+                //int c = 0;
+
+                //foreach (string s in split)
+                //{
+                //    c++;
+                //    if (isPriorityField(s))
+                //    {
+                //        printContents += "<td class='priority'>" + s + "</td><td>&nbsp;</td>";
+                //    }
+                //    else if (isCompletedField(s) && c == 1)
+                //    {
+                //        printContents += "<td class='complete'>" + s + "</td> ";
+                //    }
+                //    else if (isProjectField(s))
+                //    {
+                //        printContents += "<span class='project'>" + s + "</span> ";
+                //    }
+                //    else if (isContextField(s))
+                //    {
+                //        printContents += "<span class='context'>" + s + "</span> ";
+                //    }
+                //    else if (IsDate(s) != false)
+                //    {
+                //        if (c == 2 && isComplete) // then its completed date
+                //        {
+                //            printContents += "<td class='completeddate'>" + s + "</td> ";
+                //        }
+                //        else if (c == 2 && !isComplete) // then its start date
+                //        {
+                //            printContents += "<td class='startdate'>" + s + "</td> ";
+                //        }
+                //        else if (c == 3)    //then must be start date
+                //        {
+                //            printContents += "<td class='startdate'>" + s + "</td> ";
+                //        }
+                //        else
+                //        {
+                //            printContents += "<span class='isdate'>" + s + "</span> ";
+                //        }
+
+                //    }
+                //    else
+                //    {
+                //        if ((isComplete && c == 4) || (!isComplete && c == 3)) // should be the start of the task's details
+                //        {
+                //            printContents += "<td>" + s + " ";
+                //        }
+                //        else
+                //        {
+                //            printContents += s + " ";
+                //        }
+                //    }
+                //}
+                //printContents = printContents.Trim();
+                //printContents += "</td></tr>";
             }
             printContents += "</table></body></html>";
 
             return printContents;
+        }
+
+        private bool isPriorityField(string s)
+        {
+            if (s.Length > 0)
+            {
+                if (s.Length == 3 && s.Substring(0, 1) == "(" && s.Substring(2, 1) == ")")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool isDateField(string s)
+        {
+            return IsDate(s);
+        }
+
+        private bool isProjectField(string s)
+        {
+            if (s.Length > 0)
+            {
+                if (s.Substring(0, 1) == "+")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool isContextField(string s)
+        {
+            if (s.Length > 0)
+            {
+                if (s.Substring(0, 1) == "@")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool isCompletedField(string s)
+        {
+            if (s.Length > 0)
+            {
+                if (s.Length == 1 && s.Substring(0, 1) == "x")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private void File_PrintPreview(object sender, RoutedEventArgs e)
@@ -622,7 +940,6 @@ Copyright 2011 Ben Hughes";
             doc.close();
 
             Set_PrintControlsVisibility(true);
-
         }
 
         private void File_Print(object sender, RoutedEventArgs e)
