@@ -51,7 +51,7 @@ namespace Client
 
             webBrowser1.Navigate("about:blank");
 
-            // migrate the user settings from the previous version
+            // migrate the user settings from the previous version, if necessary
             if (User.Default.FirstRun)
             {
                 User.Default.Upgrade();
