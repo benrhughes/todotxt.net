@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
-	<version>0.8.6.0</version>
-	<changelog>Print Preview; Options dialog; Case-insensitive filtering option; Fixed bug with due date sorting</changelog>
+	<version>0.8.7.0</version>
+	<changelog>Fix for Print/Print preview bug; Settings are now migrated when upgrading; Better handing of a todo.txt file not being open</changelog>
 </updates>

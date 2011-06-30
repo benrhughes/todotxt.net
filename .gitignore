@@ -17,6 +17,7 @@ TestResults
 
 # generated installer packages
 *.msi
+*.exe
 
 # finalbuilder log/tmp files
 *.fbl7
