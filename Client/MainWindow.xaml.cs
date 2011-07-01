@@ -545,35 +545,7 @@ Copyright 2011 Ben Hughes";
                 taskdetail = task.ToString().Trim();
                 string[] split = taskdetail.Split(new char[] { ' ' });
 
-                if (isCompletedField(split[0]))  // completed
-                {
-                    scenario = 1;
-                }
-                if (!isCompletedField(split[0]))  // not completed
-                {
-                    if (isPriorityField(split[0]))  // with priority
-                    {
-                        if (isDateField(split[1]))  // with creation date
-                        {
-                            scenario = 2;
-                        }
-                        else  // without creation date
-                        {
-                            scenario = 3;
-                        }
-                    }
-                    else   // without priority
-                    {
-                        if (isDateField(split[0]))  // with creation date
-                        {
-                            scenario = 4;
-                        }
-                        else  // without creation date
-                        {
-                            scenario = 5;
-                        }
-                    }
-                }
+                scenario = getTaskScenario(split);
 
                 if (scenario == 1)
                 {
@@ -769,83 +741,45 @@ Copyright 2011 Ben Hughes";
 
                         break;
                 }
-
-                //---------
-                //bool isComplete = false;
-
-                //taskdetail = task.ToString();
-                //taskdetail = taskdetail.Trim();
-
-                //if (taskdetail.Substring(0, 2) == "x ")
-                //{
-                //    printContents += "<tr class='completedTask'>";
-                //    isComplete = true;
-                //}
-                //else
-                //{
-                //    printContents += "<tr class='uncompletedTask'>";
-                //    isComplete = false;
-                //}
-               
-                //int c = 0;
-
-                //foreach (string s in split)
-                //{
-                //    c++;
-                //    if (isPriorityField(s))
-                //    {
-                //        printContents += "<td class='priority'>" + s + "</td><td>&nbsp;</td>";
-                //    }
-                //    else if (isCompletedField(s) && c == 1)
-                //    {
-                //        printContents += "<td class='complete'>" + s + "</td> ";
-                //    }
-                //    else if (isProjectField(s))
-                //    {
-                //        printContents += "<span class='project'>" + s + "</span> ";
-                //    }
-                //    else if (isContextField(s))
-                //    {
-                //        printContents += "<span class='context'>" + s + "</span> ";
-                //    }
-                //    else if (IsDate(s) != false)
-                //    {
-                //        if (c == 2 && isComplete) // then its completed date
-                //        {
-                //            printContents += "<td class='completeddate'>" + s + "</td> ";
-                //        }
-                //        else if (c == 2 && !isComplete) // then its start date
-                //        {
-                //            printContents += "<td class='startdate'>" + s + "</td> ";
-                //        }
-                //        else if (c == 3)    //then must be start date
-                //        {
-                //            printContents += "<td class='startdate'>" + s + "</td> ";
-                //        }
-                //        else
-                //        {
-                //            printContents += "<span class='isdate'>" + s + "</span> ";
-                //        }
-
-                //    }
-                //    else
-                //    {
-                //        if ((isComplete && c == 4) || (!isComplete && c == 3)) // should be the start of the task's details
-                //        {
-                //            printContents += "<td>" + s + " ";
-                //        }
-                //        else
-                //        {
-                //            printContents += s + " ";
-                //        }
-                //    }
-                //}
-                //printContents = printContents.Trim();
-                //printContents += "</td></tr>";
             }
             printContents += "</table></body></html>";
 
             return printContents;
+        }
+
+        private int getTaskScenario(string[] split)
+        {
+            int scenario = 0;
+            if (isCompletedField(split[0]))  // completed
+            {
+                scenario = 1;
+            }
+            if (!isCompletedField(split[0]))  // not completed
+            {
+                if (isPriorityField(split[0]))  // with priority
+                {
+                    if (isDateField(split[1]))  // with creation date
+                    {
+                        scenario = 2;
+                    }
+                    else  // without creation date
+                    {
+                        scenario = 3;
+                    }
+                }
+                else   // without priority
+                {
+                    if (isDateField(split[0]))  // with creation date
+                    {
+                        scenario = 4;
+                    }
+                    else  // without creation date
+                    {
+                        scenario = 5;
+                    }
+                }
+            }
+            return scenario;
         }
 
         private bool isPriorityField(string s)
@@ -1080,7 +1014,51 @@ Copyright 2011 Ben Hughes";
                 {
                     try
                     {
-                        _taskList.Add(new Task(taskText.Text.Trim()));
+                        // determine if task entered has a creation date, if not lets add one.
+                        // also need to know if there is a priority because we'll need to add the creation date after it if there is one.
+                        string taskdetail = taskText.Text.Trim();
+                        string[] split = taskdetail.Split(new char[] { ' ' });
+                        int scenario = 0;
+                        scenario = getTaskScenario(split);
+                        DateTime thisDay = DateTime.Today;
+
+                        switch (scenario)
+                        {
+                            //   Scenario 1 - Completed task (1st word is "x", 2nd word is Date_Completed, 3rd word starts Task_Details
+                            //   Scenario 2 - Uncompleted task with Priority with Creation_Date
+                            //   Scenario 3 - Uncompleted task with Priority without Creation_Date
+                            //   Scenario 4 - Uncompleted task without Priority with Creation_Date
+                            //   Scenario 5 - Uncompleted task without Priority without Creation_Date
+
+                            case 0: // couldn't determine scenario
+                            case 1: // completed
+                            case 2: // has creation date
+                            case 4: // has creation date
+                                break;  // lets just leave the task alone
+
+                            case 3: // add in the creation date
+                                split[1] = thisDay.ToString("yyyy-MM-dd") + " " + split[1]; // squeeze in the date
+                                taskdetail = "";
+                                for (int i = 0; i < split.Count(); i++)  // rebuild the task
+                                {
+                                    taskdetail += split[i] + " ";
+                                }
+                                break;
+
+                            case 5: // add in the creation date
+                                split[0] = thisDay.ToString("yyyy-MM-dd") + " " + split[0]; // squeeze in the date
+                                taskdetail = "";
+                                for (int i = 0; i < split.Count(); i++)  // rebuild the task
+                                {
+                                    taskdetail += split[i] + " ";
+                                }
+                                break;
+
+                            default:
+                                break;  // anything else just leave the task alone
+
+                        }
+                        _taskList.Add(new Task(taskdetail.Trim()));
                     }
                     catch (TaskException ex)
                     {
