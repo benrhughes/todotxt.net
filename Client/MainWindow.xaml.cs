@@ -1198,8 +1198,11 @@ Copyright 2011 Ben Hughes";
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            _taskList.ReloadTasks();
-            FilterAndSort(_currentSort);
+            if (!taskText.IsFocused)
+            {
+                _taskList.ReloadTasks();
+                FilterAndSort(_currentSort);
+            }
         }
         #endregion
 
