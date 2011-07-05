@@ -27,6 +27,7 @@ namespace Client
             cbAutoArchive.IsChecked = User.Default.AutoArchive;
             cbAutoRefresh.IsChecked = User.Default.AutoRefresh;
             cbCaseSensitiveFilter.IsChecked = User.Default.FilterCaseSensitive;
+            cbAddCreationDate.IsChecked = User.Default.AddCreationDate;
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)

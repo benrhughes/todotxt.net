@@ -459,6 +459,7 @@ Copyright 2011 Ben Hughes";
                 User.Default.AutoArchive = o.cbAutoArchive.IsChecked.Value;
                 User.Default.AutoRefresh = o.cbAutoRefresh.IsChecked.Value;
                 User.Default.FilterCaseSensitive = o.cbCaseSensitiveFilter.IsChecked.Value;
+                User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
 
                 User.Default.Save();
 
@@ -1014,51 +1015,22 @@ Copyright 2011 Ben Hughes";
                 {
                     try
                     {
-                        // determine if task entered has a creation date, if not lets add one.
-                        // also need to know if there is a priority because we'll need to add the creation date after it if there is one.
-                        string taskdetail = taskText.Text.Trim();
-                        string[] split = taskdetail.Split(new char[] { ' ' });
-                        int scenario = 0;
-                        scenario = getTaskScenario(split);
-                        DateTime thisDay = DateTime.Today;
+                        var taskDetail = taskText.Text.Trim();
 
-                        switch (scenario)
+                        if (User.Default.AddCreationDate)
                         {
-                            //   Scenario 1 - Completed task (1st word is "x", 2nd word is Date_Completed, 3rd word starts Task_Details
-                            //   Scenario 2 - Uncompleted task with Priority with Creation_Date
-                            //   Scenario 3 - Uncompleted task with Priority without Creation_Date
-                            //   Scenario 4 - Uncompleted task without Priority with Creation_Date
-                            //   Scenario 5 - Uncompleted task without Priority without Creation_Date
+                            var tmpTask = new Task(taskDetail);
+                            var today = DateTime.Today.ToString("yyyy-MM-dd");
 
-                            case 0: // couldn't determine scenario
-                            case 1: // completed
-                            case 2: // has creation date
-                            case 4: // has creation date
-                                break;  // lets just leave the task alone
-
-                            case 3: // add in the creation date
-                                split[1] = thisDay.ToString("yyyy-MM-dd") + " " + split[1]; // squeeze in the date
-                                taskdetail = "";
-                                for (int i = 0; i < split.Count(); i++)  // rebuild the task
-                                {
-                                    taskdetail += split[i] + " ";
-                                }
-                                break;
-
-                            case 5: // add in the creation date
-                                split[0] = thisDay.ToString("yyyy-MM-dd") + " " + split[0]; // squeeze in the date
-                                taskdetail = "";
-                                for (int i = 0; i < split.Count(); i++)  // rebuild the task
-                                {
-                                    taskdetail += split[i] + " ";
-                                }
-                                break;
-
-                            default:
-                                break;  // anything else just leave the task alone
-
+                            if (string.IsNullOrEmpty(tmpTask.CreationDate))
+                            {
+                                if(string.IsNullOrEmpty(tmpTask.Priority))
+                                    taskDetail = today + " " + taskDetail;  
+                                else
+                                    taskDetail = taskDetail.Insert(tmpTask.Priority.Length, " " + today); 
+                            }
                         }
-                        _taskList.Add(new Task(taskdetail.Trim()));
+                        _taskList.Add(new Task(taskDetail.Trim()));
                     }
                     catch (TaskException ex)
                     {

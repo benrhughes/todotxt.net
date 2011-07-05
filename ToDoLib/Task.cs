@@ -10,7 +10,8 @@ namespace ToDoLib
     {
         const string completedPattern = @"^X\s((\d{4})-(\d{2})-(\d{2}))?";
         const string priorityPattern = @"^(?<priority>\([A-Z]\)\s)";
-        const string datePattern = @"due:(?<date>(\d{4})-(\d{2})-(\d{2}))";
+        const string createdDatePattern = @"(?<date>(\d{4})-(\d{2})-(\d{2}))";
+        const string dueDatePattern = @"due:(?<date>(\d{4})-(\d{2})-(\d{2}))";
         const string projectPattern = @"(?<proj>\+\w+)";
         const string contextPattern = @"(?<context>\@\w+)";
 
@@ -18,6 +19,7 @@ namespace ToDoLib
         public List<string> Contexts { get; set; }
         public string DueDate { get; set; }
         public string CompletedDate { get; set; }
+        public string CreationDate { get; set; }
         public string Priority { get; set; }
         public string Body { get; set; }
         public string Raw { get; set; }
@@ -57,6 +59,7 @@ namespace ToDoLib
             // - completed
             // - priority
             // - due date
+            // - created date
             // - projects | contexts
             // What we have left is the body
 
@@ -69,7 +72,11 @@ namespace ToDoLib
             Priority = reg.Match(raw).Groups["priority"].Value.Trim();
             raw = reg.Replace(raw, "");
 
-            reg = new Regex(datePattern);
+            reg = new Regex(dueDatePattern);
+            DueDate = reg.Match(raw).Groups["date"].Value.Trim();
+            raw = reg.Replace(raw, "");
+
+            reg = new Regex(createdDatePattern);
             DueDate = reg.Match(raw).Groups["date"].Value.Trim();
             raw = reg.Replace(raw, "");
 
@@ -154,5 +161,6 @@ namespace ToDoLib
 
             return string.Compare(this.Raw, other.Raw);
         }
+
     }
 }
