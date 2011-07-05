@@ -532,7 +532,11 @@ Copyright 2011 Ben Hughes";
                 else
                 {
                     contents.Append("<tr class='uncompletedTask'>");
-                    contents.Append("<td>&nbsp;</td>");
+                    if (string.IsNullOrEmpty(task.Priority))
+                        contents.Append("<td>&nbsp;</td>");
+                    else
+                        contents.Append("<td>" + task.Priority + "</td>");
+
                     contents.Append("<td>&nbsp;</td>");
                 }
 
