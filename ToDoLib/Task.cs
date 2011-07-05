@@ -64,7 +64,19 @@ namespace ToDoLib
             // What we have left is the body
 
             var reg = new Regex(completedPattern, RegexOptions.IgnoreCase);
-            Completed = reg.IsMatch(raw);
+            var s = reg.Match(raw).Value.Trim();
+
+            if (string.IsNullOrEmpty(s))
+            {
+                Completed = false;
+                CompletedDate = "";
+            }
+            else
+            {
+                Completed = true;
+                if (s.Length >1)
+                    CompletedDate = s.Substring(2);
+            }
             raw = reg.Replace(raw, "");
 
 
@@ -77,7 +89,7 @@ namespace ToDoLib
             raw = reg.Replace(raw, "");
 
             reg = new Regex(createdDatePattern);
-            DueDate = reg.Match(raw).Groups["date"].Value.Trim();
+            CreationDate = reg.Match(raw).Groups["date"].Value.Trim();
             raw = reg.Replace(raw, "");
 
             Projects = new List<string>();

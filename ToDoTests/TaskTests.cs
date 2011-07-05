@@ -72,10 +72,18 @@ namespace ToDoTests
         [Test]
         public void Create_Completed()
         {
-            var task = new Task("X (A) @work +test This is a test task");
+            var task = new Task("X @work +test This is a test task");
 
-            var expectedTask = new Task("(A)", _projects, _contexts, "This is a test task", "", true);
+            var expectedTask = new Task("", _projects, _contexts, "This is a test task", "", true);
             AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_CompletedData()
+        {
+            var task = new Task("X 2011-05-10 (A) @work +test This is a test task");
+
+            Assert.AreEqual("2011-05-10", task.CompletedDate);
         }
 
         [Test]
@@ -112,6 +120,14 @@ namespace ToDoTests
 
             var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task","2011-05-08", false);
             AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_CreationDate()
+        {
+            var task = new Task("(A) 2011-05-07 due:2011-05-08 @work @home +test This is a test task");
+
+            Assert.AreEqual("2011-05-07", task.CreationDate);
         }
 
         #endregion
