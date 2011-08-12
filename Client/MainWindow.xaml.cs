@@ -509,6 +509,10 @@ Copyright 2011 Ben Hughes";
 
         private string Get_PrintContents()
         {
+            if (lbTasks.Items == null || lbTasks.Items.IsEmpty)
+                return "";
+
+
             var contents = new StringBuilder();
 
             contents.Append("<html><head>");
@@ -535,7 +539,7 @@ Copyright 2011 Ben Hughes";
                     if (string.IsNullOrEmpty(task.Priority))
                         contents.Append("<td>&nbsp;</td>");
                     else
-                        contents.Append("<td>" + task.Priority + "</td>");
+                        contents.Append("<td><span class='priority'>" + task.Priority + "</span></td>");
 
                     contents.Append("<td>&nbsp;</td>");
                 }
