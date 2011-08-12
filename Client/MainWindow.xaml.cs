@@ -28,6 +28,22 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
+        class WindowLocation
+        {
+            public WindowLocation()
+            {
+                Left = User.Default.WindowLeft;
+                Top = User.Default.WindowTop;
+                Height = User.Default.WindowHeight;
+                Width = User.Default.WindowWidth;
+            }
+
+            public double Left { get; set; }
+            public double Top { get; set; }
+            public double Height { get; set; }
+            public double Width { get; set; }
+        }
+
         enum SortType
         {
             Alphabetical,
@@ -44,6 +60,8 @@ namespace Client
         Task _updating;
         int _intelliPos;
         DispatcherTimer _dispatcherTimer;
+
+        WindowLocation _previousWindowLocaiton;
 
         public MainWindow()
         {
@@ -369,20 +387,39 @@ Copyright 2011 Ben Hughes";
         #region UI event handling
 
         #region windows
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            User.Default.WindowHeight = e.NewSize.Height;
-            User.Default.WindowWidth = e.NewSize.Width;
-            User.Default.Save();
-        }
-
         private void Window_LocationChanged(object sender, EventArgs e)
         {
-            User.Default.WindowLeft = this.Left;
-            User.Default.WindowTop = this.Top;
-            User.Default.Save();
+            _previousWindowLocaiton = new WindowLocation();
+
+            if (Left >= 0 && Top >= 0)
+            {
+                User.Default.WindowLeft = this.Left;
+                User.Default.WindowTop = this.Top;
+                User.Default.Save();
+            }
         }
 
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (WindowState == System.Windows.WindowState.Maximized)
+            {
+                User.Default.WindowLeft = _previousWindowLocaiton.Left;
+                User.Default.WindowTop = _previousWindowLocaiton.Top;
+                User.Default.WindowHeight = _previousWindowLocaiton.Height;
+                User.Default.WindowWidth = _previousWindowLocaiton.Width;
+                User.Default.Save();
+            }
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.NewSize.Height > 0 && e.NewSize.Width > 0 && WindowState != System.Windows.WindowState.Maximized)
+            {
+                User.Default.WindowHeight = e.NewSize.Height;
+                User.Default.WindowWidth = e.NewSize.Width;
+                User.Default.Save();
+            }
+        }
         #endregion
 
         #region file menu
@@ -878,7 +915,7 @@ Copyright 2011 Ben Hughes";
                 FilterAndSort(_currentSort);
             }
         }
-        #endregion
+        #endregion        
 
     }
 }
