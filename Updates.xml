@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
-	<version>0.8.7.0</version>
-	<changelog>Fix for Print/Print preview bug; Settings are now migrated when upgrading; Better handing of a todo.txt file not being open</changelog>
+	<version>0.8.8.0</version>
+	<changelog>Option to add created date to new tasks; Fix for auto-refresh/focus bug; Fix for window size/locaiton restoration bug</changelog>
 </updates>
