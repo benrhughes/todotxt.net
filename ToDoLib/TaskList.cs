@@ -40,7 +40,14 @@ namespace ToDoLib
             }
             catch (IOException ex)
             {
-                throw new TaskException("There was a problem trying to read from your todo.txt file", ex);
+                var msg = "There was a problem trying to read from your todo.txt file";
+                Log.Debug(msg, ex);
+                throw new TaskException(msg, ex);
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex.ToString());
+                throw;
             }
         }
 
@@ -60,7 +67,14 @@ namespace ToDoLib
             }
             catch (IOException ex)
             {
-                throw new TaskException("An error occurred while trying to add your task to the task list file", ex);
+                var msg = "An error occurred while trying to add your task to the task list file";
+                Log.Debug(msg, ex);
+                throw new TaskException(msg, ex);
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex.ToString());
+                throw;
             }
 
         }
@@ -77,7 +91,14 @@ namespace ToDoLib
             }
             catch (IOException ex)
             {
-                throw new TaskException("An error occurred while trying to remove your task from the task list file", ex);
+                var msg = "An error occurred while trying to remove your task from the task list file";
+                Log.Debug(msg, ex);
+                throw new TaskException(msg, ex);
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex.ToString());
+                throw;
             }
         }
 
@@ -95,7 +116,14 @@ namespace ToDoLib
             }
             catch (IOException ex)
             {
-                throw new TaskException("An error occurred while trying to update your task int the task list file", ex);
+                var msg = "An error occurred while trying to update your task int the task list file";
+                Log.Debug(msg, ex);
+                throw new TaskException(msg, ex);
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex.ToString());
+                throw;
             }
 
             ReloadTasks();

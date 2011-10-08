@@ -77,6 +77,8 @@ namespace Client
                 User.Default.Save();
             }
 
+            Log.Enabled = User.Default.DebugLoggingOn;
+
             this.Height = User.Default.WindowHeight;
             this.Width = User.Default.WindowWidth;
             this.Left = User.Default.WindowLeft;
@@ -132,7 +134,7 @@ namespace Client
                     Filter(null, null);
                     break;
                 case Key.OemPeriod:
-                    _taskList.ReloadTasks();
+                    Reload();
                     FilterAndSort(_currentSort);
                     break;
                 case Key.X:
@@ -264,7 +266,9 @@ namespace Client
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "An error occurred while openning " + filePath, MessageBoxButton.OK);
+                var msg = "An error occurred while openning " + filePath;
+                Log.Debug(msg, ex);
+                MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
                 sortMenu.IsEnabled = false;
             }
         }
@@ -370,9 +374,9 @@ Copyright 2011 Ben Hughes";
                     Dispatcher.Invoke(new Action<string>(ShowUpdateMenu), version);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // swallowing excepitons is bad, mmmk? But it really doesn't matter if the auto-update fails, so lets make an exception...
+                Log.Debug("Error checking for updates", ex);
             }
 
         }
@@ -497,8 +501,11 @@ Copyright 2011 Ben Hughes";
                 User.Default.AutoRefresh = o.cbAutoRefresh.IsChecked.Value;
                 User.Default.FilterCaseSensitive = o.cbCaseSensitiveFilter.IsChecked.Value;
                 User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
+                User.Default.DebugLoggingOn = o.cbDebugOn.IsChecked.Value;
 
                 User.Default.Save();
+
+                Log.Enabled = User.Default.DebugLoggingOn;
 
                 TimerCheck();
 
@@ -626,21 +633,6 @@ Copyright 2011 Ben Hughes";
             doc.write(printContents);
             doc.execCommand("Print", true, 0);
             doc.close();
-        }
-
-        public bool IsDate(string sdate)
-        {
-            DateTime dt;
-            bool isDate = true;
-            try
-            {
-                dt = DateTime.Parse(sdate);
-            }
-            catch
-            {
-                isDate = false;
-            }
-            return isDate;
         }
 
         #endregion  //printing
@@ -911,12 +903,24 @@ Copyright 2011 Ben Hughes";
         {
             if (!taskText.IsFocused)
             {
-                _taskList.ReloadTasks();
+                Reload();
                 FilterAndSort(_currentSort);
             }
         }
         #endregion        
 
+
+        private void Reload()
+        {
+            try
+            {
+                _taskList.ReloadTasks();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }
 

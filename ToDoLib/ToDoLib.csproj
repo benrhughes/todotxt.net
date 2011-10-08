@@ -44,6 +44,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="OrderedList.cs" />
     <Compile Include="TaskException.cs" />
     <Compile Include="TaskList.cs" />
