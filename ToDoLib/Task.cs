@@ -50,7 +50,6 @@ namespace ToDoLib
         // Parsing needs to comply with these rules: https://github.com/ginatrapani/todo.txt-touch/wiki/Todo.txt-File-Format
 
         //TODO priority regex need to only recognice upper case single chars
-        //TODO created/due date properties
         public Task(string raw)
         {
             Raw = raw.Replace(Environment.NewLine, ""); //make sure it's just on one line

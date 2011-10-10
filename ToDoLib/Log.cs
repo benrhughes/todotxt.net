@@ -7,30 +7,49 @@ using System.Threading;
 
 namespace ToDoLib
 {
+    public enum LogLevel
+    {
+        Error,
+        Debug
+    }
+
     public static class Log
     {
-        public static bool Enabled { get; set; }
+        public static LogLevel LogLevel { get; set; }
 
         public static string LogFile
         {
             get
             {
                 return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                                          "Hughesoft", "todotxt.exe", "debug_log.txt");
+                                          "Hughesoft", "todotxt.exe", "log.txt");
             }
         }
 
-        public static void Debug(string msg, Exception ex)
+        public static void Debug(string msg, params string[] values)
         {
-            Debug(msg + Environment.NewLine + ex.ToString());
+            if (LogLevel == LogLevel.Debug)
+                Write(msg, values);
         }
 
-        public static void Debug(string msg)
+        public static void Error(string msg, Exception ex)
         {
-            if (!Enabled)
-                return;
+            Error(msg + Environment.NewLine + ex.ToString());
+        }
 
-            msg = Environment.NewLine + "[" + DateTime.Now.ToString() + "] " + msg;
+        public static void Error(string msg, params string[] values)
+        {
+            if (LogLevel == LogLevel.Debug || LogLevel == LogLevel.Error)
+                Write(msg, values);
+        }
+
+        private static void Write(string msg, params string[] values)
+        {
+            if (!values.IsNullOrEmpty())
+                msg = string.Format(msg, values);
+
+            msg = "[" + DateTime.Now.ToString() + "] " + msg + Environment.NewLine + Environment.NewLine;
+         
             var logFileDir = Path.GetDirectoryName(LogFile);
 
             if (!Directory.Exists(logFileDir))
@@ -47,7 +66,6 @@ namespace ToDoLib
 
                 m.ReleaseMutex();
             }
-
         }
     }
 }

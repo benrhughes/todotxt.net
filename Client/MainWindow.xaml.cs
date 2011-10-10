@@ -77,7 +77,7 @@ namespace Client
                 User.Default.Save();
             }
 
-            Log.Enabled = User.Default.DebugLoggingOn;
+            Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
             this.Height = User.Default.WindowHeight;
             this.Width = User.Default.WindowWidth;
@@ -267,7 +267,7 @@ namespace Client
             catch (Exception ex)
             {
                 var msg = "An error occurred while openning " + filePath;
-                Log.Debug(msg, ex);
+                Log.Error(msg, ex);
                 MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
                 sortMenu.IsEnabled = false;
             }
@@ -376,7 +376,7 @@ Copyright 2011 Ben Hughes";
             }
             catch (Exception ex)
             {
-                Log.Debug("Error checking for updates", ex);
+                Log.Error("Error checking for updates", ex);
             }
 
         }
@@ -505,7 +505,7 @@ Copyright 2011 Ben Hughes";
 
                 User.Default.Save();
 
-                Log.Enabled = User.Default.DebugLoggingOn;
+                Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
                 TimerCheck();
 
