@@ -181,6 +181,8 @@ namespace Client
 
         private IEnumerable<Task> Sort(IEnumerable<Task> tasks, SortType sort)
         {
+            Log.Debug("Sorting {0} tasks by {1}", tasks.Count().ToString(), sort.ToString());
+
             switch (sort)
             {
                 // nb, we sub-sort by completed for most sorts by prepending either a or z
@@ -243,6 +245,8 @@ namespace Client
                 lbTasks.SelectedItem = task;
 
             lbTasks.Focus();
+
+
         }
 
         void SetSelected(MenuItem item)
@@ -310,17 +314,21 @@ Copyright 2011 Ben Hughes";
             f.FilterText = User.Default.FilterText;
             if (f.ShowDialog().Value)
             {
-                User.Default.FilterText = f.FilterText;
+                User.Default.FilterText = f.FilterText.Trim();
                 FilterAndSort(_currentSort);
             }
         }
 
         private void FilterAndSort(SortType sort)
         {
+            Log.Debug("Filtering and sorting list...");
+
             List<Task> tasks = new List<Task>();
 
             if (_taskList != null)
             {
+                Log.Debug("Unfiltered task list contains {0} items", _taskList.Tasks.Count.ToString());
+
                 if (string.IsNullOrEmpty(User.Default.FilterText))
                 {
                     tasks = _taskList.Tasks.ToList();
@@ -350,6 +358,8 @@ Copyright 2011 Ben Hughes";
                     }
                 }
             }
+
+            Log.Debug("Filtered task list contains {0} items", tasks.Count.ToString());
 
             SetSort(sort, tasks);
         }
