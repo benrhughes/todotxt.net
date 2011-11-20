@@ -183,36 +183,39 @@ namespace ToDoLib
 			ChangePriority(1);
 		}
 
-		// NB, you need asciiShift +1 to go from A to B...
+		public void SetPriority(char priority)
+		{
+			var priorityString = new string(new char[] { '(', priority, ')' });
+
+			if (!Raw.IsNullOrEmpty())
+			{
+				if (Priority.IsNullOrEmpty())
+					Raw = priorityString + " " + Raw;
+				else
+					Raw = Raw.Replace(Priority, priorityString);
+			}
+
+			Priority = priorityString;
+		}
+
+		// NB, you need asciiShift +1 to go from A to B, even though that's a 'decrease' in priority
 		private void ChangePriority(int asciiShift)
 		{
-			var priority = "";
-
 			if (Priority.IsNullOrEmpty())
 			{
-				priority = "(A)";
+				SetPriority('A');
 			}
 			else
 			{
-				var letter = Priority[1];
+				var current = Priority[1];
 
-				var newLetter = (Char)((int)(letter) + asciiShift);
+				var newPriority = (Char)((int)(current) + asciiShift);
 
-				if (Char.IsLetter(newLetter))
+				if (Char.IsLetter(newPriority))
 				{
-					priority = new string(new char[] { '(', newLetter, ')' });
+					SetPriority(newPriority);
 				}
 			}
-
-			if (!Raw.IsNullOrEmpty() && !priority.IsNullOrEmpty())
-			{
-				if (Priority.IsNullOrEmpty())
-					Raw = priority + " " + Raw;
-				else
-					Raw = Raw.Replace(Priority, priority);
-			}
-
-			Priority = priority;
 		}
 	}
 }

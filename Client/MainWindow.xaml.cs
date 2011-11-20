@@ -145,6 +145,12 @@ namespace Client
 						FilterAndSort(_currentSort);
 						Reload();
 						break;
+					default:
+						updated.SetPriority(key.ToString().ToUpper()[0]);
+						_taskList.Update(selected, updated);
+						FilterAndSort(_currentSort);
+						Reload();
+						break;
 				}
 
 				return;
@@ -407,9 +413,9 @@ Copyright 2011 Ben Hughes";
 			if (selected != null)
 			{
 				object match = null;
-				foreach (var item in lbTasks.Items)
+				foreach (var item  in lbTasks.Items)
 				{
-					if (item.ToString().Equals(selected.ToString(), StringComparison.InvariantCultureIgnoreCase))
+					if (((Task)item).Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase))
 					{
 						match = item;
 						break;
