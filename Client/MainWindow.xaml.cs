@@ -96,9 +96,22 @@ namespace Client
 
 
 		#region private methods
+
+		private void Reload()
+		{
+			try
+			{
+				_taskList.ReloadTasks();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
+		}
+
 		private void KeyboardShortcut(Key key)
 		{
-			// if there's no task list open, we only want to allow open and create shortcuts
+			// create and open can be used when there's no list loaded
 			switch (key)
 			{
 				case Key.C:
@@ -111,6 +124,31 @@ namespace Client
 
 			if (_taskList == null)
 				return;
+
+			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt) && Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+			{
+				var selected = lbTasks.SelectedItem as Task;
+				var updated = new Task(selected.Raw);
+
+				switch (key)
+				{
+					case Key.Up:
+						updated.IncPriority();
+						_taskList.Update(selected, updated);
+						Reload();
+						FilterAndSort(_currentSort);
+						break;
+
+					case Key.Down:
+						updated.DecPriority();
+						_taskList.Update(selected, updated);
+						FilterAndSort(_currentSort);
+						Reload();
+						break;
+				}
+
+				return;
+			}
 
 			switch (key)
 			{
@@ -260,22 +298,22 @@ namespace Client
 		}
 
 		private void LoadTasks(string filePath)
-        {
-            try
-            {
-                _taskList = new TaskList(filePath);
-                User.Default.FilePath = filePath;
-                User.Default.Save();
-                lbTasks.ItemsSource = Sort(_taskList.Tasks, _currentSort);
-            }
-            catch (Exception ex)
-            {
-                var msg = "An error occurred while openning " + filePath;
-                Log.Error(msg, ex);
-                MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
-                sortMenu.IsEnabled = false;
-            }
-        }
+		{
+			try
+			{
+				_taskList = new TaskList(filePath);
+				User.Default.FilePath = filePath;
+				User.Default.Save();
+				lbTasks.ItemsSource = Sort(_taskList.Tasks, _currentSort);
+			}
+			catch (Exception ex)
+			{
+				var msg = "An error occurred while openning " + filePath;
+				Log.Error(msg, ex);
+				MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
+				sortMenu.IsEnabled = false;
+			}
+		}
 
 
 		private void Help(object sender, RoutedEventArgs e)
@@ -729,10 +767,10 @@ Copyright 2011 Ben Hughes";
 		#region lbTasks
 		private void lbTasks_PreviewKeyUp(object sender, KeyEventArgs e)
 		{
-			KeyboardShortcut(e.Key);
+			KeyboardShortcut(e.Key == Key.System ? e.SystemKey : e.Key);
 		}
 
-		//this is just for j and k - the nav keys
+		//this is just for j and k - the nav keys. Using KeyDown allows for holding the key to navigate
 		private void lbTasks_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
 			switch (e.Key)
@@ -944,19 +982,6 @@ Copyright 2011 Ben Hughes";
 			}
 		}
 		#endregion
-
-
-		private void Reload()
-		{
-			try
-			{
-				_taskList.ReloadTasks();
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message);
-			}
-		}
 	}
 }
 
