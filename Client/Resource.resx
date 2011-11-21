@@ -181,4 +181,29 @@
             width: 60px;
         }</value>
   </data>
+  <data name="HelpText" xml:space="preserve">
+    <value>todotxt.net: a Windows UI for todo.txt
+
+Version {0}
+
+Keyboard shortcuts:
+	- O: open todo.txt file
+	- C: new todo.txt file
+	- N: new task
+	- J: next task
+	- K: prev task
+	- X: toggle task completion
+	- D: delete task (with confirmation)
+	- U: update task
+	- F: filter tasks (free-text, one filter condition per line)
+	- .: reload tasks from file
+	- ?: show help
+	- Alt+Up: increase priority
+	- Alt+Down: decrease priority
+	- Alt+Left/Right: clear priority
+
+More info at http://bit.ly/todotxtnet
+
+Copyright 2011 Ben Hughes</value>
+  </data>
 </root>

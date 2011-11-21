@@ -299,28 +299,7 @@ namespace Client
 		private void Help(object sender, RoutedEventArgs e)
 		{
 			var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-			var msg =
-@"todotxt.net: a Windows UI for todo.txt
-
-Version " + version + @"
-
-Keyboard shortcuts:
-	- O: open todo.txt file
-	- C: new todo.txt file
-	- N: new task
-	- J: next task
-	- K: prev task
-	- X: toggle task completion
-	- D: delete task (with confirmation)
-	- U: update task
-	- F: filter tasks (free-text, one filter condition per line)
-	- .: reload tasks from file
-	- ?: show help
-
-
-More info at http://bit.ly/todotxtnet
-
-Copyright 2011 Ben Hughes";
+			var msg = string.Format(Resource.HelpText, version);
 			MessageBox.Show(msg);
 		}
 

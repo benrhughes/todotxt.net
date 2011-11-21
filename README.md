@@ -19,6 +19,7 @@ There is installer for the latest version available from the [github download pa
  - Sorting respects multiple projects and contexts
  - Remembers preferences for the todo.txt file, sort order, window size and postiion
  - Manual or automatic moving of completed tasks into an archive (done.txt) file
+ - Free text filtering/search
  - Intellisense for projects and contexts
  - Keyboard shortcuts
 	- O: open todo.txt file
@@ -32,3 +33,6 @@ There is installer for the latest version available from the [github download pa
 	- F: filter tasks (free-text, one filter condition per line)
 	- .: reload tasks from file
 	- ?: show help
+	- Alt+Up: increase priority
+	- Alt+Down: decrease priority
+	- Alt+Left/Right: clear priority
