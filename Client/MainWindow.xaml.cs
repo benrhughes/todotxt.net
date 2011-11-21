@@ -125,34 +125,8 @@ namespace Client
 			if (_taskList == null)
 				return;
 
-			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt) && Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
 			{
-				var selected = lbTasks.SelectedItem as Task;
-				var updated = new Task(selected.Raw);
-
-				switch (key)
-				{
-					case Key.Up:
-						updated.IncPriority();
-						_taskList.Update(selected, updated);
-						Reload();
-						FilterAndSort(_currentSort);
-						break;
-
-					case Key.Down:
-						updated.DecPriority();
-						_taskList.Update(selected, updated);
-						FilterAndSort(_currentSort);
-						Reload();
-						break;
-					default:
-						updated.SetPriority(key.ToString().ToUpper()[0]);
-						_taskList.Update(selected, updated);
-						FilterAndSort(_currentSort);
-						Reload();
-						break;
-				}
-
 				return;
 			}
 
@@ -773,12 +747,44 @@ Copyright 2011 Ben Hughes";
 		#region lbTasks
 		private void lbTasks_PreviewKeyUp(object sender, KeyEventArgs e)
 		{
-			KeyboardShortcut(e.Key == Key.System ? e.SystemKey : e.Key);
+			KeyboardShortcut(e.Key);
 		}
 
 		//this is just for j and k - the nav keys. Using KeyDown allows for holding the key to navigate
 		private void lbTasks_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
+			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+			{
+				var selected = lbTasks.SelectedItem as Task;
+				var updated = new Task(selected.Raw);
+
+				switch (e.SystemKey)
+				{
+					case Key.Up:
+						updated.IncPriority();
+						_taskList.Update(selected, updated);
+						Reload();
+						FilterAndSort(_currentSort);
+						break;
+
+					case Key.Down:
+						updated.DecPriority();
+						_taskList.Update(selected, updated);
+						FilterAndSort(_currentSort);
+						Reload();
+						break;
+					case Key.Left:
+					case Key.Right:
+						updated.SetPriority(' ');
+						_taskList.Update(selected, updated);
+						FilterAndSort(_currentSort);
+						Reload();
+						break;
+				}
+
+				return;
+			}
+
 			switch (e.Key)
 			{
 				case Key.J:

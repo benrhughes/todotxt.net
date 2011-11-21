@@ -185,7 +185,7 @@ namespace ToDoLib
 
 		public void SetPriority(char priority)
 		{
-			var priorityString = new string(new char[] { '(', priority, ')' });
+			var priorityString = char.IsLetter(priority) ? new string(new char[] { '(', priority, ')' }) : "";
 
 			if (!Raw.IsNullOrEmpty())
 			{
@@ -194,6 +194,8 @@ namespace ToDoLib
 				else
 					Raw = Raw.Replace(Priority, priorityString);
 			}
+
+			Raw = Raw.Trim();
 
 			Priority = priorityString;
 		}
