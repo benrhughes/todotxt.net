@@ -65,31 +65,40 @@ namespace Client
 
 		public MainWindow()
 		{
-			InitializeComponent();
-
-			webBrowser1.Navigate("about:blank");
-
-			// migrate the user settings from the previous version, if necessary
-			if (User.Default.FirstRun)
+			try
 			{
-				User.Default.Upgrade();
-				User.Default.FirstRun = false;
-				User.Default.Save();
+				InitializeComponent();
+
+				webBrowser1.Navigate("about:blank");
+
+				// migrate the user settings from the previous version, if necessary
+				if (User.Default.FirstRun)
+				{
+					User.Default.Upgrade();
+					User.Default.FirstRun = false;
+					User.Default.Save();
+				}
+
+				Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
+
+				this.Height = User.Default.WindowHeight;
+				this.Width = User.Default.WindowWidth;
+				this.Left = User.Default.WindowLeft;
+				this.Top = User.Default.WindowTop;
+
+				if (!string.IsNullOrEmpty(User.Default.FilePath))
+					LoadTasks(User.Default.FilePath);
+
+				FilterAndSort((SortType)User.Default.CurrentSort);
+
+				TimerCheck();
 			}
-
-			Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
-
-			this.Height = User.Default.WindowHeight;
-			this.Width = User.Default.WindowWidth;
-			this.Left = User.Default.WindowLeft;
-			this.Top = User.Default.WindowTop;
-
-			if (!string.IsNullOrEmpty(User.Default.FilePath))
-				LoadTasks(User.Default.FilePath);
-
-			FilterAndSort((SortType)User.Default.CurrentSort);
-
-			TimerCheck();
+			catch (Exception ex)
+			{
+				var msg = "An error occurred while intialising the application";
+				Log.Error(msg, ex);
+				MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
+			}
 
 			ThreadPool.QueueUserWorkItem(x => CheckForUpdates());
 		}
@@ -389,7 +398,7 @@ namespace Client
 
 		private void CheckForUpdates()
 		{
-			const string updateXMLUrl = @"https://raw.github.com/benrhughes/todotxt.net/master/Updates.xml";
+			const string updateXMLUrl = @"https://rawsss.github.com/benrhughes/todotxt.net/master/Updates.xml";
 
 			var xDoc = new XmlDocument();
 
