@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -60,12 +61,24 @@ namespace Client
 		Task _updating;
 		int _intelliPos;
 		DispatcherTimer _dispatcherTimer;
+        System.Windows.Forms.NotifyIcon _notifyIcon;
 
 		WindowLocation _previousWindowLocaiton;
 
 		public MainWindow()
 		{
 			InitializeComponent();
+            //add tray icon
+            _notifyIcon = new System.Windows.Forms.NotifyIcon();
+            _notifyIcon.Text = this.Title;
+            _notifyIcon.Icon = new System.Drawing.Icon("TodoTouch_512.ico");
+            _notifyIcon.Visible = true;
+            _notifyIcon.DoubleClick += 
+                delegate(object sender, EventArgs args)
+                {
+                    this.Show();
+                    this.WindowState = WindowState.Normal;
+                };
 
 			webBrowser1.Navigate("about:blank");
 
@@ -94,10 +107,21 @@ namespace Client
 			ThreadPool.QueueUserWorkItem(x => CheckForUpdates());
 		}
 
+        #region protected methods
 
-		#region private methods
+        protected override void OnStateChanged(EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+                this.Hide();
 
-		private void Reload()
+            base.OnStateChanged(e);
+        }
+
+        #endregion
+
+        #region private methods
+
+        private void Reload()
 		{
 			try
 			{
