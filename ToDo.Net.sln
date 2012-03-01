@@ -34,7 +34,6 @@ Global
 		{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}.Release|Any CPU.Build.0 = Release|Any CPU
 		{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}.Release|x86.ActiveCfg = Release|Any CPU
 		{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -44,7 +43,6 @@ Global
 		{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}.Release|Any CPU.Build.0 = Release|Any CPU
 		{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}.Release|x86.ActiveCfg = Release|Any CPU
 		{FC3F905A-DEE1-454E-8746-936492D66CF2}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{FC3F905A-DEE1-454E-8746-936492D66CF2}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
@@ -53,7 +51,6 @@ Global
 		{FC3F905A-DEE1-454E-8746-936492D66CF2}.Debug|x86.Build.0 = Debug|x86
 		{FC3F905A-DEE1-454E-8746-936492D66CF2}.Release|Any CPU.ActiveCfg = Release|x86
 		{FC3F905A-DEE1-454E-8746-936492D66CF2}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{FC3F905A-DEE1-454E-8746-936492D66CF2}.Release|Mixed Platforms.Build.0 = Release|x86
 		{FC3F905A-DEE1-454E-8746-936492D66CF2}.Release|x86.ActiveCfg = Release|x86
 		{FC3F905A-DEE1-454E-8746-936492D66CF2}.Release|x86.Build.0 = Release|x86
 		{5ACB819D-A073-4645-8035-339B28276310}.Debug|Any CPU.ActiveCfg = Debug
@@ -61,6 +58,7 @@ Global
 		{5ACB819D-A073-4645-8035-339B28276310}.Debug|x86.ActiveCfg = Debug
 		{5ACB819D-A073-4645-8035-339B28276310}.Release|Any CPU.ActiveCfg = Release
 		{5ACB819D-A073-4645-8035-339B28276310}.Release|Mixed Platforms.ActiveCfg = Release
+		{5ACB819D-A073-4645-8035-339B28276310}.Release|Mixed Platforms.Build.0 = Release
 		{5ACB819D-A073-4645-8035-339B28276310}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
