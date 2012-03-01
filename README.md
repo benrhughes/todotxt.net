@@ -4,6 +4,12 @@ This is an implemention of [todo.txt](http://todotxt.com/) on the .NET framework
 
 There is installer for the latest version available from the [github download page](https://github.com/benrhughes/todotxt.net/downloads).
 
+#### Contributors please note
+
+Please send your pull requests to the 'dev' branch. I'm setting up a CI build so from now on will be keeping master as clean as possible.
+
+If you forget it's not a major deal: it's just a bit more work for me as I have to manually merge.
+
 #### Goals
 
  - minimalist, keyboard-driven UI
