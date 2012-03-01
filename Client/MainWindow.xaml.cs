@@ -62,6 +62,7 @@ namespace Client
 		int _intelliPos;
 		DispatcherTimer _dispatcherTimer;
         System.Windows.Forms.NotifyIcon _notifyIcon;
+        HotKey _hotkey;
 
 		WindowLocation _previousWindowLocaiton;
 
@@ -69,16 +70,31 @@ namespace Client
 		{
 			InitializeComponent();
             //add tray icon
-            _notifyIcon = new System.Windows.Forms.NotifyIcon();
-            _notifyIcon.Text = this.Title;
-            _notifyIcon.Icon = new System.Drawing.Icon("TodoTouch_512.ico");
-            _notifyIcon.Visible = true;
-            _notifyIcon.DoubleClick += 
-                delegate(object sender, EventArgs args)
-                {
-                    this.Show();
-                    this.WindowState = WindowState.Normal;
-                };
+            try
+            {
+                _notifyIcon = new System.Windows.Forms.NotifyIcon();
+                _notifyIcon.Text = this.Title;
+                _notifyIcon.Icon = new System.Drawing.Icon("TodoTouch_512.ico");
+                _notifyIcon.Visible = true;
+                _notifyIcon.DoubleClick += (sender, args) => HideUnHideWindow();
+            }
+            catch (Exception ex)
+            {
+                var msg = "Error create tray icon";
+                Log.Error(msg, ex);
+            }
+            //add global key
+            try
+            {
+                _hotkey = new HotKey(ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T, this);
+                _hotkey.HotKeyPressed += (k) => HideUnHideWindow();
+            }
+            catch (Exception ex)
+            {
+                var msg = "Error Global HotKey Registered";
+                Log.Error(msg, ex);
+                MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
+            }
 
 			webBrowser1.Navigate("about:blank");
 
@@ -117,9 +133,33 @@ namespace Client
             base.OnStateChanged(e);
         }
 
-        #endregion
+
 
         #region private methods
+
+        private void HideUnHideWindow()
+        {
+            if (this.WindowState == WindowState.Minimized)
+            {
+                this.Show();
+                this.Topmost = true;
+                this.Activate();
+                this.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                this.WindowState = WindowState.Minimized;
+                this.Hide();
+            }
+        }
+
+        private void OnClose(object sender, System.ComponentModel.CancelEventArgs args)
+        {
+            _notifyIcon.Dispose();
+            _notifyIcon = null;
+        }
+
+        #endregion
 
         private void Reload()
 		{
