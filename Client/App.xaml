@@ -15,6 +15,10 @@
                     <Setter Property="Background"
                     Value="#f8f8f8"></Setter>
                 </Trigger>
+                <!--Change Style if task completed -->
+                <DataTrigger Binding="{Binding Path=Completed}" Value="True">
+                    <Setter Property="Opacity" Value="0.25" />
+                </DataTrigger>
             </Style.Triggers>
         </Style>
 
