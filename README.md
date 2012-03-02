@@ -27,7 +27,7 @@ If you forget it's not a major deal: it's just a bit more work for me as I have 
  - Manual or automatic moving of completed tasks into an archive (done.txt) file
  - Free text filtering/search
  - Intellisense for projects and contexts
- - Minimise to tray icon - double-click the icon or Win-Alt-T to hide/show
+ - Minimise to tray icon - double-click the icon or Win-Alt-T to hide or show the app
  - Keyboard shortcuts
 	- O: open todo.txt file
 	- C: new todo.txt file
