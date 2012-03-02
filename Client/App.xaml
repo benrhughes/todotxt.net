@@ -15,6 +15,18 @@
                     <Setter Property="Background"
                     Value="#f8f8f8"></Setter>
                 </Trigger>
+                <!--Change Style if task completed -->
+                <DataTrigger Binding="{Binding Path=Completed}" Value="True">
+                    <Setter Property="Opacity" Value="0.25" />
+                </DataTrigger>
+                <!--Change Style if task due today -->
+                <DataTrigger Binding="{Binding Path=IsTaskDue}" Value="0">
+                    <Setter Property="Foreground" Value="Green" />
+                </DataTrigger>
+                <!--Change Style if task overdue -->
+                <DataTrigger Binding="{Binding Path=IsTaskDue}" Value="-1">
+                    <Setter Property="Foreground" Value="Red" />
+                </DataTrigger>
             </Style.Triggers>
         </Style>
 

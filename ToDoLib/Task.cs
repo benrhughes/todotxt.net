@@ -47,6 +47,36 @@ namespace ToDoLib
 			}
 		}
 
+        /// <summary>
+        /// Test task Due
+        /// -1 task overDue
+        /// 0 task due today
+        /// 1 task not due
+        /// </summary>
+        public int IsTaskDue
+        {
+            set { }
+            get
+            {
+                if (Completed)
+                    return 1;
+
+                DateTime tmp = new DateTime();
+
+                if (DateTime.TryParse(DueDate, out tmp))
+                {
+                    if (tmp < DateTime.Today)
+                        return -1;
+                    if (tmp == DateTime.Today)
+                        return 0;
+                    return 1;
+                }
+                else {
+                    return 1;
+                }
+            }
+        }
+
 		// Parsing needs to comply with these rules: https://github.com/ginatrapani/todo.txt-touch/wiki/Todo.txt-File-Format
 
 		//TODO priority regex need to only recognice upper case single chars
