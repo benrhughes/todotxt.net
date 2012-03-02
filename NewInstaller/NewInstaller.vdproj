@@ -15,14 +15,14 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_8CD9B4E941C64684B93BCE8FC723ACDC"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_557C793D2B5DAA20C381B5DD18B8B4EB"
+        "OwnerKey" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_D9EBCBB33A4E4AEA0DFCD674286FB2BB"
-        "OwnerKey" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
+        "MsmKey" = "8:_8CD9B4E941C64684B93BCE8FC723ACDC"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -40,7 +40,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D9EBCBB33A4E4AEA0DFCD674286FB2BB"
+        "OwnerKey" = "8:_557C793D2B5DAA20C381B5DD18B8B4EB"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -148,6 +148,37 @@
         }
         "File"
         {
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_557C793D2B5DAA20C381B5DD18B8B4EB"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=0.9.2.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_557C793D2B5DAA20C381B5DD18B8B4EB"
+                    {
+                    "Name" = "8:ToDoLib.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:ToDoLib.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_9136B6B8A43E4907A3E4DB2F468AD84C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8CD9B4E941C64684B93BCE8FC723ACDC"
             {
             "SourcePath" = "8:..\\Client\\TodoTouch_512.ico"
@@ -166,32 +197,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D9EBCBB33A4E4AEA0DFCD674286FB2BB"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=0.8.2.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                }
-            "SourcePath" = "8:ToDoLib.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_9136B6B8A43E4907A3E4DB2F468AD84C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
         }
@@ -251,11 +256,11 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
         "ProductCode" = "8:{31D9751B-39A8-40D6-BDDF-BF30EB060090}"
-        "PackageCode" = "8:{AFCEE1E8-35BB-4A51-B2D7-A7BB0D243168}"
+        "PackageCode" = "8:{84FDDCD4-5FC5-445A-B249-AED04775106F}"
         "UpgradeCode" = "8:{16D204EA-4E20-46D6-8C18-227DE56996D4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:0.9.2"
@@ -786,7 +791,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_DD4FBF2F861840278FC197A08A3BC28B"
             {
-            "SourcePath" = "8:..\\Client\\obj\\x86\\Debug\\todotxt.exe"
+            "SourcePath" = "8:..\\Client\\obj\\x86\\Release\\todotxt.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_9136B6B8A43E4907A3E4DB2F468AD84C"
