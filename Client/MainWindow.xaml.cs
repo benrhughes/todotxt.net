@@ -60,9 +60,9 @@ namespace Client
 		SortType _currentSort;
 		Task _updating;
 		int _intelliPos;
-		DispatcherTimer _dispatcherTimer;
         System.Windows.Forms.NotifyIcon _notifyIcon;
         HotKey _hotkey;
+        FileSystemWatcher _watcher;
 
 		WindowLocation _previousWindowLocaiton;
 
@@ -121,8 +121,6 @@ namespace Client
 					LoadTasks(User.Default.FilePath);
 
 				FilterAndSort((SortType)User.Default.CurrentSort);
-
-				TimerCheck();
 			}
 			catch (Exception ex)
 			{
@@ -356,9 +354,11 @@ namespace Client
 			try
 			{
 				_taskList = new TaskList(filePath);
-				User.Default.FilePath = filePath;
+                User.Default.FilePath = filePath;
 				User.Default.Save();
 				lbTasks.ItemsSource = Sort(_taskList.Tasks, _currentSort);
+                //fix new view
+                ViewOnFile(User.Default.FilePath);
 			}
 			catch (Exception ex)
 			{
@@ -614,7 +614,8 @@ namespace Client
 
 				Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
-				TimerCheck();
+                if (!string.IsNullOrEmpty(User.Default.FilePath))
+                    ViewOnFile(User.Default.FilePath);
 
 				FilterAndSort(_currentSort);
 			}
@@ -1022,31 +1023,44 @@ namespace Client
 
 		#endregion
 
-		#region timer
-		private void TimerCheck()
-		{
-			if (User.Default.AutoRefresh == true)
-			{
-				_dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-				_dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-				_dispatcherTimer.Interval = new TimeSpan(0, 0, 20);
-				_dispatcherTimer.Start();
-			}
-			else if (User.Default.AutoRefresh == false && _dispatcherTimer != null)
-			{
-				_dispatcherTimer.Stop();
-			}
-		}
+        #region Viewer Change File
 
-		private void dispatcherTimer_Tick(object sender, EventArgs e)
-		{
-			if (!taskText.IsFocused)
-			{
-				Reload();
-				FilterAndSort(_currentSort);
-			}
-		}
-		#endregion
+        private void ViewOnFile(string filename)
+        {
+            if (User.Default.AutoRefresh == true)
+            {
+                if (_watcher != null)
+                {
+                    _watcher.Dispose();
+                }
+                _watcher = new FileSystemWatcher();
+                _watcher.Path = System.IO.Path.GetDirectoryName(filename);
+                _watcher.Filter = System.IO.Path.GetFileName(filename);
+                _watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size;
+
+                // Add event handlers.
+                _watcher.Changed += (object source, FileSystemEventArgs e) =>
+                {
+                    this.Dispatcher.Invoke(
+                          System.Windows.Threading.DispatcherPriority.Normal,
+                          new Action(
+                              delegate()
+                              {
+                                  Reload();
+                                  FilterAndSort(_currentSort);
+                              }));
+                };
+
+                // Begin watching.
+                _watcher.EnableRaisingEvents = true;
+            }
+            else if (User.Default.AutoRefresh == false && _watcher != null)
+            {
+                _watcher.EnableRaisingEvents = false;
+            }
+        }
+
+        #endregion
 	}
 }
 
