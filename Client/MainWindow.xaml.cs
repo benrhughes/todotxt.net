@@ -71,32 +71,34 @@ namespace Client
 			try
 			{
 				InitializeComponent();
-		            //add tray icon
-		            try
-		            {
-		                _notifyIcon = new System.Windows.Forms.NotifyIcon();
-		                _notifyIcon.Text = this.Title;
-		                _notifyIcon.Icon = new System.Drawing.Icon("TodoTouch_512.ico");
-		                _notifyIcon.Visible = true;
-		                _notifyIcon.DoubleClick += (sender, args) => HideUnHideWindow();
-		            }
-		            catch (Exception ex)
-		            {
-		                var msg = "Error create tray icon";
-		                Log.Error(msg, ex);
-		            }
-		            //add global key
-		            try
-		            {
-		                _hotkey = new HotKey(ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T, this);
-		                _hotkey.HotKeyPressed += (k) => HideUnHideWindow();
-		            }
-		            catch (Exception ex)
-		            {
-		                var msg = "Error Global HotKey Registered";
-		                Log.Error(msg, ex);
-		                MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
-		            }
+
+		        //add tray icon
+		        try
+		        {
+		            _notifyIcon = new System.Windows.Forms.NotifyIcon();
+		            _notifyIcon.Text = this.Title;
+		            _notifyIcon.Icon = new System.Drawing.Icon("TodoTouch_512.ico");
+		            _notifyIcon.Visible = true;
+		            _notifyIcon.DoubleClick += (sender, args) => HideUnHideWindow();
+		        }
+		        catch (Exception ex)
+		        {
+		            var msg = "Error create tray icon";
+		            Log.Error(msg, ex);
+		        }
+
+		        //add global key
+		        try
+		        {
+		            _hotkey = new HotKey(ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T, this);
+		            _hotkey.HotKeyPressed += (k) => HideUnHideWindow();
+		        }
+		        catch (Exception ex)
+		        {
+		            var msg = "Error Global HotKey Registered";
+		            Log.Error(msg, ex);
+		            MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
+		        }
 
 				webBrowser1.Navigate("about:blank");
 
@@ -142,11 +144,11 @@ namespace Client
             base.OnStateChanged(e);
         }
 
+		#endregion
 
+		#region private methods
 
-        #region private methods
-
-        private void HideUnHideWindow()
+		private void HideUnHideWindow()
         {
             if (this.WindowState == WindowState.Minimized)
             {
@@ -168,7 +170,6 @@ namespace Client
             _notifyIcon = null;
         }
 
-        #endregion
 
         private void Reload()
 		{
@@ -462,7 +463,7 @@ namespace Client
 
 		private void CheckForUpdates()
 		{
-			const string updateXMLUrl = @"https://rawsss.github.com/benrhughes/todotxt.net/master/Updates.xml";
+			const string updateXMLUrl = @"https://raw.github.com/benrhughes/todotxt.net/master/Updates.xml";
 
 			var xDoc = new XmlDocument();
 
