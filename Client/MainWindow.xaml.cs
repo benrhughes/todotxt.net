@@ -60,9 +60,9 @@ namespace Client
 		SortType _currentSort;
 		Task _updating;
 		int _intelliPos;
-        System.Windows.Forms.NotifyIcon _notifyIcon;
-        HotKey _hotkey;
-        FileSystemWatcher _watcher;
+        TrayMainWindows _tray;
+        HotKeyMainWindows _hotkey;
+        ObserverChangeFile _changefile;
 
 		WindowLocation _previousWindowLocaiton;
 
@@ -73,32 +73,13 @@ namespace Client
 				InitializeComponent();
 
 		        //add tray icon
-		        try
-		        {
-		            _notifyIcon = new System.Windows.Forms.NotifyIcon();
-		            _notifyIcon.Text = this.Title;
-		            _notifyIcon.Icon = new System.Drawing.Icon("TodoTouch_512.ico");
-		            _notifyIcon.Visible = true;
-		            _notifyIcon.DoubleClick += (sender, args) => HideUnHideWindow();
-		        }
-		        catch (Exception ex)
-		        {
-		            var msg = "Error create tray icon";
-		            Log.Error(msg, ex);
-		        }
-
+                _tray = new TrayMainWindows(this);
+		        
 		        //add global key
-		        try
-		        {
-		            _hotkey = new HotKey(ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T, this);
-		            _hotkey.HotKeyPressed += (k) => HideUnHideWindow();
-		        }
-		        catch (Exception ex)
-		        {
-		            var msg = "Error Global HotKey Registered";
-		            Log.Error(msg, ex);
-		            MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
-		        }
+                _hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
+
+                //add view on change file
+                _changefile = new ObserverChangeFile(this);
 
 				webBrowser1.Navigate("about:blank");
 
@@ -162,14 +143,7 @@ namespace Client
             }
         }
 
-        private void OnClose(object sender, System.ComponentModel.CancelEventArgs args)
-        {
-            _notifyIcon.Dispose();
-            _notifyIcon = null;
-        }
-
-
-        private void Reload()
+       private void Reload()
 		{
 			try
 			{
@@ -358,7 +332,7 @@ namespace Client
 				User.Default.Save();
 				lbTasks.ItemsSource = Sort(_taskList.Tasks, _currentSort);
                 //fix new view
-                ViewOnFile(User.Default.FilePath);
+                _changefile.ViewOnFile(User.Default.FilePath);
 			}
 			catch (Exception ex)
 			{
@@ -614,8 +588,7 @@ namespace Client
 
 				Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
-                if (!string.IsNullOrEmpty(User.Default.FilePath))
-                    ViewOnFile(User.Default.FilePath);
+                _changefile.ViewOnFile(User.Default.FilePath);
 
 				FilterAndSort(_currentSort);
 			}
@@ -1022,45 +995,14 @@ namespace Client
 		#endregion
 
 		#endregion
-
-        #region Viewer Change File
-
-        private void ViewOnFile(string filename)
+        
+        #region Refresh Task
+        public void Refresh()
         {
-            if (User.Default.AutoRefresh == true)
-            {
-                if (_watcher != null)
-                {
-                    _watcher.Dispose();
-                }
-                _watcher = new FileSystemWatcher();
-                _watcher.Path = System.IO.Path.GetDirectoryName(filename);
-                _watcher.Filter = System.IO.Path.GetFileName(filename);
-                _watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size;
-
-                // Add event handlers.
-                _watcher.Changed += (object source, FileSystemEventArgs e) =>
-                {
-                    this.Dispatcher.Invoke(
-                          System.Windows.Threading.DispatcherPriority.Normal,
-                          new Action(
-                              delegate()
-                              {
-                                  Reload();
-                                  FilterAndSort(_currentSort);
-                              }));
-                };
-
-                // Begin watching.
-                _watcher.EnableRaisingEvents = true;
-            }
-            else if (User.Default.AutoRefresh == false && _watcher != null)
-            {
-                _watcher.EnableRaisingEvents = false;
-            }
+            Reload();
+            FilterAndSort(_currentSort);
         }
-
         #endregion
-	}
+    }
 }
 
