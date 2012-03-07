@@ -20,7 +20,9 @@ namespace Client
                 _notifyIcon.Icon = new System.Drawing.Icon("TodoTouch_512.ico");
                 _notifyIcon.Visible = true;
                 _notifyIcon.DoubleClick += DoubleClick;
-                _window.Closed += (sender, args) => { Dispose(); };
+
+                _window.Closed += (sender, args) => { this.Dispose(); };
+                _window.StateChanged += (sender, args) => { if (_window.WindowState == WindowState.Minimized) _window.Hide(); };
             }
             catch (Exception ex)
             {

@@ -113,18 +113,6 @@ namespace Client
 			ThreadPool.QueueUserWorkItem(x => CheckForUpdates());
 		}
 
-        #region protected methods
-
-        protected override void OnStateChanged(EventArgs e)
-        {
-            if (WindowState == WindowState.Minimized)
-                this.Hide();
-
-            base.OnStateChanged(e);
-        }
-
-		#endregion
-
 		#region private methods
 
 		private void HideUnHideWindow()
