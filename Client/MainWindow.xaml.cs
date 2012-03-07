@@ -1,26 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using ToDoLib;
-using Microsoft.Win32;
-using System.IO;
-using System.Reflection;
-using System.Xml;
-using System.Threading;
-using System.Diagnostics;
 using System.Windows.Threading;
+using System.Xml;
+using Microsoft.Win32;
+using ToDoLib;
 
 namespace Client
 {
@@ -60,9 +53,10 @@ namespace Client
 		SortType _currentSort;
 		Task _updating;
 		int _intelliPos;
-		DispatcherTimer _dispatcherTimer;
-        System.Windows.Forms.NotifyIcon _notifyIcon;
-        HotKey _hotkey;
+        TrayMainWindows _tray;
+        HotKeyMainWindows _hotkey;
+        ObserverChangeFile _changefile;
+        CheckUpdate _checkupdate;
 
 		WindowLocation _previousWindowLocaiton;
 
@@ -73,32 +67,19 @@ namespace Client
 				InitializeComponent();
 
 		        //add tray icon
-		        try
-		        {
-		            _notifyIcon = new System.Windows.Forms.NotifyIcon();
-		            _notifyIcon.Text = this.Title;
-		            _notifyIcon.Icon = new System.Drawing.Icon("TodoTouch_512.ico");
-		            _notifyIcon.Visible = true;
-		            _notifyIcon.DoubleClick += (sender, args) => HideUnHideWindow();
-		        }
-		        catch (Exception ex)
-		        {
-		            var msg = "Error create tray icon";
-		            Log.Error(msg, ex);
-		        }
-
+                _tray = new TrayMainWindows(this);
+		        
 		        //add global key
-		        try
-		        {
-		            _hotkey = new HotKey(ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T, this);
-		            _hotkey.HotKeyPressed += (k) => HideUnHideWindow();
-		        }
-		        catch (Exception ex)
-		        {
-		            var msg = "Error Global HotKey Registered";
-		            Log.Error(msg, ex);
-		            MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
-		        }
+                _hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
+
+                //add view on change file
+                _changefile = new ObserverChangeFile();
+                _changefile.OnFileTaskListChange += () => Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate() { this.Refresh(); }));
+
+                //CheckUpdate new version
+                _checkupdate = new CheckUpdate();
+                _checkupdate.OnCheckedUpdateVershion += (string version) => Dispatcher.BeginInvoke(new CheckUpdate.CheckUpdateVershion(this.ShowUpdateMenu), version);
+                _checkupdate.Check();
 
 				webBrowser1.Navigate("about:blank");
 
@@ -121,8 +102,6 @@ namespace Client
 					LoadTasks(User.Default.FilePath);
 
 				FilterAndSort((SortType)User.Default.CurrentSort);
-
-				TimerCheck();
 			}
 			catch (Exception ex)
 			{
@@ -130,46 +109,10 @@ namespace Client
 				Log.Error(msg, ex);
 				MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
 			}
-
-			ThreadPool.QueueUserWorkItem(x => CheckForUpdates());
+			
 		}
 
-        #region protected methods
-
-        protected override void OnStateChanged(EventArgs e)
-        {
-            if (WindowState == WindowState.Minimized)
-                this.Hide();
-
-            base.OnStateChanged(e);
-        }
-
-		#endregion
-
 		#region private methods
-
-		private void HideUnHideWindow()
-        {
-            if (this.WindowState == WindowState.Minimized)
-            {
-                this.Show();
-                this.Topmost = true;
-                this.Activate();
-                this.WindowState = WindowState.Normal;
-            }
-            else
-            {
-                this.WindowState = WindowState.Minimized;
-                this.Hide();
-            }
-        }
-
-        private void OnClose(object sender, System.ComponentModel.CancelEventArgs args)
-        {
-            _notifyIcon.Dispose();
-            _notifyIcon = null;
-        }
-
 
         private void Reload()
 		{
@@ -356,9 +299,11 @@ namespace Client
 			try
 			{
 				_taskList = new TaskList(filePath);
-				User.Default.FilePath = filePath;
+                User.Default.FilePath = filePath;
 				User.Default.Save();
 				lbTasks.ItemsSource = Sort(_taskList.Tasks, _currentSort);
+                //fix new view
+                _changefile.ViewOnFile(User.Default.FilePath);
 			}
 			catch (Exception ex)
 			{
@@ -461,37 +406,14 @@ namespace Client
 			}
 		}
 
-		private void CheckForUpdates()
-		{
-			const string updateXMLUrl = @"https://raw.github.com/benrhughes/todotxt.net/master/Updates.xml";
-
-			var xDoc = new XmlDocument();
-
-			try
-			{
-				xDoc.Load(new XmlTextReader(updateXMLUrl));
-
-				var version = xDoc.SelectSingleNode("//version").InnerText;
-				var changelog = xDoc.SelectSingleNode("//changelog").InnerText;
-
-				var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
-				if (version != assemblyVersion)
-				{
-					Dispatcher.Invoke(new Action<string>(ShowUpdateMenu), version);
-				}
-			}
-			catch (Exception ex)
-			{
-				Log.Error("Error checking for updates", ex);
-			}
-
-		}
-
 		private void ShowUpdateMenu(string version)
 		{
-			this.UpdateMenu.Header = "New version: " + version;
-			this.UpdateMenu.Visibility = Visibility.Visible;
+            var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            if (version != assemblyVersion)
+            {
+                this.UpdateMenu.Header = "New version: " + version;
+                this.UpdateMenu.Visibility = Visibility.Visible;
+            }
 		}
 		#endregion
 
@@ -614,7 +536,7 @@ namespace Client
 
 				Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
-				TimerCheck();
+                _changefile.ViewOnFile(User.Default.FilePath);
 
 				FilterAndSort(_currentSort);
 			}
@@ -793,7 +715,7 @@ namespace Client
 		#region Update notification
 		private void Get_Update(object sender, RoutedEventArgs e)
 		{
-			Process.Start("https://github.com/benrhughes/todotxt.net/downloads");
+			Process.Start(CheckUpdate.updateClientUrl);
 		}
 		#endregion
 
@@ -1021,32 +943,14 @@ namespace Client
 		#endregion
 
 		#endregion
-
-		#region timer
-		private void TimerCheck()
-		{
-			if (User.Default.AutoRefresh == true)
-			{
-				_dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-				_dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-				_dispatcherTimer.Interval = new TimeSpan(0, 0, 20);
-				_dispatcherTimer.Start();
-			}
-			else if (User.Default.AutoRefresh == false && _dispatcherTimer != null)
-			{
-				_dispatcherTimer.Stop();
-			}
-		}
-
-		private void dispatcherTimer_Tick(object sender, EventArgs e)
-		{
-			if (!taskText.IsFocused)
-			{
-				Reload();
-				FilterAndSort(_currentSort);
-			}
-		}
-		#endregion
-	}
+        
+        #region Refresh Task
+        private void Refresh()
+        {
+            Reload();
+            FilterAndSort(_currentSort);
+        }
+        #endregion
+    }
 }
 

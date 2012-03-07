@@ -78,10 +78,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CheckUpdate.cs" />
     <Compile Include="FilterDialog.xaml.cs">
       <DependentUpon>FilterDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="HotKey.cs" />
+    <Compile Include="HotKeyMainWindows.cs" />
+    <Compile Include="ObserverChangeFile.cs" />
     <Compile Include="Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
     </Compile>
@@ -91,6 +94,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="TrayMainWindows.cs" />
     <Compile Include="User.cs" />
     <Compile Include="User.Designer.cs">
       <AutoGen>True</AutoGen>
