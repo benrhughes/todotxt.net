@@ -56,6 +56,7 @@ namespace Client
         TrayMainWindows _tray;
         HotKeyMainWindows _hotkey;
         ObserverChangeFile _changefile;
+        CheckUpdate _checkupdate;
 
 		WindowLocation _previousWindowLocaiton;
 
@@ -74,6 +75,11 @@ namespace Client
                 //add view on change file
                 _changefile = new ObserverChangeFile();
                 _changefile.OnFileTaskListChange += () => Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate() { this.Refresh(); }));
+
+                //CheckUpdate new version
+                _checkupdate = new CheckUpdate();
+                _checkupdate.OnCheckedUpdateVershion += (string version) => Dispatcher.BeginInvoke(new CheckUpdate.CheckUpdateVershion(this.ShowUpdateMenu), version);
+                _checkupdate.Check();
 
 				webBrowser1.Navigate("about:blank");
 
@@ -103,29 +109,12 @@ namespace Client
 				Log.Error(msg, ex);
 				MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
 			}
-
-			ThreadPool.QueueUserWorkItem(x => CheckForUpdates());
+			
 		}
 
 		#region private methods
 
-		private void HideUnHideWindow()
-        {
-            if (this.WindowState == WindowState.Minimized)
-            {
-                this.Show();
-                this.Topmost = true;
-                this.Activate();
-                this.WindowState = WindowState.Normal;
-            }
-            else
-            {
-                this.WindowState = WindowState.Minimized;
-                this.Hide();
-            }
-        }
-
-       private void Reload()
+        private void Reload()
 		{
 			try
 			{
@@ -417,37 +406,14 @@ namespace Client
 			}
 		}
 
-		private void CheckForUpdates()
-		{
-			const string updateXMLUrl = @"https://raw.github.com/benrhughes/todotxt.net/master/Updates.xml";
-
-			var xDoc = new XmlDocument();
-
-			try
-			{
-				xDoc.Load(new XmlTextReader(updateXMLUrl));
-
-				var version = xDoc.SelectSingleNode("//version").InnerText;
-				var changelog = xDoc.SelectSingleNode("//changelog").InnerText;
-
-				var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
-				if (version != assemblyVersion)
-				{
-					Dispatcher.Invoke(new Action<string>(ShowUpdateMenu), version);
-				}
-			}
-			catch (Exception ex)
-			{
-				Log.Error("Error checking for updates", ex);
-			}
-
-		}
-
 		private void ShowUpdateMenu(string version)
 		{
-			this.UpdateMenu.Header = "New version: " + version;
-			this.UpdateMenu.Visibility = Visibility.Visible;
+            var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            if (version != assemblyVersion)
+            {
+                this.UpdateMenu.Header = "New version: " + version;
+                this.UpdateMenu.Visibility = Visibility.Visible;
+            }
 		}
 		#endregion
 
@@ -749,7 +715,7 @@ namespace Client
 		#region Update notification
 		private void Get_Update(object sender, RoutedEventArgs e)
 		{
-			Process.Start("https://github.com/benrhughes/todotxt.net/downloads");
+			Process.Start(CheckUpdate.updateClientUrl);
 		}
 		#endregion
 
