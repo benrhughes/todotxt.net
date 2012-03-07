@@ -1,26 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using ToDoLib;
-using Microsoft.Win32;
-using System.IO;
-using System.Reflection;
-using System.Xml;
-using System.Threading;
-using System.Diagnostics;
 using System.Windows.Threading;
+using System.Xml;
+using Microsoft.Win32;
+using ToDoLib;
 
 namespace Client
 {
@@ -79,7 +72,8 @@ namespace Client
                 _hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
 
                 //add view on change file
-                _changefile = new ObserverChangeFile(this);
+                _changefile = new ObserverChangeFile();
+                _changefile.OnFileTaskListChange += () => Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate() { this.Refresh(); }));
 
 				webBrowser1.Navigate("about:blank");
 
@@ -985,7 +979,7 @@ namespace Client
 		#endregion
         
         #region Refresh Task
-        public void Refresh()
+        private void Refresh()
         {
             Reload();
             FilterAndSort(_currentSort);

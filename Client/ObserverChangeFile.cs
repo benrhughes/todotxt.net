@@ -11,12 +11,10 @@ namespace Client
     class ObserverChangeFile
     {
         private string _filename = "";
-        private FileSystemWatcher _watcher = new FileSystemWatcher();
-        private MainWindow _window;
+        private FileSystemWatcher _watcher;
 
-        public ObserverChangeFile(MainWindow window)
+        public ObserverChangeFile()
         {
-            _window = window;
         }
 
         public void ViewOnFile(string filename)
@@ -57,16 +55,13 @@ namespace Client
             }
         }
 
+        public delegate void FileTaskListChange();
+
+        public event FileTaskListChange OnFileTaskListChange;
+
         private void FileChange(object source, FileSystemEventArgs e)
         {
-            _window.Dispatcher.Invoke(
-                System.Windows.Threading.DispatcherPriority.Normal,
-                new Action(
-                    delegate()
-                    {
-                        _window.Refresh();
-                    }));
-
+            OnFileTaskListChange();
         }
     }
 }
