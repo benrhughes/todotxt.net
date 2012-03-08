@@ -79,6 +79,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CheckUpdate.cs" />
+    <Compile Include="CheckUpdateVersion.cs" />
     <Compile Include="FilterDialog.xaml.cs">
       <DependentUpon>FilterDialog.xaml</DependentUpon>
     </Compile>

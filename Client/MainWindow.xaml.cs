@@ -78,7 +78,7 @@ namespace Client
 
                 //CheckUpdate new version
                 _checkupdate = new CheckUpdate();
-                _checkupdate.OnCheckedUpdateVershion += (string version) => Dispatcher.BeginInvoke(new CheckUpdate.CheckUpdateVershion(this.ShowUpdateMenu), version);
+                _checkupdate.OnCheckedUpdateVersion += (string version) => Dispatcher.BeginInvoke(new CheckUpdate.CheckUpdateVersion(this.ShowUpdateMenu), version);
                 _checkupdate.Check();
 
 				webBrowser1.Navigate("about:blank");

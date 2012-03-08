@@ -11,8 +11,8 @@ namespace Client
         public const string updateXMLUrl = @"https://raw.github.com/benrhughes/todotxt.net/master/Updates.xml";
         public const string updateClientUrl = @"https://github.com/benrhughes/todotxt.net/downloads";
 
-        public delegate void CheckUpdateVershion(string version);
-        public event CheckUpdateVershion OnCheckedUpdateVershion;
+        public delegate void CheckUpdateVersion(string version);
+        public event CheckUpdateVersion OnCheckedUpdateVersion;
 
         private XmlDocument xDoc;
 
@@ -34,7 +34,7 @@ namespace Client
 
                 var version = xDoc.SelectSingleNode("//version").InnerText;
                 var changelog = xDoc.SelectSingleNode("//changelog").InnerText;
-                OnCheckedUpdateVershion(version);
+                OnCheckedUpdateVersion(version);
             }
             catch (Exception ex)
             {
