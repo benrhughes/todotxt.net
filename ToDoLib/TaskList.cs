@@ -19,8 +19,8 @@ namespace ToDoLib
         // NB, this is not the place for higher-level functions like searching, task manipulation etc. It's simply 
         // for CRUDing the todo.txt file. 
         
-        List<Task> _tasks;
-        string _filePath;
+        List<Task> _tasks = null;
+        string _filePath = null;
 
         public List<Task> Tasks { get { return _tasks; } }
 
@@ -32,6 +32,7 @@ namespace ToDoLib
 
         public void ReloadTasks()
         {
+
             Log.Debug("Loading tasks from {0}", _filePath);
 
             try
@@ -143,6 +144,83 @@ namespace ToDoLib
             {
                 Log.Error(ex.ToString());
                 throw;
+            }
+        }
+
+        public IEnumerable<Task> Sort(SortType sort, bool FilterCaseSensitive, string Filter)
+        {
+                return SortList(sort, FilterList(_tasks, FilterCaseSensitive, Filter));
+        }
+
+        public static List<Task> FilterList(List<Task> tasks, bool FilterCaseSensitive, string Filter) 
+        {
+            var comparer = FilterCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
+
+            if (String.IsNullOrEmpty(Filter)) return tasks;
+
+            List<Task> tasksFilter = new List<Task>();
+
+            foreach (var task in tasks)
+            {
+                bool include = true;
+                foreach (var filter in Filter.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    if (filter.Substring(0, 1) != "-")
+                    {   // if the filter does not start with a minus and filter is contained in task then filter out
+                        if (!task.Raw.Contains(filter, comparer))
+                            include = false;
+                    }
+                    else
+                    {   // if the filter starts with a minus then (ignoring the minus) check if the filter is contained in the task then filter out if so
+                        if (task.Raw.Contains(filter.Substring(1), comparer))
+                            include = false;
+                    }
+                }
+
+                if (include)
+                    tasksFilter.Add(task);
+            }
+            return tasksFilter;
+        }
+
+        public static IEnumerable<Task> SortList(SortType sort, List<Task> tasks)
+        {
+            Log.Debug("Sorting {0} tasks by {1}", tasks.Count().ToString(), sort.ToString());
+
+            switch (sort)
+            {
+                // nb, we sub-sort by completed for most sorts by prepending either a or z
+                case SortType.Completed:
+                    return tasks.OrderBy(t => t.Completed);
+                case SortType.Context:
+                    return tasks.OrderBy(t =>
+                    {
+                        var s = t.Completed ? "z" : "a";
+                        if (t.Contexts != null && t.Contexts.Count > 0)
+                            s += t.Contexts.Min().Substring(1);
+                        else
+                            s += "zzz";
+                        return s;
+                    });
+                case SortType.Alphabetical:
+                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + t.Raw);
+                case SortType.DueDate:
+                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.DueDate) ? "zzz" : t.DueDate));
+                case SortType.Priority:
+                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "zzz" : t.Priority));
+                case SortType.Project:
+                    return tasks.OrderBy(t =>
+                    {
+                        var s = t.Completed ? "z" : "a";
+                        if (t.Projects != null && t.Projects.Count > 0)
+                            s += t.Projects.Min().Substring(1);
+                        else
+                            s += "zzz";
+                        return s;
+                    });
+                case SortType.None:
+                default:
+                    return tasks;
             }
         }
     }

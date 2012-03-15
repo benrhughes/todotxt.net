@@ -38,17 +38,6 @@ namespace Client
 			public double Width { get; set; }
 		}
 
-		enum SortType
-		{
-			Alphabetical,
-			Completed,
-			Context,
-			DueDate,
-			Priority,
-			Project,
-			None
-		}
-
 		TaskList _taskList;
 		SortType _currentSort;
 		Task _updating;
@@ -214,74 +203,45 @@ namespace Client
 			}
 		}
 
-		private IEnumerable<Task> Sort(IEnumerable<Task> tasks, SortType sort)
+
+
+        void FilterAndSort(SortType sort)
 		{
-			Log.Debug("Sorting {0} tasks by {1}", tasks.Count().ToString(), sort.ToString());
+            if (_currentSort != sort)
+            {
+                User.Default.CurrentSort = (int)sort;
+                User.Default.Save();
+                _currentSort = sort;
+            }
 
-			switch (sort)
-			{
-				// nb, we sub-sort by completed for most sorts by prepending either a or z
-				case SortType.Completed:
-					return tasks.OrderBy(t => t.Completed);
-				case SortType.Context:
-					return tasks.OrderBy(t =>
-						{
-							var s = t.Completed ? "z" : "a";
-							if (t.Contexts != null && t.Contexts.Count > 0)
-								s += t.Contexts.Min().Substring(1);
-							else
-								s += "zzz";
-							return s;
-						});
-				case SortType.Alphabetical:
-					return tasks.OrderBy(t => (t.Completed ? "z" : "a") + t.Raw);
-				case SortType.DueDate:
-					return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.DueDate) ? "zzz" : t.DueDate));
-				case SortType.Priority:
-					return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "zzz" : t.Priority));
-				case SortType.Project:
-					return tasks.OrderBy(t =>
-						{
-							var s = t.Completed ? "z" : "a";
-							if (t.Projects != null && t.Projects.Count > 0)
-								s += t.Projects.Min().Substring(1);
-							else
-								s += "zzz";
-							return s;
-						});
-				case SortType.None:
-				default:
-					return tasks;
-			}
-		}
-
-		void SetSort(SortType sort, IEnumerable<Task> tasks = null, Task task = null)
-		{
-			if (tasks == null && _taskList == null)
-				return;
-
-			IEnumerable<Task> t = null;
-			if (_taskList != null)
-				t = _taskList.Tasks;
-
-			if (tasks != null)
-				t = tasks;
-
-			User.Default.CurrentSort = (int)sort;
-			User.Default.Save();
-
-			_currentSort = sort;
-
-			lbTasks.ItemsSource = Sort(t, _currentSort);
-
-			if (task == null)
-				lbTasks.SelectedIndex = 0;
-			else
-				lbTasks.SelectedItem = task;
-
-			lbTasks.Focus();
+            var selected = lbTasks.SelectedItem as Task;
+            var selectedIndex = lbTasks.SelectedIndex;
 
 
+            lbTasks.ItemsSource = _taskList.Sort(_currentSort, User.Default.FilterCaseSensitive, User.Default.FilterText);
+
+            if (selected != null)
+            {
+                object match = null;
+                foreach (var item in lbTasks.Items)
+                {
+                    if (((Task)item).Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        match = item;
+                        break;
+                    }
+                }
+
+                if (match == null)
+                {
+                    lbTasks.SelectedIndex = selectedIndex;
+                }
+                else
+                {
+                    lbTasks.SelectedItem = match;
+                    lbTasks.ScrollIntoView(match);
+                }
+            }
 		}
 
 		void SetSelected(MenuItem item)
@@ -301,9 +261,8 @@ namespace Client
 				_taskList = new TaskList(filePath);
                 User.Default.FilePath = filePath;
 				User.Default.Save();
-				lbTasks.ItemsSource = Sort(_taskList.Tasks, _currentSort);
-                //fix new view
                 _changefile.ViewOnFile(User.Default.FilePath);
+                FilterAndSort(_currentSort);
 			}
 			catch (Exception ex)
 			{
@@ -335,76 +294,6 @@ namespace Client
 			}
 		}
 
-		private void FilterAndSort(SortType sort)
-		{
-			Log.Debug("Filtering and sorting list...");
-
-			var selected = lbTasks.SelectedItem as Task;
-			var selectedIndex = lbTasks.SelectedIndex;
-
-			List<Task> tasks = new List<Task>();
-
-			if (_taskList != null)
-			{
-				Log.Debug("Unfiltered task list contains {0} items", _taskList.Tasks.Count.ToString());
-
-				if (string.IsNullOrEmpty(User.Default.FilterText))
-				{
-					tasks = _taskList.Tasks.ToList();
-				}
-				else
-				{
-					var comparer = User.Default.FilterCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
-					foreach (var task in _taskList.Tasks)
-					{
-						bool include = true;
-						foreach (var filter in User.Default.FilterText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-						{
-							if (filter.Substring(0, 1) != "-")
-							{   // if the filter does not start with a minus and filter is contained in task then filter out
-								if (!task.Raw.Contains(filter, comparer))
-									include = false;
-							}
-							else
-							{   // if the filter starts with a minus then (ignoring the minus) check if the filter is contained in the task then filter out if so
-								if (task.Raw.Contains(filter.Substring(1), comparer))
-									include = false;
-							}
-						}
-
-						if (include)
-							tasks.Add(task);
-					}
-				}
-			}
-
-			Log.Debug("Filtered task list contains {0} items", tasks.Count.ToString());
-
-			SetSort(sort, tasks);
-
-			if (selected != null)
-			{
-				object match = null;
-				foreach (var item  in lbTasks.Items)
-				{
-					if (((Task)item).Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase))
-					{
-						match = item;
-						break;
-					}
-				}
-
-				if (match == null)
-				{
-					lbTasks.SelectedIndex = selectedIndex;
-				}
-				else
-				{
-					lbTasks.SelectedItem = match;
-					lbTasks.ScrollIntoView(match);
-				}
-			}
-		}
 
 		private void ShowUpdateMenu(string version)
 		{
