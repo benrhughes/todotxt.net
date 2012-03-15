@@ -205,9 +205,9 @@ namespace ToDoLib
                 case SortType.Alphabetical:
                     return tasks.OrderBy(t => (t.Completed ? "z" : "a") + t.Raw);
                 case SortType.DueDate:
-                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.DueDate) ? "zzz" : t.DueDate));
+                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate));
                 case SortType.Priority:
-                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "zzz" : t.Priority));
+                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority));
                 case SortType.Project:
                     return tasks.OrderBy(t =>
                     {
