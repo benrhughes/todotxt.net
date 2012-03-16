@@ -139,5 +139,141 @@ namespace ToDoTests
             var newTask = tl.Tasks.Last();
             Assert.IsTrue(newTask.Completed);
         }
+
+        [Test]
+        public void TestEmptyFilter()
+        {
+            TaskList tl = new TaskList(Data.TestDataPath);
+            Assert.AreEqual(TaskList.FilterList(tl.Tasks, true, "").Count, tl.Tasks.Count);
+        }
+
+        [Test]
+        public void TestFilterCountantCaseSensitive()
+        {
+            var tl = getTestList();
+            Assert.AreEqual(TaskList.FilterList(tl, true, "XXXXXX").Count, 2);
+            Assert.AreEqual(TaskList.FilterList(tl, true, "xxxxxx").Count, 1);
+        }
+
+        [Test]
+        public void TestFilterCountantNoCaseSensitive()
+        {
+            var tl = getTestList();
+
+            Assert.AreEqual(TaskList.FilterList(tl, false, "XXXXXX").Count, 3);
+            Assert.AreEqual(TaskList.FilterList(tl, false, "XXXXXX").Count, 3);
+        }
+
+        [Test]
+        public void TestFilterTextSplite()
+        {
+            var tl = getTestList();
+            Assert.AreEqual(TaskList.FilterList(tl, false, "XXXXXX yyyyyy").Count, 1);
+        }
+
+        [Test]
+        public void TestFilterExclude()
+        {
+            var tl = getTestList();
+
+            Assert.AreEqual(TaskList.FilterList(tl, true, "-XXXXXX").Count, 5);
+            Assert.AreEqual(TaskList.FilterList(tl, false, "-XXXXXX").Count, 4);
+        }
+
+        /*
+        ,
+        ,
+        ,/**/
+
+        [Test]
+        public void TestSortAlphabetical()
+        {
+            var tasks = getTestList();
+            var newOrder = TaskList.SortList(SortType.Alphabetical, tasks);
+
+            Assert.AreEqual(newOrder.First<Task>().ToString(), tasks[6].ToString());
+            Assert.AreEqual(newOrder.Last<Task>().ToString(), tasks[4].ToString());
+        }
+
+        [Test]
+        public void TestSortCompleted()
+        {
+            var tasks = getTestList();
+            var newOrder = TaskList.SortList(SortType.Completed, tasks);
+
+            Assert.AreEqual(newOrder.First<Task>().ToString(), tasks[0].ToString());
+            Assert.AreEqual(newOrder.Last<Task>().ToString(), tasks[5].ToString());
+        }
+
+        [Test]
+        public void TestSortContext()
+        {
+            var tasks = getTestList();
+            var newOrder = TaskList.SortList(SortType.Context, tasks);
+
+            Assert.AreEqual(newOrder.First<Task>().ToString(), tasks[1].ToString());
+            Assert.AreEqual(newOrder.Last<Task>().ToString(), tasks[5].ToString());
+        }
+
+        [Test]
+        public void TestSortDueDate()
+        {
+            var tasks = getTestList();
+            var newOrder = TaskList.SortList(SortType.DueDate, tasks);
+
+            Assert.AreEqual(newOrder.First<Task>().ToString(), tasks[1].ToString());
+            Assert.AreEqual(newOrder.Last<Task>().ToString(),tasks[5].ToString());
+        }
+
+        [Test]
+        public void TestSortPriority()
+        {
+            var tasks = getTestList();
+            var newOrder = TaskList.SortList(SortType.Priority, tasks);
+
+            Assert.AreEqual(newOrder.First<Task>().ToString(), tasks[6].ToString());
+            Assert.AreEqual(newOrder.Last<Task>().ToString(), tasks[4].ToString());
+        }
+
+        [Test]
+        public void TestSortProject()
+        {
+            var tasks = getTestList();
+            var newOrder = TaskList.SortList(SortType.Project, tasks);
+
+            Assert.AreEqual(newOrder.First<Task>().ToString(), tasks[1].ToString());
+            Assert.AreEqual(newOrder.Last<Task>().ToString(), tasks[5].ToString());
+        }
+
+        [Test]
+        public void TestSortNone()
+        {
+            var tasks = getTestList();
+
+            var newOrder = TaskList.SortList(SortType.None, tasks);
+            var lastOrder = tasks.GetEnumerator();
+            lastOrder.MoveNext();
+
+            foreach (var task in newOrder)
+            {
+                Assert.AreEqual (task.ToString(), lastOrder.Current.ToString());
+                lastOrder.MoveNext();
+            }
+        }
+
+
+        private List<Task> getTestList()
+        {
+            var tl = new List<Task>();
+            tl.Add(new Task("(c) 3test +test2 due:2000-01-03"));//0
+            tl.Add(new Task("(d) 1test +test1 @test1 due:2000-01-01"));//1
+            tl.Add(new Task("x test XXXXXX "));//2
+            tl.Add(new Task("x test xxxxxx due:2000-01-01"));//3
+            tl.Add(new Task("x test XXXXXX yyyyyy"));//4
+            tl.Add(new Task("x (a) test YYYYYY"));//5
+            tl.Add(new Task("(b) 2test +test1 @test2 "));//6
+            return tl;
+        }
+
     }
 }
