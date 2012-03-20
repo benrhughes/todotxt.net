@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
-	<version>1.1.73</version>
-	<changelog>Auto-refresh now triggered by the file changing (rather than polling). Under the hood refactoring. (deployment attempt 3)</changelog>
+	<version>1.2.5.0</version>
+	<changelog></changelog>
 </updates>
