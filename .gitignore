@@ -26,3 +26,5 @@ TestResults
 
 # backup files
 *.bak
+
+testtasks.txt
