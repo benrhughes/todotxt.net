@@ -29,6 +29,7 @@ namespace Client
             cbCaseSensitiveFilter.IsChecked = User.Default.FilterCaseSensitive;
             cbAddCreationDate.IsChecked = User.Default.AddCreationDate;
             cbDebugOn.IsChecked = User.Default.DebugLoggingOn;
+			cbMinToSysTray.IsChecked = User.Default.MinimiseToSystemTray;
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)

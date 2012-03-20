@@ -55,11 +55,14 @@ namespace Client
 			{
 				InitializeComponent();
 
-		        //add tray icon
-                _tray = new TrayMainWindows(this);
-		        
-		        //add global key
-                _hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
+				if (User.Default.MinimiseToSystemTray)
+				{
+					//add tray icon
+					_tray = new TrayMainWindows(this);
+
+					//add global key
+					_hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
+				}
 
                 //add view on change file
                 _changefile = new ObserverChangeFile();
@@ -420,6 +423,7 @@ namespace Client
 				User.Default.FilterCaseSensitive = o.cbCaseSensitiveFilter.IsChecked.Value;
 				User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
 				User.Default.DebugLoggingOn = o.cbDebugOn.IsChecked.Value;
+				User.Default.MinimiseToSystemTray = o.cbMinToSysTray.IsChecked.Value;
 
 				User.Default.Save();
 
