@@ -6,7 +6,7 @@ There is installer for the latest version available from the [github download pa
 
 #### Contributors please note
 
-Please send your pull requests to the 'dev' branch. I'm setting up a CI build so from now on will be keeping master as clean as possible.
+Please send your pull requests to the 'dev' branch.
 
 If you forget it's not a major deal: it's just a bit more work for me as I have to manually merge.
 
