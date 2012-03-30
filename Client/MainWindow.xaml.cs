@@ -676,6 +676,7 @@ namespace Client
 
 		private void lbTasks_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
+			e.Handled = true;
 			KeyboardShortcut(Key.U);
 		}
 
