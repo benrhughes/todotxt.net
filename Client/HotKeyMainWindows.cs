@@ -33,7 +33,7 @@ namespace Client
             if (_window.WindowState == WindowState.Minimized)
             {
                 _window.Show();
-                _window.Topmost = true;
+				//_window.Topmost = true;
                 _window.Activate();
                 _window.WindowState = WindowState.Normal;
             }

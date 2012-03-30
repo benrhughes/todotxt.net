@@ -94,6 +94,8 @@ namespace Client
 					LoadTasks(User.Default.FilePath);
 
 				FilterAndSort((SortType)User.Default.CurrentSort);
+
+				lbTasks.Focus();
 			}
 			catch (Exception ex)
 			{
@@ -223,7 +225,11 @@ namespace Client
 
             lbTasks.ItemsSource = _taskList.Sort(_currentSort, User.Default.FilterCaseSensitive, User.Default.FilterText);
 
-            if (selected != null)
+			if (selected == null)
+			{
+				lbTasks.SelectedIndex = 0;
+			}
+			else
             {
                 object match = null;
                 foreach (var item in lbTasks.Items)
