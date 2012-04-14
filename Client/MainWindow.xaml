@@ -26,8 +26,11 @@
                 <MenuItem Header="_Order in file" IsCheckable="True" Click="Sort_None" />
             </MenuItem>
             <MenuItem Header="F_ilter" Click="Filter" />
-            <MenuItem Header="_Help" Click="Help" />
-            <MenuItem Name="UpdateMenu" Header="*Update available*" Visibility="Hidden" Click="Get_Update" />
+			<MenuItem Header="_Help" >
+				<MenuItem Header="_About" Click="Help" />
+				<MenuItem Header="_View Error Log" Click="ViewLog" />
+			</MenuItem>
+			<MenuItem Name="UpdateMenu" Header="*Update available*" Visibility="Hidden" Click="Get_Update" />
             <Menu.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#f8f8f8" Offset="0" />

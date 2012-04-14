@@ -851,6 +851,11 @@ namespace Client
             FilterAndSort(_currentSort);
         }
         #endregion
+
+		private void ViewLog(object sender, RoutedEventArgs e)
+		{
+			Process.Start(Log.LogFile);
+		}
     }
 }
 
