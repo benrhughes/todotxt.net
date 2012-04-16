@@ -15,14 +15,8 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_557C793D2B5DAA20C381B5DD18B8B4EB"
+        "MsmKey" = "8:_CA66CC0A3939115608B050137CAC9336"
         "OwnerKey" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8CD9B4E941C64684B93BCE8FC723ACDC"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -40,7 +34,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_557C793D2B5DAA20C381B5DD18B8B4EB"
+        "OwnerKey" = "8:_CA66CC0A3939115608B050137CAC9336"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -51,7 +45,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\NewInstaller.msi"
+        "OutputFilename" = "8:Debug\\todotxt.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -148,13 +142,18 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_557C793D2B5DAA20C381B5DD18B8B4EB"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CA66CC0A3939115608B050137CAC9336"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=0.9.2.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=1.2.35.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_CA66CC0A3939115608B050137CAC9336"
+                    {
+                    "Name" = "8:ToDoLib.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:ToDoLib.dll"
             "TargetName" = "8:"
@@ -172,26 +171,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8CD9B4E941C64684B93BCE8FC723ACDC"
-            {
-            "SourcePath" = "8:..\\Client\\TodoTouch_512.ico"
-            "TargetName" = "8:TodoTouch_512.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_9136B6B8A43E4907A3E4DB2F468AD84C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -251,7 +230,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
         "ProductCode" = "8:{94C01CAD-C49F-4F11-BF22-C93AB13BD944}"
-        "PackageCode" = "8:{B50AE003-CC8E-459C-9C0C-0BC72B6593AF}"
+        "PackageCode" = "8:{52DAB3D2-BAC5-48C9-ADB0-7AC2AA69A82E}"
         "UpgradeCode" = "8:{16D204EA-4E20-46D6-8C18-227DE56996D4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -377,12 +356,12 @@
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
+            "IconIndex" = "3:32512"
             "Transitive" = "11:FALSE"
             "Target" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
             "Folder" = "8:_756A1B8F827B4D7A85C8D847C536780D"
             "WorkingFolder" = "8:_9136B6B8A43E4907A3E4DB2F468AD84C"
-            "Icon" = "8:_8CD9B4E941C64684B93BCE8FC723ACDC"
+            "Icon" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
             "Feature" = "8:"
             }
         }
