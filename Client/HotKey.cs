@@ -27,6 +27,7 @@ namespace Client
         private readonly int _id;
         private bool _isKeyRegistered;
         readonly IntPtr _handle;
+        private bool _isDisposed = false;
 
         public HotKey(ModifierKeys modifierKeys, Keys key, Window window)
             : this(modifierKeys, key, new WindowInteropHelper(window))
@@ -80,8 +81,12 @@ namespace Client
 
         public void Dispose()
         {
-            ComponentDispatcher.ThreadPreprocessMessage -= ThreadPreprocessMessageMethod;
-            UnregisterHotKey();
+            if (!_isDisposed)
+            {
+                ComponentDispatcher.ThreadPreprocessMessage -= ThreadPreprocessMessageMethod;
+                UnregisterHotKey();
+                _isDisposed = true;
+            }
         }
 
         private void ThreadPreprocessMessageMethod(ref MSG msg, ref bool handled)

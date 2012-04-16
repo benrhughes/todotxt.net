@@ -219,36 +219,39 @@ namespace Client
                 _currentSort = sort;
             }
 
-            var selected = lbTasks.SelectedItem as Task;
-            var selectedIndex = lbTasks.SelectedIndex;
-
-
-            lbTasks.ItemsSource = _taskList.Sort(_currentSort, User.Default.FilterCaseSensitive, User.Default.FilterText);
-
-			if (selected == null)
-			{
-				lbTasks.SelectedIndex = 0;
-			}
-			else
+            if (_taskList != null)
             {
-                object match = null;
-                foreach (var item in lbTasks.Items)
-                {
-                    if (((Task)item).Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        match = item;
-                        break;
-                    }
-                }
+                var selected = lbTasks.SelectedItem as Task;
+                var selectedIndex = lbTasks.SelectedIndex;
 
-                if (match == null)
+
+                lbTasks.ItemsSource = _taskList.Sort(_currentSort, User.Default.FilterCaseSensitive, User.Default.FilterText);
+
+			    if (selected == null)
+			    {
+				    lbTasks.SelectedIndex = 0;
+			    }
+			    else
                 {
-                    lbTasks.SelectedIndex = selectedIndex;
-                }
-                else
-                {
-                    lbTasks.SelectedItem = match;
-                    lbTasks.ScrollIntoView(match);
+                    object match = null;
+                    foreach (var item in lbTasks.Items)
+                    {
+                        if (((Task)item).Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            match = item;
+                            break;
+                        }
+                    }
+
+                    if (match == null)
+                    {
+                        lbTasks.SelectedIndex = selectedIndex;
+                    }
+                    else
+                    {
+                        lbTasks.SelectedItem = match;
+                        lbTasks.ScrollIntoView(match);
+                    }
                 }
             }
 		}
@@ -411,6 +414,7 @@ namespace Client
 		private void File_Options(object sender, RoutedEventArgs e)
 		{
 			var o = new Options();
+            o.Owner = this;
 
 			var res = o.ShowDialog();
 
@@ -634,7 +638,7 @@ namespace Client
 		//this is just for j and k - the nav keys. Using KeyDown allows for holding the key to navigate
 		private void lbTasks_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
-			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt) && lbTasks.HasItems)
 			{
 				var selected = lbTasks.SelectedItem as Task;
 				var updated = new Task(selected.Raw);
