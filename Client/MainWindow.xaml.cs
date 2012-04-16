@@ -283,13 +283,6 @@ namespace Client
 		}
 
 
-		private void Help(object sender, RoutedEventArgs e)
-		{
-			var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-			var msg = string.Format(Resource.HelpText, version);
-			MessageBox.Show(msg);
-		}
-
 		private void Filter(object sender, RoutedEventArgs e)
 		{
 			var f = new FilterDialog();
@@ -611,6 +604,20 @@ namespace Client
 		}
 		#endregion
 
+		#region help menu
+		private void Help(object sender, RoutedEventArgs e)
+		{
+			var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+			var msg = string.Format(Resource.HelpText, version);
+			MessageBox.Show(msg);
+		}
+
+		private void ViewLog(object sender, RoutedEventArgs e)
+		{
+			Process.Start(Log.LogFile);
+		}
+		#endregion
+
 		#region Update notification
 		private void Get_Update(object sender, RoutedEventArgs e)
 		{
@@ -852,10 +859,6 @@ namespace Client
         }
         #endregion
 
-		private void ViewLog(object sender, RoutedEventArgs e)
-		{
-			Process.Start(Log.LogFile);
-		}
     }
 }
 
