@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 using ToDoLib;
@@ -17,7 +18,8 @@ namespace Client
             {
                 _notifyIcon = new System.Windows.Forms.NotifyIcon();
                 _notifyIcon.Text = _window.Title;
-                _notifyIcon.Icon = new System.Drawing.Icon("TodoTouch_512.ico");
+                Stream iconStream = System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/TodoTouch_512.ico")).Stream;
+                _notifyIcon.Icon = new System.Drawing.Icon(iconStream);
                 _notifyIcon.Visible = true;
                 _notifyIcon.DoubleClick += DoubleClick;
 

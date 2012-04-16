@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Options" Height="290" Width="500"
         ResizeMode="NoResize"
-        WindowStyle="ToolWindow" ShowInTaskbar="False">
+        WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
     <Grid>
         <Label Content="Archive File" Height="28" HorizontalAlignment="Left" Margin="12,12,0,0" Name="label1" VerticalAlignment="Top" />
         <TextBox HorizontalAlignment="Left" Margin="88,14,0,0" Name="tbArchiveFile" Width="296" Height="22" VerticalAlignment="Top" />
@@ -11,7 +11,7 @@
         <CheckBox Content="Automatically archive completed tasks" Height="16" HorizontalAlignment="Left" Margin="88,43,0,0" Name="cbAutoArchive" VerticalAlignment="Top" />
         <CheckBox Content="Automatically refresh task list from file" Height="16" HorizontalAlignment="Left" Margin="18,100,0,0" Name="cbAutoRefresh" VerticalAlignment="Top" />
         <Button Content="OK" Height="23" HorizontalAlignment="Right" Name="OK" VerticalAlignment="Bottom" Width="75" IsDefault="True" Click="OK_Click" Margin="0,0,94,12" />
-        <Button Content="Cancel" Height="23" HorizontalAlignment="Right" Margin="0,0,12,12" Name="Cancel" VerticalAlignment="Bottom" Width="75" Click="Cancel_Click" />
+        <Button Content="Cancel" Height="23" HorizontalAlignment="Right" Margin="0,0,12,12" Name="Cancel" VerticalAlignment="Bottom" Width="75" Click="Cancel_Click" IsCancel="True" />
         <CheckBox Content="Filter text is case-sensitive" Height="16" HorizontalAlignment="Left" Margin="18,125,0,0" Name="cbCaseSensitiveFilter" VerticalAlignment="Top" />
         <CheckBox Content="Add created date to new tasks" Height="16" HorizontalAlignment="Left" Margin="18,75,0,0" Name="cbAddCreationDate" VerticalAlignment="Top" />
         <CheckBox Content="Enable debug logging" Height="16" HorizontalAlignment="Left" Margin="18,175,0,0" Name="cbDebugOn" VerticalAlignment="Top" />
