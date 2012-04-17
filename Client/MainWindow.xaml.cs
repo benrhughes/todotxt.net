@@ -750,6 +750,8 @@ namespace Client
 				FilterAndSort(_currentSort);
 
 				Intellisense.IsOpen = false;
+				lbTasks.Focus();
+
 				return;
 			}
 
