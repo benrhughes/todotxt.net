@@ -23,6 +23,9 @@ namespace Client
                 _notifyIcon.Visible = true;
                 _notifyIcon.DoubleClick += DoubleClick;
 
+                _notifyIcon.ContextMenu = new ContextMenu();
+                _notifyIcon.ContextMenu.MenuItems.Add("E&xit", new EventHandler(ExitClick));
+
                 _window.Closed += (sender, args) => { this.Dispose(); };
                 _window.StateChanged += (sender, args) => { if (_window.WindowState == WindowState.Minimized) _window.Hide(); };
             }
@@ -45,6 +48,16 @@ namespace Client
             {
                 _window.WindowState = WindowState.Minimized;
                 _window.Hide();
+            }
+        }
+
+        private void ExitClick(object sender, EventArgs args)
+        {
+            // Close the application by triggering the File-Exit menu item click handler.
+            System.Windows.Controls.MenuItem exitMenuItem = (System.Windows.Controls.MenuItem)_window.FindName("menuFileExit");
+            if (exitMenuItem != null)
+            {
+                exitMenuItem.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.MenuItem.ClickEvent, exitMenuItem));
             }
         }
 

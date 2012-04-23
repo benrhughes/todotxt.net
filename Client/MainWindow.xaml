@@ -14,7 +14,7 @@
                 <MenuItem Header="_Archive Completed Tasks" Click="File_Archive_Completed" />
                 <MenuItem Header="Op_tions..." Click="File_Options" />
                 <Separator />
-                <MenuItem Header="E_xit" Click="File_Exit" />
+                <MenuItem Name="menuFileExit" Header="E_xit" Click="File_Exit" />
             </MenuItem>
             <MenuItem Header="_Sort" Name="sortMenu">
                 <MenuItem Header="_Alphabetical" IsCheckable="True" Click="Sort_Alphabetical" />
