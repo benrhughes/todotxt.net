@@ -40,6 +40,11 @@ namespace Client
             this.DialogResult = false;
         }
 
+        private void Clear_Click(object sender, RoutedEventArgs e)
+        {
+            tbFilter.Clear();
+        }
+
         private void tbFilter_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
