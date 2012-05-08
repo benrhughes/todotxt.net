@@ -118,7 +118,45 @@ namespace ToDoTests
         {
             var task = new Task("(A) due:2011-05-08 @work @home +test This is a test task");
 
-            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task","2011-05-08", false);
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", "2011-05-08", false);
+            
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_DueToday()
+        {
+            var task = new Task("(A) due:today @work @home +test This is a test task");
+
+            string due = DateTime.Now.ToString("yyyy-MM-dd");
+
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", due, false);
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_DueTomorrow()
+        {
+            var task = new Task("(A) due:tOmORRoW @work @home +test This is a test task");
+
+            string due = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", due, false);
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_DueDayOfWeek()
+        {
+            var task = new Task("(A) due:thUrsday @work @home +test This is a test task");
+
+            var dueDate=DateTime.Now;
+            do{
+                dueDate=dueDate.AddDays(1);
+            } while (!string.Equals(dueDate.ToString("dddd"), "thursday", StringComparison.CurrentCultureIgnoreCase));
+            string due = dueDate.ToString("yyyy-MM-dd");
+
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", due, false);
             AssertEquivalence(expectedTask, task);
         }
 

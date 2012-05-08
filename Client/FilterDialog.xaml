@@ -4,7 +4,8 @@
         Title="Filter" Height="300" Width="300" WindowStyle="ToolWindow" ShowInTaskbar="False">
     <Grid>
         <TextBox Height="236" Name="tbFilter" VerticalAlignment="Top" AcceptsReturn="True" TextWrapping="Wrap" PreviewKeyUp="tbFilter_PreviewKeyUp" />
-        <Button Content="OK" Height="23" HorizontalAlignment="Right" Name="OK" VerticalAlignment="Bottom" Width="75" IsDefault="True" Click="OK_Click" Margin="0,0,94,1" />
-        <Button Content="Cancel" Height="23" HorizontalAlignment="Right" Margin="0,0,12,1" Name="Cancel" VerticalAlignment="Bottom" Width="75" Click="Cancel_Click" />
+        <Button Content="OK" Height="23" HorizontalAlignment="Right" Name="OK" VerticalAlignment="Bottom" Width="75" IsDefault="True" Click="OK_Click" Margin="0,0,81,1" />
+        <Button Content="Cancel" Height="23" HorizontalAlignment="Right" Margin="0,0,0,1" Name="Cancel" VerticalAlignment="Bottom" Width="75" Click="Cancel_Click" />
+        <Button Content="_Clear" Height="23" HorizontalAlignment="Right" Margin="0,0,203,1" Name="Clear" VerticalAlignment="Bottom" Width="75" Click="Clear_Click" />
     </Grid>
 </Window>

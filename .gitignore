@@ -26,5 +26,6 @@ TestResults
 
 # backup files
 *.bak
+*.swp
 
 testtasks.txt
