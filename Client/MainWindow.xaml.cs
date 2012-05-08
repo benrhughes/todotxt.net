@@ -295,6 +295,8 @@ namespace Client
 			if (f.ShowDialog().Value)
 			{
 				User.Default.FilterText = f.FilterText.Trim();
+				User.Default.Save();
+
 				FilterAndSort(_currentSort);
 			}
 		}
