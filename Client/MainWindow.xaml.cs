@@ -101,7 +101,7 @@ namespace Client
 			{
 				var msg = "An error occurred while intialising the application";
 				Log.Error(msg, ex);
-				MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
+				MessageBox.Show(ex.Message, msg, MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 			
 		}
@@ -116,7 +116,7 @@ namespace Client
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message);
+				MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 
@@ -173,7 +173,8 @@ namespace Client
 				case Key.D:
 					var res = MessageBox.Show("Permanently delete the selected task?",
 								 "Confirm Delete",
-								 MessageBoxButton.YesNo);
+								 MessageBoxButton.YesNo,
+								 MessageBoxImage.Warning);
 
 					if (res == MessageBoxResult.Yes)
 					{
@@ -280,7 +281,7 @@ namespace Client
 			{
 				var msg = "An error occurred while openning " + filePath;
 				Log.Error(msg, ex);
-				MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
+				MessageBox.Show(ex.Message, msg, MessageBoxButton.OK, MessageBoxImage.Error);
 				sortMenu.IsEnabled = false;
 			}
 		}
@@ -615,12 +616,15 @@ namespace Client
 		{
 			var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 			var msg = string.Format(Resource.HelpText, version);
-			MessageBox.Show(msg);
+			MessageBox.Show(msg, "Help", MessageBoxButton.OK, MessageBoxImage.Information);
 		}
 
 		private void ViewLog(object sender, RoutedEventArgs e)
 		{
-			Process.Start(Log.LogFile);
+			if (File.Exists(Log.LogFile))
+				Process.Start(Log.LogFile);
+			else
+				MessageBox.Show("Log file does not exist: no errors have been logged", "Log file does not exist", MessageBoxButton.OK, MessageBoxImage.Information);
 		}
 		#endregion
 
@@ -739,7 +743,7 @@ namespace Client
 					}
 					catch (TaskException ex)
 					{
-						MessageBox.Show(ex.Message);
+						MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 					}
 				}
 				else

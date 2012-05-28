@@ -24,7 +24,7 @@ namespace Client
             {
                 var msg = "Error Global HotKey Registered";
                 Log.Error(msg, ex);
-                System.Windows.MessageBox.Show(ex.Message, msg, MessageBoxButton.OK);
+                System.Windows.MessageBox.Show(ex.Message, msg, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
