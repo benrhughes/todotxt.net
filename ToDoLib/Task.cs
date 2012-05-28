@@ -91,20 +91,20 @@ namespace ToDoLib
             //If today is the specified weekday, due date will be in one week
             //TODO implement short weekdays ('mon', 'tue', etc) and other languages
             var reg = new Regex(dueRelativePattern, RegexOptions.IgnoreCase);
-            string _dueDateRelative = reg.Match(raw).Groups["dateRelative"].Value.Trim();
-            if (!_dueDateRelative.IsNullOrEmpty())
+            var dueDateRelative = reg.Match(raw).Groups["dateRelative"].Value.Trim();
+            if (!dueDateRelative.IsNullOrEmpty())
             {
-                DateTime due = new DateTime();
-                _dueDateRelative = _dueDateRelative.ToLower();
-                if (_dueDateRelative == "today")
+                var due = new DateTime();
+                dueDateRelative = dueDateRelative.ToLower();
+                if (dueDateRelative == "today")
                 {
                     due = DateTime.Now;
                 }
-                else if (_dueDateRelative == "tomorrow")
+                else if (dueDateRelative == "tomorrow")
                 {
                     due = DateTime.Now.AddDays(1);
                 }
-                else if (_dueDateRelative == "monday" | _dueDateRelative == "tuesday" | _dueDateRelative == "wednesday" | _dueDateRelative == "thursday" | _dueDateRelative == "friday" | _dueDateRelative == "saturday" | _dueDateRelative == "sunday")
+                else if (dueDateRelative == "monday" | dueDateRelative == "tuesday" | dueDateRelative == "wednesday" | dueDateRelative == "thursday" | dueDateRelative == "friday" | dueDateRelative == "saturday" | dueDateRelative == "sunday")
                 {
                     due = DateTime.Now;
                     //if day of week, add days to today until weekday matches input
@@ -112,7 +112,7 @@ namespace ToDoLib
                     do
                     {
                         due = due.AddDays(1);
-                    } while (!string.Equals(due.ToString("dddd"), _dueDateRelative, StringComparison.CurrentCultureIgnoreCase));
+                    } while (!string.Equals(due.ToString("dddd"), dueDateRelative, StringComparison.CurrentCultureIgnoreCase));
                 }
                 raw = reg.Replace(raw, "due:" + due.ToString("yyyy-MM-dd"));
             }
