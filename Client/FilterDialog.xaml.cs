@@ -18,10 +18,11 @@ namespace Client
     /// </summary>
     public partial class FilterDialog : Window
     {
+		private bool _prevKeyWasEnter;
         public string FilterText
         {
             get { return tbFilter.Text; }
-            set { tbFilter.Text = value; }
+			set { tbFilter.Text = value; tbFilter.CaretIndex = tbFilter.Text.Length; }
         }
 
         public FilterDialog()
@@ -47,8 +48,14 @@ namespace Client
 
         private void tbFilter_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape)
-                this.DialogResult = true;
+			if (e.Key == Key.Escape)
+				this.DialogResult = true;
+			else if (e.Key == Key.Enter && _prevKeyWasEnter)
+				this.DialogResult = true;
+			else if (e.Key == Key.Enter)
+				_prevKeyWasEnter = true;
+			else
+				_prevKeyWasEnter = false;
         }
     }
 }
