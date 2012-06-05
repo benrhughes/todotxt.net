@@ -182,28 +182,35 @@
         }</value>
   </data>
   <data name="HelpText" xml:space="preserve">
-    <value>todotxt.net: a Windows UI for todo.txt
+    <value>Keyboard shortcuts:
+    - O: open todo.txt file
+    - C: new todo.txt file
+    - N: new task
+    - J: next task
+    - K: prev task
+    - X: toggle task completion
+    - D: delete task (with confirmation)
+    - U: update task
+    - F: filter tasks
+    - .: reload tasks from file
+    - ?: show help
+    - Alt+Up: increase priority
+    - Alt+Down: decrease priority
+    - Alt+Left/Right: clear priority
+    - Win+Alt+T: Hide/Unhide windows
 
-Version {0}
+Due date syntax:
+    - due:2012-09-28
+    - due:today
+    - due:tomorrow
+    - due:friday
 
-Keyboard shortcuts:
-	- O: open todo.txt file
-	- C: new todo.txt file
-	- N: new task
-	- J: next task
-	- K: prev task
-	- X: toggle task completion
-	- D: delete task (with confirmation)
-	- U: update task
-	- F: filter tasks (free-text, one filter condition per line)
-	- .: reload tasks from file
-	- ?: show help
-	- Alt+Up: increase priority
-	- Alt+Down: decrease priority
-	- Alt+Left/Right: clear priority
-	- Win+Alt+T: Hide/Unhide windows
-
-More info at http://benrhughes.com/todotxt.net/
+Filtering
+    - one free-text filter per line
+    - filters are AND'd together
+    - to exclude a term, start the line with a '-', eg -@work
+    - press Enter twice to save and close the filter
+    - optionally case sensitive
 
 Copyright 2012 Ben Hughes</value>
   </data>

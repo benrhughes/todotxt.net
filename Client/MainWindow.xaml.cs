@@ -48,6 +48,7 @@ namespace Client
         CheckUpdate _checkupdate;
 
 		WindowLocation _previousWindowLocaiton;
+		private Help _helpPage;
 
 		public MainWindow()
 		{
@@ -104,6 +105,14 @@ namespace Client
 				MessageBox.Show(ex.Message, msg, MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 			
+		}
+
+		protected override void OnClosed(EventArgs e)
+		{
+			if (_helpPage != null)
+				_helpPage.Close();
+
+			base.OnClosed(e);
 		}
 
 		#region private methods
@@ -615,8 +624,9 @@ namespace Client
 		private void Help(object sender, RoutedEventArgs e)
 		{
 			var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-			var msg = string.Format(Resource.HelpText, version);
-			MessageBox.Show(msg, "Help", MessageBoxButton.OK, MessageBoxImage.Information);
+			_helpPage = new Help("todotxt.net", version, Resource.HelpText, "http://benrhughes.com/todotxt.net", "benrhughes.com/todotxt.net");
+
+			_helpPage.Show();
 		}
 
 		private void ViewLog(object sender, RoutedEventArgs e)

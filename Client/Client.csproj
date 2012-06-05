@@ -82,6 +82,9 @@
     <Compile Include="FilterDialog.xaml.cs">
       <DependentUpon>FilterDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Help.xaml.cs">
+      <DependentUpon>Help.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HotKey.cs" />
     <Compile Include="HotKeyMainWindows.cs" />
     <Compile Include="ObserverChangeFile.cs" />
@@ -102,6 +105,10 @@
       <DependentUpon>User.settings</DependentUpon>
     </Compile>
     <Page Include="FilterDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Help.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
