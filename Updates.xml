@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
-	<version>1.4.3.0</version>
-	<changelog>Relative due dates (today, tomorrow etc). Clear button in filter window. Exit button option in tray icon menu.</changelog>
+	<version>1.5.0.0</version>
+	<changelog>Fixed bug with non-alpha characters in contexts and projects, double-Enter in filter window now saves and closes, new model help window</changelog>
 </updates>
