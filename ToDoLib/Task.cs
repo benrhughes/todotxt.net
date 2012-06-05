@@ -13,8 +13,8 @@ namespace ToDoLib
 		const string createdDatePattern = @"(?<date>(\d{4})-(\d{2})-(\d{2}))";
         const string dueRelativePattern = @"due:(?<dateRelative>today|tomorrow|monday|tuesday|wednesday|thursday|friday|saturday|sunday)";
 		const string dueDatePattern = @"due:(?<date>(\d{4})-(\d{2})-(\d{2}))";
-		const string projectPattern = @"(?<proj>\+\w+)";
-		const string contextPattern = @"(?<context>\@\w+)";
+		const string projectPattern = @"(?<proj>\+[^\s]+)";
+		const string contextPattern = @"(?<context>\@[^\s]+)";
 
 		public List<string> Projects { get; set; }
 		public List<string> Contexts { get; set; }

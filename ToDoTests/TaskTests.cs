@@ -168,6 +168,13 @@ namespace ToDoTests
             Assert.AreEqual("2011-05-07", task.CreationDate);
         }
 
+		[Test]
+		public void Create_Project_with_non_alpha()
+		{
+			var task = new Task("This is a test task +work&home");
+
+			Assert.AreEqual("+work&home", task.Projects[0]);
+		}
         #endregion
 
         #region ToString
