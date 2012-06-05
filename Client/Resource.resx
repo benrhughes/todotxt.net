@@ -209,8 +209,9 @@ Filtering
     - one free-text filter per line
     - filters are AND'd together
     - to exclude a term, start the line with a '-', eg -@work
+    - due date filtering: due:today, due:past or due:future
     - press Enter twice to save and close the filter
-    - optionally case sensitive
+    - set filter case sensistivity under File -&gt; Options...
 
 Copyright 2012 Ben Hughes</value>
   </data>

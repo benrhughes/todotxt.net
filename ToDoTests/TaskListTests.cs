@@ -180,10 +180,31 @@ namespace ToDoTests
             Assert.AreEqual(TaskList.FilterList(tl, false, "-XXXXXX").Count, 4);
         }
 
-        /*
-        ,
-        ,
-        ,/**/
+		[Test]
+		public void Filter_due_today()
+		{
+			var t = getTestList();
+			t.Add(new Task("Oh my due:today"));
+
+			Assert.AreEqual(TaskList.FilterList(t, false, "due:today").Count, 1);
+		}
+
+		[Test]
+		public void Filter_due_future()
+		{
+			var t = getTestList();
+			t.Add(new Task("Oh my due:tomorrow"));
+
+			Assert.AreEqual(TaskList.FilterList(t, false, "due:future").Count, 1);
+		}
+
+		[Test]
+		public void Filter_due_past()
+		{
+			var t = getTestList();
+
+			Assert.AreEqual(TaskList.FilterList(t, false, "due:past").Count, 3);
+		}
 
         [Test]
         public void TestSortAlphabetical()

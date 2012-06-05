@@ -6,12 +6,19 @@ using System.Text.RegularExpressions;
 
 namespace ToDoLib
 {
+	public enum Due
+	{
+		NotDue,
+		Today,
+		Overdue	
+	}
+
 	public class Task : IComparable
 	{
 		const string completedPattern = @"^X\s((\d{4})-(\d{2})-(\d{2}))?";
 		const string priorityPattern = @"^(?<priority>\([A-Z]\)\s)";
 		const string createdDatePattern = @"(?<date>(\d{4})-(\d{2})-(\d{2}))";
-        const string dueRelativePattern = @"due:(?<dateRelative>today|tomorrow|monday|tuesday|wednesday|thursday|friday|saturday|sunday)";
+		const string dueRelativePattern = @"due:(?<dateRelative>today|tomorrow|monday|tuesday|wednesday|thursday|friday|saturday|sunday)";
 		const string dueDatePattern = @"due:(?<date>(\d{4})-(\d{2})-(\d{2}))";
 		const string projectPattern = @"(?<proj>\+[^\s]+)";
 		const string contextPattern = @"(?<context>\@[^\s]+)";
@@ -49,35 +56,25 @@ namespace ToDoLib
 			}
 		}
 
-        /// <summary>
-        /// Test task Due
-        /// -1 task overDue
-        /// 0 task due today
-        /// 1 task not due
-        /// </summary>
-        public int IsTaskDue
-        {
-            set { }
-            get
-            {
-                if (Completed)
-                    return 1;
+		public Due IsTaskDue
+		{
+			get
+			{
+				if (Completed)
+					return Due.NotDue;
 
-                DateTime tmp = new DateTime();
+				DateTime tmp = new DateTime();
 
-                if (DateTime.TryParse(DueDate, out tmp))
-                {
-                    if (tmp < DateTime.Today)
-                        return -1;
-                    if (tmp == DateTime.Today)
-                        return 0;
-                    return 1;
-                }
-                else {
-                    return 1;
-                }
-            }
-        }
+				if (!DateTime.TryParse(DueDate, out tmp))
+					return Due.NotDue;
+
+				if (tmp < DateTime.Today)
+					return Due.Overdue;
+				if (tmp == DateTime.Today)
+					return Due.Today;
+				return Due.NotDue;
+			}
+		}
 
 		// Parsing needs to comply with these rules: https://github.com/ginatrapani/todo.txt-touch/wiki/Todo.txt-File-Format
 
@@ -86,39 +83,39 @@ namespace ToDoLib
 		{
 			raw = raw.Replace(Environment.NewLine, ""); //make sure it's just on one line
 
-            //Replace relative days with hard date
-            //Supports english: 'today', 'tomorrow', and full weekdays ('monday', 'tuesday', etc)
-            //If today is the specified weekday, due date will be in one week
-            //TODO implement short weekdays ('mon', 'tue', etc) and other languages
-            var reg = new Regex(dueRelativePattern, RegexOptions.IgnoreCase);
-            var dueDateRelative = reg.Match(raw).Groups["dateRelative"].Value.Trim();
-            if (!dueDateRelative.IsNullOrEmpty())
-            {
-                var due = new DateTime();
-                dueDateRelative = dueDateRelative.ToLower();
-                if (dueDateRelative == "today")
-                {
-                    due = DateTime.Now;
-                }
-                else if (dueDateRelative == "tomorrow")
-                {
-                    due = DateTime.Now.AddDays(1);
-                }
-                else if (dueDateRelative == "monday" | dueDateRelative == "tuesday" | dueDateRelative == "wednesday" | dueDateRelative == "thursday" | dueDateRelative == "friday" | dueDateRelative == "saturday" | dueDateRelative == "sunday")
-                {
-                    due = DateTime.Now;
-                    //if day of week, add days to today until weekday matches input
-                    //if today is the specified weekday, due date will be in one week
-                    do
-                    {
-                        due = due.AddDays(1);
-                    } while (!string.Equals(due.ToString("dddd"), dueDateRelative, StringComparison.CurrentCultureIgnoreCase));
-                }
-                raw = reg.Replace(raw, "due:" + due.ToString("yyyy-MM-dd"));
-            }
+			//Replace relative days with hard date
+			//Supports english: 'today', 'tomorrow', and full weekdays ('monday', 'tuesday', etc)
+			//If today is the specified weekday, due date will be in one week
+			//TODO implement short weekdays ('mon', 'tue', etc) and other languages
+			var reg = new Regex(dueRelativePattern, RegexOptions.IgnoreCase);
+			var dueDateRelative = reg.Match(raw).Groups["dateRelative"].Value.Trim();
+			if (!dueDateRelative.IsNullOrEmpty())
+			{
+				var due = new DateTime();
+				dueDateRelative = dueDateRelative.ToLower();
+				if (dueDateRelative == "today")
+				{
+					due = DateTime.Now;
+				}
+				else if (dueDateRelative == "tomorrow")
+				{
+					due = DateTime.Now.AddDays(1);
+				}
+				else if (dueDateRelative == "monday" | dueDateRelative == "tuesday" | dueDateRelative == "wednesday" | dueDateRelative == "thursday" | dueDateRelative == "friday" | dueDateRelative == "saturday" | dueDateRelative == "sunday")
+				{
+					due = DateTime.Now;
+					//if day of week, add days to today until weekday matches input
+					//if today is the specified weekday, due date will be in one week
+					do
+					{
+						due = due.AddDays(1);
+					} while (!string.Equals(due.ToString("dddd"), dueDateRelative, StringComparison.CurrentCultureIgnoreCase));
+				}
+				raw = reg.Replace(raw, "due:" + due.ToString("yyyy-MM-dd"));
+			}
 
-            //Set Raw string after replacing relative date but before removing matches
-            Raw = raw;
+			//Set Raw string after replacing relative date but before removing matches
+			Raw = raw;
 
 			// because we are removing matches as we go, the order we process is important. It must be:
 			// - completed
@@ -128,7 +125,7 @@ namespace ToDoLib
 			// - projects | contexts
 			// What we have left is the body
 
-            reg = new Regex(completedPattern, RegexOptions.IgnoreCase);
+			reg = new Regex(completedPattern, RegexOptions.IgnoreCase);
 			var s = reg.Match(raw).Value.Trim();
 
 			if (string.IsNullOrEmpty(s))
