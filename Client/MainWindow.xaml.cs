@@ -42,10 +42,10 @@ namespace Client
 		SortType _currentSort;
 		Task _updating;
 		int _intelliPos;
-        TrayMainWindows _tray;
-        HotKeyMainWindows _hotkey;
-        ObserverChangeFile _changefile;
-        CheckUpdate _checkupdate;
+		TrayMainWindows _tray;
+		HotKeyMainWindows _hotkey;
+		ObserverChangeFile _changefile;
+		CheckUpdate _checkupdate;
 
 		WindowLocation _previousWindowLocaiton;
 		private Help _helpPage;
@@ -65,14 +65,14 @@ namespace Client
 					_hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
 				}
 
-                //add view on change file
-                _changefile = new ObserverChangeFile();
-                _changefile.OnFileTaskListChange += () => Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate() { this.Refresh(); }));
+				//add view on change file
+				_changefile = new ObserverChangeFile();
+				_changefile.OnFileTaskListChange += () => Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate() { this.Refresh(); }));
 
-                //CheckUpdate new version
-                _checkupdate = new CheckUpdate();
-                _checkupdate.OnCheckedUpdateVersion += (string version) => Dispatcher.BeginInvoke(new CheckUpdate.CheckUpdateVersion(this.ShowUpdateMenu), version);
-                _checkupdate.Check();
+				//CheckUpdate new version
+				_checkupdate = new CheckUpdate();
+				_checkupdate.OnCheckedUpdateVersion += (string version) => Dispatcher.BeginInvoke(new CheckUpdate.CheckUpdateVersion(this.ShowUpdateMenu), version);
+				_checkupdate.Check();
 
 				webBrowser1.Navigate("about:blank");
 
@@ -100,11 +100,8 @@ namespace Client
 			}
 			catch (Exception ex)
 			{
-				var msg = "An error occurred while intialising the application";
-				Log.Error(msg, ex);
-				MessageBox.Show(ex.Message, msg, MessageBoxButton.OK, MessageBoxImage.Error);
+				HanldeException("An error occurred while intialising the application", ex);
 			}
-			
 		}
 
 		protected override void OnClosed(EventArgs e)
@@ -116,17 +113,15 @@ namespace Client
 		}
 
 		#region private methods
-
-        private void Reload()
+		private void Refresh()
 		{
-			try
-			{
-				_taskList.ReloadTasks();
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-			}
+			Reload();
+			FilterAndSort(_currentSort);
+		}
+
+		private void Reload()
+		{
+			Try(() => _taskList.ReloadTasks(), "Error loading tasks");
 		}
 
 		private void KeyboardShortcut(Key key)
@@ -187,7 +182,7 @@ namespace Client
 
 					if (res == MessageBoxResult.Yes)
 					{
-						_taskList.Delete((Task)lbTasks.SelectedItem);
+						Try(() => _taskList.Delete((Task)lbTasks.SelectedItem), "Error deleting task");
 						FilterAndSort(_currentSort);
 					}
 					break;
@@ -206,64 +201,77 @@ namespace Client
 			var newTask = new Task(task.Raw);
 			newTask.Completed = !newTask.Completed;
 
-			if (User.Default.AutoArchive && newTask.Completed)
+			try
 			{
-				var archiveList = new TaskList(User.Default.ArchiveFilePath);
-				archiveList.Add(newTask);
-				_taskList.Delete(task);
+				if (User.Default.AutoArchive && newTask.Completed)
+				{
+					var archiveList = new TaskList(User.Default.ArchiveFilePath);
+					archiveList.Add(newTask);
+					_taskList.Delete(task);
+				}
+				else
+				{
+					_taskList.Update(task, newTask);
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				_taskList.Update(task, newTask);
+				HanldeException("An error occurred while updating the task's completed status", ex);
 			}
 		}
 
 
 
-        void FilterAndSort(SortType sort)
+		void FilterAndSort(SortType sort)
 		{
-            if (_currentSort != sort)
-            {
-                User.Default.CurrentSort = (int)sort;
-                User.Default.Save();
-                _currentSort = sort;
-            }
+			if (_currentSort != sort)
+			{
+				User.Default.CurrentSort = (int)sort;
+				User.Default.Save();
+				_currentSort = sort;
+			}
 
-            if (_taskList != null)
-            {
-                var selected = lbTasks.SelectedItem as Task;
-                var selectedIndex = lbTasks.SelectedIndex;
+			if (_taskList != null)
+			{
+				var selected = lbTasks.SelectedItem as Task;
+				var selectedIndex = lbTasks.SelectedIndex;
 
+				try
+				{
+					lbTasks.ItemsSource = _taskList.Sort(_currentSort, User.Default.FilterCaseSensitive, User.Default.FilterText);
+				}
+				catch (Exception ex)
+				{
+					HanldeException("Error while sorting tasks", ex);
+				}
 
-                lbTasks.ItemsSource = _taskList.Sort(_currentSort, User.Default.FilterCaseSensitive, User.Default.FilterText);
+				if (selected == null)
+				{
+					lbTasks.SelectedIndex = 0;
+				}
+				else
+				{
+					object match = null;
+					foreach (var item in lbTasks.Items)
+					{
+						if (((Task)item).Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase))
+						{
+							match = item;
+							break;
+						}
+					}
 
-			    if (selected == null)
-			    {
-				    lbTasks.SelectedIndex = 0;
-			    }
-			    else
-                {
-                    object match = null;
-                    foreach (var item in lbTasks.Items)
-                    {
-                        if (((Task)item).Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            match = item;
-                            break;
-                        }
-                    }
-
-                    if (match == null)
-                    {
-                        lbTasks.SelectedIndex = selectedIndex;
-                    }
-                    else
-                    {
-                        lbTasks.SelectedItem = match;
-                        lbTasks.ScrollIntoView(match);
-                    }
-                }
-            }
+					if (match == null)
+					{
+						lbTasks.SelectedIndex = selectedIndex;
+					}
+					else
+					{
+						lbTasks.SelectedItem = match;
+						lbTasks.ScrollIntoView(match);
+					}
+				}
+			}
 		}
 
 		void SetSelected(MenuItem item)
@@ -281,16 +289,14 @@ namespace Client
 			try
 			{
 				_taskList = new TaskList(filePath);
-                User.Default.FilePath = filePath;
+				User.Default.FilePath = filePath;
 				User.Default.Save();
-                _changefile.ViewOnFile(User.Default.FilePath);
-                FilterAndSort(_currentSort);
+				_changefile.ViewOnFile(User.Default.FilePath);
+				FilterAndSort(_currentSort);
 			}
 			catch (Exception ex)
 			{
-				var msg = "An error occurred while openning " + filePath;
-				Log.Error(msg, ex);
-				MessageBox.Show(ex.Message, msg, MessageBoxButton.OK, MessageBoxImage.Error);
+				HanldeException("An error occurred while opening " + filePath, ex);
 				sortMenu.IsEnabled = false;
 			}
 		}
@@ -314,12 +320,30 @@ namespace Client
 
 		private void ShowUpdateMenu(string version)
 		{
-            var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            if (version != assemblyVersion)
-            {
-                this.UpdateMenu.Header = "New version: " + version;
-                this.UpdateMenu.Visibility = Visibility.Visible;
-            }
+			var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+			if (version != assemblyVersion)
+			{
+				this.UpdateMenu.Header = "New version: " + version;
+				this.UpdateMenu.Visibility = Visibility.Visible;
+			}
+		}
+
+		private void Try(Action action, string errorMessage)
+		{
+			try
+			{
+				action();
+			}
+			catch (Exception ex)
+			{
+				HanldeException(errorMessage, ex);
+			}
+		}
+
+		private void HanldeException(string errorMessage, Exception ex)
+		{
+			MessageBox.Show(errorMessage + Environment.NewLine + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			Log.Error(errorMessage, ex);
 		}
 		#endregion
 
@@ -426,7 +450,7 @@ namespace Client
 		private void File_Options(object sender, RoutedEventArgs e)
 		{
 			var o = new Options();
-            o.Owner = this;
+			o.Owner = this;
 
 			var res = o.ShowDialog();
 
@@ -444,7 +468,7 @@ namespace Client
 
 				Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
-                _changefile.ViewOnFile(User.Default.FilePath);
+				_changefile.ViewOnFile(User.Default.FilePath);
 
 				FilterAndSort(_currentSort);
 			}
@@ -641,7 +665,7 @@ namespace Client
 		#region Update notification
 		private void Get_Update(object sender, RoutedEventArgs e)
 		{
-			Process.Start(CheckUpdate.updateClientUrl);
+			Try(() => Process.Start(CheckUpdate.updateClientUrl), "Error while launching " + CheckUpdate.updateClientUrl);
 		}
 		#endregion
 
@@ -663,21 +687,21 @@ namespace Client
 				{
 					case Key.Up:
 						updated.IncPriority();
-						_taskList.Update(selected, updated);
+						Try(() => _taskList.Update(selected, updated), "Error while changing priority");
 						Reload();
 						FilterAndSort(_currentSort);
 						break;
 
 					case Key.Down:
 						updated.DecPriority();
-						_taskList.Update(selected, updated);
+						Try(() => _taskList.Update(selected, updated), "Error while changing priority");
 						FilterAndSort(_currentSort);
 						Reload();
 						break;
 					case Key.Left:
 					case Key.Right:
 						updated.SetPriority(' ');
-						_taskList.Update(selected, updated);
+						Try(() => _taskList.Update(selected, updated), "Error while changing priority");
 						FilterAndSort(_currentSort);
 						Reload();
 						break;
@@ -806,16 +830,12 @@ namespace Client
 						this.lbTasks.Focus();
 						break;
 					case Key.OemPlus:
-						List<string> projects = new List<string>();
-						_taskList.Tasks.Each(task => projects = projects.Concat(task.Projects).ToList());
-
+						var projects = _taskList.Tasks.SelectMany(task => task.Projects);
 						_intelliPos = taskText.CaretIndex - 1;
 						ShowIntellisense(projects.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(_intelliPos));
 						break;
 					case Key.D2:
-						List<string> contexts = new List<string>();
-						_taskList.Tasks.Each(task => contexts = contexts.Concat(task.Contexts).ToList());
-
+						var contexts = _taskList.Tasks.SelectMany(task => task.Contexts);
 						_intelliPos = taskText.CaretIndex - 1;
 						ShowIntellisense(contexts.Distinct().OrderBy(s => s), taskText.GetRectFromCharacterIndex(_intelliPos));
 						break;
@@ -872,15 +892,6 @@ namespace Client
 		#endregion
 
 		#endregion
-        
-        #region Refresh Task
-        private void Refresh()
-        {
-            Reload();
-            FilterAndSort(_currentSort);
-        }
-        #endregion
-
-    }
+	}
 }
 
