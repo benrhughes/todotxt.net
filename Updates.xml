@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
-	<version>1.6.0.0</version>
-	<changelog>Filtering for due dates - due:today, due:past or due:future</changelog>
+	<version>1.6.6.0</version>
+	<changelog>Improved error handling</changelog>
 </updates>
