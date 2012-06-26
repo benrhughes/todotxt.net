@@ -125,6 +125,11 @@ namespace ToDoLib
 				Log.Debug("Updating task '{0}' to '{1}'", currentTask.ToString(), newTask.ToString());
 
 				ReloadTasks();
+
+				// ensure that the task list still contains the current task...
+				if (!_tasks.Any(t => t.Raw == currentTask.Raw))
+					throw new Exception("That task no longer exists in to todo.txt file");
+
 				var currentIndex = _tasks.IndexOf(_tasks.First(t => t.Raw == currentTask.Raw));
 
 				_tasks[currentIndex] = newTask;
