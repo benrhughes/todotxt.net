@@ -205,6 +205,9 @@ namespace Client
 			{
 				if (User.Default.AutoArchive && newTask.Completed)
 				{
+					if (User.Default.ArchiveFilePath.IsNullOrEmpty())
+						throw new Exception("You have enabled auto-archiving but have not specified an archive file.\nPlease go to File -> Options and disable auto-archiving or specify an archive file");
+
 					var archiveList = new TaskList(User.Default.ArchiveFilePath);
 					archiveList.Add(newTask);
 					_taskList.Delete(task);
