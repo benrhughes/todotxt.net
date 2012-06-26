@@ -345,8 +345,8 @@ namespace Client
 
 		private void HanldeException(string errorMessage, Exception ex)
 		{
-			MessageBox.Show(errorMessage + Environment.NewLine + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			Log.Error(errorMessage, ex);
+			MessageBox.Show(errorMessage + Environment.NewLine + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 		}
 		#endregion
 
