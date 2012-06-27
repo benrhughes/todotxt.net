@@ -11,7 +11,22 @@ namespace ToDoTests
     [TestFixture]
     class TaskListTests
     {
-        [Test]
+
+		[TestFixtureSetUp]
+		public void TFSetup()
+		{
+			if (!File.Exists(Data.TestDataPath))
+				File.WriteAllText(Data.TestDataPath, "");
+		}
+
+		[TestFixtureTearDown]
+		public void TearDown()
+		{
+			if (File.Exists(Data.TestDataPath))
+				File.Delete(Data.TestDataPath);
+		}
+        
+		[Test]
         public void Construct()
         {
             var tl = new TaskList(Data.TestDataPath);
