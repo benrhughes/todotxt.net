@@ -5,6 +5,8 @@ using System.Text;
 using NUnit.Framework;
 using ToDoLib;
 using System.IO;
+using System.Threading;
+using System.Diagnostics;
 
 namespace ToDoTests
 {
@@ -297,6 +299,47 @@ namespace ToDoTests
             }
         }
 
+		[Test]
+		public void Read_when_file_is_open_in_another_process()
+		{
+			var t = new TaskList(Data.TestDataPath);
+		
+			var thread = new Thread(x =>
+				{
+					try
+					{
+						var f = File.Open(Data.TestDataPath, FileMode.Open, FileAccess.ReadWrite);
+						using (var s = new StreamWriter(f))
+						{
+							s.WriteLine("hello");
+							s.Flush();
+						}
+						Thread.Sleep(500);
+						f.Close();
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine("Exception while opening in background thread " + ex.Message);
+					}
+				});
+
+			thread.Start();
+			Thread.Sleep(100);
+
+			try
+			{
+				t.ReloadTasks();
+			}
+			catch (Exception ex)
+			{
+				Assert.Fail(ex.Message);
+			}
+			finally
+			{
+				thread.Join();
+			}
+
+		}
 
         private List<Task> getTestList()
         {

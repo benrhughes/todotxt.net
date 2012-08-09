@@ -39,8 +39,20 @@ namespace ToDoLib
 			try
 			{
 				_tasks = new List<Task>();
-				foreach (var line in File.ReadAllLines(_filePath))
-					_tasks.Add(new Task(line));
+				//foreach (var line in File.ReadAllLines(_filePath))
+				//    _tasks.Add(new Task(line));
+
+				var file = File.OpenRead(_filePath);
+				using (var reader = new StreamReader(file))
+				{
+					string raw;
+					while ((raw = reader.ReadLine()) != null)
+					{
+						_tasks.Add(new Task(raw));
+					}
+
+				}
+				file.Close();
 
 				Log.Debug("Finished loading tasks from {0}", _filePath);
 			}
