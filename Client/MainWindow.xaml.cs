@@ -100,7 +100,7 @@ namespace Client
 			}
 			catch (Exception ex)
 			{
-				HanldeException("An error occurred while intialising the application", ex);
+				HandleException("An error occurred while intialising the application", ex);
 			}
 		}
 
@@ -154,7 +154,15 @@ namespace Client
 					{
 						if (filter.Substring(0, 1) != "-")
 						{
-							filters = filters + " " + filter;
+                            if (filter.Contains("active"))
+                            {
+                                // If the current filter is "active", replace it here with "today"
+                                filters = filters + " " + "due:today";
+                            }
+                            else
+                            {
+                                filters = filters + " " + filter;
+                            }
 						}
 					}
 					taskText.Text = filters;
@@ -166,7 +174,35 @@ namespace Client
 				case Key.F:
 					Filter(null, null);
 					break;
-				case Key.OemPeriod:
+
+                case Key.RightShift:
+                    // Add Calendar to the titlebar
+                    AddCalendarToTitle();
+                    break;
+                
+                // Filter Presets
+                case Key.NumPad1:
+                case Key.D1:
+                    User.Default.FilterText = User.Default.FilterTextPreset1;
+                    FilterAndSort(_currentSort);
+                    User.Default.Save();
+                    break;
+
+                case Key.NumPad2:
+                case Key.D2:
+                    User.Default.FilterText = User.Default.FilterTextPreset2;
+                    FilterAndSort(_currentSort);
+                    User.Default.Save();
+                    break;
+
+                case Key.NumPad3:
+                case Key.D3:
+                    User.Default.FilterText = User.Default.FilterTextPreset3;
+                    FilterAndSort(_currentSort);
+                    User.Default.Save();
+                    break;
+                
+                case Key.OemPeriod:
 					Reload();
 					FilterAndSort(_currentSort);
 					break;
@@ -196,7 +232,37 @@ namespace Client
 			}
 		}
 
-		private void ToggleComplete(Task task)
+        // 
+        //  AddCalendarToTitle
+        //
+        //  Add a quick calendar of the next 7 days to the title bar.  If the calendar is already displayed, toggle it off.
+        //
+        private void AddCalendarToTitle()
+        {
+            string Title = this.Title;
+            string today;
+            string today_letter;
+
+            if (Title.Length < 15)
+            {
+                Title += "       Calendar:  ";
+
+                for (double i = 0; i < 7; i++)
+                {
+                    today = DateTime.Now.AddDays(i).ToString("MM-dd");
+                    today_letter = DateTime.Now.AddDays(i).DayOfWeek.ToString();
+                    today_letter = today_letter.Remove(2);
+                    Title += "  " + today_letter + ":" + today;
+                }
+            }
+            else
+            {
+                Title = "todotxt.net";
+            }
+            this.Title = Title;
+        }
+
+        private void ToggleComplete(Task task)
 		{
 			var newTask = new Task(task.Raw);
 			newTask.Completed = !newTask.Completed;
@@ -219,7 +285,7 @@ namespace Client
 			}
 			catch (Exception ex)
 			{
-				HanldeException("An error occurred while updating the task's completed status", ex);
+				HandleException("An error occurred while updating the task's completed status", ex);
 			}
 		}
 
@@ -245,7 +311,7 @@ namespace Client
 				}
 				catch (Exception ex)
 				{
-					HanldeException("Error while sorting tasks", ex);
+					HandleException("Error while sorting tasks", ex);
 				}
 
 				if (selected == null)
@@ -299,7 +365,7 @@ namespace Client
 			}
 			catch (Exception ex)
 			{
-				HanldeException("An error occurred while opening " + filePath, ex);
+				HandleException("An error occurred while opening " + filePath, ex);
 				sortMenu.IsEnabled = false;
 			}
 		}
@@ -311,9 +377,15 @@ namespace Client
 			f.Left = this.Left + 10;
 			f.Top = this.Top + 10;
 			f.FilterText = User.Default.FilterText;
+            f.FilterTextPreset1 = User.Default.FilterTextPreset1;
+            f.FilterTextPreset2 = User.Default.FilterTextPreset2;
+            f.FilterTextPreset3 = User.Default.FilterTextPreset3;
 			if (f.ShowDialog().Value)
 			{
 				User.Default.FilterText = f.FilterText.Trim();
+                User.Default.FilterTextPreset1 = f.FilterTextPreset1.Trim();
+                User.Default.FilterTextPreset2 = f.FilterTextPreset2.Trim();
+                User.Default.FilterTextPreset3 = f.FilterTextPreset3.Trim();
 				User.Default.Save();
 
 				FilterAndSort(_currentSort);
@@ -339,11 +411,11 @@ namespace Client
 			}
 			catch (Exception ex)
 			{
-				HanldeException(errorMessage, ex);
+				HandleException(errorMessage, ex);
 			}
 		}
 
-		private void HanldeException(string errorMessage, Exception ex)
+		private void HandleException(string errorMessage, Exception ex)
 		{
 			Log.Error(errorMessage, ex);
 			MessageBox.Show(errorMessage + Environment.NewLine + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
