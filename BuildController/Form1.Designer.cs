@@ -36,11 +36,14 @@
 			this.tbVersion = new System.Windows.Forms.TextBox();
 			this.tbChangelog = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
+			this.cbBranch = new System.Windows.Forms.ComboBox();
+			this.button1 = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btnRun
 			// 
-			this.btnRun.Location = new System.Drawing.Point(95, 287);
+			this.btnRun.Location = new System.Drawing.Point(95, 335);
 			this.btnRun.Name = "btnRun";
 			this.btnRun.Size = new System.Drawing.Size(154, 23);
 			this.btnRun.TabIndex = 0;
@@ -52,7 +55,7 @@
 			// 
 			this.clbOptions.CheckOnClick = true;
 			this.clbOptions.FormattingEnabled = true;
-			this.clbOptions.Location = new System.Drawing.Point(13, 148);
+			this.clbOptions.Location = new System.Drawing.Point(13, 196);
 			this.clbOptions.Name = "clbOptions";
 			this.clbOptions.Size = new System.Drawing.Size(305, 124);
 			this.clbOptions.TabIndex = 1;
@@ -60,7 +63,7 @@
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(10, 9);
+			this.label1.Location = new System.Drawing.Point(10, 60);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(45, 13);
 			this.label1.TabIndex = 2;
@@ -69,7 +72,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(10, 39);
+			this.label2.Location = new System.Drawing.Point(10, 90);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(61, 13);
 			this.label2.TabIndex = 3;
@@ -77,7 +80,7 @@
 			// 
 			// tbVersion
 			// 
-			this.tbVersion.Location = new System.Drawing.Point(95, 6);
+			this.tbVersion.Location = new System.Drawing.Point(95, 57);
 			this.tbVersion.Name = "tbVersion";
 			this.tbVersion.Size = new System.Drawing.Size(223, 20);
 			this.tbVersion.TabIndex = 4;
@@ -85,7 +88,7 @@
 			// tbChangelog
 			// 
 			this.tbChangelog.AcceptsReturn = true;
-			this.tbChangelog.Location = new System.Drawing.Point(95, 39);
+			this.tbChangelog.Location = new System.Drawing.Point(95, 90);
 			this.tbChangelog.Multiline = true;
 			this.tbChangelog.Name = "tbChangelog";
 			this.tbChangelog.Size = new System.Drawing.Size(223, 75);
@@ -94,17 +97,53 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(10, 123);
+			this.label3.Location = new System.Drawing.Point(10, 171);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(45, 13);
 			this.label3.TabIndex = 6;
 			this.label3.Text = "Actions:";
 			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(13, 13);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(44, 13);
+			this.label4.TabIndex = 7;
+			this.label4.Text = "Branch:";
+			// 
+			// cbBranch
+			// 
+			this.cbBranch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+			this.cbBranch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+			this.cbBranch.FormattingEnabled = true;
+			this.cbBranch.Items.AddRange(new object[] {
+            "master",
+            "dev"});
+			this.cbBranch.Location = new System.Drawing.Point(95, 13);
+			this.cbBranch.Name = "cbBranch";
+			this.cbBranch.Size = new System.Drawing.Size(223, 21);
+			this.cbBranch.TabIndex = 8;
+			this.cbBranch.Text = "master";
+			// 
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(298, 335);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(20, 23);
+			this.button1.TabIndex = 9;
+			this.button1.Text = "?";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(330, 323);
+			this.ClientSize = new System.Drawing.Size(330, 383);
+			this.Controls.Add(this.button1);
+			this.Controls.Add(this.cbBranch);
+			this.Controls.Add(this.label4);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.tbChangelog);
 			this.Controls.Add(this.tbVersion);
@@ -129,6 +168,9 @@
 		private System.Windows.Forms.TextBox tbVersion;
 		private System.Windows.Forms.TextBox tbChangelog;
 		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.ComboBox cbBranch;
+		private System.Windows.Forms.Button button1;
 	}
 }
 
