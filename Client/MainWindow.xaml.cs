@@ -713,21 +713,25 @@ namespace Client
 				return;
 			}
 
-			switch (e.Key)
+		    switch (e.Key)
 			{
 				case Key.J:
+                case Key.Down:
 					if (lbTasks.SelectedIndex < lbTasks.Items.Count - 1)
 					{
-						lbTasks.ScrollIntoView(lbTasks.Items[lbTasks.SelectedIndex + 1]);
-						lbTasks.SelectedIndex = lbTasks.SelectedIndex + 1;
+                        lbTasks.SelectedIndex++;
+						lbTasks.ScrollIntoView(lbTasks.Items[lbTasks.SelectedIndex]);
 					}
+                    e.Handled = true;
 					break;
 				case Key.K:
+                case Key.Up:
 					if (lbTasks.SelectedIndex > 0)
 					{
 						lbTasks.ScrollIntoView(lbTasks.Items[lbTasks.SelectedIndex - 1]);
 						lbTasks.SelectedIndex = lbTasks.SelectedIndex - 1;
 					}
+                    e.Handled = true;
 					break;
 				default:
 					break;
@@ -894,7 +898,11 @@ namespace Client
 		}
 		#endregion
 
+
 		#endregion
+
+
+       
 	}
 }
 
