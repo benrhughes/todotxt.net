@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -192,6 +193,9 @@ namespace ToDoLib
 						continue;
 					else if (filter.Equals("due:past", StringComparison.OrdinalIgnoreCase) 
 						&& task.DueDate.IsDateLessThan(DateTime.Now))
+						continue;
+					else if (filter.Equals("due:active", StringComparison.OrdinalIgnoreCase)
+						&& !task.DueDate.IsDateGreaterThan(DateTime.Now))
 						continue;
 
 					if (filter.Substring(0, 1) == "-")
