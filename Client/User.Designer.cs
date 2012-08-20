@@ -82,6 +82,52 @@ namespace Client {
                 this["FilterText"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FilterTextPreset1
+        {
+            get
+            {
+                return ((string)(this["FilterTextPreset1"]));
+            }
+            set
+            {
+                this["FilterTextPreset1"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FilterTextPreset2
+        {
+            get
+            {
+                return ((string)(this["FilterTextPreset2"]));
+            }
+            set
+            {
+                this["FilterTextPreset2"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FilterTextPreset3
+        {
+            get
+            {
+                return ((string)(this["FilterTextPreset3"]));
+            }
+            set
+            {
+                this["FilterTextPreset3"] = value;
+            }
+        }
+
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

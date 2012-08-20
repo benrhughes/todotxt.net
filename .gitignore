@@ -5,6 +5,10 @@ _ReSharper*
 bin
 obj
 
+*.pdb
+*.exe
+*.dll
+
 # user settings
 *.user
 *.suo

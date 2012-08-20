@@ -27,5 +27,16 @@ namespace BuildController
 		{
 			_runner.Run(tbVersion.Text, tbChangelog.Text, clbOptions.CheckedItems.Cast<string>());
 		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			var message = 
+@"The build controller is mostly useful if you want to build and deploy 
+the todotxt.net installer, including pushing version changes to github.
+That is, it's really for core contributors. However, if you have a fork 
+you may find it helpful for building the installer etc.";
+
+			MessageBox.Show(message, "Huh?", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		}
 	}
 }

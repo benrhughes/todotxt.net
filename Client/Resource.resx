@@ -192,6 +192,7 @@
     - D: delete task (with confirmation)
     - U: update task
     - F: filter tasks
+    - Right Shift: quick calendar in title bar
     - .: reload tasks from file
     - ?: show help
     - Alt+Up: increase priority
@@ -209,7 +210,8 @@ Filtering
     - one free-text filter per line
     - filters are AND'd together
     - to exclude a term, start the line with a '-', eg -@work
-    - due date filtering: due:today, due:past or due:future
+    - due date filtering: due:today, due:past, due:future 
+      or due:active (today and past)
     - press Enter twice to save and close the filter
     - set filter case sensistivity under File -&gt; Options...
 
