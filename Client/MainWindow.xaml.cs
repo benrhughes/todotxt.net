@@ -563,6 +563,7 @@ namespace Client
 		private void btnCancelPrint_Click(object sender, RoutedEventArgs e)
 		{
 			Set_PrintControlsVisibility(false);
+            taskText.Focus();
 		}
 
 		private void Set_PrintControlsVisibility(bool PrintControlsVisibility)
