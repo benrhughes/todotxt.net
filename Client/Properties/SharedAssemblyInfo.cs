@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Hughesoft")]
 [assembly: AssemblyProduct("todotxt.net")]
-[assembly: AssemblyCopyright("Copyright © Ben Hughes 2011")]
+[assembly: AssemblyCopyright("Copyright © Ben Hughes 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,5 +20,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.6.6.0")]
-[assembly: AssemblyFileVersion("1.6.6.0")]
+[assembly: AssemblyVersion("1.7.0.0")]
+[assembly: AssemblyFileVersion("1.7.0.0")]

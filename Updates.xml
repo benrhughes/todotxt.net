@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
-	<version>1.6.6.0</version>
-	<changelog>Improved error handling</changelog>
+	<version>1.7.0.0</version>
+	<changelog>Copy Task with Ctrl-C; Multiple saved filters; due:active filter</changelog>
 </updates>
