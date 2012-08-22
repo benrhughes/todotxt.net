@@ -26,9 +26,15 @@ namespace BuildController
 				{"Update Installer", () =>UpdateInstaller()},
 				{"Build Installer", () => BuildInstaller()},
 				{"Update updates.xml", () => UpdateXML()},
+                {"Merge into master", () => MergeMaster()},
 				{"Push to Github", () => PushToGithub()}
 			};
 		}
+
+        private object MergeMaster()
+        {
+            throw new NotImplementedException();
+        }
 
 		public void Run(string version, string changelog, IEnumerable<string> actionNames)
 		{
