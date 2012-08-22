@@ -126,6 +126,15 @@ namespace Client
 
 		private void KeyboardShortcut(Key key)
 		{
+			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && key == Key.C)
+			{
+				var currentTask = lbTasks.SelectedItem as Task;
+				if(currentTask != null)
+					Clipboard.SetText(currentTask.Raw);
+				
+				return;
+			}
+
 			// create and open can be used when there's no list loaded
 			switch (key)
 			{
