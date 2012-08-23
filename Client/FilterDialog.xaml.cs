@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Client
 {
@@ -19,6 +9,7 @@ namespace Client
     public partial class FilterDialog : Window
     {
 		private bool _prevKeyWasEnter;
+
         public string FilterText
         {
             get { return tbFilter.Text; }
@@ -71,6 +62,7 @@ namespace Client
             tbFilterPreset2.Clear();
             tbFilterPreset3.Clear();
         }
+
         private void tbFilter_PreviewKeyUp(object sender, KeyEventArgs e)
         {
 			if (e.Key == Key.Escape)
