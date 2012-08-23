@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace ToDoLib
 {
@@ -38,9 +36,7 @@ namespace ToDoLib
 
 			try
 			{
-				_tasks = new List<Task>();
-				//foreach (var line in File.ReadAllLines(_filePath))
-				//    _tasks.Add(new Task(line));
+				_tasks = new List<Task>();				
 
 				var file = File.OpenRead(_filePath);
 				using (var reader = new StreamReader(file))
@@ -50,9 +46,7 @@ namespace ToDoLib
 					{
 						_tasks.Add(new Task(raw));
 					}
-
-				}
-				file.Close();
+				}                
 
 				Log.Debug("Finished loading tasks from {0}", _filePath);
 			}
