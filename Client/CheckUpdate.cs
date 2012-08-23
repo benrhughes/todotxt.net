@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Xml;
 using ToDoLib;
-using System.Windows;
 
 namespace Client
 {

@@ -3,18 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Filter" Height="494" Width="385" WindowStyle="ToolWindow" ShowInTaskbar="False">
     <Grid>
-        <TextBox Height="62" Name="tbFilter" VerticalAlignment="Top" AcceptsReturn="True" TextWrapping="Wrap" PreviewKeyUp="tbFilter_PreviewKeyUp" Margin="0,60,0,0" />
-        <Button Content="OK" Height="23" HorizontalAlignment="Right" Name="OK" VerticalAlignment="Bottom" Width="75" IsDefault="True" Click="OK_Click" Margin="0,0,81,1" />
-        <Button Content="Cancel" Height="23" HorizontalAlignment="Right" Margin="0,0,0,1" Name="Cancel" VerticalAlignment="Bottom" Width="75" Click="Cancel_Click" />
-        <Button Content="_Clear Active" Height="23" HorizontalAlignment="Right" Margin="0,0,300,1" Name="Clear" VerticalAlignment="Bottom" Width="75" Click="Clear_Click" />
-        <Button Content="Clear _All" Height="23" HorizontalAlignment="Right" Margin="0,0,220,1" Name="Clear_All" VerticalAlignment="Bottom" Width="75" Click="Clear_All_Click" />
-        <TextBox AcceptsReturn="True" Height="70" Margin="1,150,0,0" Name="tbFilterPreset1" TextWrapping="Wrap" VerticalAlignment="Top" />
-        <TextBox AcceptsReturn="True" Height="70" Margin="1,250,0,0" Name="tbFilterPreset2" TextWrapping="Wrap" VerticalAlignment="Top" />
-        <TextBox AcceptsReturn="True" Height="70" Margin="1,350,0,0" Name="tbFilterPreset3" TextWrapping="Wrap" VerticalAlignment="Top" />
         <Label Content="To invoke a filter from the main window, press '1', '2' or '3'" Height="28" HorizontalAlignment="Left" Margin="1,7,0,0" Name="label1" VerticalAlignment="Top" Width="344" />
         <Label Content="Currently active filter:" Height="28" HorizontalAlignment="Left" Margin="1,40,0,0" Name="label2" VerticalAlignment="Top" />
+        <TextBox Height="62" Name="tbFilter" VerticalAlignment="Top" AcceptsReturn="True" TextWrapping="Wrap" PreviewKeyUp="tbFilter_PreviewKeyUp" Margin="0,60,0,0" />
         <Label Content="Preset filter #1:" Height="28" HorizontalAlignment="Left" Margin="1,130,0,0" Name="label3" VerticalAlignment="Top" />
+        <TextBox AcceptsReturn="True" Height="70" Margin="1,150,0,0" Name="tbFilterPreset1" TextWrapping="Wrap" VerticalAlignment="Top" PreviewKeyUp="tbFilter_PreviewKeyUp" />
         <Label Content="Preset filter #2:" Height="28" HorizontalAlignment="Left" Margin="1,230,0,0" Name="label4" VerticalAlignment="Top" />
+        <TextBox AcceptsReturn="True" Height="70" Margin="1,250,0,0" Name="tbFilterPreset2" TextWrapping="Wrap" VerticalAlignment="Top" PreviewKeyUp="tbFilter_PreviewKeyUp" />
         <Label Content="Preset filter #3:" Height="28" HorizontalAlignment="Left" Margin="1,330,0,0" Name="label5" VerticalAlignment="Top" />
+        <TextBox AcceptsReturn="True" Height="70" Margin="1,350,0,0" Name="tbFilterPreset3" TextWrapping="Wrap" VerticalAlignment="Top" PreviewKeyUp="tbFilter_PreviewKeyUp" />
+        <Button Content="_Clear Active" Height="23" HorizontalAlignment="Right" Margin="0,0,300,1" Name="Clear" VerticalAlignment="Bottom" Width="75" Click="Clear_Click" />
+        <Button Content="Clear _All" Height="23" HorizontalAlignment="Right" Margin="0,0,220,1" Name="Clear_All" VerticalAlignment="Bottom" Width="75" Click="Clear_All_Click" />
+        <Button Content="OK" Height="23" HorizontalAlignment="Right" Name="OK" VerticalAlignment="Bottom" Width="75" IsDefault="True" Click="OK_Click" Margin="0,0,81,1" />
+        <Button Content="Cancel" Height="23" HorizontalAlignment="Right" Margin="0,0,0,1" Name="Cancel" VerticalAlignment="Bottom" Width="75" Click="Cancel_Click" />        
     </Grid>
 </Window>
