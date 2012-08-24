@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
-	<version>1.7.0.0</version>
-	<changelog>Copy Task with Ctrl-C; Multiple saved filters; due:active filter</changelog>
+	<version>1.7.1.0</version>
+	<changelog>Re-instated colour coding/styles that went missing in the last release</changelog>
 </updates>
