@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Client.FilterDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Filter" Height="494" Width="385" WindowStyle="ToolWindow" ShowInTaskbar="False">
+        Title="Filter" Height="494" Width="400" WindowStyle="ToolWindow" ShowInTaskbar="False">
     <Grid>
         <Label Content="To invoke a filter from the main window, press '1', '2' or '3'" Height="28" HorizontalAlignment="Left" Margin="1,7,0,0" Name="label1" VerticalAlignment="Top" Width="344" />
         <Label Content="Currently active filter:" Height="28" HorizontalAlignment="Left" Margin="1,40,0,0" Name="label2" VerticalAlignment="Top" />
