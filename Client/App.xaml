@@ -4,6 +4,7 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <Style  TargetType="{x:Type ListBoxItem}">
+			<Setter Property="BorderBrush" Value="{x:Null}"/>
             <Style.Triggers>                                
                 <Trigger Property="ItemsControl.AlternationIndex"
                  Value="0">
