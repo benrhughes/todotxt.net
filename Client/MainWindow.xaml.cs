@@ -236,6 +236,30 @@ namespace Client
 					taskText.Text = _updating.ToString();
 					taskText.Focus();
 					break;
+                case Key.P:
+                    _updating = (Task)lbTasks.SelectedItem;
+
+                    int iPostponeCount = Postpone(null, null);
+                    if (iPostponeCount <= 0)
+                    {
+                        // User canceled, or entered a non-positive number or garbage
+                        break;
+                    }
+                    
+                    // Get the current DueDate from the item being updated
+                    DateTime dtNewDueDate = Convert.ToDateTime(_updating.DueDate);
+
+                    // Add days to that date
+                    dtNewDueDate = dtNewDueDate.AddDays(iPostponeCount);
+
+                    // Build a dummy string which we'll display so the rest of the system thinks we edited the current item.  
+                    // Otherwise we end up with 2 items which differ only by due date
+                    string postponedString = _updating.Raw.Replace(_updating.DueDate, dtNewDueDate.ToString("yyyy-MM-dd"));
+
+                    // Display our "dummy" string.  If they cancel, no changes are committed.  
+                    taskText.Text = postponedString;
+                    taskText.Focus();
+                    break;
 				default:
 					break;
 			}
@@ -402,6 +426,33 @@ namespace Client
 		}
 
 
+        private int Postpone(object sender, RoutedEventArgs e)
+        {
+            var p = new PostponeDialog();
+            p.Left = this.Left + 10;
+            p.Top = this.Top + 10;
+            int iDays = 0;
+
+            if (p.ShowDialog().Value)
+            {
+                string sPostpone = p.PostponeText.Trim();
+
+                if (sPostpone.Length > 0)
+                {
+                    try
+                    {
+                        iDays = Convert.ToInt32(sPostpone);
+                    }
+                    catch
+                    {
+                        // No action needed.  iDays will be 0, which will leave the item unaltered.
+                    }
+                }
+            }
+
+            return iDays;
+
+        }
 		private void ShowUpdateMenu(string version)
 		{
 			var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
