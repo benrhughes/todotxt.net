@@ -7,7 +7,7 @@
 			<RowDefinition Height="444*" />
 			<RowDefinition Height="14*" />
 		</Grid.RowDefinitions>
-		<Label Content="To invoke a filter from the main window, press '1', '2' or '3'" Height="28" HorizontalAlignment="Left" Margin="1,7,0,0" Name="label1" VerticalAlignment="Top" Width="344" />
+		<Label Content="To invoke a filter from the main window, press '1', '2' or '3'.  '0' to clear." Height="28" HorizontalAlignment="Left" Margin="1,7,0,0" Name="label1" VerticalAlignment="Top" Width="370" />
         <Label Content="Currently active filter:" Height="28" HorizontalAlignment="Left" Margin="0,41,0,0" Name="label2" VerticalAlignment="Top" />
         <TextBox Height="62" Name="tbFilter" VerticalAlignment="Top" AcceptsReturn="True" TextWrapping="Wrap" PreviewKeyUp="tbFilter_PreviewKeyUp" Margin="12,62,12,0" />
         <Label Content="Preset filter #1:" Height="28" HorizontalAlignment="Left" Margin="1,130,0,0" Name="label3" VerticalAlignment="Top" />

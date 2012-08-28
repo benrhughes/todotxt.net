@@ -190,6 +190,12 @@ namespace Client
                     break;
                 
                 // Filter Presets
+                case Key.NumPad0:
+                case Key.D0:
+                    User.Default.FilterText = "";
+                    FilterAndSort(_currentSort);
+                    break;
+
                 case Key.NumPad1:
                 case Key.D1:
                     User.Default.FilterText = User.Default.FilterTextPreset1;
