@@ -192,6 +192,7 @@
     - D: delete task (with confirmation)
     - U: update task
     - F: filter tasks
+    - P: postpone task X days
     - Right Shift: quick calendar in title bar
     - .: reload tasks from file
     - ?: show help
