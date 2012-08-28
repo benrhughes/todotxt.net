@@ -194,6 +194,7 @@ namespace Client
                 case Key.D0:
                     User.Default.FilterText = "";
                     FilterAndSort(_currentSort);
+					User.Default.Save();
                     break;
 
                 case Key.NumPad1:
