@@ -106,14 +106,14 @@ namespace Client {
         ///    - D: delete task (with confirmation)
         ///    - U: update task
         ///    - F: filter tasks
+        ///    - P: postpone task X days
         ///    - Right Shift: quick calendar in title bar
         ///    - .: reload tasks from file
         ///    - ?: show help
         ///    - Alt+Up: increase priority
         ///    - Alt+Down: decrease priority
         ///    - Alt+Left/Right: clear priority
-        ///    - Win+Alt+T: Hide/Unhide windows
-        ///    - Ctrl [rest of string was truncated]&quot;;.
+        ///    - Win+Alt+T:  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string HelpText {
             get {
