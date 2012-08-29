@@ -149,11 +149,6 @@
             "AssemblyAsmDisplayName" = "8:ToDoLib, Version=1.7.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_5547FE2E13BA1709529C22A3CD4A2BB0"
-                    {
-                    "Name" = "8:ToDoLib.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:ToDoLib.dll"
             "TargetName" = "8:"
@@ -229,15 +224,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
-        "ProductCode" = "8:{6AA33644-3648-46E4-BED0-5AB983FB6B3E}"
-        "PackageCode" = "8:{5D518ED1-F542-4359-84FC-69603AAA59F2}"
+        "ProductCode" = "8:{ABF422D6-BC8E-4268-A863-DB2022534414}"
+        "PackageCode" = "8:{DD1DB83C-4776-4578-B7D6-1A3125C20C35}"
         "UpgradeCode" = "8:{16D204EA-4E20-46D6-8C18-227DE56996D4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.7.1"
+        "ProductVersion" = "8:1.8.0"
         "Manufacturer" = "8:Hughesoft"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -765,7 +760,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_DD4FBF2F861840278FC197A08A3BC28B"
             {
-            "SourcePath" = "8:..\\Client\\obj\\x86\\Release\\todotxt.exe"
+            "SourcePath" = "8:..\\Client\\obj\\x86\\Debug\\todotxt.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_9136B6B8A43E4907A3E4DB2F468AD84C"
