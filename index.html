@@ -22,7 +22,7 @@
   					});
   			});
         
-        $.getJson('https://api.github.com/repos/benrhughes/todotxt.net/downloads?callback=?', function(data){
+        $.getJSON('https://api.github.com/repos/benrhughes/todotxt.net/downloads?callback=?', function(data){
           $('#download').append('<a href="' + data.data[0].html_url + '">Download</a>');
         });
         
