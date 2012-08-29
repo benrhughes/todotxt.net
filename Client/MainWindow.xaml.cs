@@ -254,14 +254,33 @@ namespace Client
                     }
                     
                     // Get the current DueDate from the item being updated
-                    DateTime dtNewDueDate = Convert.ToDateTime(_updating.DueDate);
+                    DateTime dtNewDueDate;
+                    string postponedString;
+                    if (_updating.DueDate.Length > 0)
+                    {
+                        dtNewDueDate = Convert.ToDateTime(_updating.DueDate);
+                    }
+                    else
+                    {
+                        // Current item doesn't have a due date.  Use today as the due date
+                        dtNewDueDate = Convert.ToDateTime(DateTime.Now.ToString());
+                    }
 
                     // Add days to that date
                     dtNewDueDate = dtNewDueDate.AddDays(iPostponeCount);
 
                     // Build a dummy string which we'll display so the rest of the system thinks we edited the current item.  
                     // Otherwise we end up with 2 items which differ only by due date
-                    string postponedString = _updating.Raw.Replace(_updating.DueDate, dtNewDueDate.ToString("yyyy-MM-dd"));
+                    if (_updating.DueDate.Length > 0)
+                    {
+                        // The item has a due date, so exchange the current with the new
+                        postponedString = _updating.Raw.Replace(_updating.DueDate, dtNewDueDate.ToString("yyyy-MM-dd"));
+                    }
+                    else
+                    {
+                        // The item doesn't have a due date, so just append the new due date to the task
+                        postponedString = _updating.Raw.ToString() + " due:" + dtNewDueDate.ToString("yyyy-MM-dd");
+                    }
 
                     // Display our "dummy" string.  If they cancel, no changes are committed.  
                     taskText.Text = postponedString;
