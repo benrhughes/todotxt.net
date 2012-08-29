@@ -55,6 +55,12 @@ a:focus {
 Theme Styles
 *******************************************************************************/
 
+#download{
+  font-size:2em;
+  font-weight: bold;
+  text-align: right;
+}
+
 body {
   box-sizing: border-box;
   color:#373737;
