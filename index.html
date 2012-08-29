@@ -9,6 +9,21 @@
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>Todotxt.net</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+  	<script type="text/javascript">
+      $(
+        $.getJSON('https://api.github.com/repos/benrhughes/todotxt.net/contributors?callback=?',
+  			  function(data){
+  					var $contribs = $('#contributors');
+  					$.each(data.data, function(i,v){
+  						$contribs.append(
+                  '<a href="http://github.com/' + v.login + '">' + 
+  								  '<img width="80px" height="80px" src="' + v.avatar_url + '" />' +
+  								'</a>');
+  					});
+  			});
+      );
+    </script>
   </head>
 
   <body>
@@ -59,18 +74,8 @@
 <p>You can download the MSI installer from the <a href="http://github.com/benrhughes/todotxt.net/downloads">github download page</a>. When a new version is released, a notification will appear in the app's menu.</p>
 
 <h3>Contributors</h3>
+<div id="contributors"></div>
 
-<ul>
-<li><a href="https://github.com/benrhughes" class="user-mention">@benrhughes</a></li>
-<li><a href="https://github.com/Mytholus" class="user-mention">@Mytholus</a></li>
-<li><a href="https://github.com/steppsr" class="user-mention">@steppsr</a></li>
-<li><a href="https://github.com/ejsmile" class="user-mention">@ejsmile</a></li>
-<li><a href="https://github.com/clifb" class="user-mention">@clifb</a></li>
-<li><a href="https://github.com/arkolbus" class="user-mention">@arkolbus</a></li>
-<li><a href="https://github.com/ChrisWay" class="user-mention">@ChrisWay</a></li>
-<li><a href="https://github.com/Piscean" class="user-mention">@Piscean</a></li>
-<li><a href="https://github.com/robjefferies" class="user-mention">@robjefferies</a></li>
-</ul>
       </section>
     </div>
 
