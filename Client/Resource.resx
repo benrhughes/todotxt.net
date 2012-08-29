@@ -159,6 +159,11 @@
             font-style: italic;
             color: green;
         }
+        td.enddate
+        {
+            font-style: italic;
+            color: blue;
+        }
         table, tr
         {
             width: 7in;
@@ -177,6 +182,10 @@
             width: 60px;
         }
         td.completeddate
+        {
+            width: 60px;
+        }
+        td.enddate
         {
             width: 60px;
         }</value>
