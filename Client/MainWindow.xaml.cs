@@ -690,7 +690,7 @@ namespace Client
 			contents.Append("<body>");
 			contents.Append("<h2>todotxt.net</h2>");
 			contents.Append("<table>");
-			contents.Append("<tr class='tbhead'><th>&nbsp;</th><th>Done</th><th>Created</th><td>Details</td></tr>");
+			contents.Append("<tr class='tbhead'><th>&nbsp;</th><th>Done</th><th>Created</th><th>Due</th><td>Details</td></tr>");
 
 			foreach (Task task in lbTasks.Items)
 			{
@@ -715,6 +715,10 @@ namespace Client
 					contents.Append("<td>&nbsp;</td>");
 				else
 					contents.Append("<td class='startdate'>" + task.CreationDate + "</td>");
+                if (string.IsNullOrEmpty(task.DueDate))
+                    contents.Append("<td>&nbsp;</td>");
+                else
+                    contents.Append("<td class='enddate'>" + task.DueDate + "</td>");
 
 				contents.Append("<td>" + task.Body);
 
