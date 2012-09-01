@@ -1022,21 +1022,39 @@ namespace Client
 		#endregion
 
 		#region intellisense
+        
+        /// <summary>
+        /// Helper function to add the chosen text in the intellisense into the task string.
+        /// Created to allow the use of both keyboard and mouse clicks.
+        /// </summary>
+        private void InsertTextIntoTaskString()
+        {
+            Intellisense.IsOpen = false;
+
+            taskText.Text = taskText.Text.Remove(_intelliPos, taskText.CaretIndex - _intelliPos);
+
+            var newText = IntellisenseList.SelectedItem.ToString();
+            taskText.Text = taskText.Text.Insert(_intelliPos, newText);
+            taskText.CaretIndex = _intelliPos + newText.Length;
+
+            taskText.Focus();
+        }
+
+        /// <summary>
+        /// Tab, Enter and Space keys will all added the selected text into the task string.
+        /// Escape key cancels out.
+        /// </summary>
+        /// <param name="sender">Not used.</param>
+        /// <param name="e">The key to trigger on.</param>
 		private void Intellisense_KeyDown(object sender, KeyEventArgs e)
 		{
 			switch (e.Key)
-			{
+			{                    
 				case Key.Enter:
-					Intellisense.IsOpen = false;
-
-					taskText.Text = taskText.Text.Remove(_intelliPos, taskText.CaretIndex - _intelliPos);
-
-					var newText = IntellisenseList.SelectedItem.ToString();
-					taskText.Text = taskText.Text.Insert(_intelliPos, newText);
-					taskText.CaretIndex = _intelliPos + newText.Length;
-
-					taskText.Focus();
-					break;
+                case Key.Tab: 
+                case Key.Space:
+                    InsertTextIntoTaskString();
+                break;
 				case Key.Escape:
 					Intellisense.IsOpen = false;
 					taskText.CaretIndex = taskText.Text.Length;
@@ -1056,16 +1074,25 @@ namespace Client
 			Intellisense.PlacementRectangle = placement;
 
 			IntellisenseList.ItemsSource = s;
-			Intellisense.IsOpen = true;
+			Intellisense.IsOpen = true;            
 			taskText.Focus();
 		}
-		#endregion
+		
+        /// <summary>
+        /// Uses the click even to add the selected text from the intellisense into the task list.
+        /// </summary>
+        /// <param name="sender">Not used.</param>
+        /// <param name="e">Not used.</param>
+        private void IntellisenseList_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            InsertTextIntoTaskString();
+        }
+        #endregion
+
+        #endregion
 
 
-		#endregion
 
-
-       
-	}
+    }
 }
 
