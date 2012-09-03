@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Client.Options"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Options" Height="290" Width="500"
+        Title="Options" Height="317" Width="500"
         ResizeMode="NoResize"
         WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
     <Grid>
@@ -16,5 +16,6 @@
         <CheckBox Content="Add created date to new tasks" Height="16" HorizontalAlignment="Left" Margin="18,75,0,0" Name="cbAddCreationDate" VerticalAlignment="Top" />
         <CheckBox Content="Enable debug logging" Height="16" HorizontalAlignment="Left" Margin="18,175,0,0" Name="cbDebugOn" VerticalAlignment="Top" />
 		<CheckBox Content="Minimise to system tray (requires restart)" Height="16" HorizontalAlignment="Left" Margin="18,150,0,0" Name="cbMinToSysTray" VerticalAlignment="Top" />
+        <CheckBox Content="Use Ctrl-Enter to create new task" Height="16" HorizontalAlignment="Left" Margin="18,197,0,0" Name="cbRequireCtrlEnter" VerticalAlignment="Top" />
     </Grid>
 </Window>
