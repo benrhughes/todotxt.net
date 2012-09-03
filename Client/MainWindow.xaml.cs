@@ -50,6 +50,11 @@ namespace Client
         WindowLocation _previousWindowLocaiton;
         private Help _helpPage;
 
+        /// <summary>
+        /// The keyboard key that triggers a new task.
+        /// </summary>
+        private const Key NewTaskKey = Key.Enter; // Helps stop GUI knowledge from being tied to functionality.  
+
         public MainWindow()
         {
             try
@@ -624,6 +629,7 @@ namespace Client
                 User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
                 User.Default.DebugLoggingOn = o.cbDebugOn.IsChecked.Value;
                 User.Default.MinimiseToSystemTray = o.cbMinToSysTray.IsChecked.Value;
+                User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
 
                 User.Default.Save();
 
@@ -911,6 +917,34 @@ namespace Client
 
         #region taskText
 
+        /// <summary>
+        /// Helper function to determine if the correct keysequence has been entered to create a task.
+        /// Added to enable the check for Ctrl-Enter if set in options.
+        /// </summary>
+        /// <param name="e">The stroked key and any modifiers.</param>
+        /// <returns>true if the task should be added to the list, false otherwise.</returns>
+        private bool ShoudAddTask(KeyEventArgs e)
+        {
+            bool shouldAddTask = false;
+
+            if (e.Key == NewTaskKey)
+            {
+                if (User.Default.RequireCtrlEnter)
+                {
+                    if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+                    {
+                        shouldAddTask = true;
+                    }
+                }
+                else
+                {
+                    shouldAddTask = true;
+                }
+            }
+
+            return shouldAddTask;
+        }
+
         private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             if (_taskList == null)
@@ -922,7 +956,7 @@ namespace Client
                 return;
             }
 
-            if (e.Key == Key.Enter)
+            if (ShoudAddTask(e))
             {
                 if (_updating == null)
                 {

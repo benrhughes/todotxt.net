@@ -30,6 +30,7 @@ namespace Client
             cbAddCreationDate.IsChecked = User.Default.AddCreationDate;
             cbDebugOn.IsChecked = User.Default.DebugLoggingOn;
 			cbMinToSysTray.IsChecked = User.Default.MinimiseToSystemTray;
+            cbRequireCtrlEnter.IsChecked = User.Default.RequireCtrlEnter;
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)

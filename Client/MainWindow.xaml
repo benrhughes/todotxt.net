@@ -38,7 +38,7 @@
                 </LinearGradientBrush>
             </Menu.Background>
         </Menu>
-        <TextBox Height="23" Margin="0,23,0,0" Name="taskText" AcceptsReturn="True" Cursor="IBeam" KeyUp="taskText_PreviewKeyUp" VerticalAlignment="Top"/>
+        <TextBox Height="23" Margin="0,23,0,0" Name="taskText" AcceptsReturn="False" Cursor="IBeam" KeyUp="taskText_PreviewKeyUp" VerticalAlignment="Top"/>
         <Popup Name="Intellisense" Width="150" Height="auto" StaysOpen="False" Placement="Bottom" IsOpen="False">
             <Grid>
                 <ListBox Name="IntellisenseList"
