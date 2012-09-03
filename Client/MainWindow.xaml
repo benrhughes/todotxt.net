@@ -44,7 +44,7 @@
                 <ListBox Name="IntellisenseList"
                     ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                    PreviewKeyDown="Intellisense_KeyDown"
+                    PreviewKeyUp="Intellisense_KeyDown"
                          MouseUp="IntellisenseList_MouseUp"
                     IsTextSearchEnabled="True"
                     />
