@@ -248,5 +248,21 @@ namespace Client {
                 this["MinimiseToSystemTray"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RequireCtrlEnter
+        {
+            get
+            {
+                return ((bool)(this["RequireCtrlEnter"]));
+            }
+            set
+            {
+                this["RequireCtrlEnter"] = value;
+            }
+        }
+
     }
 }
