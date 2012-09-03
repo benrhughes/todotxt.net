@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
-	<version>1.8.1.0</version>
-	<changelog>Intellisense improvements; bugfixes</changelog>
+	<version>1.8.0.0</version>
+	<changelog>Pulling 1.8.1 as intellisense is badly broken</changelog>
 </updates>
