@@ -129,7 +129,7 @@ namespace Client
             Try(() => _taskList.ReloadTasks(), "Error loading tasks");
         }
 
-        private void KeyboardShortcut(Key key)
+        private void KeyboardShortcut(Key key, ModifierKeys modifierKeys = ModifierKeys.None)
         {
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && key == Key.C)
             {
@@ -232,15 +232,18 @@ namespace Client
                     FilterAndSort(_currentSort);
                     break;
                 case Key.D:
-                    var res = MessageBox.Show("Permanently delete the selected task?",
-                                 "Confirm Delete",
-                                 MessageBoxButton.YesNo,
-                                 MessageBoxImage.Warning);
-
-                    if (res == MessageBoxResult.Yes)
+                    if (modifierKeys != ModifierKeys.Windows)
                     {
-                        Try(() => _taskList.Delete((Task)lbTasks.SelectedItem), "Error deleting task");
-                        FilterAndSort(_currentSort);
+                        var res = MessageBox.Show("Permanently delete the selected task?",
+                                     "Confirm Delete",
+                                     MessageBoxButton.YesNo,
+                                     MessageBoxImage.Warning);
+
+                        if (res == MessageBoxResult.Yes)
+                        {
+                            Try(() => _taskList.Delete((Task)lbTasks.SelectedItem), "Error deleting task");
+                            FilterAndSort(_currentSort);
+                        }
                     }
                     break;
                 case Key.U:
@@ -844,7 +847,7 @@ namespace Client
         #region lbTasks
         private void lbTasks_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-            KeyboardShortcut(e.Key);
+            KeyboardShortcut(e.Key, e.KeyboardDevice.Modifiers);
         }
 
         //this is just for j and k - the nav keys. Using KeyDown allows for holding the key to navigate
