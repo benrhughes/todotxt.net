@@ -148,6 +148,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ColorFont\ColorFont.csproj">
+      <Project>{C51DEEDA-B581-401B-870B-DBB7D10119BF}</Project>
+      <Name>ColorFont</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ToDoLib\ToDoLib.csproj">
       <Project>{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}</Project>
       <Name>ToDoLib</Name>
