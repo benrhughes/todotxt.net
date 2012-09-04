@@ -14,6 +14,8 @@ using System.Windows.Threading;
 using System.Xml;
 using Microsoft.Win32;
 using ToDoLib;
+using ColorFont;
+using System.Windows.Media;
 
 namespace Client
 {
@@ -59,7 +61,7 @@ namespace Client
         {
             try
             {
-                InitializeComponent();
+                InitializeComponent();                
 
                 if (User.Default.MinimiseToSystemTray)
                 {
@@ -69,6 +71,8 @@ namespace Client
                     //add global key
                     _hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
                 }
+
+                SetFont();
 
                 //add view on change file
                 _changefile = new ObserverChangeFile();
@@ -118,6 +122,38 @@ namespace Client
         }
 
         #region private methods
+
+        /// <summary>
+        /// Helper function that converts the values stored in the settings into the font values
+        /// and then sets the tasklist font values.
+        /// </summary>
+        private void SetFont()
+        {            
+            var family = new FontFamily(User.Default.TaskListFontFamily);
+            double size = User.Default.TaskListFontSize;
+            
+            var styleConverter = new FontStyleConverter();
+
+            FontStyle style = (FontStyle)styleConverter.ConvertFromString(User.Default.TaskListFontStyle);
+
+            var stretchConverter = new FontStretchConverter();
+            FontStretch stretch = (FontStretch)stretchConverter.ConvertFromString(User.Default.TaskListFontStretch);
+
+            var weightConverter = new FontWeightConverter();
+            FontWeight weight = (FontWeight)weightConverter.ConvertFromString(User.Default.TaskListFontWeight);
+                        
+            Color color = (Color)ColorConverter.ConvertFromString(User.Default.TaskListFontBrushColor);
+
+            this.lbTasks.FontFamily = family;
+            this.lbTasks.FontSize = size;
+            this.lbTasks.FontStyle = style;
+            this.lbTasks.FontStretch = stretch;
+            this.lbTasks.FontWeight = weight;
+            this.lbTasks.Foreground = new SolidColorBrush(color);            
+        }
+
+
+
         private void Refresh()
         {
             Reload();
@@ -618,7 +654,7 @@ namespace Client
 
         private void File_Options(object sender, RoutedEventArgs e)
         {
-            var o = new Options();
+            var o = new Options(FontInfo.GetControlFont(lbTasks));
             o.Owner = this;
 
             var res = o.ShowDialog();
@@ -634,11 +670,20 @@ namespace Client
                 User.Default.MinimiseToSystemTray = o.cbMinToSysTray.IsChecked.Value;
                 User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
 
+                // Unfortunately, font classes are not serializable, so all the pieces are tracked instead.
+                User.Default.TaskListFontFamily = o.TaskListFont.Family.ToString();
+                User.Default.TaskListFontSize = o.TaskListFont.Size;
+                User.Default.TaskListFontStyle = o.TaskListFont.Style.ToString();
+                User.Default.TaskListFontStretch = o.TaskListFont.Stretch.ToString();
+                User.Default.TaskListFontBrushColor = o.TaskListFont.BrushColor.ToString();
+
                 User.Default.Save();
 
                 Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
                 _changefile.ViewOnFile(User.Default.FilePath);
+                                
+                SetFont();
 
                 FilterAndSort(_currentSort);
             }
