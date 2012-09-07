@@ -227,6 +227,9 @@ Filtering
     - press Enter twice to save and close the filter
     - set filter case sensistivity under File -&gt; Options...
 
+Font selector based on Alessio Saltarin's code: http://goo.gl/vmujX
+
+
 Copyright 2012 Ben Hughes</value>
   </data>
 </root>
