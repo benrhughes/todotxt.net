@@ -25,7 +25,7 @@
                 <MenuItem Header="Pro_ject" IsCheckable="True" Click="Sort_Project" />
                 <MenuItem Header="_Order in file" IsCheckable="True" Click="Sort_None" />
             </MenuItem>
-            <MenuItem Header="F_ilter" Click="Filter" />
+            <MenuItem Header="F_ilter" Click="Filter" Name="filterMenu" />
 			<MenuItem Header="_Help" >
 				<MenuItem Header="_About" Click="Help" />
 				<MenuItem Header="_View Error Log" Click="ViewLog" />
@@ -38,13 +38,13 @@
                 </LinearGradientBrush>
             </Menu.Background>
         </Menu>
-        <TextBox Height="23" Margin="0,23,0,0" Name="taskText" AcceptsReturn="True" Cursor="IBeam" KeyUp="taskText_PreviewKeyUp" VerticalAlignment="Top"/>
+        <TextBox Height="23" Margin="0,23,0,0" Name="taskText" AcceptsReturn="False" Cursor="IBeam" KeyUp="taskText_PreviewKeyUp" VerticalAlignment="Top"/>
         <Popup Name="Intellisense" Width="150" Height="auto" StaysOpen="False" Placement="Bottom" IsOpen="False">
             <Grid>
                 <ListBox Name="IntellisenseList"
                     ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                    PreviewKeyDown="Intellisense_KeyDown"
+                    PreviewKeyUp="Intellisense_KeyDown"
                          MouseUp="IntellisenseList_MouseUp"
                     IsTextSearchEnabled="True"
                     />

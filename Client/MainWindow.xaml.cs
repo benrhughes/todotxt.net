@@ -14,6 +14,8 @@ using System.Windows.Threading;
 using System.Xml;
 using Microsoft.Win32;
 using ToDoLib;
+using ColorFont;
+using System.Windows.Media;
 
 namespace Client
 {
@@ -50,11 +52,16 @@ namespace Client
         WindowLocation _previousWindowLocaiton;
         private Help _helpPage;
 
+        /// <summary>
+        /// The keyboard key that triggers a new task.
+        /// </summary>
+        private const Key NewTaskKey = Key.Enter; // Helps stop GUI knowledge from being tied to functionality.  
+
         public MainWindow()
         {
             try
             {
-                InitializeComponent();
+                InitializeComponent();                
 
                 if (User.Default.MinimiseToSystemTray)
                 {
@@ -64,6 +71,8 @@ namespace Client
                     //add global key
                     _hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
                 }
+
+                SetFont();
 
                 //add view on change file
                 _changefile = new ObserverChangeFile();
@@ -113,6 +122,38 @@ namespace Client
         }
 
         #region private methods
+
+        /// <summary>
+        /// Helper function that converts the values stored in the settings into the font values
+        /// and then sets the tasklist font values.
+        /// </summary>
+        private void SetFont()
+        {            
+            var family = new FontFamily(User.Default.TaskListFontFamily);
+            double size = User.Default.TaskListFontSize;
+            
+            var styleConverter = new FontStyleConverter();
+
+            FontStyle style = (FontStyle)styleConverter.ConvertFromString(User.Default.TaskListFontStyle);
+
+            var stretchConverter = new FontStretchConverter();
+            FontStretch stretch = (FontStretch)stretchConverter.ConvertFromString(User.Default.TaskListFontStretch);
+
+            var weightConverter = new FontWeightConverter();
+            FontWeight weight = (FontWeight)weightConverter.ConvertFromString(User.Default.TaskListFontWeight);
+                        
+            Color color = (Color)ColorConverter.ConvertFromString(User.Default.TaskListFontBrushColor);
+
+            this.lbTasks.FontFamily = family;
+            this.lbTasks.FontSize = size;
+            this.lbTasks.FontStyle = style;
+            this.lbTasks.FontStretch = stretch;
+            this.lbTasks.FontWeight = weight;
+            this.lbTasks.Foreground = new SolidColorBrush(color);            
+        }
+
+
+
         private void Refresh()
         {
             Reload();
@@ -124,7 +165,7 @@ namespace Client
             Try(() => _taskList.ReloadTasks(), "Error loading tasks");
         }
 
-        private void KeyboardShortcut(Key key)
+        private void KeyboardShortcut(Key key, ModifierKeys modifierKeys = ModifierKeys.None)
         {
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && key == Key.C)
             {
@@ -227,15 +268,18 @@ namespace Client
                     FilterAndSort(_currentSort);
                     break;
                 case Key.D:
-                    var res = MessageBox.Show("Permanently delete the selected task?",
-                                 "Confirm Delete",
-                                 MessageBoxButton.YesNo,
-                                 MessageBoxImage.Warning);
-
-                    if (res == MessageBoxResult.Yes)
+                    if (modifierKeys != ModifierKeys.Windows)
                     {
-                        Try(() => _taskList.Delete((Task)lbTasks.SelectedItem), "Error deleting task");
-                        FilterAndSort(_currentSort);
+                        var res = MessageBox.Show("Permanently delete the selected task?",
+                                     "Confirm Delete",
+                                     MessageBoxButton.YesNo,
+                                     MessageBoxImage.Warning);
+
+                        if (res == MessageBoxResult.Yes)
+                        {
+                            Try(() => _taskList.Delete((Task)lbTasks.SelectedItem), "Error deleting task");
+                            FilterAndSort(_currentSort);
+                        }
                     }
                     break;
                 case Key.U:
@@ -399,6 +443,9 @@ namespace Client
                         lbTasks.ScrollIntoView(match);
                     }
                 }
+
+                //Set the menu item to Bold to easily identify if there is a filter in force
+                filterMenu.FontWeight = User.Default.FilterText.Length == 0 ? FontWeights.Normal : FontWeights.Bold;
             }
         }
 
@@ -610,7 +657,7 @@ namespace Client
 
         private void File_Options(object sender, RoutedEventArgs e)
         {
-            var o = new Options();
+            var o = new Options(FontInfo.GetControlFont(lbTasks));
             o.Owner = this;
 
             var res = o.ShowDialog();
@@ -624,12 +671,22 @@ namespace Client
                 User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
                 User.Default.DebugLoggingOn = o.cbDebugOn.IsChecked.Value;
                 User.Default.MinimiseToSystemTray = o.cbMinToSysTray.IsChecked.Value;
+                User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
+
+                // Unfortunately, font classes are not serializable, so all the pieces are tracked instead.
+                User.Default.TaskListFontFamily = o.TaskListFont.Family.ToString();
+                User.Default.TaskListFontSize = o.TaskListFont.Size;
+                User.Default.TaskListFontStyle = o.TaskListFont.Style.ToString();
+                User.Default.TaskListFontStretch = o.TaskListFont.Stretch.ToString();
+                User.Default.TaskListFontBrushColor = o.TaskListFont.BrushColor.ToString();
 
                 User.Default.Save();
 
                 Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
                 _changefile.ViewOnFile(User.Default.FilePath);
+                                
+                SetFont();
 
                 FilterAndSort(_currentSort);
             }
@@ -838,7 +895,7 @@ namespace Client
         #region lbTasks
         private void lbTasks_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-            KeyboardShortcut(e.Key);
+            KeyboardShortcut(e.Key, e.KeyboardDevice.Modifiers);
         }
 
         //this is just for j and k - the nav keys. Using KeyDown allows for holding the key to navigate
@@ -911,6 +968,34 @@ namespace Client
 
         #region taskText
 
+        /// <summary>
+        /// Helper function to determine if the correct keysequence has been entered to create a task.
+        /// Added to enable the check for Ctrl-Enter if set in options.
+        /// </summary>
+        /// <param name="e">The stroked key and any modifiers.</param>
+        /// <returns>true if the task should be added to the list, false otherwise.</returns>
+        private bool ShoudAddTask(KeyEventArgs e)
+        {
+            bool shouldAddTask = false;
+
+            if (e.Key == NewTaskKey)
+            {
+                if (User.Default.RequireCtrlEnter)
+                {
+                    if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+                    {
+                        shouldAddTask = true;
+                    }
+                }
+                else
+                {
+                    shouldAddTask = true;
+                }
+            }
+
+            return shouldAddTask;
+        }
+
         private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             if (_taskList == null)
@@ -922,7 +1007,7 @@ namespace Client
                 return;
             }
 
-            if (e.Key == Key.Enter)
+            if (ShoudAddTask(e))
             {
                 if (_updating == null)
                 {
