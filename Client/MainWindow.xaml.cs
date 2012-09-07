@@ -443,6 +443,9 @@ namespace Client
                         lbTasks.ScrollIntoView(match);
                     }
                 }
+
+                //Set the menu item to Bold to easily identify if there is a filter in force
+                filterMenu.FontWeight = User.Default.FilterText.Length == 0 ? FontWeights.Normal : FontWeights.Bold;
             }
         }
 
