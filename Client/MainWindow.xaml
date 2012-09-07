@@ -25,7 +25,7 @@
                 <MenuItem Header="Pro_ject" IsCheckable="True" Click="Sort_Project" />
                 <MenuItem Header="_Order in file" IsCheckable="True" Click="Sort_None" />
             </MenuItem>
-            <MenuItem Header="F_ilter" Click="Filter" />
+            <MenuItem Header="F_ilter" Click="Filter" Name="filterMenu" />
 			<MenuItem Header="_Help" >
 				<MenuItem Header="_About" Click="Help" />
 				<MenuItem Header="_View Error Log" Click="ViewLog" />
