@@ -21,6 +21,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_BFF4480815149D4F0E2CC6D549C9D4C5"
+        "OwnerKey" = "8:_D29F3A1B1A1D4F9AE3E2D15A7871D345"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_D29F3A1B1A1D4F9AE3E2D15A7871D345"
         "OwnerKey" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
         "MsmSig" = "8:_UNDEFINED"
@@ -158,7 +164,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=1.9.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_BFF4480815149D4F0E2CC6D549C9D4C5"
@@ -272,15 +278,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
-        "ProductCode" = "8:{E641C628-93F1-44C2-8D3E-32125E41737B}"
-        "PackageCode" = "8:{C9B1F22D-672E-4469-BC26-BBECE57053B0}"
+        "ProductCode" = "8:{06AFE2A8-38DA-4231-B997-22F9DB53802B}"
+        "PackageCode" = "8:{C8A02A9D-0626-40FB-AD29-3113034BC2EC}"
         "UpgradeCode" = "8:{16D204EA-4E20-46D6-8C18-227DE56996D4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.9.0"
+        "ProductVersion" = "8:1.9.1"
         "Manufacturer" = "8:Hughesoft"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

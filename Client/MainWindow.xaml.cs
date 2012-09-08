@@ -69,7 +69,6 @@ namespace Client
 
 			try
 			{
-				throw new Exception("ho");
 				if (User.Default.MinimiseToSystemTray)
 				{
 					//add tray icon
