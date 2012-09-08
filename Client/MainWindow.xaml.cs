@@ -59,52 +59,65 @@ namespace Client
 
 		public MainWindow()
 		{
-			Application.Current.DispatcherUnhandledException += (o, e) => HandleException("An unexpected error occurred", e.Exception);
+			Application.Current.DispatcherUnhandledException += (o, e) =>
+				{
+					HandleException("An unexpected error occurred", e.Exception);
+					e.Handled = true;
+				};
+
 			InitializeComponent();
 
-			if (User.Default.MinimiseToSystemTray)
+			try
 			{
-				//add tray icon
-				_tray = new TrayMainWindows(this);
+				throw new Exception("ho");
+				if (User.Default.MinimiseToSystemTray)
+				{
+					//add tray icon
+					_tray = new TrayMainWindows(this);
 
-				//add global key
-				_hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
+					//add global key
+					_hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
+				}
+
+				SetFont();
+
+				//add view on change file
+				_changefile = new ObserverChangeFile();
+				_changefile.OnFileTaskListChange += () => Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate() { this.Refresh(); }));
+
+				//CheckUpdate new version
+				_checkupdate = new CheckUpdate();
+				_checkupdate.OnCheckedUpdateVersion += (string version) => Dispatcher.BeginInvoke(new CheckUpdate.CheckUpdateVersion(this.ShowUpdateMenu), version);
+				_checkupdate.Check();
+
+				webBrowser1.Navigate("about:blank");
+
+				// migrate the user settings from the previous version, if necessary
+				if (User.Default.FirstRun)
+				{
+					User.Default.Upgrade();
+					User.Default.FirstRun = false;
+					User.Default.Save();
+				}
+
+				Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
+
+				this.Height = User.Default.WindowHeight;
+				this.Width = User.Default.WindowWidth;
+				this.Left = User.Default.WindowLeft;
+				this.Top = User.Default.WindowTop;
+
+				if (!string.IsNullOrEmpty(User.Default.FilePath))
+					LoadTasks(User.Default.FilePath);
+
+				FilterAndSort((SortType)User.Default.CurrentSort);
+
+				lbTasks.Focus();
 			}
-
-			SetFont();
-
-			//add view on change file
-			_changefile = new ObserverChangeFile();
-			_changefile.OnFileTaskListChange += () => Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate() { this.Refresh(); }));
-
-			//CheckUpdate new version
-			_checkupdate = new CheckUpdate();
-			_checkupdate.OnCheckedUpdateVersion += (string version) => Dispatcher.BeginInvoke(new CheckUpdate.CheckUpdateVersion(this.ShowUpdateMenu), version);
-			_checkupdate.Check();
-
-			webBrowser1.Navigate("about:blank");
-
-			// migrate the user settings from the previous version, if necessary
-			if (User.Default.FirstRun)
+			catch (Exception ex)
 			{
-				User.Default.Upgrade();
-				User.Default.FirstRun = false;
-				User.Default.Save();
+				HandleException("An error occurred while initialising the application", ex);
 			}
-
-			Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
-
-			this.Height = User.Default.WindowHeight;
-			this.Width = User.Default.WindowWidth;
-			this.Left = User.Default.WindowLeft;
-			this.Top = User.Default.WindowTop;
-
-			if (!string.IsNullOrEmpty(User.Default.FilePath))
-				LoadTasks(User.Default.FilePath);
-
-			FilterAndSort((SortType)User.Default.CurrentSort);
-
-			lbTasks.Focus();
 		}
 
 		protected override void OnClosed(EventArgs e)

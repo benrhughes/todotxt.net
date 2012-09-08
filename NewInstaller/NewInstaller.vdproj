@@ -21,6 +21,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_D29F3A1B1A1D4F9AE3E2D15A7871D345"
+        "OwnerKey" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -35,6 +41,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_BFF4480815149D4F0E2CC6D549C9D4C5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_D29F3A1B1A1D4F9AE3E2D15A7871D345"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -146,11 +158,47 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_BFF4480815149D4F0E2CC6D549C9D4C5"
+                    {
+                    "Name" = "8:ToDoLib.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:ToDoLib.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_9136B6B8A43E4907A3E4DB2F468AD84C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D29F3A1B1A1D4F9AE3E2D15A7871D345"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ColorFont, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_D29F3A1B1A1D4F9AE3E2D15A7871D345"
+                    {
+                    "Name" = "8:ColorFont.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:ColorFont.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_9136B6B8A43E4907A3E4DB2F468AD84C"
@@ -225,7 +273,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
         "ProductCode" = "8:{E641C628-93F1-44C2-8D3E-32125E41737B}"
-        "PackageCode" = "8:{DE935478-13EE-44CD-AC4B-3DDBE6277023}"
+        "PackageCode" = "8:{C9B1F22D-672E-4469-BC26-BBECE57053B0}"
         "UpgradeCode" = "8:{16D204EA-4E20-46D6-8C18-227DE56996D4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
