@@ -100,7 +100,12 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ToDoLib\ToDoLib.csproj">
+      <Project>{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}</Project>
+      <Name>ToDoLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\colorfont_icon.png" />
   </ItemGroup>
