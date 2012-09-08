@@ -210,7 +210,6 @@
     - Alt+Left/Right: clear priority
     - Win+Alt+T: Hide/Unhide windows
     - Ctrl-C: copy task to clipboard
-    - Right-shift: show dates for the next few days in the title bar
 
 Due date syntax:
     - due:2012-09-28
