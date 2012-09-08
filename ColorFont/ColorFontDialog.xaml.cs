@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Windows;
 using System.Windows.Media;
+using ToDoLib;
 
 namespace ColorFont
 {
@@ -13,6 +14,7 @@ public partial class ColorFontDialog : Window
 
     public ColorFontDialog()
     {
+        Log.Debug("Loading ColorFontDialog");
         this.selectedFont = null; // Default
         InitializeComponent();
     }
@@ -33,29 +35,42 @@ public partial class ColorFontDialog : Window
 
     private void SyncFontName()
     {
+        Log.Debug("In SyncFontName");
+
         string fontFamilyName = this.selectedFont.Family.Source;
+        bool isFontFound = false;
+
         int idx = 0;
         foreach (var item in this.colorFontChooser.lstFamily.Items)
         {
             string itemName = item.ToString();
             if (fontFamilyName == itemName)
             {
+                isFontFound = true;                
                 break;
             }
             idx++;
         }
+        
+        if (!isFontFound)
+        {
+            idx = 0;
+        }
+
         this.colorFontChooser.lstFamily.SelectedIndex = idx;
         this.colorFontChooser.lstFamily.ScrollIntoView(this.colorFontChooser.lstFamily.Items[idx]);
     }
 
     private void SyncFontSize()
     {
+        Log.Debug("In SyncFontSize");
         double fontSize = this.selectedFont.Size;
         this.colorFontChooser.fontSizeSlider.Value = fontSize;
     }
 
     private void SyncFontColor()
     {
+        Log.Debug("In SyncFontColor");
         int colorIdx = AvailableColors.GetFontColorIndex(this.Font.Color);
         this.colorFontChooser.colorPicker.superCombo.SelectedIndex = colorIdx;
         // The following does not work. Why???
@@ -65,6 +80,7 @@ public partial class ColorFontDialog : Window
 
     private void SyncFontTypeface()
     {
+        Log.Debug("In SyncFontTypeface");
         string fontTypeFaceSb = FontInfo.TypefaceToString(this.selectedFont.Typeface);
         int idx = 0;
         foreach (var item in this.colorFontChooser.lstTypefaces.Items)
@@ -87,10 +103,12 @@ public partial class ColorFontDialog : Window
 
     private void Window_Loaded_1(object sender, RoutedEventArgs e)
     {
+        Log.Debug("In Window_Loaded_1" );
         this.SyncFontColor();
         this.SyncFontName();
         this.SyncFontSize();
         this.SyncFontTypeface();
+        Log.Debug("Leaving Window_Loaded_1");
     }
 }
 }

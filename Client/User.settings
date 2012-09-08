@@ -60,7 +60,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="TaskListFontFamily" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Segoe UI</Value>
+      <Value Profile="(Default)">Arial</Value>
     </Setting>
     <Setting Name="TaskListFontSize" Type="System.Double" Scope="User">
       <Value Profile="(Default)">12</Value>
