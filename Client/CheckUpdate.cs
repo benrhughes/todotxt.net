@@ -8,7 +8,7 @@ namespace Client
     class CheckUpdate
     {
         public const string updateXMLUrl = @"https://raw.github.com/benrhughes/todotxt.net/master/Updates.xml";
-        public const string updateClientUrl = @"https://github.com/benrhughes/todotxt.net/downloads";
+        public const string updateClientUrl = @"http://benrhughes.com/todotxt.net";
 
         public delegate void CheckUpdateVersion(string version);
         public event CheckUpdateVersion OnCheckedUpdateVersion;

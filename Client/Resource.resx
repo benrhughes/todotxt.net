@@ -210,7 +210,6 @@
     - Alt+Left/Right: clear priority
     - Win+Alt+T: Hide/Unhide windows
     - Ctrl-C: copy task to clipboard
-    - Right-shift: show dates for the next few days in the title bar
 
 Due date syntax:
     - due:2012-09-28
@@ -226,6 +225,9 @@ Filtering
       or due:active (today and past)
     - press Enter twice to save and close the filter
     - set filter case sensistivity under File -&gt; Options...
+
+Font selector based on Alessio Saltarin's code: http://goo.gl/vmujX
+
 
 Copyright 2012 Ben Hughes</value>
   </data>
