@@ -101,6 +101,7 @@
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
     <Compile Include="TrayMainWindows.cs" />
+    <Compile Include="UrlService.cs" />
     <Compile Include="User.cs" />
     <Compile Include="User.Designer.cs">
       <AutoGen>True</AutoGen>
