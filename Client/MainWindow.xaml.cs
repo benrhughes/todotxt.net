@@ -373,6 +373,10 @@ namespace Client
 
 		private void ToggleComplete(Task task)
 		{
+			//Ensure an empty task can not be completed.
+			if(task.Body.Trim() == string.Empty)
+				return;
+
 			var newTask = new Task(task.Raw);
 			newTask.Completed = !newTask.Completed;
 
