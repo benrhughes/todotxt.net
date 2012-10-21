@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
-	<version>1.9.1.0</version>
-	<changelog>Bugfix for font selection on XP; global error handling</changelog>
+	<version>2.0.0.0</version>
+	<changelog>URLs are now clickable in the task list; other bug fixes</changelog>
 </updates>

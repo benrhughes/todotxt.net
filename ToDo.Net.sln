@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoLib", "ToDoLib\ToDoLib.csproj", "{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoTests", "ToDoTests\ToDoTests.csproj", "{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}"
@@ -48,7 +48,6 @@ Global
 		{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}.Release|Any CPU.Build.0 = Release|Any CPU
 		{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{11B849E6-E525-4AE8-B6C8-4CE6FE9C0338}.Release|x86.ActiveCfg = Release|Any CPU
 		{FC3F905A-DEE1-454E-8746-936492D66CF2}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{FC3F905A-DEE1-454E-8746-936492D66CF2}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
@@ -74,7 +73,6 @@ Global
 		{9694B6F0-F3A8-4230-A4AE-B274D40913F3}.Debug|x86.Build.0 = Debug|x86
 		{9694B6F0-F3A8-4230-A4AE-B274D40913F3}.Release|Any CPU.ActiveCfg = Release|x86
 		{9694B6F0-F3A8-4230-A4AE-B274D40913F3}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{9694B6F0-F3A8-4230-A4AE-B274D40913F3}.Release|Mixed Platforms.Build.0 = Release|x86
 		{9694B6F0-F3A8-4230-A4AE-B274D40913F3}.Release|x86.ActiveCfg = Release|x86
 		{9694B6F0-F3A8-4230-A4AE-B274D40913F3}.Release|x86.Build.0 = Release|x86
 		{C51DEEDA-B581-401B-870B-DBB7D10119BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
