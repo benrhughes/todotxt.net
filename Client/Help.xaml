@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Client.Help"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Help" Width="450" MaxHeight="700">
+        Title="Help" SizeToContent="WidthAndHeight">
 	<ScrollViewer>
 		<Grid>
 			<TextBlock Height="35" FontSize="20" Margin="23,0,0,0" Name="tbTitle" Text="Title" VerticalAlignment="Top" HorizontalAlignment="Left" />
