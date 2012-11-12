@@ -78,7 +78,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CheckUpdate.cs" />
+    <Compile Include="UpdateChecker.cs" />
+    <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="PostponeDialog.xaml.cs">
       <DependentUpon>PostponeDialog.xaml</DependentUpon>
     </Compile>
@@ -108,6 +109,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>User.settings</DependentUpon>
     </Compile>
+    <Compile Include="Utilities.cs" />
+    <Compile Include="WindowLocation.cs" />
     <Page Include="PostponeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

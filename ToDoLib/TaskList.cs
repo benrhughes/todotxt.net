@@ -18,10 +18,9 @@ namespace ToDoLib
 		// NB, this is not the place for higher-level functions like searching, task manipulation etc. It's simply 
 		// for CRUDing the todo.txt file. 
 
-		List<Task> _tasks = null;
 		string _filePath = null;
 
-		public List<Task> Tasks { get { return _tasks; } }
+		public List<Task> Tasks { get; private set; }
 
 		public TaskList(string filePath)
 		{
@@ -31,12 +30,11 @@ namespace ToDoLib
 
 		public void ReloadTasks()
 		{
-
 			Log.Debug("Loading tasks from {0}", _filePath);
 
 			try
 			{
-				_tasks = new List<Task>();				
+				Tasks = new List<Task>();
 
 				var file = File.OpenRead(_filePath);
 				using (var reader = new StreamReader(file))
@@ -44,9 +42,9 @@ namespace ToDoLib
 					string raw;
 					while ((raw = reader.ReadLine()) != null)
 					{
-						_tasks.Add(new Task(raw));
+						Tasks.Add(new Task(raw));
 					}
-				}                
+				}
 
 				Log.Debug("Finished loading tasks from {0}", _filePath);
 			}
@@ -103,8 +101,8 @@ namespace ToDoLib
 
 				ReloadTasks(); // make sure we're working on the latest file
 
-				if (_tasks.Remove(_tasks.First(t => t.Raw == task.Raw)))
-					File.WriteAllLines(_filePath, _tasks.Select(t => t.ToString()));
+				if (Tasks.Remove(Tasks.First(t => t.Raw == task.Raw)))
+					File.WriteAllLines(_filePath, Tasks.Select(t => t.ToString()));
 
 				Log.Debug("Task '{0}' deleted", task.ToString());
 
@@ -133,14 +131,14 @@ namespace ToDoLib
 				ReloadTasks();
 
 				// ensure that the task list still contains the current task...
-				if (!_tasks.Any(t => t.Raw == currentTask.Raw))
+				if (!Tasks.Any(t => t.Raw == currentTask.Raw))
 					throw new Exception("That task no longer exists in to todo.txt file");
 
-				var currentIndex = _tasks.IndexOf(_tasks.First(t => t.Raw == currentTask.Raw));
+				var currentIndex = Tasks.IndexOf(Tasks.First(t => t.Raw == currentTask.Raw));
 
-				_tasks[currentIndex] = newTask;
+				Tasks[currentIndex] = newTask;
 
-				File.WriteAllLines(_filePath, _tasks.Select(t => t.ToString()));
+				File.WriteAllLines(_filePath, Tasks.Select(t => t.ToString()));
 
 				Log.Debug("Task '{0}' updated", currentTask.ToString());
 
@@ -156,97 +154,6 @@ namespace ToDoLib
 			{
 				Log.Error(ex.ToString());
 				throw;
-			}
-		}
-
-		public IEnumerable<Task> Sort(SortType sort, bool FilterCaseSensitive, string Filter)
-		{
-			return SortList(sort, FilterList(_tasks, FilterCaseSensitive, Filter));
-		}
-
-		public static List<Task> FilterList(List<Task> tasks, bool FilterCaseSensitive, string Filter)
-		{
-			var comparer = FilterCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
-
-			if (String.IsNullOrEmpty(Filter))
-				return tasks;
-
-			List<Task> tasksFilter = new List<Task>();
-
-			foreach (var task in tasks)
-			{
-				bool include = true;
-				foreach (var filter in Filter.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-				{
-					if (filter.Equals("due:today", StringComparison.OrdinalIgnoreCase)
-						&& task.DueDate == DateTime.Now.ToString("yyyy-MM-dd"))
-						continue;
-					else if (filter.Equals("due:future", StringComparison.OrdinalIgnoreCase)
-						&& task.DueDate.IsDateGreaterThan(DateTime.Now))
-						continue;
-					else if (filter.Equals("due:past", StringComparison.OrdinalIgnoreCase) 
-						&& task.DueDate.IsDateLessThan(DateTime.Now))
-						continue;
-					else if (filter.Equals("due:active", StringComparison.OrdinalIgnoreCase)
-						&& !task.DueDate.IsNullOrEmpty()
-						&& !task.DueDate.IsDateGreaterThan(DateTime.Now))
-						continue;
-
-					if (filter.Substring(0, 1) == "-")
-					{
-						if (task.Raw.Contains(filter.Substring(1), comparer))
-							include = false;
-					}
-					else if (!task.Raw.Contains(filter, comparer))
-					{
-						include = false;
-					}
-				}
-
-				if (include)
-					tasksFilter.Add(task);
-			}
-			return tasksFilter;
-		}
-
-		public static IEnumerable<Task> SortList(SortType sort, List<Task> tasks)
-		{
-			Log.Debug("Sorting {0} tasks by {1}", tasks.Count().ToString(), sort.ToString());
-
-			switch (sort)
-			{
-				// nb, we sub-sort by completed for most sorts by prepending either a or z
-				case SortType.Completed:
-					return tasks.OrderBy(t => t.Completed);
-				case SortType.Context:
-					return tasks.OrderBy(t =>
-					{
-						var s = t.Completed ? "z" : "a";
-						if (t.Contexts != null && t.Contexts.Count > 0)
-							s += t.Contexts.Min().Substring(1);
-						else
-							s += "zzz";
-						return s;
-					});
-				case SortType.Alphabetical:
-					return tasks.OrderBy(t => (t.Completed ? "z" : "a") + t.Raw);
-				case SortType.DueDate:
-					return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate));
-				case SortType.Priority:
-					return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority));
-				case SortType.Project:
-					return tasks.OrderBy(t =>
-					{
-						var s = t.Completed ? "z" : "a";
-						if (t.Projects != null && t.Projects.Count > 0)
-							s += t.Projects.Min().Substring(1);
-						else
-							s += "zzz";
-						return s;
-					});
-				case SortType.None:
-				default:
-					return tasks;
 			}
 		}
 	}

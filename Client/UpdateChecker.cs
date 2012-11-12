@@ -5,20 +5,13 @@ using ToDoLib;
 
 namespace Client
 {
-    class CheckUpdate
+    class UpdateChecker
     {
         public const string updateXMLUrl = @"https://raw.github.com/benrhughes/todotxt.net/master/Updates.xml";
         public const string updateClientUrl = @"http://benrhughes.com/todotxt.net";
 
         public delegate void CheckUpdateVersion(string version);
         public event CheckUpdateVersion OnCheckedUpdateVersion;
-
-        private XmlDocument xDoc;
-
-        public CheckUpdate()
-        {
-            xDoc = new XmlDocument();
-        }
 
         public void Check()
         {
@@ -29,6 +22,7 @@ namespace Client
         {
             try
             {
+				var xDoc = new XmlDocument();
                 xDoc.Load(new XmlTextReader(updateXMLUrl));
 
                 var version = xDoc.SelectSingleNode("//version").InnerText;

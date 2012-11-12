@@ -24,30 +24,11 @@ namespace Client
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		class WindowLocation
-		{
-			public WindowLocation()
-			{
-				Left = User.Default.WindowLeft;
-				Top = User.Default.WindowTop;
-				Height = User.Default.WindowHeight;
-				Width = User.Default.WindowWidth;
-			}
-
-			public double Left { get; set; }
-			public double Top { get; set; }
-			public double Height { get; set; }
-			public double Width { get; set; }
-		}
-
-		TaskList _taskList;
-		SortType _currentSort;
 		Task _updating;
 		int _intelliPos;
 		TrayMainWindows _tray;
 		HotKeyMainWindows _hotkey;
-		ObserverChangeFile _changefile;
-		CheckUpdate _checkupdate;
+		UpdateChecker _updateChecker;
 
 		WindowLocation _previousWindowLocaiton;
 		private Help _helpPage;
@@ -67,57 +48,67 @@ namespace Client
 
 			InitializeComponent();
 
-			try
+			ViewModel = new MainWindowViewModel(this);
+			DataContext = ViewModel;
+
+			SetupTrayIcon();
+
+			CheckForUpdates();
+
+			webBrowser1.Navigate("about:blank");
+
+			MigrateUserSettings();
+
+			SetFont();
+
+			Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
+
+			SetWindowPosition();
+
+			if (!string.IsNullOrEmpty(User.Default.FilePath))
+				ViewModel.LoadTasks(User.Default.FilePath);
+
+			ViewModel.FilterAndSort((SortType)User.Default.CurrentSort);
+
+			lbTasks.Focus();
+		}
+
+		private void CheckForUpdates()
+		{
+			_updateChecker = new UpdateChecker();
+			_updateChecker.OnCheckedUpdateVersion += (v) => ShowUpdateMenu(v);
+			_updateChecker.Check();
+		}
+
+		private void SetupTrayIcon()
+		{
+			if (User.Default.MinimiseToSystemTray)
 			{
-				if (User.Default.MinimiseToSystemTray)
-				{
-					//add tray icon
-					_tray = new TrayMainWindows(this);
-
-					//add global key
-					_hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
-				}
-
-				SetFont();
-
-				//add view on change file
-				_changefile = new ObserverChangeFile();
-				_changefile.OnFileTaskListChange += () => Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate() { this.Refresh(); }));
-
-				//CheckUpdate new version
-				_checkupdate = new CheckUpdate();
-				_checkupdate.OnCheckedUpdateVersion += (string version) => Dispatcher.BeginInvoke(new CheckUpdate.CheckUpdateVersion(this.ShowUpdateMenu), version);
-				_checkupdate.Check();
-
-				webBrowser1.Navigate("about:blank");
-
-				// migrate the user settings from the previous version, if necessary
-				if (User.Default.FirstRun)
-				{
-					User.Default.Upgrade();
-					User.Default.FirstRun = false;
-					User.Default.Save();
-				}
-
-				Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
-
-				this.Height = User.Default.WindowHeight;
-				this.Width = User.Default.WindowWidth;
-				this.Left = User.Default.WindowLeft;
-				this.Top = User.Default.WindowTop;
-
-				if (!string.IsNullOrEmpty(User.Default.FilePath))
-					LoadTasks(User.Default.FilePath);
-
-				FilterAndSort((SortType)User.Default.CurrentSort);
-
-				lbTasks.Focus();
-			}
-			catch (Exception ex)
-			{
-				HandleException("An error occurred while initialising the application", ex);
+				_tray = new TrayMainWindows(this);
+				_hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
 			}
 		}
+
+		private void SetWindowPosition()
+		{
+			this.Height = User.Default.WindowHeight;
+			this.Width = User.Default.WindowWidth;
+			this.Left = User.Default.WindowLeft;
+			this.Top = User.Default.WindowTop;
+		}
+
+		private static void MigrateUserSettings()
+		{
+			// migrate the user settings from the previous version, if necessary
+			if (User.Default.FirstRun)
+			{
+				User.Default.Upgrade();
+				User.Default.FirstRun = false;
+				User.Default.Save();
+			}
+		}
+
+		public MainWindowViewModel ViewModel { get; set; }
 
 		protected override void OnClosed(EventArgs e)
 		{
@@ -160,187 +151,6 @@ namespace Client
 
 
 
-		private void Refresh()
-		{
-			Reload();
-			FilterAndSort(_currentSort);
-		}
-
-		private void Reload()
-		{
-			Try(() => _taskList.ReloadTasks(), "Error loading tasks");
-		}
-
-		private void KeyboardShortcut(Key key, ModifierKeys modifierKeys = ModifierKeys.None)
-		{
-			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && key == Key.C)
-			{
-				var currentTask = lbTasks.SelectedItem as Task;
-				if (currentTask != null)
-					Clipboard.SetText(currentTask.Raw);
-
-				return;
-			}
-
-			// create and open can be used when there's no list loaded
-			switch (key)
-			{
-				case Key.C:
-					File_New(null, null);
-					return;
-				case Key.O:
-					File_Open(null, null);
-					return;
-			}
-
-			if (_taskList == null)
-				return;
-
-			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
-			{
-				return;
-			}
-
-			switch (key)
-			{
-				case Key.N:
-					// create one-line string of all filter but not ones beginning with a minus, and use as the starting text for a new task
-					string filters = "";
-					foreach (var filter in User.Default.FilterText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-					{
-						if (filter.Substring(0, 1) != "-")
-						{
-							if (filter.Contains("active"))
-							{
-								// If the current filter is "active", replace it here with "today"
-								filters = filters + " " + "due:today";
-							}
-							else
-							{
-								filters = filters + " " + filter;
-							}
-						}
-					}
-					taskText.Text = filters;
-					taskText.Focus();
-					break;
-				case Key.OemQuestion:
-					Help(null, null);
-					break;
-				case Key.F:
-					Filter(null, null);
-					break;
-
-				case Key.RightShift:
-					// Add Calendar to the titlebar
-					AddCalendarToTitle();
-					break;
-
-				// Filter Presets
-				case Key.NumPad0:
-				case Key.D0:
-					User.Default.FilterText = "";
-					FilterAndSort(_currentSort);
-					User.Default.Save();
-					break;
-
-				case Key.NumPad1:
-				case Key.D1:
-					User.Default.FilterText = User.Default.FilterTextPreset1;
-					FilterAndSort(_currentSort);
-					User.Default.Save();
-					break;
-
-				case Key.NumPad2:
-				case Key.D2:
-					User.Default.FilterText = User.Default.FilterTextPreset2;
-					FilterAndSort(_currentSort);
-					User.Default.Save();
-					break;
-
-				case Key.NumPad3:
-				case Key.D3:
-					User.Default.FilterText = User.Default.FilterTextPreset3;
-					FilterAndSort(_currentSort);
-					User.Default.Save();
-					break;
-
-				case Key.OemPeriod:
-					Reload();
-					FilterAndSort(_currentSort);
-					break;
-				case Key.X:
-					ToggleComplete((Task)lbTasks.SelectedItem);
-					FilterAndSort(_currentSort);
-					break;
-				case Key.D:
-					if (modifierKeys != ModifierKeys.Windows)
-					{
-						var res = MessageBox.Show("Permanently delete the selected task?",
-									 "Confirm Delete",
-									 MessageBoxButton.YesNo,
-									 MessageBoxImage.Warning);
-
-						if (res == MessageBoxResult.Yes)
-						{
-							Try(() => _taskList.Delete((Task)lbTasks.SelectedItem), "Error deleting task");
-							FilterAndSort(_currentSort);
-						}
-					}
-					break;
-				case Key.U:
-					_updating = (Task)lbTasks.SelectedItem;
-					taskText.Text = _updating.ToString();
-					taskText.Focus();
-					break;
-				case Key.P:
-					_updating = (Task)lbTasks.SelectedItem;
-
-					int iPostponeCount = Postpone(null, null);
-					if (iPostponeCount <= 0)
-					{
-						// User canceled, or entered a non-positive number or garbage
-						break;
-					}
-
-					// Get the current DueDate from the item being updated
-					DateTime dtNewDueDate;
-					string postponedString;
-					if (_updating.DueDate.Length > 0)
-					{
-						dtNewDueDate = Convert.ToDateTime(_updating.DueDate);
-					}
-					else
-					{
-						// Current item doesn't have a due date.  Use today as the due date
-						dtNewDueDate = Convert.ToDateTime(DateTime.Now.ToString());
-					}
-
-					// Add days to that date
-					dtNewDueDate = dtNewDueDate.AddDays(iPostponeCount);
-
-					// Build a dummy string which we'll display so the rest of the system thinks we edited the current item.  
-					// Otherwise we end up with 2 items which differ only by due date
-					if (_updating.DueDate.Length > 0)
-					{
-						// The item has a due date, so exchange the current with the new
-						postponedString = _updating.Raw.Replace(_updating.DueDate, dtNewDueDate.ToString("yyyy-MM-dd"));
-					}
-					else
-					{
-						// The item doesn't have a due date, so just append the new due date to the task
-						postponedString = _updating.Raw.ToString() + " due:" + dtNewDueDate.ToString("yyyy-MM-dd");
-					}
-
-					// Display our "dummy" string.  If they cancel, no changes are committed.  
-					taskText.Text = postponedString;
-					taskText.Focus();
-					break;
-				default:
-					break;
-			}
-		}
-
 		// 
 		//  AddCalendarToTitle
 		//
@@ -374,7 +184,7 @@ namespace Client
 		private void ToggleComplete(Task task)
 		{
 			//Ensure an empty task can not be completed.
-			if(task.Body.Trim() == string.Empty)
+			if (task.Body.Trim() == string.Empty)
 				return;
 
 			var newTask = new Task(task.Raw);
@@ -402,61 +212,6 @@ namespace Client
 			}
 		}
 
-		void FilterAndSort(SortType sort)
-		{
-			if (_currentSort != sort)
-			{
-				User.Default.CurrentSort = (int)sort;
-				User.Default.Save();
-				_currentSort = sort;
-			}
-
-			if (_taskList != null)
-			{
-				var selected = lbTasks.SelectedItem as Task;
-				var selectedIndex = lbTasks.SelectedIndex;
-
-				try
-				{
-					lbTasks.ItemsSource = _taskList.Sort(_currentSort, User.Default.FilterCaseSensitive, User.Default.FilterText);
-				}
-				catch (Exception ex)
-				{
-					HandleException("Error while sorting tasks", ex);
-				}
-
-				if (selected == null)
-				{
-					lbTasks.SelectedIndex = 0;
-				}
-				else
-				{
-					object match = null;
-					foreach (var item in lbTasks.Items)
-					{
-						if (((Task)item).Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase))
-						{
-							match = item;
-							break;
-						}
-					}
-
-					if (match == null)
-					{
-						lbTasks.SelectedIndex = selectedIndex;
-					}
-					else
-					{
-						lbTasks.SelectedItem = match;
-						lbTasks.ScrollIntoView(match);
-					}
-				}
-
-				//Set the menu item to Bold to easily identify if there is a filter in force
-				filterMenu.FontWeight = User.Default.FilterText.Length == 0 ? FontWeights.Normal : FontWeights.Bold;
-			}
-		}
-
 		void SetSelected(MenuItem item)
 		{
 			var sortMenu = (MenuItem)item.Parent;
@@ -467,43 +222,9 @@ namespace Client
 
 		}
 
-		private void LoadTasks(string filePath)
-		{
-			try
-			{
-				_taskList = new TaskList(filePath);
-				User.Default.FilePath = filePath;
-				User.Default.Save();
-				_changefile.ViewOnFile(User.Default.FilePath);
-				FilterAndSort(_currentSort);
-			}
-			catch (Exception ex)
-			{
-				HandleException("An error occurred while opening " + filePath, ex);
-				sortMenu.IsEnabled = false;
-			}
-		}
-
-
 		private void Filter(object sender, RoutedEventArgs e)
 		{
-			var f = new FilterDialog();
-			f.Left = this.Left + 10;
-			f.Top = this.Top + 10;
-			f.FilterText = User.Default.FilterText;
-			f.FilterTextPreset1 = User.Default.FilterTextPreset1;
-			f.FilterTextPreset2 = User.Default.FilterTextPreset2;
-			f.FilterTextPreset3 = User.Default.FilterTextPreset3;
-			if (f.ShowDialog().Value)
-			{
-				User.Default.FilterText = f.FilterText.Trim();
-				User.Default.FilterTextPreset1 = f.FilterTextPreset1.Trim();
-				User.Default.FilterTextPreset2 = f.FilterTextPreset2.Trim();
-				User.Default.FilterTextPreset3 = f.FilterTextPreset3.Trim();
-				User.Default.Save();
-
-				FilterAndSort(_currentSort);
-			}
+			ViewModel.ShowFilterDialog();
 		}
 
 
@@ -544,24 +265,6 @@ namespace Client
 			}
 		}
 
-		private void Try(Action action, string errorMessage)
-		{
-			try
-			{
-				action();
-			}
-			catch (Exception ex)
-			{
-				HandleException(errorMessage, ex);
-			}
-		}
-
-		private void HandleException(string errorMessage, Exception ex)
-		{
-			Log.Error(errorMessage, ex);
-			MessageBox.Show(errorMessage + Environment.NewLine + ex.Message + Environment.NewLine + "Please see Help -> Show Error Log for more details", 
-				"Error", MessageBoxButton.OK, MessageBoxImage.Error);
-		}
 		#endregion
 
 		#region UI event handling
@@ -692,8 +395,6 @@ namespace Client
 				User.Default.Save();
 
 				Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
-
-				_changefile.ViewOnFile(User.Default.FilePath);
 
 				SetFont();
 
@@ -897,7 +598,7 @@ namespace Client
 		#region Update notification
 		private void Get_Update(object sender, RoutedEventArgs e)
 		{
-			Try(() => Process.Start(CheckUpdate.updateClientUrl), "Error while launching " + CheckUpdate.updateClientUrl);
+			Try(() => Process.Start(UpdateChecker.updateClientUrl), "Error while launching " + UpdateChecker.updateClientUrl);
 		}
 		#endregion
 
