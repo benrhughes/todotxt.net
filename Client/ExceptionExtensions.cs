@@ -7,21 +7,9 @@ using System.Windows;
 
 namespace Client
 {
-	public class Utilities
+	public static class ExceptionExtensions
 	{
-		public void Try(Action action, string errorMessage)
-		{
-			try
-			{
-				action();
-			}
-			catch (Exception ex)
-			{
-				HandleException(errorMessage, ex);
-			}
-		}
-
-		public void HandleException(string errorMessage, Exception ex)
+		public static void Handle(this Exception ex, string errorMessage)
 		{
 			Log.Error(errorMessage, ex);
 			MessageBox.Show(errorMessage + Environment.NewLine + ex.Message + Environment.NewLine + "Please see Help -> Show Error Log for more details",

@@ -74,26 +74,27 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <ApplicationDefinition Include="Controls\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="SortType.cs" />
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="PostponeDialog.xaml.cs">
+    <Compile Include="Controls\PostponeDialog.xaml.cs">
       <DependentUpon>PostponeDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FilterDialog.xaml.cs">
+    <Compile Include="Controls\FilterDialog.xaml.cs">
       <DependentUpon>FilterDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Help.xaml.cs">
+    <Compile Include="Controls\Help.xaml.cs">
       <DependentUpon>Help.xaml</DependentUpon>
     </Compile>
     <Compile Include="HotKey.cs" />
     <Compile Include="HotKeyMainWindows.cs" />
     <Compile Include="ObserverChangeFile.cs" />
-    <Compile Include="Options.xaml.cs">
+    <Compile Include="Controls\Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\SharedAssemblyInfo.cs" />
@@ -110,33 +111,32 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>User.settings</DependentUpon>
     </Compile>
-    <Compile Include="Utilities.cs" />
     <Compile Include="WindowLocation.cs" />
-    <Page Include="PostponeDialog.xaml">
+    <Page Include="Controls\PostponeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="FilterDialog.xaml">
+    <Page Include="Controls\FilterDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Help.xaml">
+    <Page Include="Controls\Help.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Controls\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
+    <Compile Include="Controls\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Controls\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Options.xaml">
+    <Page Include="Controls\Options.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -156,6 +156,10 @@
     <ProjectReference Include="..\ColorFont\ColorFont.csproj">
       <Project>{C51DEEDA-B581-401B-870B-DBB7D10119BF}</Project>
       <Name>ColorFont</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonExtensions\CommonExtensions.csproj">
+      <Project>{5CE19CC1-833A-4950-B86E-CBF59FA00D6F}</Project>
+      <Name>CommonExtensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\ToDoLib\ToDoLib.csproj">
       <Project>{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}</Project>

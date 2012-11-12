@@ -41,7 +41,7 @@ namespace Client
 		{
 			Application.Current.DispatcherUnhandledException += (o, e) =>
 				{
-					HandleException("An unexpected error occurred", e.Exception);
+					Helper.HandleException("An unexpected error occurred", e.Exception);
 					e.Handled = true;
 				};
 
@@ -450,7 +450,7 @@ namespace Client
 			ViewModel.KeyboardShortcut(e.Key, e.KeyboardDevice.Modifiers);
 		}
 
-		//this is just for j and k - the nav keys. Using KeyDown allows for holding the key to navigate
+		// Using KeyDown allows for holding the key to navigate
 		private void lbTasks_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
 			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt) && lbTasks.HasItems)
@@ -513,7 +513,7 @@ namespace Client
 		private void lbTasks_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
 			e.Handled = true;
-			KeyboardShortcut(Key.U);
+			ViewModel.KeyboardShortcut(Key.U);
 		}
 
 		#endregion

@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}</ProjectGuid>
+    <ProjectGuid>{5CE19CC1-833A-4950-B86E-CBF59FA00D6F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ToDoLib</RootNamespace>
-    <AssemblyName>ToDoLib</AssemblyName>
+    <RootNamespace>CommonExtensions</RootNamespace>
+    <AssemblyName>CommonExtensions</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,20 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Client\Properties\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Log.cs" />
-    <Compile Include="TaskException.cs" />
-    <Compile Include="TaskList.cs" />
-    <Compile Include="Task.cs" />
+    <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CommonExtensions\CommonExtensions.csproj">
-      <Project>{5CE19CC1-833A-4950-B86E-CBF59FA00D6F}</Project>
-      <Name>CommonExtensions</Name>
-    </ProjectReference>
+    <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.IO;
 using ColorFont;
+using CommonExtensions;
 
 namespace Client
 {
@@ -31,7 +32,7 @@ namespace Client
 			UpdateDisplayedTasks();
 		}
 
-		public SortType SortType 
+		public SortType SortType
 		{
 			get { return _sortType; }
 			set
@@ -60,7 +61,7 @@ namespace Client
 			}
 			catch (Exception ex)
 			{
-				HandleException("An error occurred while opening " + filePath, ex);
+				ex.Handle("An error occurred while opening " + filePath);
 			}
 		}
 
@@ -172,7 +173,15 @@ namespace Client
 
 						if (res == MessageBoxResult.Yes)
 						{
-							Try(() => _taskList.Delete((Task)_window.lbTasks.SelectedItem), "Error deleting task");
+							try 
+							{	        
+								_taskList.Delete((Task)_window.lbTasks.SelectedItem);
+							}
+							catch (Exception ex)
+							{
+								ex.Handle("Error deleting task");
+							}
+
 							UpdateDisplayedTasks();
 						}
 					}
@@ -245,7 +254,7 @@ namespace Client
 				}
 				catch (Exception ex)
 				{
-					HandleException("Error while sorting tasks", ex);
+					ex.Handle("Error while sorting tasks");
 				}
 
 				if (selected == null)
@@ -288,7 +297,14 @@ namespace Client
 
 		private void Reload()
 		{
-			Try(() => _taskList.ReloadTasks(), "Error loading tasks");
+			try 
+			{	        
+				_taskList.ReloadTasks();
+			}
+			catch (Exception ex)
+			{
+				ex.Handle("Error loading tasks");
+			}
 		}
 
 		public void ShowFilterDialog()
@@ -300,7 +316,7 @@ namespace Client
 			f.FilterTextPreset1 = User.Default.FilterTextPreset1;
 			f.FilterTextPreset2 = User.Default.FilterTextPreset2;
 			f.FilterTextPreset3 = User.Default.FilterTextPreset3;
-			
+
 			if (f.ShowDialog().Value)
 			{
 				User.Default.FilterText = f.FilterText.Trim();
@@ -317,7 +333,7 @@ namespace Client
 		{
 			var filters = User.Default.FilterText;
 			var comparer = User.Default.FilterCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
-			
+
 			if (String.IsNullOrEmpty(filters))
 				return tasks;
 
@@ -334,7 +350,7 @@ namespace Client
 					else if (filter.Equals("due:future", StringComparison.OrdinalIgnoreCase)
 						&& task.DueDate.IsDateGreaterThan(DateTime.Now))
 						continue;
-					else if (filter.Equals("due:past", StringComparison.OrdinalIgnoreCase) 
+					else if (filter.Equals("due:past", StringComparison.OrdinalIgnoreCase)
 						&& task.DueDate.IsDateLessThan(DateTime.Now))
 						continue;
 					else if (filter.Equals("due:active", StringComparison.OrdinalIgnoreCase)
@@ -452,7 +468,7 @@ namespace Client
 			}
 			catch (Exception ex)
 			{
-				HandleException("An error occurred while updating the task's completed status", ex);
+				ex.Handle("An error occurred while updating the task's completed status");
 			}
 		}
 
