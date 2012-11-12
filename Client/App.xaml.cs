@@ -12,5 +12,20 @@ namespace Client
     /// </summary>
     public partial class App : Application
     {
+		public App()
+		{
+			MigrateUserSettings();
+		}
+
+		private static void MigrateUserSettings()
+		{
+			// migrate the user settings from the previous version, if necessary
+			if (User.Default.FirstRun)
+			{
+				User.Default.Upgrade();
+				User.Default.FirstRun = false;
+				User.Default.Save();
+			}
+		}
     }
 }

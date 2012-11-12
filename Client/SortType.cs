@@ -1,4 +1,4 @@
-﻿namespace ToDoLib
+﻿namespace Client
 {
     public enum SortType
     {

@@ -78,6 +78,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SortType.cs" />
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="PostponeDialog.xaml.cs">

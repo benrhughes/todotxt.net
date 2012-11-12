@@ -13,9 +13,9 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml;
 using Microsoft.Win32;
-using ToDoLib;
 using ColorFont;
 using System.Windows.Media;
+using ToDoLib;
 
 namespace Client
 {
@@ -24,7 +24,6 @@ namespace Client
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		Task _updating;
 		int _intelliPos;
 		TrayMainWindows _tray;
 		HotKeyMainWindows _hotkey;
@@ -57,21 +56,17 @@ namespace Client
 
 			webBrowser1.Navigate("about:blank");
 
-			MigrateUserSettings();
-
 			SetFont();
-
-			Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
 			SetWindowPosition();
 
 			if (!string.IsNullOrEmpty(User.Default.FilePath))
 				ViewModel.LoadTasks(User.Default.FilePath);
 
-			ViewModel.FilterAndSort((SortType)User.Default.CurrentSort);
-
 			lbTasks.Focus();
 		}
+
+		public MainWindowViewModel ViewModel { get; set; }
 
 		private void CheckForUpdates()
 		{
@@ -91,24 +86,11 @@ namespace Client
 
 		private void SetWindowPosition()
 		{
-			this.Height = User.Default.WindowHeight;
-			this.Width = User.Default.WindowWidth;
-			this.Left = User.Default.WindowLeft;
-			this.Top = User.Default.WindowTop;
+			Height = User.Default.WindowHeight;
+			Width = User.Default.WindowWidth;
+			Left = User.Default.WindowLeft;
+			Top = User.Default.WindowTop;
 		}
-
-		private static void MigrateUserSettings()
-		{
-			// migrate the user settings from the previous version, if necessary
-			if (User.Default.FirstRun)
-			{
-				User.Default.Upgrade();
-				User.Default.FirstRun = false;
-				User.Default.Save();
-			}
-		}
-
-		public MainWindowViewModel ViewModel { get; set; }
 
 		protected override void OnClosed(EventArgs e)
 		{
@@ -118,13 +100,12 @@ namespace Client
 			base.OnClosed(e);
 		}
 
-		#region private methods
 
 		/// <summary>
 		/// Helper function that converts the values stored in the settings into the font values
 		/// and then sets the tasklist font values.
 		/// </summary>
-		private void SetFont()
+		public void SetFont()
 		{
 			var family = new FontFamily(User.Default.TaskListFontFamily);
 			double size = User.Default.TaskListFontSize;
@@ -141,75 +122,12 @@ namespace Client
 
 			Color color = (Color)ColorConverter.ConvertFromString(User.Default.TaskListFontBrushColor);
 
-			this.lbTasks.FontFamily = family;
-			this.lbTasks.FontSize = size;
-			this.lbTasks.FontStyle = style;
-			this.lbTasks.FontStretch = stretch;
-			this.lbTasks.FontWeight = weight;
-			this.lbTasks.Foreground = new SolidColorBrush(color);
-		}
-
-
-
-		// 
-		//  AddCalendarToTitle
-		//
-		//  Add a quick calendar of the next 7 days to the title bar.  If the calendar is already displayed, toggle it off.
-		//
-		private void AddCalendarToTitle()
-		{
-			string Title = this.Title;
-			string today;
-			string today_letter;
-
-			if (Title.Length < 15)
-			{
-				Title += "       Calendar:  ";
-
-				for (double i = 0; i < 7; i++)
-				{
-					today = DateTime.Now.AddDays(i).ToString("MM-dd");
-					today_letter = DateTime.Now.AddDays(i).DayOfWeek.ToString();
-					today_letter = today_letter.Remove(2);
-					Title += "  " + today_letter + ":" + today;
-				}
-			}
-			else
-			{
-				Title = "todotxt.net";
-			}
-			this.Title = Title;
-		}
-
-		private void ToggleComplete(Task task)
-		{
-			//Ensure an empty task can not be completed.
-			if (task.Body.Trim() == string.Empty)
-				return;
-
-			var newTask = new Task(task.Raw);
-			newTask.Completed = !newTask.Completed;
-
-			try
-			{
-				if (User.Default.AutoArchive && newTask.Completed)
-				{
-					if (User.Default.ArchiveFilePath.IsNullOrEmpty())
-						throw new Exception("You have enabled auto-archiving but have not specified an archive file.\nPlease go to File -> Options and disable auto-archiving or specify an archive file");
-
-					var archiveList = new TaskList(User.Default.ArchiveFilePath);
-					archiveList.Add(newTask);
-					_taskList.Delete(task);
-				}
-				else
-				{
-					_taskList.Update(task, newTask);
-				}
-			}
-			catch (Exception ex)
-			{
-				HandleException("An error occurred while updating the task's completed status", ex);
-			}
+			lbTasks.FontFamily = family;
+			lbTasks.FontSize = size;
+			lbTasks.FontStyle = style;
+			lbTasks.FontStretch = stretch;
+			lbTasks.FontWeight = weight;
+			lbTasks.Foreground = new SolidColorBrush(color);
 		}
 
 		void SetSelected(MenuItem item)
@@ -227,57 +145,25 @@ namespace Client
 			ViewModel.ShowFilterDialog();
 		}
 
-
-		private int Postpone(object sender, RoutedEventArgs e)
-		{
-			var p = new PostponeDialog();
-			p.Left = this.Left + 10;
-			p.Top = this.Top + 10;
-			int iDays = 0;
-
-			if (p.ShowDialog().Value)
-			{
-				string sPostpone = p.PostponeText.Trim();
-
-				if (sPostpone.Length > 0)
-				{
-					try
-					{
-						iDays = Convert.ToInt32(sPostpone);
-					}
-					catch
-					{
-						// No action needed.  iDays will be 0, which will leave the item unaltered.
-					}
-				}
-			}
-
-			return iDays;
-
-		}
 		private void ShowUpdateMenu(string version)
 		{
 			var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 			if (version != assemblyVersion)
 			{
-				this.UpdateMenu.Header = "New version: " + version;
-				this.UpdateMenu.Visibility = Visibility.Visible;
+				UpdateMenu.Header = "New version: " + version;
+				UpdateMenu.Visibility = Visibility.Visible;
 			}
 		}
 
-		#endregion
-
-		#region UI event handling
-
-		#region windows
+		#region window location handlers
 		private void Window_LocationChanged(object sender, EventArgs e)
 		{
 			_previousWindowLocaiton = new WindowLocation();
 
 			if (Left >= 0 && Top >= 0)
 			{
-				User.Default.WindowLeft = this.Left;
-				User.Default.WindowTop = this.Top;
+				User.Default.WindowLeft = Left;
+				User.Default.WindowTop = Top;
 				User.Default.Save();
 			}
 		}
@@ -305,33 +191,26 @@ namespace Client
 		}
 		#endregion
 
+
 		#region file menu
 
-		private void File_New(object sender, RoutedEventArgs e)
+		public void File_New(object sender, RoutedEventArgs e)
 		{
 			var dialog = new SaveFileDialog();
 			dialog.FileName = "todo.txt";
 			dialog.DefaultExt = ".txt";
 			dialog.Filter = "Text documents (.txt)|*.txt";
+			
 			var res = dialog.ShowDialog();
+
 			if (res.Value)
-				SaveFileDialog(dialog.FileName);
-
-			if (File.Exists(dialog.FileName))
-				LoadTasks(dialog.FileName);
-
-		}
-
-		private static void SaveFileDialog(string filename)
-		{
-			using (StreamWriter todofile = new StreamWriter(filename))
 			{
-				todofile.Write("");
+				File.WriteAllText(dialog.FileName, "");
+				ViewModel.LoadTasks(dialog.FileName);
 			}
 		}
 
-
-		private void File_Open(object sender, RoutedEventArgs e)
+		public void File_Open(object sender, RoutedEventArgs e)
 		{
 			var dialog = new OpenFileDialog();
 			dialog.DefaultExt = ".txt";
@@ -340,7 +219,7 @@ namespace Client
 			var res = dialog.ShowDialog();
 
 			if (res.Value)
-				LoadTasks(dialog.FileName);
+				ViewModel.LoadTasks(dialog.FileName);
 		}
 
 		private void File_Exit(object sender, RoutedEventArgs e)
@@ -350,57 +229,91 @@ namespace Client
 
 		private void File_Archive_Completed(object sender, RoutedEventArgs e)
 		{
-			if (!File.Exists(User.Default.ArchiveFilePath))
-				File_Options(this, null);
-
-			if (!File.Exists(User.Default.ArchiveFilePath))
-				return;
-
-			var archiveList = new TaskList(User.Default.ArchiveFilePath);
-			var completed = _taskList.Tasks.Where(t => t.Completed);
-			foreach (var task in completed)
-			{
-				archiveList.Add(task);
-				_taskList.Delete(task);
-			}
-
-			FilterAndSort(_currentSort);
+			ViewModel.ArchiveCompleted();
 		}
 
-		private void File_Options(object sender, RoutedEventArgs e)
+		public void File_Options(object sender, RoutedEventArgs e)
 		{
-			var o = new Options(FontInfo.GetControlFont(lbTasks));
-			o.Owner = this;
-
-			var res = o.ShowDialog();
-
-			if (res.Value)
-			{
-				User.Default.ArchiveFilePath = o.tbArchiveFile.Text;
-				User.Default.AutoArchive = o.cbAutoArchive.IsChecked.Value;
-				User.Default.AutoRefresh = o.cbAutoRefresh.IsChecked.Value;
-				User.Default.FilterCaseSensitive = o.cbCaseSensitiveFilter.IsChecked.Value;
-				User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
-				User.Default.DebugLoggingOn = o.cbDebugOn.IsChecked.Value;
-				User.Default.MinimiseToSystemTray = o.cbMinToSysTray.IsChecked.Value;
-				User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
-
-				// Unfortunately, font classes are not serializable, so all the pieces are tracked instead.
-				User.Default.TaskListFontFamily = o.TaskListFont.Family.ToString();
-				User.Default.TaskListFontSize = o.TaskListFont.Size;
-				User.Default.TaskListFontStyle = o.TaskListFont.Style.ToString();
-				User.Default.TaskListFontStretch = o.TaskListFont.Stretch.ToString();
-				User.Default.TaskListFontBrushColor = o.TaskListFont.BrushColor.ToString();
-
-				User.Default.Save();
-
-				Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
-
-				SetFont();
-
-				FilterAndSort(_currentSort);
-			}
+			ViewModel.ShowOptionsDialog();
 		}
+
+		#endregion
+
+		#region sort menu
+		private void Sort_Priority(object sender, RoutedEventArgs e)
+		{
+			ViewModel.SortType = SortType.Priority;
+			ViewModel.UpdateDisplayedTasks();
+			SetSelected((MenuItem)sender);
+		}
+
+		private void Sort_None(object sender, RoutedEventArgs e)
+		{
+			ViewModel.SortType = SortType.None;
+			ViewModel.UpdateDisplayedTasks();
+			SetSelected((MenuItem)sender);
+		}
+
+		private void Sort_Context(object sender, RoutedEventArgs e)
+		{
+			ViewModel.SortType = SortType.Context;
+			ViewModel.UpdateDisplayedTasks();
+			SetSelected((MenuItem)sender);
+		}
+
+		private void Sort_Completed(object sender, RoutedEventArgs e)
+		{
+			ViewModel.SortType = SortType.Completed;
+			ViewModel.UpdateDisplayedTasks();
+			SetSelected((MenuItem)sender);
+		}
+
+		private void Sort_DueDate(object sender, RoutedEventArgs e)
+		{
+			ViewModel.SortType = SortType.DueDate;
+			ViewModel.UpdateDisplayedTasks();
+			SetSelected((MenuItem)sender);
+		}
+
+		private void Sort_Project(object sender, RoutedEventArgs e)
+		{
+			ViewModel.SortType = SortType.Project;
+			ViewModel.UpdateDisplayedTasks();
+			SetSelected((MenuItem)sender);
+		}
+
+		private void Sort_Alphabetical(object sender, RoutedEventArgs e)
+		{
+			ViewModel.SortType = SortType.Alphabetical;
+			ViewModel.UpdateDisplayedTasks();
+			SetSelected((MenuItem)sender);
+		}
+		#endregion
+
+		#region help menu
+		public void Help(object sender, RoutedEventArgs e)
+		{
+			var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+			_helpPage = new Help("todotxt.net", version, Resource.HelpText, "http://benrhughes.com/todotxt.net", "benrhughes.com/todotxt.net");
+
+			_helpPage.Show();
+		}
+
+		private void ViewLog(object sender, RoutedEventArgs e)
+		{
+			if (File.Exists(Log.LogFile))
+				Process.Start(Log.LogFile);
+			else
+				MessageBox.Show("Log file does not exist: no errors have been logged", "Log file does not exist", MessageBoxButton.OK, MessageBoxImage.Information);
+		}
+		#endregion
+
+		#region Update notification
+		private void Get_Update(object sender, RoutedEventArgs e)
+		{
+			Try(() => Process.Start(UpdateChecker.updateClientUrl), "Error while launching " + UpdateChecker.updateClientUrl);
+		}
+		#endregion
 
 		#region printing
 
@@ -531,81 +444,10 @@ namespace Client
 
 		#endregion  //printing
 
-		#endregion
-
-		#region sort menu
-		private void Sort_Priority(object sender, RoutedEventArgs e)
-		{
-			FilterAndSort(SortType.Priority);
-			SetSelected((MenuItem)sender);
-		}
-
-		private void Sort_None(object sender, RoutedEventArgs e)
-		{
-			FilterAndSort(SortType.None);
-			SetSelected((MenuItem)sender);
-		}
-
-		private void Sort_Context(object sender, RoutedEventArgs e)
-		{
-			FilterAndSort(SortType.Context);
-			SetSelected((MenuItem)sender);
-		}
-
-		private void Sort_Completed(object sender, RoutedEventArgs e)
-		{
-			FilterAndSort(SortType.Completed);
-			SetSelected((MenuItem)sender);
-		}
-
-		private void Sort_DueDate(object sender, RoutedEventArgs e)
-		{
-			FilterAndSort(SortType.DueDate);
-			SetSelected((MenuItem)sender);
-		}
-
-		private void Sort_Project(object sender, RoutedEventArgs e)
-		{
-			FilterAndSort(SortType.Project);
-			SetSelected((MenuItem)sender);
-		}
-
-		private void Sort_Alphabetical(object sender, RoutedEventArgs e)
-		{
-			FilterAndSort(SortType.Alphabetical);
-			SetSelected((MenuItem)sender);
-		}
-		#endregion
-
-		#region help menu
-		private void Help(object sender, RoutedEventArgs e)
-		{
-			var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-			_helpPage = new Help("todotxt.net", version, Resource.HelpText, "http://benrhughes.com/todotxt.net", "benrhughes.com/todotxt.net");
-
-			_helpPage.Show();
-		}
-
-		private void ViewLog(object sender, RoutedEventArgs e)
-		{
-			if (File.Exists(Log.LogFile))
-				Process.Start(Log.LogFile);
-			else
-				MessageBox.Show("Log file does not exist: no errors have been logged", "Log file does not exist", MessageBoxButton.OK, MessageBoxImage.Information);
-		}
-		#endregion
-
-		#region Update notification
-		private void Get_Update(object sender, RoutedEventArgs e)
-		{
-			Try(() => Process.Start(UpdateChecker.updateClientUrl), "Error while launching " + UpdateChecker.updateClientUrl);
-		}
-		#endregion
-
 		#region lbTasks
 		private void lbTasks_PreviewKeyUp(object sender, KeyEventArgs e)
 		{
-			KeyboardShortcut(e.Key, e.KeyboardDevice.Modifiers);
+			ViewModel.KeyboardShortcut(e.Key, e.KeyboardDevice.Modifiers);
 		}
 
 		//this is just for j and k - the nav keys. Using KeyDown allows for holding the key to navigate
@@ -792,7 +634,7 @@ namespace Client
 					case Key.Escape:
 						_updating = null;
 						taskText.Text = "";
-						this.lbTasks.Focus();
+						lbTasks.Focus();
 						break;
 					case Key.OemPlus:
 					case Key.Add: // handles the '+' from the numpad.
@@ -890,7 +732,6 @@ namespace Client
 		}
 		#endregion
 
-		#endregion
 
 
 
