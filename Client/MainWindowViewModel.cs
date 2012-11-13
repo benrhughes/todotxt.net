@@ -9,6 +9,9 @@ using System.Windows.Input;
 using System.IO;
 using ColorFont;
 using CommonExtensions;
+using Microsoft.Win32;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace Client
 {
@@ -17,11 +20,15 @@ namespace Client
 		private TaskList _taskList;
 		private ObserverChangeFile _changefile;
 		private SortType _sortType;
-		MainWindow _window;
-		Task _updating;
+		private MainWindow _window;
+		private Task _updating;
+		int _intelliPos;
+
 
 		public MainWindowViewModel(MainWindow window)
 		{
+			_window = window;
+
 			Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
 			//add view on change file
@@ -29,7 +36,9 @@ namespace Client
 			_changefile.OnFileTaskListChange += () => Refresh();
 
 			SortType = (SortType)User.Default.CurrentSort;
-			UpdateDisplayedTasks();
+
+			if (!string.IsNullOrEmpty(User.Default.FilePath))
+				LoadTasks(User.Default.FilePath);
 		}
 
 		public SortType SortType
@@ -47,7 +56,7 @@ namespace Client
 			}
 		}
 
-		public ObservableCollection<Task> Tasks { get; private set; }
+		public Help HelpPage { get; private set; }
 
 		public void LoadTasks(string filePath)
 		{
@@ -65,7 +74,7 @@ namespace Client
 			}
 		}
 
-		public void KeyboardShortcut(Key key, ModifierKeys modifierKeys = ModifierKeys.None)
+		public void TaskListKeyUp(Key key, ModifierKeys modifierKeys = ModifierKeys.None)
 		{
 			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && key == Key.C)
 			{
@@ -173,8 +182,8 @@ namespace Client
 
 						if (res == MessageBoxResult.Yes)
 						{
-							try 
-							{	        
+							try
+							{
 								_taskList.Delete((Task)_window.lbTasks.SelectedItem);
 							}
 							catch (Exception ex)
@@ -250,7 +259,7 @@ namespace Client
 				{
 					var tasks = FilterList(_taskList.Tasks);
 					tasks = SortList(tasks);
-					Tasks = new ObservableCollection<Task>(tasks);
+					_window.lbTasks.ItemsSource = new List<Task>(tasks);
 				}
 				catch (Exception ex)
 				{
@@ -264,7 +273,7 @@ namespace Client
 				else
 				{
 					object match = null;
-					foreach (var task in Tasks)
+					foreach (var task in _taskList.Tasks)
 					{
 						if (task.Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase))
 						{
@@ -297,8 +306,8 @@ namespace Client
 
 		private void Reload()
 		{
-			try 
-			{	        
+			try
+			{
 				_taskList.ReloadTasks();
 			}
 			catch (Exception ex)
@@ -552,6 +561,417 @@ namespace Client
 
 				UpdateDisplayedTasks();
 			}
+		}
+
+		public void NewFile()
+		{
+			var dialog = new SaveFileDialog();
+			dialog.FileName = "todo.txt";
+			dialog.DefaultExt = ".txt";
+			dialog.Filter = "Text documents (.txt)|*.txt";
+
+			var res = dialog.ShowDialog();
+
+			if (res.Value)
+			{
+				File.WriteAllText(dialog.FileName, "");
+				LoadTasks(dialog.FileName);
+			}
+		}
+
+		public void OpenFile()
+		{
+			var dialog = new OpenFileDialog();
+			dialog.DefaultExt = ".txt";
+			dialog.Filter = "Text documents (.txt)|*.txt";
+
+			var res = dialog.ShowDialog();
+
+			if (res.Value)
+				LoadTasks(dialog.FileName);
+		}
+
+		public void ShowHelpDialog()
+		{
+			var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+			HelpPage = new Help("todotxt.net", version, Resource.HelpText, "http://benrhughes.com/todotxt.net", "benrhughes.com/todotxt.net");
+
+			HelpPage.Show();
+		}
+
+		public void ViewLog()
+		{
+			if (File.Exists(Log.LogFile))
+				Process.Start(Log.LogFile);
+			else
+				MessageBox.Show("Log file does not exist: no errors have been logged", "Log file does not exist", MessageBoxButton.OK, MessageBoxImage.Information);
+		}
+
+		public void TaskListPreviewKeyDown(KeyEventArgs e)
+		{
+			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt) && _window.lbTasks.HasItems)
+			{
+				var selected = _window.lbTasks.SelectedItem as Task;
+				var updated = new Task(selected.Raw);
+
+				switch (e.SystemKey)
+				{
+					case Key.Up:
+						updated.IncPriority();
+						try 
+						{	        
+							_taskList.Update(selected, updated);
+						}
+						catch ( Exception ex)
+						{
+							ex.Handle("Error while changing priority");
+						}
+
+						Refresh();
+
+						break;
+
+					case Key.Down:
+						updated.DecPriority();
+						try
+						{
+							_taskList.Update(selected, updated);
+						}
+						catch ( Exception ex)
+						{
+							ex.Handle("Error while changing priority");
+						}
+
+						Refresh();
+						break;
+					case Key.Left:
+					case Key.Right:
+						updated.SetPriority(' ');
+						try
+						{
+							_taskList.Update(selected, updated);
+						}
+						catch (Exception ex)
+						{
+							ex.Handle("Error while changing priority");
+						}
+						Refresh();
+						break;
+				}
+
+				return;
+			}
+
+			switch (e.Key)
+			{
+				case Key.J:
+				case Key.Down:
+					if (_window.lbTasks.SelectedIndex < _window.lbTasks.Items.Count - 1)
+					{
+						_window.lbTasks.SelectedIndex++;
+						_window.lbTasks.ScrollIntoView(_window.lbTasks.Items[_window.lbTasks.SelectedIndex]);
+					}
+					e.Handled = true;
+					break;
+				case Key.K:
+				case Key.Up:
+					if (_window.lbTasks.SelectedIndex > 0)
+					{
+						_window.lbTasks.ScrollIntoView(_window.lbTasks.Items[_window.lbTasks.SelectedIndex - 1]);
+						_window.lbTasks.SelectedIndex = _window.lbTasks.SelectedIndex - 1;
+					}
+					e.Handled = true;
+					break;
+				default:
+					break;
+			}
+		}
+
+		internal void TaskTextPreviewKeyUp(KeyEventArgs e)
+		{
+			if (_taskList == null)
+			{
+				MessageBox.Show("You don't have a todo.txt file open - please use File\\New or File\\Open",
+					"Please open a file", MessageBoxButton.OK, MessageBoxImage.Error);
+				e.Handled = true;
+				_window.lbTasks.Focus();
+				return;
+			}
+
+			if (ShoudAddTask(e))
+			{
+				if (_updating == null)
+				{
+					try
+					{
+						var taskDetail = _window.taskText.Text.Trim();
+
+						if (User.Default.AddCreationDate)
+						{
+							var tmpTask = new Task(taskDetail);
+							var today = DateTime.Today.ToString("yyyy-MM-dd");
+
+							if (string.IsNullOrEmpty(tmpTask.CreationDate))
+							{
+								if (string.IsNullOrEmpty(tmpTask.Priority))
+									taskDetail = today + " " + taskDetail;
+								else
+									taskDetail = taskDetail.Insert(tmpTask.Priority.Length, " " + today);
+							}
+						}
+						_taskList.Add(new Task(taskDetail));
+					}
+					catch (TaskException ex)
+					{
+						MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					}
+				}
+				else
+				{
+					_taskList.Update(_updating, new Task(_window.taskText.Text.Trim()));
+					_updating = null;
+				}
+
+				_window.taskText.Text = "";
+				UpdateDisplayedTasks();
+
+				_window.Intellisense.IsOpen = false;
+				_window.lbTasks.Focus();
+
+				return;
+			}
+
+			if (_window.Intellisense.IsOpen && !_window.IntellisenseList.IsFocused)
+			{
+				if (_window.taskText.CaretIndex <= _intelliPos) // we've moved behind the symbol, drop out of intellisense
+				{
+					_window.Intellisense.IsOpen = false;
+					return;
+				}
+
+				switch (e.Key)
+				{
+					case Key.Down:
+						_window.IntellisenseList.Focus();
+						Keyboard.Focus(_window.IntellisenseList);
+						_window.IntellisenseList.SelectedIndex = 0;
+						break;
+					case Key.Escape:
+					case Key.Space:
+						_window.Intellisense.IsOpen = false;
+						break;
+					default:
+						var word = FindIntelliWord();
+						_window.IntellisenseList.Items.Filter = (o) => o.ToString().Contains(word);
+						break;
+				}
+			}
+			else
+			{
+				switch (e.Key)
+				{
+					case Key.Escape:
+						_updating = null;
+						_window.taskText.Text = "";
+						_window.lbTasks.Focus();
+						break;
+					case Key.OemPlus:
+					case Key.Add: // handles the '+' from the numpad.
+						if (e.KeyboardDevice.Modifiers == ModifierKeys.Shift || e.Key == Key.Add) // activates on '+' but not '='.
+						{
+							var projects = _taskList.Tasks.SelectMany(task => task.Projects);
+							_intelliPos = _window.taskText.CaretIndex - 1;
+							ShowIntellisense(projects.Distinct().OrderBy(s => s), _window.taskText.GetRectFromCharacterIndex(_intelliPos));
+						}
+						break;
+					case Key.D2:
+						if (e.KeyboardDevice.Modifiers == ModifierKeys.Shift) // activates on '@' but not '2'.
+						{
+							var contexts = _taskList.Tasks.SelectMany(task => task.Contexts);
+							_intelliPos = _window.taskText.CaretIndex - 1;
+							ShowIntellisense(contexts.Distinct().OrderBy(s => s), _window.taskText.GetRectFromCharacterIndex(_intelliPos));
+						}
+						break;
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Helper function to determine if the correct keysequence has been entered to create a task.
+		/// Added to enable the check for Ctrl-Enter if set in options.
+		/// </summary>
+		/// <param name="e">The stroked key and any modifiers.</param>
+		/// <returns>true if the task should be added to the list, false otherwise.</returns>
+		private bool ShoudAddTask(KeyEventArgs e)
+		{
+			const Key NewTaskKey = Key.Enter;
+
+			bool shouldAddTask = false;
+
+			if (e.Key == NewTaskKey)
+			{
+				if (User.Default.RequireCtrlEnter)
+				{
+					if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+					{
+						shouldAddTask = true;
+					}
+				}
+				else
+				{
+					shouldAddTask = true;
+				}
+			}
+
+			return shouldAddTask;
+		}
+
+		/// <summary>
+		/// Helper function to add the chosen text in the intellisense into the task string.
+		/// Created to allow the use of both keyboard and mouse clicks.
+		/// </summary>
+		private void InsertTextIntoTaskString()
+		{
+			_window.Intellisense.IsOpen = false;
+
+			_window.taskText.Text = _window.taskText.Text.Remove(_intelliPos, _window.taskText.CaretIndex - _intelliPos);
+
+			var newText = _window.IntellisenseList.SelectedItem.ToString();
+			_window.taskText.Text = _window.taskText.Text.Insert(_intelliPos, newText);
+			_window.taskText.CaretIndex = _intelliPos + newText.Length;
+
+			_window.taskText.Focus();
+		}
+
+		/// <summary>
+		/// Tab, Enter and Space keys will all added the selected text into the task string.
+		/// Escape key cancels out.
+		/// </summary>
+		/// <param name="sender">Not used.</param>
+		/// <param name="e">The key to trigger on.</param>
+		public void IntellisenseKeyDown(KeyEventArgs e)
+		{
+			switch (e.Key)
+			{
+				case Key.Enter:
+				case Key.Tab:
+				case Key.Space:
+					InsertTextIntoTaskString();
+					break;
+				case Key.Escape:
+					_window.Intellisense.IsOpen = false;
+					_window.taskText.CaretIndex = _window.taskText.Text.Length;
+					_window.taskText.Focus();
+					break;
+			}
+		}
+
+		public void ShowIntellisense(IEnumerable<string> s, Rect placement)
+		{
+			if (s.Count() == 0)
+				return;
+
+			_window.Intellisense.PlacementTarget = _window.taskText;
+			_window.Intellisense.PlacementRectangle = placement;
+
+			_window.IntellisenseList.ItemsSource = s;
+			_window.Intellisense.IsOpen = true;
+			_window.taskText.Focus();
+		}
+
+		public void IntellisenseMouseUp()
+		{
+			InsertTextIntoTaskString();
+		}
+
+		private string FindIntelliWord()
+		{
+			return _window.taskText.Text.Substring(_intelliPos + 1, _window.taskText.CaretIndex - _intelliPos - 1);
+		}
+
+		public void SetPrintControlsVisibility(bool PrintControlsVisibility)
+		{
+			if (PrintControlsVisibility)
+			{   // Show Printer Controls
+				_window.webBrowser1.Visibility = Visibility.Visible;
+				_window.btnPrint.Visibility = Visibility.Visible;
+				_window.btnCancelPrint.Visibility = Visibility.Visible;
+				_window.lbTasks.Visibility = Visibility.Hidden;
+				_window.menu1.Visibility = Visibility.Hidden;
+				_window.taskText.Visibility = Visibility.Hidden;
+			}
+			else
+			{   // Hide Printer Controls
+				_window.webBrowser1.Visibility = Visibility.Hidden;
+				_window.btnPrint.Visibility = Visibility.Hidden;
+				_window.btnCancelPrint.Visibility = Visibility.Hidden;
+				_window.lbTasks.Visibility = Visibility.Visible;
+				_window.menu1.Visibility = Visibility.Visible;
+				_window.taskText.Visibility = Visibility.Visible;
+			}
+		}
+
+		public string GetPrintContents()
+		{
+			if (_window.lbTasks.Items == null || _window.lbTasks.Items.IsEmpty)
+				return "";
+
+
+			var contents = new StringBuilder();
+
+			contents.Append("<html><head>");
+			contents.Append("<title>todotxt.net</title>");
+			contents.Append("<style>" + Resource.CSS + "</style>");
+			contents.Append("</head>");
+
+			contents.Append("<body>");
+			contents.Append("<h2>todotxt.net</h2>");
+			contents.Append("<table>");
+			contents.Append("<tr class='tbhead'><th>&nbsp;</th><th>Done</th><th>Created</th><th>Due</th><td>Details</td></tr>");
+
+			foreach (Task task in _window.lbTasks.Items)
+			{
+				if (task.Completed)
+				{
+					contents.Append("<tr class='completedTask'>");
+					contents.Append("<td class='complete'>x</td> ");
+					contents.Append("<td class='completeddate'>" + task.CompletedDate + "</td> ");
+				}
+				else
+				{
+					contents.Append("<tr class='uncompletedTask'>");
+					if (string.IsNullOrEmpty(task.Priority))
+						contents.Append("<td>&nbsp;</td>");
+					else
+						contents.Append("<td><span class='priority'>" + task.Priority + "</span></td>");
+
+					contents.Append("<td>&nbsp;</td>");
+				}
+
+				if (string.IsNullOrEmpty(task.CreationDate))
+					contents.Append("<td>&nbsp;</td>");
+				else
+					contents.Append("<td class='startdate'>" + task.CreationDate + "</td>");
+				if (string.IsNullOrEmpty(task.DueDate))
+					contents.Append("<td>&nbsp;</td>");
+				else
+					contents.Append("<td class='enddate'>" + task.DueDate + "</td>");
+
+				contents.Append("<td>" + task.Body);
+
+				task.Projects.ForEach(project => contents.Append(" <span class='project'>" + project + "</span> "));
+
+				task.Contexts.ForEach(context => contents.Append(" <span class='context'>" + context + "</span> "));
+
+				contents.Append("</td>");
+
+				contents.Append("</tr>");
+			}
+
+			contents.Append("</table></body></html>");
+
+			return contents.ToString();
 		}
 	}
 }
