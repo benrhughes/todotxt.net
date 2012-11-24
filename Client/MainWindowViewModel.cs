@@ -547,7 +547,14 @@ namespace Client
 				User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
 
 				// Unfortunately, font classes are not serializable, so all the pieces are tracked instead.
-				User.Default.TaskListFontFamily = o.TaskListFont.Family.ToString();
+                if (CheckOSforXP())
+                {
+                    User.Default.TaskListFontFamilyXP = o.TaskListFont.Family.ToString();
+                }
+                else
+                {
+                    User.Default.TaskListFontFamily = o.TaskListFont.Family.ToString();
+                }
 				User.Default.TaskListFontSize = o.TaskListFont.Size;
 				User.Default.TaskListFontStyle = o.TaskListFont.Style.ToString();
 				User.Default.TaskListFontStretch = o.TaskListFont.Stretch.ToString();
@@ -562,6 +569,24 @@ namespace Client
 				UpdateDisplayedTasks();
 			}
 		}
+
+        // Are we running on XP?  Some of the fonts don't look right on XP, so we need to special case them to something better
+        public static bool CheckOSforXP()
+        {
+            //Get Operating system information.
+            var os = Environment.OSVersion;
+
+            //Get version information about the os.
+            Version vs = os.Version;
+
+            if (os.Platform == PlatformID.Win32NT && vs.Major == 5 && vs.Minor != 0)
+            {
+                // The OS is XP.  
+                return true;
+            }
+            return false;
+        }
+
 
 		public void NewFile()
 		{
