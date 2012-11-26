@@ -262,7 +262,22 @@ namespace Client {
                 this["TaskListFontFamily"] = value;
             }
         }
-        
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Verdana")]
+        public string TaskListFontFamilyXP
+        {
+            get
+            {
+                return ((string)(this["TaskListFontFamilyXP"]));
+            }
+            set
+            {
+                this["TaskListFontFamilyXP"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("12")]
