@@ -5,6 +5,7 @@ using ToDoLib;
 using System.IO;
 
 using System.Windows.Input;
+using System.Threading;
 
 namespace Client
 {
@@ -61,6 +62,7 @@ namespace Client
 
         private void FileChange(object source, FileSystemEventArgs e)
         {
+			Thread.Sleep(1000); // give the writing app time to release its lock
             OnFileTaskListChange();
         }
     }

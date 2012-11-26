@@ -12,6 +12,7 @@ using CommonExtensions;
 using Microsoft.Win32;
 using System.Reflection;
 using System.Diagnostics;
+using System.Windows.Threading;
 
 namespace Client
 {
@@ -33,7 +34,7 @@ namespace Client
 
 			//add view on change file
 			_changefile = new ObserverChangeFile();
-			_changefile.OnFileTaskListChange += () => Refresh();
+			_changefile.OnFileTaskListChange += () => _window.Dispatcher.BeginInvoke(new Action(delegate() { Refresh(); }));
 
 			SortType = (SortType)User.Default.CurrentSort;
 
@@ -618,11 +619,11 @@ namespace Client
 				{
 					case Key.Up:
 						updated.IncPriority();
-						try 
-						{	        
+						try
+						{
 							_taskList.Update(selected, updated);
 						}
-						catch ( Exception ex)
+						catch (Exception ex)
 						{
 							ex.Handle("Error while changing priority");
 						}
@@ -637,7 +638,7 @@ namespace Client
 						{
 							_taskList.Update(selected, updated);
 						}
-						catch ( Exception ex)
+						catch (Exception ex)
 						{
 							ex.Handle("Error while changing priority");
 						}

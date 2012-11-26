@@ -1,7 +1,8 @@
 ﻿<Window x:Class="Client.FilterDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Filter" Height="497" Width="405" WindowStyle="ToolWindow" ShowInTaskbar="False">
+        Title="Filter" Height="497" Width="405" WindowStyle="ToolWindow" ShowInTaskbar="False"
+		WindowStartupLocation="CenterOwner">
     <Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="444*" />

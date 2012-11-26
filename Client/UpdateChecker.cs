@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Xml;
 using ToDoLib;
+using System.ComponentModel;
 
 namespace Client
 {
@@ -10,29 +11,35 @@ namespace Client
         public const string updateXMLUrl = @"https://raw.github.com/benrhughes/todotxt.net/master/Updates.xml";
         public const string updateClientUrl = @"http://benrhughes.com/todotxt.net";
 
-        public delegate void CheckUpdateVersion(string version);
-        public event CheckUpdateVersion OnCheckedUpdateVersion;
+		MainWindow _window;
+		public UpdateChecker(MainWindow window)
+		{
+			_window = window;
+		}
 
         public void Check()
         {
-            ThreadPool.QueueUserWorkItem(x => CheckForUpdates());
-        }
+			var worker = new BackgroundWorker();
+			var version = "";
 
-        private void CheckForUpdates()
-        {
-            try
-            {
-				var xDoc = new XmlDocument();
-                xDoc.Load(new XmlTextReader(updateXMLUrl));
+			worker.DoWork += (o, e) =>
+			{
+				try
+				{
+					var xDoc = new XmlDocument();
+					xDoc.Load(new XmlTextReader(updateXMLUrl));
 
-                var version = xDoc.SelectSingleNode("//version").InnerText;
-                var changelog = xDoc.SelectSingleNode("//changelog").InnerText;
-                OnCheckedUpdateVersion(version);
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Error checking for updates", ex);
-            }
+					version = xDoc.SelectSingleNode("//version").InnerText;
+				}
+				catch (Exception ex)
+				{
+					Log.Error("Error checking for updates", ex);
+				}
+			};
+
+			worker.RunWorkerCompleted += (o, e) => { _window.ToggleUpdateMenu(version); };
+
+			worker.RunWorkerAsync();
         }
     }
 }
