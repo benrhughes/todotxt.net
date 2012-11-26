@@ -253,7 +253,7 @@ namespace Client {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Segoe")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Segoe UI")]
         public string TaskListFontFamily {
             get {
                 return ((string)(this["TaskListFontFamily"]));
