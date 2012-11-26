@@ -27,6 +27,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_474A878493B8DF70DA6BF0352BEE006F"
+        "OwnerKey" = "8:_1D0CDDE619368409F30EF1F7AA79355C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_474A878493B8DF70DA6BF0352BEE006F"
+        "OwnerKey" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_B418E6D193A6FDF394D27B1A926819B8"
         "OwnerKey" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
         "MsmSig" = "8:_UNDEFINED"
@@ -53,6 +65,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_1D0CDDE619368409F30EF1F7AA79355C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_474A878493B8DF70DA6BF0352BEE006F"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -164,7 +182,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_1D0CDDE619368409F30EF1F7AA79355C"
@@ -174,6 +192,37 @@
                     }
                 }
             "SourcePath" = "8:ToDoLib.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_9136B6B8A43E4907A3E4DB2F468AD84C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_474A878493B8DF70DA6BF0352BEE006F"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:CommonExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_474A878493B8DF70DA6BF0352BEE006F"
+                    {
+                    "Name" = "8:CommonExtensions.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:CommonExtensions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_9136B6B8A43E4907A3E4DB2F468AD84C"
@@ -278,15 +327,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
-        "ProductCode" = "8:{7D0C614B-C71B-4E0F-BAFD-826A3B25C276}"
-        "PackageCode" = "8:{BFB95E8B-1F7D-4A49-A559-AF7748F43034}"
+        "ProductCode" = "8:{4DD38BE1-5663-4390-A067-ED5CC7AABDB3}"
+        "PackageCode" = "8:{FF362082-F2A4-4372-A430-E27036186B3C}"
         "UpgradeCode" = "8:{16D204EA-4E20-46D6-8C18-227DE56996D4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.0.0"
+        "ProductVersion" = "8:2.0.1"
         "Manufacturer" = "8:Hughesoft"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

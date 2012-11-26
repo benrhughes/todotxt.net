@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
-	<version>2.0.0.0</version>
-	<changelog>URLs are now clickable in the task list; other bug fixes</changelog>
+	<version>2.0.1.0</version>
+	<changelog>Big under the covers refactor, several bug fixes</changelog>
 </updates>

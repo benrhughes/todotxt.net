@@ -49,6 +49,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Data.resx</DependentUpon>
     </Compile>
+    <Compile Include="MainWindowViewModelTests.cs" />
     <Compile Include="TaskListTests.cs" />
     <Compile Include="TaskTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
