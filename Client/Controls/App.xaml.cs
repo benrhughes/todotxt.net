@@ -24,8 +24,23 @@ namespace Client
 			{
 				User.Default.Upgrade();
 				User.Default.FirstRun = false;
+
+				if (IsXP())
+					User.Default.TaskListFontFamily = "Verdana"; // because segoe isn't installed on XP
+
 				User.Default.Save();
 			}
+		}
+
+		private static bool IsXP()
+		{
+			var os = Environment.OSVersion;
+			var vs = os.Version;
+
+			if (os.Platform == PlatformID.Win32NT && vs.Major == 5 && vs.Minor != 0)
+				return true;
+			
+			return false;
 		}
     }
 }

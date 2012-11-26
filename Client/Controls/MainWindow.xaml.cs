@@ -90,18 +90,7 @@ namespace Client
 		/// </summary>
 		public void SetFont()
 		{
-            string FontFamily;
-
-            if (Client.MainWindowViewModel.CheckOSforXP())
-            {
-                FontFamily = User.Default.TaskListFontFamilyXP;
-            }
-            else
-            {
-                FontFamily = User.Default.TaskListFontFamily;
-            }
-
-            var family = new FontFamily(FontFamily);
+            var family = new FontFamily(User.Default.TaskListFontFamily);
 
 			double size = User.Default.TaskListFontSize;
 
