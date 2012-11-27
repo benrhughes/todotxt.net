@@ -55,7 +55,7 @@ namespace Client
 		private void CheckForUpdates()
 		{
 			var updateChecker = new UpdateChecker(this);
-			updateChecker.Check();
+			updateChecker.BeginCheck();
 		}
 
 		private void SetupTrayIcon()

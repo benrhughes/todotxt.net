@@ -17,7 +17,7 @@ namespace Client
 			_window = window;
 		}
 
-        public void Check()
+        public void BeginCheck()
         {
 			var worker = new BackgroundWorker();
 			var version = "";

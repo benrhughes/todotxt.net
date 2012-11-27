@@ -19,7 +19,7 @@ namespace Client
 	public class MainWindowViewModel
 	{
 		private TaskList _taskList;
-		private ObserverChangeFile _changefile;
+		private FileChangeObserver _changefile;
 		private SortType _sortType;
 		private MainWindow _window;
 		private Task _updating;
@@ -32,9 +32,8 @@ namespace Client
 
 			Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
-			//add view on change file
-			_changefile = new ObserverChangeFile();
-			_changefile.OnFileTaskListChange += () => _window.Dispatcher.BeginInvoke(new Action(delegate() { Refresh(); }));
+			_changefile = new FileChangeObserver();
+			_changefile.OnFileChanged += () => _window.Dispatcher.BeginInvoke(new Action(Refresh));
 
 			SortType = (SortType)User.Default.CurrentSort;
 
@@ -66,7 +65,7 @@ namespace Client
 				_taskList = new TaskList(filePath);
 				User.Default.FilePath = filePath;
 				User.Default.Save();
-				_changefile.ViewOnFile(User.Default.FilePath);
+				_changefile.ObserveFile(User.Default.FilePath);
 				UpdateDisplayedTasks();
 			}
 			catch (Exception ex)
