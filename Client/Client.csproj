@@ -79,7 +79,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ExceptionExtensions.cs" />
-    <Compile Include="FileChangeObserver.cs" />
     <Compile Include="SortType.cs" />
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="MainWindowViewModel.cs" />
@@ -94,6 +93,7 @@
     </Compile>
     <Compile Include="HotKey.cs" />
     <Compile Include="HotKeyMainWindows.cs" />
+    <Compile Include="FileChangeObserver.cs" />
     <Compile Include="Controls\Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
     </Compile>
