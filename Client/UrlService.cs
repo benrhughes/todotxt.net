@@ -53,13 +53,19 @@ namespace Client
 				}
 
 				// Create a hyperlink for the match
-				string uri = match.Value.StartsWith("www.") ? string.Format("http://{0}", match.Value) : match.Value;
+                var uri = match.Value.StartsWith("www.") ? string.Format("http://{0}", match.Value) : match.Value;
+
+                // in case the regex fails
+			    if (!Uri.IsWellFormedUriString(uri, UriKind.Absolute)) 
+                    continue;
+
 				var link = new Hyperlink(new Run(match.Value))
 				{
 					// If it starts with "www." add "http://" to make it a valid Uri
 					NavigateUri = new Uri(uri),
 					ToolTip = uri
 				};
+
 				link.Click += OnUrlClick;
 
 				textBlock.Inlines.Add(link);

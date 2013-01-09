@@ -31,8 +31,8 @@ namespace Client
 		{
 			Application.Current.DispatcherUnhandledException += (o, e) =>
 				{
+                    e.Handled = true;
 					e.Exception.Handle("An unexpected error occurred");
-					e.Handled = true;
 				};
 
 			InitializeComponent();
