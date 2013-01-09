@@ -22,9 +22,7 @@
   					});
   			});
         
-        $.getJSON('https://api.github.com/repos/benrhughes/todotxt.net/downloads?callback=?', function(data){
-          $('.download').attr('href', data.data[0].html_url);
-        });
+          $('.download').attr('href', 'http://hughesoft.com/todotxtnet/todotxt.msi');
         
       });
     </script>
@@ -73,7 +71,9 @@
 
 <p>To get started, <a class="download" href="">download the installer</a> and either load your existing todo.txt, or create a new one.</p>
 
-<p>A notification will appear in the app's menu when a new version is released. You can download preivous versions from the <a href="http://github.com/benrhughes/todotxt.net/downloads">github download page</a>.</p>
+<p>A notification will appear in the app's menu when a new version is released.</p>
+
+<p>NB, with the removal of Github 'downloads', previous versions are no longer available, until I sort out a reasonable way to do it.</p>
 
 <h3>Contributors</h3>
 <div id="contributors"></div>
