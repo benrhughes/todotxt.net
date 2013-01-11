@@ -37,10 +37,7 @@ namespace Client
 			var os = Environment.OSVersion;
 			var vs = os.Version;
 
-			if (os.Platform == PlatformID.Win32NT && vs.Major == 5 && vs.Minor != 0)
-				return true;
-			
-			return false;
+			return os.Platform == PlatformID.Win32NT && vs.Major == 5 && vs.Minor != 0;
 		}
     }
 }
