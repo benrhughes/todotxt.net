@@ -322,5 +322,17 @@ namespace Client {
                 this["TaskListFontBrushColor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AllowGrouping {
+            get {
+                return ((bool)(this["AllowGrouping"]));
+            }
+            set {
+                this["AllowGrouping"] = value;
+            }
+        }
     }
 }

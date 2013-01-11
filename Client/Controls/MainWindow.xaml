@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:Client"
 		Loaded="Window_Loaded"
         Title="todotxt.net" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="384" Width="562" SizeChanged="Window_SizeChanged" LocationChanged="Window_LocationChanged" DataContext="{Binding}" StateChanged="Window_StateChanged" >
-    
+
     <Grid Name="stackPanel1" Margin="0,0,0,0" >
         <Menu Height="23" Name="menu1" VerticalAlignment="Top" IsMainMenu="True">
             <MenuItem Header="_File">
@@ -61,6 +61,15 @@
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.GroupStyle>
+                <GroupStyle HidesIfEmpty="True">
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontWeight="Bold" FontSize="15" Text="{Binding Name}" Margin="0,10,0,3"/>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListBox.GroupStyle>
         </ListBox>
         <WebBrowser Height="Auto" HorizontalAlignment="Stretch" Margin="0,46,0,0" Name="webBrowser1" VerticalAlignment="Stretch" Width="Auto" Visibility="Hidden" Grid.ColumnSpan="2" />
         <Button Content="PRINT" Height="23" HorizontalAlignment="Left" Margin="0,23,207,0" Name="btnPrint" VerticalAlignment="Top" Width="92" Visibility="Hidden" Click="btnPrint_Click" />
