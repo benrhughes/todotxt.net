@@ -32,6 +32,7 @@ namespace Client
             cbDebugOn.IsChecked = User.Default.DebugLoggingOn;
             cbMinToSysTray.IsChecked = User.Default.MinimiseToSystemTray;
             cbRequireCtrlEnter.IsChecked = User.Default.RequireCtrlEnter;
+            cbAllowGrouping.IsChecked = User.Default.AllowGrouping;
             this.TaskListFont = taskFont;
         }
 

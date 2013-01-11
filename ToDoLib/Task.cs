@@ -47,11 +47,11 @@ namespace ToDoLib
 				if (_completed)
 				{
 					this.CompletedDate = DateTime.Now.ToString("yyyy-MM-dd");
-					this.Priority = "";
+					this.Priority = "N/A";
 				}
 				else
 				{
-					this.CompletedDate = "";
+                    this.CompletedDate = "Not Completed";
 				}
 			}
 		}
@@ -143,7 +143,7 @@ namespace ToDoLib
 			if (string.IsNullOrEmpty(s))
 			{
 				Completed = false;
-				CompletedDate = "";
+				CompletedDate = "Not Completed";
 			}
 			else
 			{
@@ -156,52 +156,96 @@ namespace ToDoLib
 
 			reg = new Regex(priorityPattern, RegexOptions.IgnoreCase);
 			Priority = reg.Match(raw).Groups["priority"].Value.Trim();
+		    if (Priority.IsNullOrEmpty())
+		    {
+		        Priority = "N/A";
+		    }
 			raw = reg.Replace(raw, "");
 
 			reg = new Regex(dueDatePattern);
 			DueDate = reg.Match(raw).Groups["date"].Value.Trim();
+		    if (DueDate.IsNullOrEmpty())
+		    {
+		        DueDate = "N/A";
+		    }
 			raw = reg.Replace(raw, "");
 
 			reg = new Regex(createdDatePattern);
 			CreationDate = reg.Match(raw).Groups["date"].Value.Trim();
+            if (CreationDate.IsNullOrEmpty())
+            {
+                CreationDate = "N/A";
+            }
 			raw = reg.Replace(raw, "");
 
 			Projects = new List<string>();
 			reg = new Regex(projectPattern);
 			var projects = reg.Matches(raw);
 
-			foreach (Match project in projects)
-			{
-				var p = project.Groups["proj"].Value.Trim();
-				Projects.Add(p);
-			}
+            if (projects.Count == 0)
+            {
+                Projects.Add("No Project");
+            }
+            else
+            {
+                foreach (Match project in projects)
+                {
+                    var p = project.Groups["proj"].Value.Trim();
+                    Projects.Add(p);
+                }
+            }
 
-			raw = reg.Replace(raw, "");
+		    raw = reg.Replace(raw, "");
 
 
 			Contexts = new List<string>();
 			reg = new Regex(contextPattern);
 			var contexts = reg.Matches(raw);
 
-			foreach (Match context in contexts)
-			{
-				var c = context.Groups["context"].Value.Trim();
-				Contexts.Add(c);
-			}
+            if (contexts.Count == 0)
+            {
+                Contexts.Add("No Contexts");
+            }
+            else
+            {
+                foreach (Match context in contexts)
+                {
+                    var c = context.Groups["context"].Value.Trim();
+                    Contexts.Add(c);
+                }
+            }
 
-			raw = reg.Replace(raw, "");
+		    raw = reg.Replace(raw, "");
 
 
 			Body = raw.Trim();
 		}
 
-		public Task(string priority, List<string> projects, List<string> contexts, string body, string dueDate = "", bool completed = false)
+		public Task(string priority, List<string> projects, List<string> contexts, string body, string dueDate = "N/A", bool completed = false)
 		{
-			Priority = priority;
-			Projects = projects;
-			Contexts = contexts;
-			DueDate = dueDate;
-			Body = body;
+            Priority = string.IsNullOrEmpty(priority) ? "N/A" : priority;
+
+            if (projects.Count == 0)
+            {
+                Projects.Add("No Project");
+            }
+            else
+            {
+                Projects = projects;
+            }
+
+            if (contexts.Count == 0)
+            {
+                Contexts.Add("No Contexts");
+            }
+            else
+            {
+                Contexts = contexts;
+            }
+
+		    DueDate = dueDate.IsNullOrEmpty() ? "N/A" : dueDate;
+
+		    Body = body;
 			Completed = completed;
 		}
 
@@ -233,8 +277,8 @@ namespace ToDoLib
 			else
 			{
 				str = string.Format("{0}{1}{2} {3} {4}",
-					Completed ? "x " + CompletedDate + " " : "",
-					Priority == null ? "" : Priority + " ",
+                    Completed ? "x " + CompletedDate + " " : "",
+					Priority == null ? "N/A" : Priority + " ",
 					Body, string.Join(" ", Projects), string.Join(" ", Contexts));
 			}
 
@@ -264,7 +308,7 @@ namespace ToDoLib
 
 			if (!Raw.IsNullOrEmpty())
 			{
-				if (Priority.IsNullOrEmpty())
+                if (Priority.IsNullOrEmpty() || Priority.Equals("N/A"))
 					Raw = priorityString + " " + Raw;
 				else
 					Raw = Raw.Replace(Priority, priorityString);
@@ -278,7 +322,7 @@ namespace ToDoLib
 		// NB, you need asciiShift +1 to go from A to B, even though that's a 'decrease' in priority
 		private void ChangePriority(int asciiShift)
 		{
-			if (Priority.IsNullOrEmpty())
+			if (Priority.IsNullOrEmpty() || Priority.Equals("N/A"))
 			{
 				SetPriority('A');
 			}
