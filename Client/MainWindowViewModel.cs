@@ -201,8 +201,10 @@ namespace Client
                     }
                     break;
                 case Key.U:
+                case Key.F2:
                     _updating = (Task)_window.lbTasks.SelectedItem;
                     _window.taskText.Text = _updating.ToString();
+                    _window.taskText.Select(_window.taskText.Text.Length, 0); //puts cursor at the end
                     _window.taskText.Focus();
                     break;
                 case Key.P:
