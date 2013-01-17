@@ -346,7 +346,7 @@ namespace Client
 		#region taskText
 
 		private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
-                            {
+        {
 			ViewModel.TaskTextPreviewKeyUp(e);
         }
 

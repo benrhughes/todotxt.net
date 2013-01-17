@@ -19,16 +19,16 @@ namespace Client
 {
     public class MainWindowViewModel
     {
-        private CollectionView myView;
+        private CollectionView _myView;
         private TaskList _taskList;
         private FileChangeObserver _changefile;
         private SortType _sortType;
         private MainWindow _window;
         private Task _updating;
         int _intelliPos;
-        private int numberOfItemsInCurrentGroup;
-        private List<CollectionViewGroup> viewGroups;
-        private int nextGroupAtTaskNumber;
+        private int _numberOfItemsInCurrentGroup;
+        private List<CollectionViewGroup> _viewGroups;
+        private int _nextGroupAtTaskNumber;
 
 
         public MainWindowViewModel(MainWindow window)
@@ -118,7 +118,7 @@ namespace Client
                     {
                         if (filter.Substring(0, 1) != "-")
                         {
-                            if (filter.Contains("active"))
+                            if (filter.Contains("due:active"))
                                 filters = filters + " " + "due:today"; // If the current filter is "active", replace it here with "today"
                             else
                                 filters = filters + " " + filter;
@@ -287,20 +287,20 @@ namespace Client
                             break;
                     }
 
-                    myView = (CollectionView)CollectionViewSource.GetDefaultView(sortedTaskList);
+                    _myView = (CollectionView)CollectionViewSource.GetDefaultView(sortedTaskList);
 
                     if (User.Default.AllowGrouping && SortType != SortType.Alphabetical && SortType != SortType.None)
                     {
-                        if (myView.CanGroup)
+                        if (_myView.CanGroup)
                         {
                             PropertyGroupDescription groupDescription = new PropertyGroupDescription(sortTitle);
-                            myView.GroupDescriptions.Add(groupDescription);
+                            _myView.GroupDescriptions.Add(groupDescription);
 
                         }
                     }
                     else
                     {
-                        myView.GroupDescriptions.Clear();
+                        _myView.GroupDescriptions.Clear();
                     }
                     _window.lbTasks.ItemsSource = sortedTaskList;
                 }
@@ -975,25 +975,25 @@ namespace Client
             contents.Append("<tr class='tbhead'><th>&nbsp;</th><th>Done</th><th>Created</th><th>Due</th><td>Details</td></tr>");
 
             int currentTaskNumber = 0;
-            nextGroupAtTaskNumber = 0;
+            _nextGroupAtTaskNumber = 0;
 
             foreach (Task task in _window.lbTasks.Items)
             {
                 if (User.Default.AllowGrouping)
                 {
                     //Do we need to emit a Group Header?
-                    if (!myView.Groups.IsNullOrEmpty() && currentTaskNumber == nextGroupAtTaskNumber)
+                    if (!_myView.Groups.IsNullOrEmpty() && currentTaskNumber == _nextGroupAtTaskNumber)
                     {
                         //We do need to emit one
-                        if (viewGroups.IsNullOrEmpty())
+                        if (_viewGroups.IsNullOrEmpty())
                         {
                             //For Group Headers
-                            viewGroups = myView.Groups.Cast<CollectionViewGroup>().ToList();
+                            _viewGroups = _myView.Groups.Cast<CollectionViewGroup>().ToList();
                         }
 
                         List<GroupStyle> name = _window.lbTasks.GroupStyle.ToList();
                         contents.Append(EmitGroupHeader());
-                        nextGroupAtTaskNumber = numberOfItemsInCurrentGroup + currentTaskNumber;
+                        _nextGroupAtTaskNumber = _numberOfItemsInCurrentGroup + currentTaskNumber;
                     }
                 }
 
@@ -1050,12 +1050,12 @@ namespace Client
 
             //Reset the number of items in the group
 
-            if (!myView.Groups.IsNullOrEmpty() && myView.GroupDescriptions != null && myView.Groups.Count > 0)
+            if (!_myView.Groups.IsNullOrEmpty() && _myView.GroupDescriptions != null && _myView.Groups.Count > 0)
             {
-                    numberOfItemsInCurrentGroup = viewGroups[0].ItemCount;
-                    string name = viewGroups[0].Name.ToString();
+                    _numberOfItemsInCurrentGroup = _viewGroups[0].ItemCount;
+                    string name = _viewGroups[0].Name.ToString();
 
-                    viewGroups.RemoveAt(0);
+                    _viewGroups.RemoveAt(0);
                     return "<tr><th colspan=\"5\"><h3>" + name + "</h3></th></tr>";              
             }
 
