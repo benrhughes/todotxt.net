@@ -79,6 +79,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ExceptionExtensions.cs" />
+    <Compile Include="GroupConverter.cs" />
     <Compile Include="SortType.cs" />
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="MainWindowViewModel.cs" />

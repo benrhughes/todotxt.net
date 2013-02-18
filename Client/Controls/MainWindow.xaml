@@ -62,7 +62,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.GroupStyle>
-                <GroupStyle HidesIfEmpty="True">
+                <GroupStyle HidesIfEmpty="False">
                     <GroupStyle.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock FontWeight="Bold" FontSize="15" Text="{Binding Name}" Margin="0,10,0,3"/>
@@ -72,7 +72,7 @@
             </ListBox.GroupStyle>
         </ListBox>
         <WebBrowser Height="Auto" HorizontalAlignment="Stretch" Margin="0,46,0,0" Name="webBrowser1" VerticalAlignment="Stretch" Width="Auto" Visibility="Hidden" Grid.ColumnSpan="2" />
-        <Button Content="PRINT" Height="23" HorizontalAlignment="Left" Margin="0,23,207,0" Name="btnPrint" VerticalAlignment="Top" Width="92" Visibility="Hidden" Click="btnPrint_Click" />
-        <Button Content="CANCEL" Height="23" HorizontalAlignment="Left" Margin="97,23,0,0" Name="btnCancelPrint" VerticalAlignment="Top" Width="92" Visibility="Hidden" Click="btnCancelPrint_Click" />
+        <Button Content="Print" Height="23" HorizontalAlignment="Left" Margin="0,23,207,0" Name="btnPrint" VerticalAlignment="Top" Width="92" Visibility="Hidden" Click="btnPrint_Click" />
+        <Button Content="Cancel" Height="23" HorizontalAlignment="Left" Margin="97,23,0,0" Name="btnCancelPrint" VerticalAlignment="Top" Width="92" Visibility="Hidden" Click="btnCancelPrint_Click" />
     </Grid>
 </Window>

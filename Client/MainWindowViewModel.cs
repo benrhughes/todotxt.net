@@ -14,6 +14,7 @@ using CommonExtensions;
 using Microsoft.Win32;
 using System.Reflection;
 using System.Diagnostics;
+using System.ComponentModel;
 
 namespace Client
 {
@@ -261,7 +262,7 @@ namespace Client
             {
                 var selected = _window.lbTasks.SelectedItem as Task;
                 var selectedIndex = _window.lbTasks.SelectedIndex;
-                string sortTitle = "";
+                string sortProperty = "";
 
                 try
                 {
@@ -271,19 +272,19 @@ namespace Client
                     switch (SortType)
                     {
                         case SortType.Project:
-                            sortTitle = "Projects";
+                            sortProperty = "Projects";
                             break;
                         case SortType.Context:
-                            sortTitle = "Contexts";
+                            sortProperty = "Contexts";
                             break;
                         case SortType.DueDate:
-                            sortTitle = "DueDate";
+                            sortProperty = "DueDate";
                             break;
                         case SortType.Completed:
-                            sortTitle = "CompletedDate";
+                            sortProperty = "CompletedDate";
                             break;
                         case SortType.Priority:
-                            sortTitle = "Priority";
+                            sortProperty = "Priority";
                             break;
                     }
 
@@ -293,9 +294,10 @@ namespace Client
                     {
                         if (_myView.CanGroup)
                         {
-                            PropertyGroupDescription groupDescription = new PropertyGroupDescription(sortTitle);
-                            _myView.GroupDescriptions.Add(groupDescription);
+                            var groupDescription = new PropertyGroupDescription(sortProperty);
+                            groupDescription.Converter = new GroupConverter();
 
+                            _myView.GroupDescriptions.Add(groupDescription);
                         }
                     }
                     else
@@ -462,7 +464,6 @@ namespace Client
                             s += "zzz";
                         return s;
                     });
-                case SortType.None:
                 default:
                     return tasks;
             }
