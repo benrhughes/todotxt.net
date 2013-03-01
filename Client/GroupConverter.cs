@@ -13,7 +13,7 @@ namespace Client
         {
             var strings = value as List<string>;
 
-            if ((strings != null && strings.Count == 0) || (value == ""))
+            if ((strings != null && strings.Count == 0) || (value as string == ""))
                 return "n/a";
 
             return value;
