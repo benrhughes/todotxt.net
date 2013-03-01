@@ -324,7 +324,6 @@ namespace Client
                     }
                     else
                     {
-                        _window.lbTasks.SelectedItems.Clear();
                         _window.lbTasks.SelectedItem = match;
                         _window.lbTasks.ScrollIntoView(match);
                     }
