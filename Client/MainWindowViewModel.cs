@@ -317,22 +317,14 @@ namespace Client
                 }
                 else
                 {
-                    object match = null;
-                    foreach (var task in _taskList.Tasks)
-                    {
-                        if (task.Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            match = task;
-                            break;
-                        }
-                    }
-
+                    var match = _taskList.Tasks.FirstOrDefault(x => x.Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase));
                     if (match == null)
                     {
                         _window.lbTasks.SelectedIndex = selectedIndex;
                     }
                     else
                     {
+                        _window.lbTasks.SelectedItems.Clear();
                         _window.lbTasks.SelectedItem = match;
                         _window.lbTasks.ScrollIntoView(match);
                     }

@@ -12,7 +12,8 @@ namespace Client
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var strings = value as List<string>;
-            if ((strings != null && strings.Count == 0) || value == "")
+
+            if ((strings != null && strings.Count == 0) || (value == ""))
                 return "n/a";
 
             return value;
