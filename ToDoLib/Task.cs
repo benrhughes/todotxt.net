@@ -24,7 +24,7 @@ namespace ToDoLib
 
         private const string DueDatePattern = @"due:(?<date>(\d{4})-(\d{2})-(\d{2}))";
         private const string ProjectPattern = @"(?<proj>\+[^\s]+)";
-        private const string ContextPattern = @"(?<context>\@[^\s]+)";
+        private const string ContextPattern = @"(^|\s)(?<context>\@[^\s]+)";
 
         public List<string> Projects { get; set; }
         public List<string> Contexts { get; set; }
