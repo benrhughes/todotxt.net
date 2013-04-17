@@ -648,6 +648,9 @@ namespace Client
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt) && _window.lbTasks.HasItems)
             {
                 var selected = _window.lbTasks.SelectedItem as Task;
+                if (selected == null)
+                    return;
+
                 var updated = new Task(selected.Raw);
 
                 switch (e.SystemKey)
@@ -694,7 +697,7 @@ namespace Client
                         Refresh();
                         break;
                 }
-
+                _window.lbTasks.Focus();
                 return;
             }
 
@@ -843,24 +846,20 @@ namespace Client
         {
             const Key NewTaskKey = Key.Enter;
 
-            bool shouldAddTask = false;
-
             if (e.Key == NewTaskKey)
             {
                 if (User.Default.RequireCtrlEnter)
                 {
                     if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
-                    {
-                        shouldAddTask = true;
-                    }
+                        return true;
                 }
                 else
                 {
-                    shouldAddTask = true;
+                    return true;
                 }
             }
 
-            return shouldAddTask;
+            return false;
         }
 
         /// <summary>
