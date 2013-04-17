@@ -258,80 +258,81 @@ namespace Client
 
         public void UpdateDisplayedTasks()
         {
-            if (_taskList != null)
+            if (_taskList == null)
+                return;
+
+            var selected = _window.lbTasks.SelectedItem as Task;
+            var selectedIndex = _window.lbTasks.SelectedIndex;
+            string sortProperty = "";
+
+            try
             {
-                var selected = _window.lbTasks.SelectedItem as Task;
-                var selectedIndex = _window.lbTasks.SelectedIndex;
-                string sortProperty = "";
+                var sortedTaskList = FilterList(_taskList.Tasks);
+                sortedTaskList = SortList(sortedTaskList);
 
-                try
+                switch (SortType)
                 {
-                    var sortedTaskList = FilterList(_taskList.Tasks);
-                    sortedTaskList = SortList(sortedTaskList);
-
-                    switch (SortType)
-                    {
-                        case SortType.Project:
-                            sortProperty = "Projects";
-                            break;
-                        case SortType.Context:
-                            sortProperty = "Contexts";
-                            break;
-                        case SortType.DueDate:
-                            sortProperty = "DueDate";
-                            break;
-                        case SortType.Completed:
-                            sortProperty = "CompletedDate";
-                            break;
-                        case SortType.Priority:
-                            sortProperty = "Priority";
-                            break;
-                    }
-
-                    _myView = (CollectionView)CollectionViewSource.GetDefaultView(sortedTaskList);
-
-                    if (User.Default.AllowGrouping && SortType != SortType.Alphabetical && SortType != SortType.None)
-                    {
-                        if (_myView.CanGroup)
-                        {
-                            var groupDescription = new PropertyGroupDescription(sortProperty);
-                            groupDescription.Converter = new GroupConverter();
-
-                            _myView.GroupDescriptions.Add(groupDescription);
-                        }
-                    }
-                    else
-                    {
-                        _myView.GroupDescriptions.Clear();
-                    }
-                    _window.lbTasks.ItemsSource = sortedTaskList;
-                }
-                catch (Exception ex)
-                {
-                    ex.Handle("Error while sorting tasks");
+                    case SortType.Project:
+                        sortProperty = "Projects";
+                        break;
+                    case SortType.Context:
+                        sortProperty = "Contexts";
+                        break;
+                    case SortType.DueDate:
+                        sortProperty = "DueDate";
+                        break;
+                    case SortType.Completed:
+                        sortProperty = "CompletedDate";
+                        break;
+                    case SortType.Priority:
+                        sortProperty = "Priority";
+                        break;
                 }
 
-                if (selected == null)
+                _myView = (CollectionView)CollectionViewSource.GetDefaultView(sortedTaskList);
+
+                if (User.Default.AllowGrouping && SortType != SortType.Alphabetical && SortType != SortType.None)
                 {
-                    _window.lbTasks.SelectedIndex = 0;
+                    if (_myView.CanGroup)
+                    {
+                        var groupDescription = new PropertyGroupDescription(sortProperty);
+                        groupDescription.Converter = new GroupConverter();
+
+                        _myView.GroupDescriptions.Add(groupDescription);
+                    }
                 }
                 else
                 {
-                    var match = _taskList.Tasks.FirstOrDefault(x => x.Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase));
-                    if (match == null)
-                    {
-                        _window.lbTasks.SelectedIndex = selectedIndex;
-                    }
-                    else
-                    {
-                        _window.lbTasks.SelectedItem = match;
-                        _window.lbTasks.ScrollIntoView(match);
-                    }
+                    _myView.GroupDescriptions.Clear();
                 }
-
-                //Set the menu item to Bold to easily identify if there is a filter in force
-                _window.filterMenu.FontWeight = User.Default.FilterText.Length == 0 ? FontWeights.Normal : FontWeights.Bold;
+                _window.lbTasks.ItemsSource = sortedTaskList;
             }
+            catch (Exception ex)
+            {
+                ex.Handle("Error while sorting tasks");
+            }
+
+            if (selected == null)
+            {
+                _window.lbTasks.SelectedIndex = 0;
+            }
+            else
+            {
+                var match = _taskList.Tasks.FirstOrDefault(x => x.Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase));
+                if (match == null)
+                {
+                    _window.lbTasks.SelectedIndex = selectedIndex;
+                }
+                else
+                {
+                    _window.lbTasks.SelectedItem = match;
+                    _window.lbTasks.ScrollIntoView(match);
+                }
+            }
+
+            //Set the menu item to Bold to easily identify if there is a filter in force
+            _window.filterMenu.FontWeight = User.Default.FilterText.Length == 0 ? FontWeights.Normal : FontWeights.Bold;
+            _window.lbTasks.Focus();
         }
 
         private void Refresh()
