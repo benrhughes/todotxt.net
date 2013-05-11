@@ -22,11 +22,9 @@
     </script>
   	<script type="text/javascript">
       function ana(){
-        var that=this;
-        _gaq.push(['_trackEvent','Download','PDF',this.href]);
-        setTimeout(function(){location.href=that.href;},400);
-        return false;
+        _gaq.push(['_trackEvent','Download','MSI',this.href]);
       }
+      
       $(function(){
         $.getJSON('https://api.github.com/repos/benrhughes/todotxt.net/contributors?callback=?', function(data){
   					var $contribs = $('#contributors');
@@ -40,6 +38,7 @@
         
           $('.download').attr('href', 'http://benrhughes.com/todotxt.msi');
           $('.download').attr('onclick', "ana()");
+          $('.download').attr('target', "_blank");
       });
     </script>
   </head>
