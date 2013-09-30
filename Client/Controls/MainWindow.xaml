@@ -23,6 +23,7 @@
                 <MenuItem Header="_Completed" IsCheckable="True" Click="Sort_Completed" />
                 <MenuItem Header="Con_text" IsCheckable="True" Click="Sort_Context" />
                 <MenuItem Header="_Due Date" IsCheckable="True" Click="Sort_DueDate" />
+                <MenuItem Header="C_reation Date" IsCheckable="True" Click="Sort_Created" />
                 <MenuItem Header="_Priority" IsCheckable="True" Click="Sort_Priority" />
                 <MenuItem Header="Pro_ject" IsCheckable="True" Click="Sort_Project" />
                 <MenuItem Header="_Order in file" IsCheckable="True" Click="Sort_None" />

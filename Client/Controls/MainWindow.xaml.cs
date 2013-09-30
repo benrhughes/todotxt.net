@@ -250,6 +250,13 @@ namespace Client
             ViewModel.UpdateDisplayedTasks();
             SetSelected((MenuItem)sender);
         }
+
+        private void Sort_Created(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SortType = SortType.Created;
+            ViewModel.UpdateDisplayedTasks();
+			SetSelected((MenuItem)sender);
+        }
         #endregion
 
         #region help menu
@@ -370,6 +377,8 @@ namespace Client
 			ViewModel.IntellisenseMouseUp();
         }
         #endregion
+
+        
     }
 }
 

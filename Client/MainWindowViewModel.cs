@@ -287,6 +287,9 @@ namespace Client
                     case SortType.Priority:
                         sortProperty = "Priority";
                         break;
+					case SortType.Created:
+                        sortProperty = "CreationDate";
+						break;
                 }
 
                 _myView = (CollectionView)CollectionViewSource.GetDefaultView(sortedTaskList);
@@ -456,6 +459,8 @@ namespace Client
                             s += "zzz";
                         return s;
                     });
+				case SortType.Created: 
+                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.CreationDate) ? "9999-99-99" : t.CreationDate));
                 default:
                     return tasks;
             }
