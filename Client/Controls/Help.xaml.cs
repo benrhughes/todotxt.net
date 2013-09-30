@@ -34,5 +34,11 @@ namespace Client
 		{
 			Process.Start(e.Uri.ToString());
 		}
+
+	    private void Help_OnKeyDown(object sender, KeyEventArgs e)
+	    {
+	        if(e.Key == Key.Escape)
+				this.Close();
+	    }
 	}
 }
