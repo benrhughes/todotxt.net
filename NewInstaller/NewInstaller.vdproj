@@ -327,15 +327,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
-        "ProductCode" = "8:{B030C1A5-2FC6-4CBB-AB65-B982EFB933D5}"
-        "PackageCode" = "8:{932BCA77-59E9-437C-BEFE-DCF86D99D49A}"
+        "ProductCode" = "8:{103394CC-C454-4950-9D4A-8FACC89ED141}"
+        "PackageCode" = "8:{151C4E34-5711-478A-9A66-B41A06C62A08}"
         "UpgradeCode" = "8:{16D204EA-4E20-46D6-8C18-227DE56996D4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.2.0"
+        "ProductVersion" = "8:2.2.1"
         "Manufacturer" = "8:Hughesoft"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -450,7 +450,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_2ED4A6291B4244FD8FA133F5315A10C2"
             {
-            "Name" = "8:todotxt"
+            "Name" = "8:todotxt.net"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
