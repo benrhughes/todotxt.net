@@ -21,5 +21,10 @@ namespace CommonExtensions
 		{
 			return items == null || items.Count() == 0;
 		}
+
+		public static bool HasValues<T>(this IEnumerable<T> items)
+		{
+		    return !items.IsNullOrEmpty();
+		}
 	}
 }

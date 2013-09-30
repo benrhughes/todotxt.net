@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CommonExtensions;
 
 namespace ToDoLib
 {
@@ -40,9 +41,10 @@ namespace ToDoLib
 				using (var reader = new StreamReader(file))
 				{
 					string raw;
-					while ((raw = reader.ReadLine()) != null)
+					while ((raw = reader.ReadLine()) != null) 
 					{
-						Tasks.Add(new Task(raw));
+						if(raw.HasValues())
+                            Tasks.Add(new Task(raw));
 					}
 				}
 
