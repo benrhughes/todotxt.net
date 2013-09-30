@@ -231,4 +231,7 @@ Font selector based on Alessio Saltarin's code: http://goo.gl/vmujX
 
 Copyright 2012 Ben Hughes</value>
   </data>
+	<data name="SiteUrl" xml:space="preserve">
+    <value>http://benrhughes.com/todotxt.net</value>
+  </data>
 </root>

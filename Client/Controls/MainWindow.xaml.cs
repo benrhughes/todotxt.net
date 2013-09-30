@@ -269,6 +269,11 @@ namespace Client
         {
 			ViewModel.ViewLog();
         }
+
+        private void Donate(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Donate();
+        }
         #endregion
 
 		#region update menu
@@ -378,7 +383,6 @@ namespace Client
         }
         #endregion
 
-        
     }
 }
 

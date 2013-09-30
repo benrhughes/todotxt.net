@@ -636,7 +636,7 @@ namespace Client
         public void ShowHelpDialog()
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            HelpPage = new Help("todotxt.net", version, Resource.HelpText, "http://benrhughes.com/todotxt.net", "benrhughes.com/todotxt.net");
+            HelpPage = new Help("todotxt.net", version, Resource.HelpText, Resource.SiteUrl, "benrhughes.com/todotxt.net");
 
             HelpPage.Show();
         }
@@ -647,6 +647,11 @@ namespace Client
                 Process.Start(Log.LogFile);
             else
                 MessageBox.Show("Log file does not exist: no errors have been logged", "Log file does not exist", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        public void Donate()
+        {
+            Process.Start(Resource.SiteUrl);
         }
 
         public void TaskListPreviewKeyDown(KeyEventArgs e)
