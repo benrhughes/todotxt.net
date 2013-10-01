@@ -19,7 +19,7 @@ namespace CommonExtensions
 
 		public static bool IsNullOrEmpty<T>(this IEnumerable<T> items)
 		{
-			return items == null || items.Count() == 0;
+			return items == null || !items.Any();
 		}
 
 		public static bool HasValues<T>(this IEnumerable<T> items)

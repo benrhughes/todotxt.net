@@ -43,7 +43,7 @@ namespace ToDoLib
 					string raw;
 					while ((raw = reader.ReadLine()) != null) 
 					{
-						if(raw.HasValues())
+						if(!raw.IsNullOrEmpty())
                             Tasks.Add(new Task(raw));
 					}
 				}

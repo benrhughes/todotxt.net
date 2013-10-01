@@ -58,7 +58,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E56657F78AF7B5244BA7FDF10E880166"
+        "OwnerKey" = "8:_C10738306E97986612D206CFD812BB79"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -70,7 +70,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C10738306E97986612D206CFD812BB79"
+        "OwnerKey" = "8:_E56657F78AF7B5244BA7FDF10E880166"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -185,11 +185,6 @@
             "AssemblyAsmDisplayName" = "8:ToDoLib, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_88A8CD34C295BF006E1293EBD76FAE9E"
-                    {
-                    "Name" = "8:ToDoLib.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:ToDoLib.dll"
             "TargetName" = "8:"
@@ -216,11 +211,6 @@
             "AssemblyAsmDisplayName" = "8:CommonExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_C10738306E97986612D206CFD812BB79"
-                    {
-                    "Name" = "8:CommonExtensions.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:CommonExtensions.dll"
             "TargetName" = "8:"
@@ -247,11 +237,6 @@
             "AssemblyAsmDisplayName" = "8:ColorFont, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_E56657F78AF7B5244BA7FDF10E880166"
-                    {
-                    "Name" = "8:ColorFont.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:ColorFont.dll"
             "TargetName" = "8:"
@@ -327,15 +312,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
-        "ProductCode" = "8:{98A19E41-DAB6-4F62-A370-7963E15DF154}"
-        "PackageCode" = "8:{2860A548-B0D8-498F-A4A0-0AFAE930C613}"
+        "ProductCode" = "8:{9C9BFC81-3110-4362-A7E0-E8DED615ABE6}"
+        "PackageCode" = "8:{5BBF5AA2-8A94-4490-A570-26FB7E6624C3}"
         "UpgradeCode" = "8:{16D204EA-4E20-46D6-8C18-227DE56996D4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.2.2"
+        "ProductVersion" = "8:2.2.3"
         "Manufacturer" = "8:Hughesoft"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
