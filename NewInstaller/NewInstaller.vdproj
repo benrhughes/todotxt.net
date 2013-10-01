@@ -15,31 +15,25 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_226DDE2DD483FAE5F41D8311DED06E1E"
-        "OwnerKey" = "8:_3A04E196E217999AB7C4B475C1739642"
+        "MsmKey" = "8:_88A8CD34C295BF006E1293EBD76FAE9E"
+        "OwnerKey" = "8:_E56657F78AF7B5244BA7FDF10E880166"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_226DDE2DD483FAE5F41D8311DED06E1E"
+        "MsmKey" = "8:_88A8CD34C295BF006E1293EBD76FAE9E"
         "OwnerKey" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2C46E9FD7D82413385D65B6ABF00CD9E"
-        "OwnerKey" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
+        "MsmKey" = "8:_C10738306E97986612D206CFD812BB79"
+        "OwnerKey" = "8:_88A8CD34C295BF006E1293EBD76FAE9E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3A04E196E217999AB7C4B475C1739642"
-        "OwnerKey" = "8:_2C46E9FD7D82413385D65B6ABF00CD9E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3A04E196E217999AB7C4B475C1739642"
+        "MsmKey" = "8:_C10738306E97986612D206CFD812BB79"
         "OwnerKey" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -51,6 +45,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_E56657F78AF7B5244BA7FDF10E880166"
+        "OwnerKey" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_DD4FBF2F861840278FC197A08A3BC28B"
         "MsmSig" = "8:_UNDEFINED"
@@ -58,19 +58,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2C46E9FD7D82413385D65B6ABF00CD9E"
+        "OwnerKey" = "8:_E56657F78AF7B5244BA7FDF10E880166"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3A04E196E217999AB7C4B475C1739642"
+        "OwnerKey" = "8:_88A8CD34C295BF006E1293EBD76FAE9E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_226DDE2DD483FAE5F41D8311DED06E1E"
+        "OwnerKey" = "8:_C10738306E97986612D206CFD812BB79"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -178,14 +178,45 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_226DDE2DD483FAE5F41D8311DED06E1E"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_88A8CD34C295BF006E1293EBD76FAE9E"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_88A8CD34C295BF006E1293EBD76FAE9E"
+                    {
+                    "Name" = "8:ToDoLib.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:ToDoLib.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_9136B6B8A43E4907A3E4DB2F468AD84C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C10738306E97986612D206CFD812BB79"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:CommonExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_226DDE2DD483FAE5F41D8311DED06E1E"
+                    "_C10738306E97986612D206CFD812BB79"
                     {
                     "Name" = "8:CommonExtensions.dll"
                     "Attributes" = "3:512"
@@ -209,51 +240,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2C46E9FD7D82413385D65B6ABF00CD9E"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E56657F78AF7B5244BA7FDF10E880166"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:ColorFont, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2C46E9FD7D82413385D65B6ABF00CD9E"
+                    "_E56657F78AF7B5244BA7FDF10E880166"
                     {
                     "Name" = "8:ColorFont.dll"
                     "Attributes" = "3:512"
                     }
                 }
             "SourcePath" = "8:ColorFont.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_9136B6B8A43E4907A3E4DB2F468AD84C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3A04E196E217999AB7C4B475C1739642"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ToDoLib, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_3A04E196E217999AB7C4B475C1739642"
-                    {
-                    "Name" = "8:ToDoLib.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:ToDoLib.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_9136B6B8A43E4907A3E4DB2F468AD84C"
@@ -327,15 +327,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:todotxt.net"
-        "ProductCode" = "8:{103394CC-C454-4950-9D4A-8FACC89ED141}"
-        "PackageCode" = "8:{151C4E34-5711-478A-9A66-B41A06C62A08}"
+        "ProductCode" = "8:{98A19E41-DAB6-4F62-A370-7963E15DF154}"
+        "PackageCode" = "8:{2860A548-B0D8-498F-A4A0-0AFAE930C613}"
         "UpgradeCode" = "8:{16D204EA-4E20-46D6-8C18-227DE56996D4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.2.1"
+        "ProductVersion" = "8:2.2.2"
         "Manufacturer" = "8:Hughesoft"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
