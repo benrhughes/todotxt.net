@@ -2,7 +2,7 @@
 
 This is an implemention of [todo.txt](http://todotxt.com/) using the .NET framework. As far as I am aware, it is fully complient with [Gina's spec](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format). 
 
-There is installer for the latest version available from the [github download page](https://github.com/benrhughes/todotxt.net/downloads).
+There is installer for the latest version available from the [the main site](http://benrhughes.github.io/todotxt.net/).
 
 #### Contributors please note
 
