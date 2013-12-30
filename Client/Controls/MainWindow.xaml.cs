@@ -309,6 +309,10 @@ namespace Client
 			ViewModel.TaskListKeyUp(Key.U);
         }
 
+        private void lbTasks_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            ViewModel.TaskListTextInput(e);
+        }
         #endregion
 
 		#region printing
@@ -360,6 +364,11 @@ namespace Client
 		private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
         {
 			ViewModel.TaskTextPreviewKeyUp(e);
+        }
+
+        private void taskText_PreviewTextChanged(object sender, TextChangedEventArgs e)
+        {
+            ViewModel.TaskTextPreviewTextChanged(e);
         }
 
         #endregion
