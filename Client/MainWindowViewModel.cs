@@ -170,10 +170,6 @@ namespace Client
                     User.Default.Save();
                     break;
 
-                case Key.OemPeriod:
-                    Reload();
-					UpdateDisplayedTasks();
-                    break;
                 case Key.X:
                     ToggleComplete((Task)_window.lbTasks.SelectedItem);
 					UpdateDisplayedTasks();
@@ -252,6 +248,23 @@ namespace Client
                     _window.taskText.Focus();
                     break;
                 default:
+                    break;
+            }
+        }
+
+        public void TaskListTextInput(TextCompositionEventArgs e)
+        {
+            var text = e.Text.ToLowerInvariant();
+
+            switch (text)
+            {
+                case "?":
+                    _window.Help(null, null);
+                    break;
+
+                case ".":
+                    Reload();
+                    UpdateDisplayedTasks();
                     break;
             }
         }
@@ -825,27 +838,33 @@ namespace Client
                         _window.taskText.Text = "";
                         _window.lbTasks.Focus();
                         break;
-                    case Key.OemPlus:
-                    case Key.Add: // handles the '+' from the numpad.
-                        if (e.KeyboardDevice.Modifiers == ModifierKeys.Shift || e.Key == Key.Add) // activates on '+' but not '='.
-                        {
-                            var projects = _taskList.Tasks.SelectMany(task => task.Projects);
-                            _intelliPos = _window.taskText.CaretIndex - 1;
-                            ShowIntellisense(projects.Distinct().OrderBy(s => s), _window.taskText.GetRectFromCharacterIndex(_intelliPos));
-                        }
-                        break;
-                    case Key.D2:
-                        if (e.KeyboardDevice.Modifiers == ModifierKeys.Shift) // activates on '@' but not '2'.
-                        {
-                            var contexts = _taskList.Tasks.SelectMany(task => task.Contexts);
-                            _intelliPos = _window.taskText.CaretIndex - 1;
-                            ShowIntellisense(contexts.Distinct().OrderBy(s => s), _window.taskText.GetRectFromCharacterIndex(_intelliPos));
-                        }
-                        break;
                 }
             }
         }
 
+        public void TaskTextPreviewTextChanged(TextChangedEventArgs e)
+        {
+            if (e.Changes.Count != 1) return;
+            if (e.Changes.First().AddedLength < 1) return;
+            if (_window.taskText.CaretIndex < 1) return;
+
+            var lastAddedCharacter = _window.taskText.Text.Substring(_window.taskText.CaretIndex - 1, 1);
+
+            switch (lastAddedCharacter)
+            {
+                case "+":
+                    var projects = _taskList.Tasks.SelectMany(task => task.Projects);
+                    _intelliPos = _window.taskText.CaretIndex - 1;
+                    ShowIntellisense(projects.Distinct().OrderBy(s => s), _window.taskText.GetRectFromCharacterIndex(_intelliPos));
+                    break;
+
+                case "@":
+                    var contexts = _taskList.Tasks.SelectMany(task => task.Contexts);
+                    _intelliPos = _window.taskText.CaretIndex - 1;
+                    ShowIntellisense(contexts.Distinct().OrderBy(s => s), _window.taskText.GetRectFromCharacterIndex(_intelliPos));
+                    break;
+            }
+        }
 
         /// <summary>
         /// Helper function to determine if the correct keysequence has been entered to create a task.
