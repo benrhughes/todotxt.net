@@ -171,10 +171,12 @@ namespace Client
                     break;
 
                 case Key.X:
+                    if (!IsTaskSelected()) break;
                     ToggleComplete((Task)_window.lbTasks.SelectedItem);
 					UpdateDisplayedTasks();
                     break;
                 case Key.D:
+                    if (!IsTaskSelected()) break;
                     if (modifierKeys != ModifierKeys.Windows)
                     {
                         var res = MessageBox.Show("Permanently delete the selected task?",
@@ -199,12 +201,14 @@ namespace Client
                     break;
                 case Key.U:
                 case Key.F2:
+                    if (!IsTaskSelected()) break;
                     _updating = (Task)_window.lbTasks.SelectedItem;
                     _window.taskText.Text = _updating.ToString();
                     _window.taskText.Select(_window.taskText.Text.Length, 0); //puts cursor at the end
                     _window.taskText.Focus();
                     break;
                 case Key.P:
+                    if (!IsTaskSelected()) break;
                     _updating = (Task)_window.lbTasks.SelectedItem;
 
                     int iPostponeCount = ShowPostponeDialog();
@@ -267,6 +271,11 @@ namespace Client
                     UpdateDisplayedTasks();
                     break;
             }
+        }
+
+        private bool IsTaskSelected()
+        {
+            return _window.lbTasks.SelectedItem != null;
         }
 
         public void UpdateDisplayedTasks()
