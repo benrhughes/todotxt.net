@@ -769,20 +769,23 @@ namespace Client
                     {
                         var taskDetail = _window.taskText.Text.Trim();
 
-                        if (User.Default.AddCreationDate)
+                        if (taskDetail.Length > 0)
                         {
-                            var tmpTask = new Task(taskDetail);
-                            var today = DateTime.Today.ToString("yyyy-MM-dd");
-
-                            if (string.IsNullOrEmpty(tmpTask.CreationDate))
+                            if (User.Default.AddCreationDate)
                             {
-                                if (string.IsNullOrEmpty(tmpTask.Priority))
-                                    taskDetail = today + " " + taskDetail;
-                                else
-                                    taskDetail = taskDetail.Insert(tmpTask.Priority.Length, " " + today);
+                                var tmpTask = new Task(taskDetail);
+                                var today = DateTime.Today.ToString("yyyy-MM-dd");
+
+                                if (string.IsNullOrEmpty(tmpTask.CreationDate))
+                                {
+                                    if (string.IsNullOrEmpty(tmpTask.Priority))
+                                        taskDetail = today + " " + taskDetail;
+                                    else
+                                        taskDetail = taskDetail.Insert(tmpTask.Priority.Length, " " + today);
+                                }
                             }
+                            _taskList.Add(new Task(taskDetail));
                         }
-                        _taskList.Add(new Task(taskDetail));
                     }
                     catch (TaskException ex)
                     {
