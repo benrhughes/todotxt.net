@@ -614,6 +614,7 @@ namespace Client
                 User.Default.TaskListFontFamily = o.TaskListFont.Family.ToString();
                 User.Default.TaskListFontSize = o.TaskListFont.Size;
                 User.Default.TaskListFontStyle = o.TaskListFont.Style.ToString();
+                User.Default.TaskListFontWeight = o.TaskListFont.Weight.ToString();
                 User.Default.TaskListFontStretch = o.TaskListFont.Stretch.ToString();
                 User.Default.TaskListFontBrushColor = o.TaskListFont.BrushColor.ToString();
 
