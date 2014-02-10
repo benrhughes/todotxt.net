@@ -53,7 +53,13 @@ namespace Client
                 this.taskListFont = value;
                 if (this.taskListFont != null)
                 {
-                    this.currentFontDisplay.Text = this.taskListFont.Family.ToString() + ", " + this.taskListFont.Style.ToString() + ", " + this.taskListFont.Size.ToString();
+                    this.currentFontDisplay.Text = string.Format("{0}, {1}-{2}-{3}, {4}",
+                            this.taskListFont.Family,
+                            this.taskListFont.Style,
+                            this.taskListFont.Weight,
+                            this.taskListFont.Stretch,
+                            this.taskListFont.Size
+                        );
                 }
             }
         }
