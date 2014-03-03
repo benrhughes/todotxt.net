@@ -212,9 +212,9 @@ namespace Client
                     _updating = (Task)_window.lbTasks.SelectedItem;
 
                     int iPostponeCount = ShowPostponeDialog();
-                    if (iPostponeCount <= 0)
+                    if (iPostponeCount == 0)
                     {
-                        // User canceled, or entered a non-positive number or garbage
+                        // User canceled, or entered zero or garbage
                         break;
                     }
 
