@@ -210,6 +210,7 @@
     - Alt+Left/Right: clear priority
     - Win+Alt+T: Hide/Unhide windows
     - Ctrl-C: copy task to clipboard
+    - Ctrl+Shift+C: copy task to edit field
 
 Due date syntax:
     - due:2012-09-28
@@ -231,7 +232,7 @@ Font selector based on Alessio Saltarin's code: http://goo.gl/vmujX
 
 Copyright 2012 Ben Hughes</value>
   </data>
-	<data name="SiteUrl" xml:space="preserve">
+  <data name="SiteUrl" xml:space="preserve">
     <value>http://benrhughes.com/todotxt.net</value>
   </data>
 </root>
