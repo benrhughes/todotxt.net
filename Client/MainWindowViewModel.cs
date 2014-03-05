@@ -82,6 +82,17 @@ namespace Client
 
         public void TaskListKeyUp(Key key, ModifierKeys modifierKeys = ModifierKeys.None)
         {
+        	if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) && key == Key.C)
+		    {
+		        var currentTask = _window.lbTasks.SelectedItem as Task;
+		        if (currentTask != null)
+		        {
+		            _window.taskText.Text = currentTask.Raw;
+		            _window.taskText.Select(_window.taskText.Text.Length, 0); //puts cursor at the end
+		            _window.taskText.Focus();
+		        }
+		        return;
+		    }
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && key == Key.C)
             {
                 var currentTask = _window.lbTasks.SelectedItem as Task;

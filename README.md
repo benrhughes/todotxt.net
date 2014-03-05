@@ -43,3 +43,5 @@ Please send your pull requests to the 'dev' branch. If you forget it's not a maj
 	- Alt+Up: increase priority
 	- Alt+Down: decrease priority
 	- Alt+Left/Right: clear priority
+	- Ctrl+C: copy task to clipboard
+	- Ctrl+Shift+C: copy task to edit field
