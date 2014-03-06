@@ -1,4 +1,4 @@
-﻿<Window x:Class="Client.MainWindow"
+<Window x:Class="Client.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Client"
@@ -67,7 +67,7 @@
                 <GroupStyle HidesIfEmpty="False">
                     <GroupStyle.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock FontWeight="Bold" FontSize="15" Text="{Binding Name}" Margin="0,10,0,3"/>
+                            <TextBlock FontWeight="Bold" Text="{Binding Name}" Margin="0,10,0,3"/>
                         </DataTemplate>
                     </GroupStyle.HeaderTemplate>
                 </GroupStyle>
