@@ -220,47 +220,8 @@ namespace Client
                     break;
                 case Key.P:
                     if (!IsTaskSelected()) break;
-                    _updating = (Task)_window.lbTasks.SelectedItem;
-
-                    int iPostponeCount = ShowPostponeDialog();
-                    if (iPostponeCount == 0)
-                    {
-                        // User canceled, or entered zero or garbage
-                        break;
-                    }
-
-                    // Get the current DueDate from the item being updated
-                    DateTime dtNewDueDate;
-                    string postponedString;
-                    if (_updating.DueDate.Length > 0)
-                    {
-                        dtNewDueDate = Convert.ToDateTime(_updating.DueDate);
-                    }
-                    else
-                    {
-                        // Current item doesn't have a due date.  Use today as the due date
-                        dtNewDueDate = Convert.ToDateTime(DateTime.Now.ToString());
-                    }
-
-                    // Add days to that date
-                    dtNewDueDate = dtNewDueDate.AddDays(iPostponeCount);
-
-                    // Build a dummy string which we'll display so the rest of the system thinks we edited the current item.  
-                    // Otherwise we end up with 2 items which differ only by due date
-                    if (_updating.DueDate.Length > 0)
-                    {
-                        // The item has a due date, so exchange the current with the new
-                        postponedString = _updating.Raw.Replace(_updating.DueDate, dtNewDueDate.ToString("yyyy-MM-dd"));
-                    }
-                    else
-                    {
-                        // The item doesn't have a due date, so just append the new due date to the task
-                        postponedString = _updating.Raw.ToString() + " due:" + dtNewDueDate.ToString("yyyy-MM-dd");
-                    }
-
-                    // Display our "dummy" string.  If they cancel, no changes are committed.  
-                    _window.taskText.Text = postponedString;
-                    _window.taskText.Focus();
+                    PostponeTask((Task)_window.lbTasks.SelectedItem, ShowPostponeDialog());
+                    UpdateDisplayedTasks();
                     break;
                 default:
                     break;
@@ -552,6 +513,39 @@ namespace Client
             catch (Exception ex)
             {
                 ex.Handle("An error occurred while updating the task's completed status");
+            }
+        }
+        
+        private void PostponeTask(Task task, int daysToPostpone)
+        {
+            if (daysToPostpone == 0) // if user entered 0 or junk
+            {
+                return;
+            }
+        
+            // Get due date of the selected task. 
+            // If current item doesn't have a due date, use today as the due date.
+            DateTime oldDueDate = (task.DueDate.Length > 0) ? 
+                Convert.ToDateTime(task.DueDate) : 
+                DateTime.Today;
+        
+            // Add days to that date to create the new due date.
+            DateTime newDueDate = oldDueDate.AddDays(daysToPostpone);
+        
+            // If the item has a due date, exchange the current due date with the new.
+            // Else if the item does not have a due date, append the new due date to the task.
+            string updatedRaw = (task.DueDate.Length > 0) ?
+                task.Raw.Replace("due:" + task.DueDate, "due:" + newDueDate.ToString("yyyy-MM-dd")) :
+                task.Raw.ToString() + " due:" + newDueDate.ToString("yyyy-MM-dd");
+        
+            // update the task
+            try
+            {
+                _taskList.Update(task, new Task(updatedRaw));
+            }
+            catch (Exception ex)
+            {
+                ex.Handle("An error occurred while updating the task's due date.");
             }
         }
 
