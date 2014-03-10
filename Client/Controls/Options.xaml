@@ -1,4 +1,4 @@
-﻿<Window x:Class="Client.Options"
+<Window x:Class="Client.Options"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Options" Height="369" Width="512"
@@ -7,7 +7,7 @@
     <Grid>
         <Label Content="Archive File" Height="28" HorizontalAlignment="Left" Margin="12,12,0,0" Name="label1" VerticalAlignment="Top" />
         <TextBox HorizontalAlignment="Right" Margin="0,14,94,0" Name="tbArchiveFile" Width="296" Height="22" VerticalAlignment="Top" />
-        <Button Content="Select..." Height="23" HorizontalAlignment="Right" Margin="0,12,0,0" Name="button1" VerticalAlignment="Top" Width="75" Click="button1_Click" />
+        <Button Content="Select..." Height="23" HorizontalAlignment="Left" Margin="415,12,0,0" Name="button1" VerticalAlignment="Top" Width="75" Click="button1_Click" />
         <CheckBox Content="Automatically archive completed tasks" Height="16" HorizontalAlignment="Left" Margin="88,43,0,0" Name="cbAutoArchive" VerticalAlignment="Top" />
         <CheckBox Content="Automatically refresh task list from file" Height="16" HorizontalAlignment="Left" Margin="25,140,0,0" Name="cbAutoRefresh" VerticalAlignment="Top" />
         <Button Content="OK" Height="23" HorizontalAlignment="Right" Name="OK" VerticalAlignment="Bottom" Width="75" IsDefault="True" Click="OK_Click" Margin="0,0,94,12" />
