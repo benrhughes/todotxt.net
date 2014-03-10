@@ -1,4 +1,4 @@
-﻿<!-- Original code by Norris Cheng
+<!-- Original code by Norris Cheng
     http://blogs.msdn.com/b/text/archive/2006/06/20/592777.aspx -->
     <UserControl
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -70,12 +70,13 @@
                          TextAlignment="Center" TextWrapping="Wrap" 
                          Text="Lorem ipsum dolor sit amet, consectetur adipisicing elit" Background="#FFFFFFF7"/>
                 <Slider x:Name="fontSizeSlider" 
-                		Maximum="50" Value="10" 
-                        Minimum="8"
-                		SmallChange="0.5" LargeChange="2" HorizontalAlignment="Right" 
+                		Maximum="50"
+                        Minimum="1"
+                		SmallChange="0.5" LargeChange="1" HorizontalAlignment="Right" 
                 		VerticalAlignment="Bottom" Width="192" Margin="0,0,0,5" 
                         TickPlacement="BottomRight" 
-                        AutoToolTipPlacement ="TopLeft" />
+                        AutoToolTipPlacement ="TopLeft" 
+            			Value="{Binding Text, ElementName=fontSizeTextBox, Mode=TwoWay, ValidatesOnExceptions=true}"/>
             </Grid>
             <!-- Color Picker -->
             <Grid Grid.Column="1" Grid.Row="2" Margin="5">
@@ -85,6 +86,18 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Margin="0,8,0,0" Text="Font Color:" FontStyle="Italic" Grid.RowSpan="2" />
                 <local:ColorPicker Grid.Row="1" Height="32" x:Name="colorPicker" ColorChanged="colorPicker_ColorChanged" Margin="0,2"  />
+            </Grid>
+        	
+        	<!-- Font Size -->
+            <Grid Grid.Column="2" Grid.Row="2" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="24" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Margin="0,8,0,0" Text="Font Size:" FontStyle="Italic" Grid.RowSpan="2" />
+                <TextBox Name="fontSizeTextBox" 
+                         Text="{Binding Value, ElementName=fontSizeSlider, Mode=TwoWay, ValidatesOnExceptions=true, FallbackValue=10.0}" 
+                         Grid.Row="1" Height="32" Margin="0,2" />
             </Grid>
         </Grid>
     </Grid>
