@@ -33,3 +33,9 @@ TestResults
 *.swp
 
 testtasks.txt
+
+# ignore installer output
+Installer/Output
+
+# NuGet Packages Directory
+packages/

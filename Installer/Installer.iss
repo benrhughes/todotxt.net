@@ -2,7 +2,7 @@
 #define MyAppPublisher "Hughesoft"
 #define MyAppURL "http://www.todotxt.net"
 #define MyAppExeName "todotxt.exe"
-#define MyAppPath SourcePath + "..\Client\bin\Release"
+#define MyAppPath SourcePath + "ProgramFiles"
 #define MyAppVer = GetFileVersion(MyAppPath + "\todotxt.exe")
 
 [Setup]
