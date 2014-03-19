@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
+using ToDoLib;
 
 namespace Client
 {
@@ -12,12 +15,7 @@ namespace Client
     /// </summary>
     public partial class App : Application
     {
-		public App()
-		{
-			MigrateUserSettings();
-		}
-
-		private static void MigrateUserSettings()
+        private static void MigrateUserSettings()
 		{
 			// migrate the user settings from the previous version, if necessary
 			if (User.Default.FirstRun)
@@ -39,5 +37,30 @@ namespace Client
 
 			return os.Platform == PlatformID.Win32NT && vs.Major == 5 && vs.Minor != 0;
 		}
+
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            #if PORTABLE
+                var programDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                Log.LogFile = Path.Combine(programDir, "log.txt");
+                MakePortable(User.Default);
+            #endif
+
+            MigrateUserSettings();
+
+            var mainWindow = new MainWindow();
+            mainWindow.Show();
+        }
+
+        private static void MakePortable(ApplicationSettingsBase settings)
+        {
+            var portableSettingsProvider = new PortableSettingsProvider();
+            settings.Providers.Add(portableSettingsProvider);
+            foreach (SettingsProperty prop in settings.Properties)
+            {
+                prop.Provider = portableSettingsProvider;
+            }
+            settings.Reload();
+        }
     }
 }

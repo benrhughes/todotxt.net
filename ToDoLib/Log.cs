@@ -16,12 +16,23 @@ namespace ToDoLib
     {
         public static LogLevel LogLevel { get; set; }
 
+        public static string _logFile;
+
         public static string LogFile
         {
             get
             {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                                          "Hughesoft", "todotxt.exe", "log.txt");
+                if (_logFile == null)
+                {
+                    _logFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        "Hughesoft", "todotxt.exe", "log.txt");
+                }
+                return _logFile;
+            }
+
+            set
+            {
+                _logFile = value;
             }
         }
 

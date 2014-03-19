@@ -58,6 +58,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -80,6 +81,7 @@
     </ApplicationDefinition>
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="GroupConverter.cs" />
+    <Compile Include="PortableSettingsProvider.cs" />
     <Compile Include="SortType.cs" />
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="MainWindowViewModel.cs" />
@@ -148,6 +150,7 @@
     </Compile>
     <None Include="app.config" />
     <AppDesigner Include="Properties\" />
+    <None Include="packages.config" />
     <None Include="User.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>User.Designer.cs</LastGenOutput>
