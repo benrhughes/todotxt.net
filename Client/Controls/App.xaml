@@ -35,6 +35,7 @@
                         <Condition Property="Selector.IsSelectionActive" Value="true" />
                     </MultiTrigger.Conditions>
                     <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Opacity" Value="1" />
                 </MultiTrigger>
             </Style.Triggers>
         </Style>
