@@ -1103,11 +1103,4 @@ namespace Client
         }
 
     }
-
-    // Requires using System.Collections.ObjectModel; 
-    public class TaskList2 : ObservableCollection<Task>
-    {
-        
-        // Creating the Tasks collection in this way enables data binding from XAML.
-    }
 }
