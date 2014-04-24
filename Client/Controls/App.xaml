@@ -17,26 +17,29 @@
                     Value="#f8f8f8"></Setter>
                 </Trigger>
                 <!--Change Style if task completed -->
-                <DataTrigger Binding="{Binding Path=Completed}" Value="True">
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Path=Completed}" Value="true" />
+                        <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}" Value="false" />
+                    </MultiDataTrigger.Conditions>
                     <Setter Property="Opacity" Value="0.25" />
-                </DataTrigger>
+                </MultiDataTrigger>
                 <!--Change Style if task due today -->
-                <DataTrigger Binding="{Binding Path=IsTaskDue}" Value="1">
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Path=IsTaskDue}" Value="1" />
+                        <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}" Value="false" />
+                    </MultiDataTrigger.Conditions>
                     <Setter Property="Foreground" Value="Green" />
-                </DataTrigger>
+                </MultiDataTrigger>
                 <!--Change Style if task overdue -->
-                <DataTrigger Binding="{Binding Path=IsTaskDue}" Value="2">
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Path=IsTaskDue}" Value="2" />
+                        <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}" Value="false" />
+                    </MultiDataTrigger.Conditions>
                     <Setter Property="Foreground" Value="Red" />
-                </DataTrigger>
-                <!-- Change Style if task is selected and the task list has focus -->
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsSelected" Value="true" />
-                        <Condition Property="Selector.IsSelectionActive" Value="true" />
-                    </MultiTrigger.Conditions>
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="Opacity" Value="1" />
-                </MultiTrigger>
+                </MultiDataTrigger>
             </Style.Triggers>
         </Style>
         <Style TargetType="{x:Type TextBlock}">
