@@ -817,7 +817,7 @@ namespace Client
 				UpdateDisplayedTasks();
 
                 _window.Intellisense.IsOpen = false;
-                _window.lbTasks.Focus();
+                _window.taskText.Focus();
 
                 return;
             }
