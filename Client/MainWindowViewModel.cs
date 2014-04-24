@@ -317,8 +317,15 @@ namespace Client
             {
                 var match = _taskList.Tasks.FirstOrDefault(x => x.Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase));
                 if (match == null)
-                {
-                    _window.lbTasks.SelectedIndex = selectedIndex;
+                {            
+                    if (selectedIndex == _window.lbTasks.Items.Count)
+                    {
+                        _window.lbTasks.SelectedIndex = selectedIndex - 1;
+                    }
+                    else
+                    {
+                        _window.lbTasks.SelectedIndex = selectedIndex;
+                    }
                 }
                 else
                 {
