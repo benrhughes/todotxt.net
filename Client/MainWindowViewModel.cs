@@ -776,7 +776,7 @@ namespace Client
                 return;
             }
 
-            if (ShoudAddTask(e))
+            if (ShouldAddTask(e))
             {
                 if (_updating == null)
                 {
@@ -890,7 +890,7 @@ namespace Client
         /// </summary>
         /// <param name="e">The stroked key and any modifiers.</param>
         /// <returns>true if the task should be added to the list, false otherwise.</returns>
-        private bool ShoudAddTask(KeyEventArgs e)
+        private bool ShouldAddTask(KeyEventArgs e)
         {
             const Key NewTaskKey = Key.Enter;
 
