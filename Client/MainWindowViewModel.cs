@@ -20,6 +20,8 @@ namespace Client
 {
     public class MainWindowViewModel
     {
+        #region Properties
+
         private CollectionView _myView;
         private TaskList _taskList;
         private FileChangeObserver _changefile;
@@ -30,22 +32,6 @@ namespace Client
         private int _numberOfItemsInCurrentGroup;
         private List<CollectionViewGroup> _viewGroups;
         private int _nextGroupAtTaskNumber;
-
-
-        public MainWindowViewModel(MainWindow window)
-        {
-            _window = window;
-
-            Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
-
-            _changefile = new FileChangeObserver();
-            _changefile.OnFileChanged += () => _window.Dispatcher.BeginInvoke(new Action(Refresh));
-
-            SortType = (SortType)User.Default.CurrentSort;
-
-            if (!string.IsNullOrEmpty(User.Default.FilePath))
-                LoadTasks(User.Default.FilePath);
-        }
 
         public SortType SortType
         {
@@ -64,6 +50,29 @@ namespace Client
 
         public Help HelpPage { get; private set; }
 
+        #endregion
+
+        #region Constructors
+
+        public MainWindowViewModel(MainWindow window)
+        {
+            _window = window;
+
+            Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
+
+            _changefile = new FileChangeObserver();
+            _changefile.OnFileChanged += () => _window.Dispatcher.BeginInvoke(new Action(Refresh));
+
+            SortType = (SortType)User.Default.CurrentSort;
+
+            if (!string.IsNullOrEmpty(User.Default.FilePath))
+                LoadTasks(User.Default.FilePath);
+        }
+
+        #endregion
+
+        #region Task List ListBox Management Methods
+
         public void LoadTasks(string filePath)
         {
             try
@@ -79,6 +88,148 @@ namespace Client
                 ex.Handle("An error occurred while opening " + filePath);
             }
         }
+
+        private void Reload()
+        {
+            try
+            {
+                _taskList.ReloadTasks();
+            }
+            catch (Exception ex)
+            {
+                ex.Handle("Error loading tasks");
+            }
+        }
+
+        private void Refresh()
+        {
+            Reload();
+            UpdateDisplayedTasks();
+        }
+
+        public void UpdateDisplayedTasks()
+        {
+            if (_taskList == null)
+                return;
+
+            var selected = _window.lbTasks.SelectedItem as Task;
+            var selectedIndex = _window.lbTasks.SelectedIndex;
+            string sortProperty = "";
+
+            try
+            {
+                var sortedTaskList = FilterList(_taskList.Tasks);
+                sortedTaskList = SortList(sortedTaskList);
+
+                switch (SortType)
+                {
+                    case SortType.Project:
+                        sortProperty = "Projects";
+                        break;
+                    case SortType.Context:
+                        sortProperty = "Contexts";
+                        break;
+                    case SortType.DueDate:
+                        sortProperty = "DueDate";
+                        break;
+                    case SortType.Completed:
+                        sortProperty = "CompletedDate";
+                        break;
+                    case SortType.Priority:
+                        sortProperty = "Priority";
+                        break;
+                    case SortType.Created:
+                        sortProperty = "CreationDate";
+                        break;
+                }
+
+                _myView = (CollectionView)CollectionViewSource.GetDefaultView(sortedTaskList);
+
+                if (User.Default.AllowGrouping && SortType != SortType.Alphabetical && SortType != SortType.None)
+                {
+                    if (_myView.CanGroup)
+                    {
+                        var groupDescription = new PropertyGroupDescription(sortProperty);
+                        groupDescription.Converter = new GroupConverter();
+
+                        _myView.GroupDescriptions.Add(groupDescription);
+                    }
+                }
+                else
+                {
+                    _myView.GroupDescriptions.Clear();
+                }
+                _window.lbTasks.ItemsSource = sortedTaskList;
+            }
+            catch (Exception ex)
+            {
+                ex.Handle("Error while sorting tasks");
+            }
+
+            if (selected == null)
+            {
+                _window.lbTasks.SelectedIndex = 0;
+            }
+            else
+            {
+                var match = _taskList.Tasks.FirstOrDefault(x => x.Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase));
+                if (match == null)
+                {
+                    if (selectedIndex == _window.lbTasks.Items.Count)
+                    {
+                        _window.lbTasks.SelectedIndex = selectedIndex - 1;
+                    }
+                    else
+                    {
+                        _window.lbTasks.SelectedIndex = selectedIndex;
+                    }
+                }
+                else
+                {
+                    _window.lbTasks.SelectedItem = match;
+                    _window.lbTasks.ScrollIntoView(match);
+                }
+            }
+
+            //Set the menu item to Bold to easily identify if there is a filter in force
+            _window.filterMenu.FontWeight = User.Default.FilterText.Length == 0 ? FontWeights.Normal : FontWeights.Bold;
+            _window.lbTasks.Focus();
+        }
+
+        private bool IsTaskSelected()
+        {
+            return _window.lbTasks.SelectedItem != null;
+        }
+
+        /// <summary>
+        /// Helper function to determine if the correct keysequence has been entered to create a task.
+        /// Added to enable the check for Ctrl-Enter if set in options.
+        /// </summary>
+        /// <param name="e">The stroked key and any modifiers.</param>
+        /// <returns>true if the task should be added to the list, false otherwise.</returns>
+        private bool ShouldAddTask(KeyEventArgs e)
+        {
+            const Key NewTaskKey = Key.Enter;
+
+            if (e.Key == NewTaskKey)
+            {
+                if (User.Default.RequireCtrlEnter)
+                {
+                    if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+                        return true;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        #endregion
+
+        #region Task List ListBox Event Handling Methods
 
         public void TaskListKeyUp(Key key, ModifierKeys modifierKeys = ModifierKeys.None)
         {
@@ -228,468 +379,6 @@ namespace Client
             }
         }
 
-        public void TaskListTextInput(TextCompositionEventArgs e)
-        {
-            var text = e.Text.ToLowerInvariant();
-
-            switch (text)
-            {
-                case "?":
-                    _window.Help(null, null);
-                    break;
-
-                case ".":
-                    Reload();
-                    UpdateDisplayedTasks();
-                    break;
-            }
-        }
-
-        private bool IsTaskSelected()
-        {
-            return _window.lbTasks.SelectedItem != null;
-        }
-
-        public void UpdateDisplayedTasks()
-        {
-            if (_taskList == null)
-                return;
-
-            var selected = _window.lbTasks.SelectedItem as Task;
-            var selectedIndex = _window.lbTasks.SelectedIndex;
-            string sortProperty = "";
-
-            try
-            {
-                var sortedTaskList = FilterList(_taskList.Tasks);
-                sortedTaskList = SortList(sortedTaskList);
-
-                switch (SortType)
-                {
-                    case SortType.Project:
-                        sortProperty = "Projects";
-                        break;
-                    case SortType.Context:
-                        sortProperty = "Contexts";
-                        break;
-                    case SortType.DueDate:
-                        sortProperty = "DueDate";
-                        break;
-                    case SortType.Completed:
-                        sortProperty = "CompletedDate";
-                        break;
-                    case SortType.Priority:
-                        sortProperty = "Priority";
-                        break;
-					case SortType.Created:
-                        sortProperty = "CreationDate";
-						break;
-                }
-
-                _myView = (CollectionView)CollectionViewSource.GetDefaultView(sortedTaskList);
-
-                if (User.Default.AllowGrouping && SortType != SortType.Alphabetical && SortType != SortType.None)
-                {
-                    if (_myView.CanGroup)
-                    {
-                        var groupDescription = new PropertyGroupDescription(sortProperty);
-                        groupDescription.Converter = new GroupConverter();
-
-                        _myView.GroupDescriptions.Add(groupDescription);
-                    }
-                }
-                else
-                {
-                    _myView.GroupDescriptions.Clear();
-                }
-                _window.lbTasks.ItemsSource = sortedTaskList;
-            }
-            catch (Exception ex)
-            {
-                ex.Handle("Error while sorting tasks");
-            }
-
-            if (selected == null)
-            {
-                _window.lbTasks.SelectedIndex = 0;
-            }
-            else
-            {
-                var match = _taskList.Tasks.FirstOrDefault(x => x.Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase));
-                if (match == null)
-                {            
-                    if (selectedIndex == _window.lbTasks.Items.Count)
-                    {
-                        _window.lbTasks.SelectedIndex = selectedIndex - 1;
-                    }
-                    else
-                    {
-                        _window.lbTasks.SelectedIndex = selectedIndex;
-                    }
-                }
-                else
-                {
-                    _window.lbTasks.SelectedItem = match;
-                    _window.lbTasks.ScrollIntoView(match);
-                }
-            }
-
-            //Set the menu item to Bold to easily identify if there is a filter in force
-            _window.filterMenu.FontWeight = User.Default.FilterText.Length == 0 ? FontWeights.Normal : FontWeights.Bold;            
-            _window.lbTasks.Focus();
-        }
-
-        private void Refresh()
-        {
-            Reload();
-			UpdateDisplayedTasks();
-        }
-
-        private void Reload()
-        {
-            try
-            {
-                _taskList.ReloadTasks();
-            }
-            catch (Exception ex)
-            {
-                ex.Handle("Error loading tasks");
-            }
-        }
-
-        public void ShowFilterDialog()
-        {
-            var f = new FilterDialog();
-            f.Owner = _window;
-
-            f.FilterText = User.Default.FilterText;
-            f.FilterTextPreset1 = User.Default.FilterTextPreset1;
-            f.FilterTextPreset2 = User.Default.FilterTextPreset2;
-            f.FilterTextPreset3 = User.Default.FilterTextPreset3;
-
-            if (f.ShowDialog().Value)
-            {
-                User.Default.FilterText = f.FilterText.Trim();
-                User.Default.FilterTextPreset1 = f.FilterTextPreset1.Trim();
-                User.Default.FilterTextPreset2 = f.FilterTextPreset2.Trim();
-                User.Default.FilterTextPreset3 = f.FilterTextPreset3.Trim();
-                User.Default.Save();
-
-				UpdateDisplayedTasks();
-            }
-        }
-
-        public static IEnumerable<Task> FilterList(IEnumerable<Task> tasks)
-        {
-            var filters = User.Default.FilterText;
-            var comparer = User.Default.FilterCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
-
-            if (String.IsNullOrEmpty(filters))
-                return tasks;
-
-            var filteredTasks = new List<Task>();
-
-            foreach (var task in tasks)
-            {
-                bool include = true;
-                foreach (var filter in filters.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    if (filter.Equals("due:today", StringComparison.OrdinalIgnoreCase)
-                        && task.DueDate == DateTime.Now.ToString("yyyy-MM-dd"))
-                        continue;
-                    else if (filter.Equals("due:future", StringComparison.OrdinalIgnoreCase)
-                        && task.DueDate.IsDateGreaterThan(DateTime.Now))
-                        continue;
-                    else if (filter.Equals("due:past", StringComparison.OrdinalIgnoreCase)
-                        && task.DueDate.IsDateLessThan(DateTime.Now))
-                        continue;
-                    else if (filter.Equals("due:active", StringComparison.OrdinalIgnoreCase)
-                        && !task.DueDate.IsNullOrEmpty()
-                        && !task.DueDate.IsDateGreaterThan(DateTime.Now))
-                        continue;
-
-                    if (filter.Substring(0, 1) == "-")
-                    {
-                        if (task.Raw.Contains(filter.Substring(1), comparer))
-                            include = false;
-                    }
-                    else if (!task.Raw.Contains(filter, comparer))
-                    {
-                        include = false;
-                    }
-                }
-
-                if (include)
-                    filteredTasks.Add(task);
-            }
-            return filteredTasks;
-        }
-
-        public IEnumerable<Task> SortList(IEnumerable<Task> tasks)
-        {
-            Log.Debug("Sorting {0} tasks by {1}", tasks.Count().ToString(), SortType.ToString());
-
-            switch (SortType)
-            {
-                // nb, we sub-sort by completed for most sorts by prepending either a or z
-                case SortType.Completed:
-                    return tasks.OrderBy(t => t.Completed);
-                case SortType.Context:
-                    return tasks.OrderBy(t =>
-                    {
-                        var s = t.Completed ? "z" : "a";
-                        if (t.Contexts != null && t.Contexts.Count > 0)
-                            s += t.Contexts.Min().Substring(1);
-                        else
-                            s += "zzz";
-                        return s;
-                    });
-                case SortType.Alphabetical:
-                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + t.Raw);
-                case SortType.DueDate:
-                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate));
-                case SortType.Priority:
-                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority));
-                case SortType.Project:
-                    return tasks.OrderBy(t =>
-                    {
-                        var s = t.Completed ? "z" : "a";
-                        if (t.Projects != null && t.Projects.Count > 0)
-                            s += t.Projects.Min().Substring(1);
-                        else
-                            s += "zzz";
-                        return s;
-                    });
-				case SortType.Created: 
-                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.CreationDate) ? "9999-99-99" : t.CreationDate));
-                default:
-                    return tasks;
-            }
-        }
-
-        //  Add a quick calendar of the next 7 days to the title bar.  If the calendar is already displayed, toggle it off.
-        private void AddCalendarToTitle()
-        {
-            var title = _window.Title;
-
-            if (title.Length < 15)
-            {
-                title += "       Calendar:  ";
-
-                for (double i = 0; i < 7; i++)
-                {
-                    var today = DateTime.Now.AddDays(i).ToString("MM-dd");
-                    var today_letter = DateTime.Now.AddDays(i).DayOfWeek.ToString();
-                    today_letter = today_letter.Remove(2);
-                    title += "  " + today_letter + ":" + today;
-                }
-            }
-            else
-            {
-                title = "todotxt.net";
-            }
-
-            _window.Title = title;
-        }
-
-        private void ToggleComplete(Task task)
-        {
-            //Ensure an empty task can not be completed.
-            if (task.Body.Trim() == string.Empty)
-                return;
-
-            var newTask = new Task(task.Raw);
-            newTask.Completed = !newTask.Completed;
-
-            try
-            {
-                if (User.Default.AutoArchive && newTask.Completed)
-                {
-                    if (User.Default.ArchiveFilePath.IsNullOrEmpty())
-                        throw new Exception("You have enabled auto-archiving but have not specified an archive file.\nPlease go to File -> Options and disable auto-archiving or specify an archive file");
-
-                    var archiveList = new TaskList(User.Default.ArchiveFilePath);
-                    archiveList.Add(newTask);
-                    _taskList.Delete(task);
-                }
-                else
-                {
-                    _taskList.Update(task, newTask);
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.Handle("An error occurred while updating the task's completed status");
-            }
-        }
-        
-        private void PostponeTask(Task task, int daysToPostpone)
-        {
-            if (daysToPostpone == 0) // if user entered 0 or junk
-            {
-                return;
-            }
-        
-            // Get due date of the selected task. 
-            // If current item doesn't have a due date, use today as the due date.
-            DateTime oldDueDate = (task.DueDate.Length > 0) ? 
-                Convert.ToDateTime(task.DueDate) : 
-                DateTime.Today;
-        
-            // Add days to that date to create the new due date.
-            DateTime newDueDate = oldDueDate.AddDays(daysToPostpone);
-        
-            // If the item has a due date, exchange the current due date with the new.
-            // Else if the item does not have a due date, append the new due date to the task.
-            string updatedRaw = (task.DueDate.Length > 0) ?
-                task.Raw.Replace("due:" + task.DueDate, "due:" + newDueDate.ToString("yyyy-MM-dd")) :
-                task.Raw.ToString() + " due:" + newDueDate.ToString("yyyy-MM-dd");
-        
-            // update the task
-            try
-            {
-                _taskList.Update(task, new Task(updatedRaw));
-            }
-            catch (Exception ex)
-            {
-                ex.Handle("An error occurred while updating the task's due date.");
-            }
-        }
-
-        private int ShowPostponeDialog()
-        {
-            var dialog = new PostponeDialog();
-            dialog.Owner = _window;
-
-            int iDays = 0;
-
-            if (dialog.ShowDialog().Value)
-            {
-                string sPostpone = dialog.PostponeText.Trim();
-
-                if (sPostpone.Length > 0)
-                {
-                    try
-                    {
-                        iDays = Convert.ToInt32(sPostpone);
-                    }
-                    catch
-                    {
-                        // No action needed.  iDays will be 0, which will leave the item unaltered.
-                    }
-                }
-            }
-
-            return iDays;
-
-        }
-
-        public void ArchiveCompleted()
-        {
-            if (!File.Exists(User.Default.ArchiveFilePath))
-                _window.File_Options(null, null);
-
-            if (!File.Exists(User.Default.ArchiveFilePath))
-                return;
-
-            var archiveList = new TaskList(User.Default.ArchiveFilePath);
-            var completed = _taskList.Tasks.Where(t => t.Completed);
-            foreach (var task in completed)
-            {
-                archiveList.Add(task);
-                _taskList.Delete(task);
-            }
-
-			UpdateDisplayedTasks();
-        }
-
-        public void ShowOptionsDialog()
-        {
-            var o = new Options(FontInfo.GetControlFont(_window.lbTasks));
-            o.Owner = _window;
-
-            var res = o.ShowDialog();
-
-            if (res.Value)
-            {
-                User.Default.ArchiveFilePath = o.tbArchiveFile.Text;
-                User.Default.AutoArchive = o.cbAutoArchive.IsChecked.Value;
-                User.Default.MoveFocusToTaskListAfterAddingNewTask = o.cbMoveFocusToTaskListAfterAddingNewTask.IsChecked.Value;
-                User.Default.AutoRefresh = o.cbAutoRefresh.IsChecked.Value;
-                User.Default.FilterCaseSensitive = o.cbCaseSensitiveFilter.IsChecked.Value;
-                User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
-                User.Default.DebugLoggingOn = o.cbDebugOn.IsChecked.Value;
-                User.Default.MinimiseToSystemTray = o.cbMinToSysTray.IsChecked.Value;
-                User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
-                User.Default.AllowGrouping = o.cbAllowGrouping.IsChecked.Value;
-
-                // Unfortunately, font classes are not serializable, so all the pieces are tracked instead.
-                User.Default.TaskListFontFamily = o.TaskListFont.Family.ToString();
-                User.Default.TaskListFontSize = o.TaskListFont.Size;
-                User.Default.TaskListFontStyle = o.TaskListFont.Style.ToString();
-                User.Default.TaskListFontWeight = o.TaskListFont.Weight.ToString();
-                User.Default.TaskListFontStretch = o.TaskListFont.Stretch.ToString();
-                User.Default.TaskListFontBrushColor = o.TaskListFont.BrushColor.ToString();
-
-                User.Default.Save();
-
-                Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
-
-                _window.SetFont();
-
-				UpdateDisplayedTasks();
-            }
-        }
-
-        public void NewFile()
-        {
-            var dialog = new SaveFileDialog();
-            dialog.FileName = "todo.txt";
-            dialog.DefaultExt = ".txt";
-            dialog.Filter = "Text documents (.txt)|*.txt";
-
-            var res = dialog.ShowDialog();
-
-            if (res.Value)
-            {
-                File.WriteAllText(dialog.FileName, "");
-                LoadTasks(dialog.FileName);
-            }
-        }
-
-        public void OpenFile()
-        {
-            var dialog = new OpenFileDialog();
-            dialog.DefaultExt = ".txt";
-            dialog.Filter = "Text documents (.txt)|*.txt";
-
-            var res = dialog.ShowDialog();
-
-            if (res.Value)
-                LoadTasks(dialog.FileName);
-        }
-
-        public void ShowHelpDialog()
-        {
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            HelpPage = new Help("todotxt.net", version, Resource.HelpText, Resource.SiteUrl, "benrhughes.com/todotxt.net");
-
-            HelpPage.Show();
-        }
-
-        public void ViewLog()
-        {
-            if (File.Exists(Log.LogFile))
-                Process.Start(Log.LogFile);
-            else
-                MessageBox.Show("Log file does not exist: no errors have been logged", "Log file does not exist", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        public void Donate()
-        {
-            Process.Start(Resource.SiteUrl);
-        }
-
         public void TaskListPreviewKeyDown(KeyEventArgs e)
         {
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt) && _window.lbTasks.HasItems)
@@ -772,6 +461,380 @@ namespace Client
                     break;
             }
         }
+
+        public void TaskListTextInput(TextCompositionEventArgs e)
+        {
+            var text = e.Text.ToLowerInvariant();
+
+            switch (text)
+            {
+                case "?":
+                    _window.Help(null, null);
+                    break;
+
+                case ".":
+                    Reload();
+                    UpdateDisplayedTasks();
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region Filter Methods
+
+        public void ShowFilterDialog()
+        {
+            var f = new FilterDialog();
+            f.Owner = _window;
+
+            f.FilterText = User.Default.FilterText;
+            f.FilterTextPreset1 = User.Default.FilterTextPreset1;
+            f.FilterTextPreset2 = User.Default.FilterTextPreset2;
+            f.FilterTextPreset3 = User.Default.FilterTextPreset3;
+
+            if (f.ShowDialog().Value)
+            {
+                User.Default.FilterText = f.FilterText.Trim();
+                User.Default.FilterTextPreset1 = f.FilterTextPreset1.Trim();
+                User.Default.FilterTextPreset2 = f.FilterTextPreset2.Trim();
+                User.Default.FilterTextPreset3 = f.FilterTextPreset3.Trim();
+                User.Default.Save();
+
+				UpdateDisplayedTasks();
+            }
+        }
+
+        public static IEnumerable<Task> FilterList(IEnumerable<Task> tasks)
+        {
+            var filters = User.Default.FilterText;
+            var comparer = User.Default.FilterCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
+
+            if (String.IsNullOrEmpty(filters))
+                return tasks;
+
+            var filteredTasks = new List<Task>();
+
+            foreach (var task in tasks)
+            {
+                bool include = true;
+                foreach (var filter in filters.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    if (filter.Equals("due:today", StringComparison.OrdinalIgnoreCase)
+                        && task.DueDate == DateTime.Now.ToString("yyyy-MM-dd"))
+                        continue;
+                    else if (filter.Equals("due:future", StringComparison.OrdinalIgnoreCase)
+                        && task.DueDate.IsDateGreaterThan(DateTime.Now))
+                        continue;
+                    else if (filter.Equals("due:past", StringComparison.OrdinalIgnoreCase)
+                        && task.DueDate.IsDateLessThan(DateTime.Now))
+                        continue;
+                    else if (filter.Equals("due:active", StringComparison.OrdinalIgnoreCase)
+                        && !task.DueDate.IsNullOrEmpty()
+                        && !task.DueDate.IsDateGreaterThan(DateTime.Now))
+                        continue;
+
+                    if (filter.Substring(0, 1) == "-")
+                    {
+                        if (task.Raw.Contains(filter.Substring(1), comparer))
+                            include = false;
+                    }
+                    else if (!task.Raw.Contains(filter, comparer))
+                    {
+                        include = false;
+                    }
+                }
+
+                if (include)
+                    filteredTasks.Add(task);
+            }
+            return filteredTasks;
+        }
+
+        #endregion
+
+        #region Sort Methods
+
+        public IEnumerable<Task> SortList(IEnumerable<Task> tasks)
+        {
+            Log.Debug("Sorting {0} tasks by {1}", tasks.Count().ToString(), SortType.ToString());
+
+            switch (SortType)
+            {
+                // nb, we sub-sort by completed for most sorts by prepending either a or z
+                case SortType.Completed:
+                    return tasks.OrderBy(t => t.Completed);
+                case SortType.Context:
+                    return tasks.OrderBy(t =>
+                    {
+                        var s = t.Completed ? "z" : "a";
+                        if (t.Contexts != null && t.Contexts.Count > 0)
+                            s += t.Contexts.Min().Substring(1);
+                        else
+                            s += "zzz";
+                        return s;
+                    });
+                case SortType.Alphabetical:
+                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + t.Raw);
+                case SortType.DueDate:
+                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate));
+                case SortType.Priority:
+                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority));
+                case SortType.Project:
+                    return tasks.OrderBy(t =>
+                    {
+                        var s = t.Completed ? "z" : "a";
+                        if (t.Projects != null && t.Projects.Count > 0)
+                            s += t.Projects.Min().Substring(1);
+                        else
+                            s += "zzz";
+                        return s;
+                    });
+				case SortType.Created: 
+                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.CreationDate) ? "9999-99-99" : t.CreationDate));
+                default:
+                    return tasks;
+            }
+        }
+
+        #endregion
+
+        #region Task Methods
+
+        private void ToggleComplete(Task task)
+        {
+            //Ensure an empty task can not be completed.
+            if (task.Body.Trim() == string.Empty)
+                return;
+
+            var newTask = new Task(task.Raw);
+            newTask.Completed = !newTask.Completed;
+
+            try
+            {
+                if (User.Default.AutoArchive && newTask.Completed)
+                {
+                    if (User.Default.ArchiveFilePath.IsNullOrEmpty())
+                        throw new Exception("You have enabled auto-archiving but have not specified an archive file.\nPlease go to File -> Options and disable auto-archiving or specify an archive file");
+
+                    var archiveList = new TaskList(User.Default.ArchiveFilePath);
+                    archiveList.Add(newTask);
+                    _taskList.Delete(task);
+                }
+                else
+                {
+                    _taskList.Update(task, newTask);
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Handle("An error occurred while updating the task's completed status");
+            }
+        }
+
+        private void PostponeTask(Task task, int daysToPostpone)
+        {
+            if (daysToPostpone == 0) // if user entered 0 or junk
+            {
+                return;
+            }
+
+            // Get due date of the selected task. 
+            // If current item doesn't have a due date, use today as the due date.
+            DateTime oldDueDate = (task.DueDate.Length > 0) ?
+                Convert.ToDateTime(task.DueDate) :
+                DateTime.Today;
+
+            // Add days to that date to create the new due date.
+            DateTime newDueDate = oldDueDate.AddDays(daysToPostpone);
+
+            // If the item has a due date, exchange the current due date with the new.
+            // Else if the item does not have a due date, append the new due date to the task.
+            string updatedRaw = (task.DueDate.Length > 0) ?
+                task.Raw.Replace("due:" + task.DueDate, "due:" + newDueDate.ToString("yyyy-MM-dd")) :
+                task.Raw.ToString() + " due:" + newDueDate.ToString("yyyy-MM-dd");
+
+            // update the task
+            try
+            {
+                _taskList.Update(task, new Task(updatedRaw));
+            }
+            catch (Exception ex)
+            {
+                ex.Handle("An error occurred while updating the task's due date.");
+            }
+        }
+
+        private int ShowPostponeDialog()
+        {
+            var dialog = new PostponeDialog();
+            dialog.Owner = _window;
+
+            int iDays = 0;
+
+            if (dialog.ShowDialog().Value)
+            {
+                string sPostpone = dialog.PostponeText.Trim();
+
+                if (sPostpone.Length > 0)
+                {
+                    try
+                    {
+                        iDays = Convert.ToInt32(sPostpone);
+                    }
+                    catch
+                    {
+                        // No action needed.  iDays will be 0, which will leave the item unaltered.
+                    }
+                }
+            }
+
+            return iDays;
+
+        }
+
+        #endregion
+
+        #region File Methods
+
+        public void NewFile()
+        {
+            var dialog = new SaveFileDialog();
+            dialog.FileName = "todo.txt";
+            dialog.DefaultExt = ".txt";
+            dialog.Filter = "Text documents (.txt)|*.txt";
+
+            var res = dialog.ShowDialog();
+
+            if (res.Value)
+            {
+                File.WriteAllText(dialog.FileName, "");
+                LoadTasks(dialog.FileName);
+            }
+        }
+
+        public void OpenFile()
+        {
+            var dialog = new OpenFileDialog();
+            dialog.DefaultExt = ".txt";
+            dialog.Filter = "Text documents (.txt)|*.txt";
+
+            var res = dialog.ShowDialog();
+
+            if (res.Value)
+                LoadTasks(dialog.FileName);
+        }
+        
+        public void ArchiveCompleted()
+        {
+            if (!File.Exists(User.Default.ArchiveFilePath))
+                _window.File_Options(null, null);
+
+            if (!File.Exists(User.Default.ArchiveFilePath))
+                return;
+
+            var archiveList = new TaskList(User.Default.ArchiveFilePath);
+            var completed = _taskList.Tasks.Where(t => t.Completed);
+            foreach (var task in completed)
+            {
+                archiveList.Add(task);
+                _taskList.Delete(task);
+            }
+
+			UpdateDisplayedTasks();
+        }
+
+        public void ShowOptionsDialog()
+        {
+            var o = new Options(FontInfo.GetControlFont(_window.lbTasks));
+            o.Owner = _window;
+
+            var res = o.ShowDialog();
+
+            if (res.Value)
+            {
+                User.Default.ArchiveFilePath = o.tbArchiveFile.Text;
+                User.Default.AutoArchive = o.cbAutoArchive.IsChecked.Value;
+                User.Default.MoveFocusToTaskListAfterAddingNewTask = o.cbMoveFocusToTaskListAfterAddingNewTask.IsChecked.Value;
+                User.Default.AutoRefresh = o.cbAutoRefresh.IsChecked.Value;
+                User.Default.FilterCaseSensitive = o.cbCaseSensitiveFilter.IsChecked.Value;
+                User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
+                User.Default.DebugLoggingOn = o.cbDebugOn.IsChecked.Value;
+                User.Default.MinimiseToSystemTray = o.cbMinToSysTray.IsChecked.Value;
+                User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
+                User.Default.AllowGrouping = o.cbAllowGrouping.IsChecked.Value;
+
+                // Unfortunately, font classes are not serializable, so all the pieces are tracked instead.
+                User.Default.TaskListFontFamily = o.TaskListFont.Family.ToString();
+                User.Default.TaskListFontSize = o.TaskListFont.Size;
+                User.Default.TaskListFontStyle = o.TaskListFont.Style.ToString();
+                User.Default.TaskListFontWeight = o.TaskListFont.Weight.ToString();
+                User.Default.TaskListFontStretch = o.TaskListFont.Stretch.ToString();
+                User.Default.TaskListFontBrushColor = o.TaskListFont.BrushColor.ToString();
+
+                User.Default.Save();
+
+                Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
+
+                _window.SetFont();
+
+				UpdateDisplayedTasks();
+            }
+        }
+
+        #endregion
+
+        #region Help Methods
+
+        public void ShowHelpDialog()
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            HelpPage = new Help("todotxt.net", version, Resource.HelpText, Resource.SiteUrl, "benrhughes.com/todotxt.net");
+
+            HelpPage.Show();
+        }
+
+        public void ViewLog()
+        {
+            if (File.Exists(Log.LogFile))
+                Process.Start(Log.LogFile);
+            else
+                MessageBox.Show("Log file does not exist: no errors have been logged", "Log file does not exist", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        public void Donate()
+        {
+            Process.Start(Resource.SiteUrl);
+        }
+
+        //  Add a quick calendar of the next 7 days to the title bar.  If the calendar is already displayed, toggle it off.
+        private void AddCalendarToTitle()
+        {
+            var title = _window.Title;
+
+            if (title.Length < 15)
+            {
+                title += "       Calendar:  ";
+
+                for (double i = 0; i < 7; i++)
+                {
+                    var today = DateTime.Now.AddDays(i).ToString("MM-dd");
+                    var today_letter = DateTime.Now.AddDays(i).DayOfWeek.ToString();
+                    today_letter = today_letter.Remove(2);
+                    title += "  " + today_letter + ":" + today;
+                }
+            }
+            else
+            {
+                title = "todotxt.net";
+            }
+
+            _window.Title = title;
+        }
+
+        #endregion
+
+        #region New Task TextBox Event Handling Methods
 
         internal void TaskTextPreviewKeyUp(KeyEventArgs e)
         {
@@ -900,46 +963,16 @@ namespace Client
             }
         }
 
-        /// <summary>
-        /// Helper function to determine if the correct keysequence has been entered to create a task.
-        /// Added to enable the check for Ctrl-Enter if set in options.
-        /// </summary>
-        /// <param name="e">The stroked key and any modifiers.</param>
-        /// <returns>true if the task should be added to the list, false otherwise.</returns>
-        private bool ShouldAddTask(KeyEventArgs e)
+        public void ShowIntellisense(IEnumerable<string> s, Rect placement)
         {
-            const Key NewTaskKey = Key.Enter;
+            if (s.Count() == 0)
+                return;
 
-            if (e.Key == NewTaskKey)
-            {
-                if (User.Default.RequireCtrlEnter)
-                {
-                    if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
-                        return true;
-                }
-                else
-                {
-                    return true;
-                }
-            }
+            _window.Intellisense.PlacementTarget = _window.taskText;
+            _window.Intellisense.PlacementRectangle = placement;
 
-            return false;
-        }
-
-        /// <summary>
-        /// Helper function to add the chosen text in the intellisense into the task string.
-        /// Created to allow the use of both keyboard and mouse clicks.
-        /// </summary>
-        private void InsertTextIntoTaskString()
-        {
-            _window.Intellisense.IsOpen = false;
-
-            _window.taskText.Text = _window.taskText.Text.Remove(_intelliPos, _window.taskText.CaretIndex - _intelliPos);
-
-            var newText = _window.IntellisenseList.SelectedItem.ToString();
-            _window.taskText.Text = _window.taskText.Text.Insert(_intelliPos, newText);
-            _window.taskText.CaretIndex = _intelliPos + newText.Length;
-
+            _window.IntellisenseList.ItemsSource = s;
+            _window.Intellisense.IsOpen = true;
             _window.taskText.Focus();
         }
 
@@ -966,19 +999,6 @@ namespace Client
             }
         }
 
-        public void ShowIntellisense(IEnumerable<string> s, Rect placement)
-        {
-            if (s.Count() == 0)
-                return;
-
-            _window.Intellisense.PlacementTarget = _window.taskText;
-            _window.Intellisense.PlacementRectangle = placement;
-
-            _window.IntellisenseList.ItemsSource = s;
-            _window.Intellisense.IsOpen = true;
-            _window.taskText.Focus();
-        }
-
         public void IntellisenseMouseUp()
         {
             InsertTextIntoTaskString();
@@ -988,6 +1008,28 @@ namespace Client
         {
             return _window.taskText.Text.Substring(_intelliPos + 1, _window.taskText.CaretIndex - _intelliPos - 1);
         }
+
+        /// <summary>
+        /// Helper function to add the chosen text in the intellisense into the task string.
+        /// Created to allow the use of both keyboard and mouse clicks.
+        /// </summary>
+        private void InsertTextIntoTaskString()
+        {
+            _window.Intellisense.IsOpen = false;
+
+            _window.taskText.Text = _window.taskText.Text.Remove(_intelliPos, _window.taskText.CaretIndex - _intelliPos);
+
+            var newText = _window.IntellisenseList.SelectedItem.ToString();
+            _window.taskText.Text = _window.taskText.Text.Insert(_intelliPos, newText);
+            _window.taskText.CaretIndex = _intelliPos + newText.Length;
+
+            _window.taskText.Focus();
+        }
+
+
+        #endregion
+
+        #region Print Methods
 
         public void SetPrintControlsVisibility(bool PrintControlsVisibility)
         {
@@ -1118,5 +1160,6 @@ namespace Client
 
         }
 
+        #endregion
     }
 }
