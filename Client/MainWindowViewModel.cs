@@ -61,7 +61,7 @@ namespace Client
             Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
             _changefile = new FileChangeObserver();
-            _changefile.OnFileChanged += () => _window.Dispatcher.BeginInvoke(new Action(Refresh));
+            _changefile.OnFileChanged += () => _window.Dispatcher.BeginInvoke(new Action(ReloadFile));
 
             SortType = (SortType)User.Default.CurrentSort;
 
@@ -89,7 +89,7 @@ namespace Client
             }
         }
 
-        private void Reload()
+        public void ReloadFile()
         {
             try
             {
@@ -99,11 +99,6 @@ namespace Client
             {
                 ex.Handle("Error loading tasks");
             }
-        }
-
-        private void Refresh()
-        {
-            Reload();
             UpdateDisplayedTasks();
         }
 
@@ -235,21 +230,12 @@ namespace Client
         {
         	if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) && key == Key.C)
 		    {
-		        var currentTask = _window.lbTasks.SelectedItem as Task;
-		        if (currentTask != null)
-		        {
-		            _window.taskText.Text = currentTask.Raw;
-		            _window.taskText.Select(_window.taskText.Text.Length, 0); //puts cursor at the end
-		            _window.taskText.Focus();
-		        }
+                CopySelectedTaskToTextBox();
 		        return;
 		    }
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && key == Key.C)
             {
-                var currentTask = _window.lbTasks.SelectedItem as Task;
-                if (currentTask != null)
-                    Clipboard.SetText(currentTask.Raw);
-
+                CopySelectedTasksToClipboard();
                 return;
             }
 
@@ -257,10 +243,10 @@ namespace Client
             switch (key)
             {
                 case Key.C:
-                    _window.File_New(null, null);
+                    NewFile();
                     return;
                 case Key.O:
-                    _window.File_Open(null, null);
+                    OpenFile();
                     return;
             }
 
@@ -275,107 +261,49 @@ namespace Client
             switch (key)
             {
                 case Key.N:
-                    // create one-line string of all filter but not ones beginning with a minus, and use as the starting text for a new task
-                    string filters = "";
-                    foreach (var filter in User.Default.FilterText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        if (filter.Substring(0, 1) != "-")
-                        {
-                            if (filter.Contains("due:active"))
-                                filters = filters + " " + "due:today"; // If the current filter is "active", replace it here with "today"
-                            else
-                                filters = filters + " " + filter;
-                        }
-                    }
-
-                    _window.taskText.Text = filters;
-                    _window.taskText.Focus();
-                    break;
+                    AddNewTask();
+                    return;
                 case Key.OemQuestion:
-                    _window.Help(null, null);
-                    break;
+                    ShowHelpDialog();
+                    return;
                 case Key.F:
                     ShowFilterDialog();
-                    break;
-
+                    return;
                 case Key.RightShift:
-                    // Add Calendar to the titlebar
                     AddCalendarToTitle();
-                    break;
-
+                    return;
                 // Filter Presets
                 case Key.NumPad0:
                 case Key.D0:
-                    User.Default.FilterText = "";
-					UpdateDisplayedTasks();
-                    User.Default.Save();
-                    break;
-
+                    ApplyFilterPreset0();
+                    return;
                 case Key.NumPad1:
                 case Key.D1:
-                    User.Default.FilterText = User.Default.FilterTextPreset1;
-					UpdateDisplayedTasks();
-                    User.Default.Save();
-                    break;
-
+                    ApplyFilterPreset1();
+                    return;
                 case Key.NumPad2:
                 case Key.D2:
-                    User.Default.FilterText = User.Default.FilterTextPreset2;
-					UpdateDisplayedTasks();
-                    User.Default.Save();
-                    break;
-
+                    ApplyFilterPreset2();
+                    return;
                 case Key.NumPad3:
                 case Key.D3:
-                    User.Default.FilterText = User.Default.FilterTextPreset3;
-					UpdateDisplayedTasks();
-                    User.Default.Save();
-                    break;
-
+                    ApplyFilterPreset3();
+                    return;
                 case Key.X:
-                    if (!IsTaskSelected()) break;
-                    ToggleComplete((Task)_window.lbTasks.SelectedItem);
-					UpdateDisplayedTasks();
-                    break;
+                    ToggleCompletion();
+                    return;
                 case Key.D:
-                    if (!IsTaskSelected()) break;
-                    if (modifierKeys != ModifierKeys.Windows)
-                    {
-                        var res = MessageBox.Show("Permanently delete the selected task?",
-                                     "Confirm Delete",
-                                     MessageBoxButton.YesNo,
-                                     MessageBoxImage.Warning);
-
-                        if (res == MessageBoxResult.Yes)
-                        {
-                            try
-                            {
-                                _taskList.Delete((Task)_window.lbTasks.SelectedItem);
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Handle("Error deleting task");
-                            }
-
-							UpdateDisplayedTasks();
-                        }
-                    }
-                    break;
+                    DeleteTask();
+                    return;
                 case Key.U:
                 case Key.F2:
-                    if (!IsTaskSelected()) break;
-                    _updating = (Task)_window.lbTasks.SelectedItem;
-                    _window.taskText.Text = _updating.ToString();
-                    _window.taskText.Select(_window.taskText.Text.Length, 0); //puts cursor at the end
-                    _window.taskText.Focus();
-                    break;
+                    UpdateTask();
+                    return;
                 case Key.P:
-                    if (!IsTaskSelected()) break;
-                    PostponeTask((Task)_window.lbTasks.SelectedItem, ShowPostponeDialog());
-                    UpdateDisplayedTasks();
-                    break;
+                    PostponeTask();
+                    return;
                 default:
-                    break;
+                    return;
             }
         }
 
@@ -383,54 +311,20 @@ namespace Client
         {
             if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt) && _window.lbTasks.HasItems)
             {
-                var selected = _window.lbTasks.SelectedItem as Task;
-                if (selected == null)
-                    return;
-
-                var updated = new Task(selected.Raw);
+                if (!IsTaskSelected()) return;
 
                 switch (e.SystemKey)
                 {
                     case Key.Up:
-                        updated.IncPriority();
-                        try
-                        {
-                            _taskList.Update(selected, updated);
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Handle("Error while changing priority");
-                        }
-
-                        Refresh();
-
+                        IncreasePriority();
                         break;
 
                     case Key.Down:
-                        updated.DecPriority();
-                        try
-                        {
-                            _taskList.Update(selected, updated);
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Handle("Error while changing priority");
-                        }
-
-                        Refresh();
+                        DecreasePriority();
                         break;
                     case Key.Left:
                     case Key.Right:
-                        updated.SetPriority(' ');
-                        try
-                        {
-                            _taskList.Update(selected, updated);
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Handle("Error while changing priority");
-                        }
-                        Refresh();
+                        RemovePriority();
                         break;
                 }
                 _window.lbTasks.Focus();
@@ -469,13 +363,13 @@ namespace Client
             switch (text)
             {
                 case "?":
-                    _window.Help(null, null);
-                    break;
-
+                    ShowHelpDialog();
+                    return;
                 case ".":
-                    Reload();
-                    UpdateDisplayedTasks();
-                    break;
+                    ReloadFile();
+                    return;
+                default:
+                    return;
             }
         }
 
@@ -551,6 +445,49 @@ namespace Client
             return filteredTasks;
         }
 
+        public void ApplyFilterPreset0()
+        {
+            ApplyFilterPreset(0);
+        }
+
+        public void ApplyFilterPreset1()
+        {
+            ApplyFilterPreset(1);
+        }
+
+        public void ApplyFilterPreset2()
+        {
+            ApplyFilterPreset(2);
+        }
+
+        public void ApplyFilterPreset3()
+        {
+            ApplyFilterPreset(3);
+        }
+
+        private void ApplyFilterPreset(int filterPresetNumber)
+        {
+            switch (filterPresetNumber)
+            {
+                case 0:
+                    User.Default.FilterText = "";
+                    break;
+                case 1:
+                    User.Default.FilterText = User.Default.FilterTextPreset1;
+                    break;
+                case 2:
+                    User.Default.FilterText = User.Default.FilterTextPreset2;
+                    break;
+                case 3:
+                    User.Default.FilterText = User.Default.FilterTextPreset3;
+                    break;
+                default:
+                    return;
+            }
+            UpdateDisplayedTasks();
+            User.Default.Save();
+        }
+        
         #endregion
 
         #region Sort Methods
@@ -600,6 +537,145 @@ namespace Client
         #endregion
 
         #region Task Methods
+
+        public void AddNewTask()
+        {
+            // create one-line string of all filter but not ones beginning with a minus, and use as the starting text for a new task
+            string filters = "";
+            foreach (var filter in User.Default.FilterText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (filter.Substring(0, 1) != "-")
+                {
+                    if (filter.Contains("due:active"))
+                        filters = filters + " " + "due:today"; // If the current filter is "active", replace it here with "today"
+                    else
+                        filters = filters + " " + filter;
+                }
+            }
+
+            _window.taskText.Text = filters;
+            _window.taskText.Focus();
+        }
+
+        public void UpdateTask()
+        {
+            if (!IsTaskSelected()) return;
+            _updating = (Task)_window.lbTasks.SelectedItem;
+            _window.taskText.Text = _updating.ToString();
+            _window.taskText.Select(_window.taskText.Text.Length, 0); //puts cursor at the end
+            _window.taskText.Focus();
+        }
+
+        public void DeleteTask()
+        {
+            if (!IsTaskSelected()) return;
+            var res = MessageBox.Show("Permanently delete the selected task?",
+                            "Confirm Delete",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Warning);
+
+            if (res == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    _taskList.Delete((Task)_window.lbTasks.SelectedItem);
+                }
+                catch (Exception ex)
+                {
+                    ex.Handle("Error deleting task");
+                }
+
+                UpdateDisplayedTasks();
+            }
+        }
+
+        public void CopySelectedTaskToTextBox()
+        {
+            var currentTask = _window.lbTasks.SelectedItem as Task;
+            if (currentTask != null)
+            {
+                _window.taskText.Text = currentTask.Raw;
+                _window.taskText.Select(_window.taskText.Text.Length, 0); // puts cursor at the end
+                _window.taskText.Focus();
+            }
+        }
+
+        public void ToggleCompletion()
+        {
+            if (!IsTaskSelected()) return;
+            ToggleComplete((Task)_window.lbTasks.SelectedItem);
+            UpdateDisplayedTasks();
+        }
+
+        public void IncreasePriority()
+        {
+            Task selectedTask = (Task)_window.lbTasks.SelectedItem;
+            if (selectedTask == null) return;
+
+            try
+            {
+                Task newTask = new Task(selectedTask.Raw);
+                newTask.IncPriority();
+                _taskList.Update(selectedTask, newTask);
+            }
+            catch (Exception ex)
+            {
+                ex.Handle("Error while changing priority.");
+            }
+            finally
+            {
+                ReloadFile();
+            }
+        }
+
+        public void DecreasePriority()
+        {
+            Task selectedTask = (Task)_window.lbTasks.SelectedItem;
+            if (selectedTask == null) return;
+
+            try
+            {
+                Task newTask = new Task(selectedTask.Raw);
+                newTask.DecPriority();
+                _taskList.Update(selectedTask, newTask);
+            }
+            catch (Exception ex)
+            {
+                ex.Handle("Error while changing priority.");
+            }
+            finally
+            {
+                ReloadFile();
+            }
+        }
+
+        public void RemovePriority()
+        {
+            if (!IsTaskSelected()) return;
+
+            try
+            {
+                Task selectedTask = (Task)_window.lbTasks.SelectedItem;
+                Task newTask = new Task(selectedTask.Raw);
+                newTask.SetPriority(' ');
+                _taskList.Update(selectedTask, newTask);
+            }
+            catch (Exception ex)
+            {
+                ex.Handle("Error while changing priority.");
+            }
+            finally
+            {
+                ReloadFile();
+            }
+        }
+
+        public void PostponeTask()
+        {
+            if (!IsTaskSelected()) return;
+            PostponeTask((Task)_window.lbTasks.SelectedItem, ShowPostponeDialog());
+            UpdateDisplayedTasks();
+        }
 
         private void ToggleComplete(Task task)
         {
@@ -691,6 +767,22 @@ namespace Client
 
             return iDays;
 
+        }
+
+        public void CopySelectedTasksToClipboard()
+        {
+            int itemCount = 0;
+            StringBuilder clipboardText = new StringBuilder("");
+            foreach (var item in _window.lbTasks.SelectedItems)
+            {
+                itemCount++;
+                if (itemCount > 1)
+                {
+                    clipboardText.Append(Environment.NewLine);
+                }
+                clipboardText.Append(item.ToString());
+            }
+            Clipboard.SetText(clipboardText.ToString());
         }
 
         #endregion
@@ -808,7 +900,7 @@ namespace Client
         }
 
         //  Add a quick calendar of the next 7 days to the title bar.  If the calendar is already displayed, toggle it off.
-        private void AddCalendarToTitle()
+        public void AddCalendarToTitle()
         {
             var title = _window.Title;
 
