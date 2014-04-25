@@ -33,6 +33,7 @@ namespace Client
             cbMinToSysTray.IsChecked = User.Default.MinimiseToSystemTray;
             cbRequireCtrlEnter.IsChecked = User.Default.RequireCtrlEnter;
             cbAllowGrouping.IsChecked = User.Default.AllowGrouping;
+            cbMoveFocusToTaskListAfterAddingNewTask.IsChecked = User.Default.MoveFocusToTaskListAfterAddingNewTask;
             this.TaskListFont = taskFont;
         }
 
@@ -103,7 +104,6 @@ namespace Client
             {
                 this.TaskListFont = taskFontDialog.Font;
             }
-
         }
     }
 }

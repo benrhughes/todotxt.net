@@ -335,7 +335,7 @@ namespace Client
             }
 
             //Set the menu item to Bold to easily identify if there is a filter in force
-            _window.filterMenu.FontWeight = User.Default.FilterText.Length == 0 ? FontWeights.Normal : FontWeights.Bold;
+            _window.filterMenu.FontWeight = User.Default.FilterText.Length == 0 ? FontWeights.Normal : FontWeights.Bold;            
             _window.lbTasks.Focus();
         }
 
@@ -614,6 +614,7 @@ namespace Client
             {
                 User.Default.ArchiveFilePath = o.tbArchiveFile.Text;
                 User.Default.AutoArchive = o.cbAutoArchive.IsChecked.Value;
+                User.Default.MoveFocusToTaskListAfterAddingNewTask = o.cbMoveFocusToTaskListAfterAddingNewTask.IsChecked.Value;
                 User.Default.AutoRefresh = o.cbAutoRefresh.IsChecked.Value;
                 User.Default.FilterCaseSensitive = o.cbCaseSensitiveFilter.IsChecked.Value;
                 User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
@@ -824,7 +825,15 @@ namespace Client
 				UpdateDisplayedTasks();
 
                 _window.Intellisense.IsOpen = false;
-                _window.taskText.Focus();
+                if (User.Default.MoveFocusToTaskListAfterAddingNewTask)
+                {
+                    _window.lbTasks.Focus();
+                }
+                else
+                {
+                    _window.taskText.Focus();
+                }
+                
 
                 return;
             }

@@ -5,21 +5,22 @@
         ResizeMode="NoResize"
         WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
     <Grid>
-        <Label Content="Archive File" Height="28" HorizontalAlignment="Left" Margin="12,12,0,0" Name="label1" VerticalAlignment="Top" />
-        <TextBox HorizontalAlignment="Right" Margin="0,14,94,0" Name="tbArchiveFile" Width="296" Height="22" VerticalAlignment="Top" />
+        <Label Content="Archive File" Height="28" HorizontalAlignment="Left" Margin="25,12,0,0" Name="label1" VerticalAlignment="Top" />
+        <TextBox HorizontalAlignment="Right" Margin="0,14,96,0" Name="tbArchiveFile" Width="304" Height="22" VerticalAlignment="Top" />
         <Button Content="Select..." Height="23" HorizontalAlignment="Left" Margin="415,12,0,0" Name="button1" VerticalAlignment="Top" Width="75" Click="button1_Click" />
-        <CheckBox Content="Automatically archive completed tasks" Height="16" HorizontalAlignment="Left" Margin="88,43,0,0" Name="cbAutoArchive" VerticalAlignment="Top" />
-        <CheckBox Content="Automatically refresh task list from file" Height="16" HorizontalAlignment="Left" Margin="25,140,0,0" Name="cbAutoRefresh" VerticalAlignment="Top" />
+        <CheckBox Content="Automatically archive completed tasks" Height="16" HorizontalAlignment="Left" Margin="106,45,0,0" Name="cbAutoArchive" VerticalAlignment="Top" Width="226" />
+        <CheckBox Content="Move focus to task list after creating new task" Height="16" HorizontalAlignment="Left" Margin="25,138,0,0" Name="cbMoveFocusToTaskListAfterAddingNewTask" VerticalAlignment="Top" Width="283"/>
+        <CheckBox Content="Automatically refresh task list from file" Height="16" HorizontalAlignment="Left" Margin="25,161,0,0" Name="cbAutoRefresh" VerticalAlignment="Top" Width="283" />
         <Button Content="OK" Height="23" HorizontalAlignment="Right" Name="OK" VerticalAlignment="Bottom" Width="75" IsDefault="True" Click="OK_Click" Margin="0,0,94,12" />
         <Button Content="Cancel" Height="23" HorizontalAlignment="Right" Margin="0,0,12,12" Name="Cancel" VerticalAlignment="Bottom" Width="75" Click="Cancel_Click" IsCancel="True" />
-        <CheckBox Content="Filter text is case-sensitive" Height="16" HorizontalAlignment="Left" Margin="25,165,0,0" Name="cbCaseSensitiveFilter" VerticalAlignment="Top" />
-        <CheckBox Content="Add created date to new tasks" Height="16" HorizontalAlignment="Left" Margin="25,115,0,0" Name="cbAddCreationDate" VerticalAlignment="Top" />
-        <CheckBox Content="Enable debug logging" Height="16" HorizontalAlignment="Left" Margin="25,215,0,0" Name="cbDebugOn" VerticalAlignment="Top" />
-		<CheckBox Content="Minimise to system tray (requires restart)" Height="16" HorizontalAlignment="Left" Margin="25,190,0,0" Name="cbMinToSysTray" VerticalAlignment="Top" />
-        <CheckBox Content="Use Ctrl-Enter to create new task" Height="16" HorizontalAlignment="Left" Margin="25,240,0,0" Name="cbRequireCtrlEnter" VerticalAlignment="Top" />
-        <CheckBox Content="Allow grouping of tasks" Height="16" HorizontalAlignment="Left" Margin="25,265,0,0" Name="cbAllowGrouping" VerticalAlignment="Top" />
+        <CheckBox Content="Filter text is case-sensitive" Height="16" HorizontalAlignment="Left" Margin="25,186,0,0" Name="cbCaseSensitiveFilter" VerticalAlignment="Top" Width="283" />
+        <CheckBox Content="Add created date to new tasks" Height="16" HorizontalAlignment="Left" Margin="25,115,0,0" Name="cbAddCreationDate" VerticalAlignment="Top" Width="283" />
+        <CheckBox Content="Enable debug logging" Height="16" HorizontalAlignment="Left" Margin="25,236,0,0" Name="cbDebugOn" VerticalAlignment="Top" Width="283" />
+        <CheckBox Content="Minimise to system tray (requires restart)" Height="16" HorizontalAlignment="Left" Margin="25,211,0,0" Name="cbMinToSysTray" VerticalAlignment="Top" Width="283" />
+        <CheckBox Content="Use Ctrl-Enter to create new task" Height="16" HorizontalAlignment="Left" Margin="25,261,0,0" Name="cbRequireCtrlEnter" VerticalAlignment="Top" Width="283" />
+        <CheckBox Content="Allow grouping of tasks" Height="16" HorizontalAlignment="Left" Margin="25,286,0,0" Name="cbAllowGrouping" VerticalAlignment="Top" Width="283" />
         <Button Content="Select Font..." Height="23" HorizontalAlignment="Left" Margin="415,75,0,0" Name="selectFonts" VerticalAlignment="Top" Width="75" Click="selectFonts_Click" />
-        <Label Content="Current Font" Height="28" HorizontalAlignment="Left" Margin="12,74,0,0" Name="label2" VerticalAlignment="Top" />
-        <TextBox Height="22" HorizontalAlignment="Right" Margin="0,74,94,0" Name="currentFontDisplay" VerticalAlignment="Top" Width="296" IsUndoEnabled="False" IsReadOnly="True" />
+        <Label Content="Current Font" Height="28" HorizontalAlignment="Left" Margin="25,73,0,0" Name="label2" VerticalAlignment="Top" />
+        <TextBox Height="22" HorizontalAlignment="Right" Margin="0,74,96,0" Name="currentFontDisplay" VerticalAlignment="Top" Width="304" IsUndoEnabled="False" IsReadOnly="True" />
     </Grid>
 </Window>
