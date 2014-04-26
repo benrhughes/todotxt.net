@@ -239,6 +239,46 @@ namespace Client
                 return;
             }
 
+            // sort hotkeys
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+            {
+                switch (key)
+                {
+                    case Key.NumPad0:
+                    case Key.D0:
+                        _window.Sort_None(_window.None, null);
+                        return;
+                    case Key.NumPad1:
+                    case Key.D1:
+                        _window.Sort_Alphabetical(_window.Alphabetical, null);
+                        return;
+                    case Key.NumPad2:
+                    case Key.D2:
+                        _window.Sort_Completed(_window.Completed, null);
+                        return;
+                    case Key.NumPad3:
+                    case Key.D3:
+                        _window.Sort_Context(_window.Context, null);
+                        return;
+                    case Key.NumPad4:
+                    case Key.D4:
+                        _window.Sort_DueDate(_window.DueDate, null);
+                        return;
+                    case Key.NumPad5:
+                    case Key.D5:
+                        _window.Sort_Created(_window.Created, null);
+                        return;
+                    case Key.NumPad6:
+                    case Key.D6:
+                        _window.Sort_Priority(_window.Priority, null);
+                        return;
+                    case Key.NumPad7:
+                    case Key.D7:
+                        _window.Sort_Project(_window.Project, null);
+                        return;
+                }
+            }
+
             // create and open can be used when there's no list loaded
             switch (key)
             {

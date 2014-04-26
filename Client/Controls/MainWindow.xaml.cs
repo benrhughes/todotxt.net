@@ -202,56 +202,56 @@ namespace Client
         #endregion
 
         #region sort menu
-        private void Sort_Priority(object sender, RoutedEventArgs e)
+        public void Sort_Priority(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.Priority;
             ViewModel.UpdateDisplayedTasks();
             SetSelected((MenuItem)sender);
         }
 
-        private void Sort_None(object sender, RoutedEventArgs e)
+        public void Sort_None(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.None;
             ViewModel.UpdateDisplayedTasks();
             SetSelected((MenuItem)sender);
         }
 
-        private void Sort_Context(object sender, RoutedEventArgs e)
+        public void Sort_Context(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.Context;
             ViewModel.UpdateDisplayedTasks();
             SetSelected((MenuItem)sender);
         }
 
-        private void Sort_Completed(object sender, RoutedEventArgs e)
+        public void Sort_Completed(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.Completed;
             ViewModel.UpdateDisplayedTasks();
             SetSelected((MenuItem)sender);
         }
 
-        private void Sort_DueDate(object sender, RoutedEventArgs e)
+        public void Sort_DueDate(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.DueDate;
             ViewModel.UpdateDisplayedTasks();
             SetSelected((MenuItem)sender);
         }
 
-        private void Sort_Project(object sender, RoutedEventArgs e)
+        public void Sort_Project(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.Project;
             ViewModel.UpdateDisplayedTasks();
             SetSelected((MenuItem)sender);
         }
 
-        private void Sort_Alphabetical(object sender, RoutedEventArgs e)
+        public void Sort_Alphabetical(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.Alphabetical;
             ViewModel.UpdateDisplayedTasks();
             SetSelected((MenuItem)sender);
         }
 
-        private void Sort_Created(object sender, RoutedEventArgs e)
+        public void Sort_Created(object sender, RoutedEventArgs e)
         {
             ViewModel.SortType = SortType.Created;
             ViewModel.UpdateDisplayedTasks();
