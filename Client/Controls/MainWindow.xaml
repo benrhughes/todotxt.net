@@ -19,14 +19,14 @@
                 <MenuItem Name="menuFileExit" Header="E_xit" Click="File_Exit" />
             </MenuItem>
             <MenuItem Header="_Sort" Name="sortMenu">
-                <MenuItem Header="_Alphabetical" IsCheckable="True" Click="Sort_Alphabetical" />
-                <MenuItem Header="_Completed" IsCheckable="True" Click="Sort_Completed" />
-                <MenuItem Header="Con_text" IsCheckable="True" Click="Sort_Context" />
-                <MenuItem Header="_Due Date" IsCheckable="True" Click="Sort_DueDate" />
-                <MenuItem Header="C_reation Date" IsCheckable="True" Click="Sort_Created" />
-                <MenuItem Header="_Priority" IsCheckable="True" Click="Sort_Priority" />
-                <MenuItem Header="Pro_ject" IsCheckable="True" Click="Sort_Project" />
-                <MenuItem Header="_Order in file" IsCheckable="True" Click="Sort_None" />
+                <MenuItem Header="_Order in file" Name="None" IsCheckable="True" Click="Sort_None" />
+                <MenuItem Header="_Alphabetical" Name="Alphabetical" IsCheckable="True" Click="Sort_Alphabetical" />
+                <MenuItem Header="_Completed" Name="Completed" IsCheckable="True" Click="Sort_Completed" />
+                <MenuItem Header="Con_text" Name="Context" IsCheckable="True" Click="Sort_Context" />
+                <MenuItem Header="_Due Date" Name="DueDate" IsCheckable="True" Click="Sort_DueDate" />
+                <MenuItem Header="C_reation Date" Name="Created" IsCheckable="True" Click="Sort_Created" />
+                <MenuItem Header="_Priority" Name="Priority" IsCheckable="True" Click="Sort_Priority" />
+                <MenuItem Header="Pro_ject" Name="Project" IsCheckable="True" Click="Sort_Project" /> 
             </MenuItem>
             <MenuItem Header="F_ilter" Click="Filter" Name="filterMenu" />
 			<MenuItem Header="_Help" >

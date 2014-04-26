@@ -209,16 +209,27 @@
     - Alt+Down: decrease priority
     - Alt+Left/Right: clear priority
     - Win+Alt+T: Hide/Unhide windows
-    - Ctrl-C: copy task to clipboard
+    - Ctrl+C: copy task to clipboard
     - Ctrl+Shift+C: copy task to edit field
+    
+Sorting shortcuts:
+    - Ctrl+0: None
+    - Ctrl+1: Alphabetical
+    - Ctrl+2: Completed
+    - Ctrl+3: Context
+    - Ctrl+4: DueDate
+    - Ctrl+5: Created
+    - Ctrl+6: Priority
+    - Ctrl+7: Project
 
+    
 Due date syntax:
     - due:2012-09-28
     - due:today
     - due:tomorrow
     - due:friday
 
-Filtering
+Filtering:
     - one free-text filter per line
     - filters are AND'd together
     - to exclude a term, start the line with a '-', eg -@work
