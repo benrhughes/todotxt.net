@@ -20,6 +20,8 @@ namespace Client
 {
     public class MainWindowViewModel
     {
+        #region Properties
+
         private CollectionView _myView;
         private TaskList _taskList;
         private FileChangeObserver _changefile;
@@ -30,22 +32,6 @@ namespace Client
         private int _numberOfItemsInCurrentGroup;
         private List<CollectionViewGroup> _viewGroups;
         private int _nextGroupAtTaskNumber;
-
-
-        public MainWindowViewModel(MainWindow window)
-        {
-            _window = window;
-
-            Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
-
-            _changefile = new FileChangeObserver();
-            _changefile.OnFileChanged += () => _window.Dispatcher.BeginInvoke(new Action(Refresh));
-
-            SortType = (SortType)User.Default.CurrentSort;
-
-            if (!string.IsNullOrEmpty(User.Default.FilePath))
-                LoadTasks(User.Default.FilePath);
-        }
 
         public SortType SortType
         {
@@ -64,6 +50,29 @@ namespace Client
 
         public Help HelpPage { get; private set; }
 
+        #endregion
+
+        #region Constructors
+
+        public MainWindowViewModel(MainWindow window)
+        {
+            _window = window;
+
+            Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
+
+            _changefile = new FileChangeObserver();
+            _changefile.OnFileChanged += () => _window.Dispatcher.BeginInvoke(new Action(ReloadFile));
+
+            SortType = (SortType)User.Default.CurrentSort;
+
+            if (!string.IsNullOrEmpty(User.Default.FilePath))
+                LoadTasks(User.Default.FilePath);
+        }
+
+        #endregion
+
+        #region Task List ListBox Management Methods
+
         public void LoadTasks(string filePath)
         {
             try
@@ -80,174 +89,17 @@ namespace Client
             }
         }
 
-        public void TaskListKeyUp(Key key, ModifierKeys modifierKeys = ModifierKeys.None)
+        public void ReloadFile()
         {
-        	if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) && key == Key.C)
-		    {
-		        var currentTask = _window.lbTasks.SelectedItem as Task;
-		        if (currentTask != null)
-		        {
-		            _window.taskText.Text = currentTask.Raw;
-		            _window.taskText.Select(_window.taskText.Text.Length, 0); //puts cursor at the end
-		            _window.taskText.Focus();
-		        }
-		        return;
-		    }
-            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && key == Key.C)
+            try
             {
-                var currentTask = _window.lbTasks.SelectedItem as Task;
-                if (currentTask != null)
-                    Clipboard.SetText(currentTask.Raw);
-
-                return;
+                _taskList.ReloadTasks();
             }
-
-            // create and open can be used when there's no list loaded
-            switch (key)
+            catch (Exception ex)
             {
-                case Key.C:
-                    _window.File_New(null, null);
-                    return;
-                case Key.O:
-                    _window.File_Open(null, null);
-                    return;
+                ex.Handle("Error loading tasks");
             }
-
-            if (_taskList == null)
-                return;
-
-            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
-            {
-                return;
-            }
-
-            switch (key)
-            {
-                case Key.N:
-                    // create one-line string of all filter but not ones beginning with a minus, and use as the starting text for a new task
-                    string filters = "";
-                    foreach (var filter in User.Default.FilterText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        if (filter.Substring(0, 1) != "-")
-                        {
-                            if (filter.Contains("due:active"))
-                                filters = filters + " " + "due:today"; // If the current filter is "active", replace it here with "today"
-                            else
-                                filters = filters + " " + filter;
-                        }
-                    }
-
-                    _window.taskText.Text = filters;
-                    _window.taskText.Focus();
-                    break;
-                case Key.OemQuestion:
-                    _window.Help(null, null);
-                    break;
-                case Key.F:
-                    ShowFilterDialog();
-                    break;
-
-                case Key.RightShift:
-                    // Add Calendar to the titlebar
-                    AddCalendarToTitle();
-                    break;
-
-                // Filter Presets
-                case Key.NumPad0:
-                case Key.D0:
-                    User.Default.FilterText = "";
-					UpdateDisplayedTasks();
-                    User.Default.Save();
-                    break;
-
-                case Key.NumPad1:
-                case Key.D1:
-                    User.Default.FilterText = User.Default.FilterTextPreset1;
-					UpdateDisplayedTasks();
-                    User.Default.Save();
-                    break;
-
-                case Key.NumPad2:
-                case Key.D2:
-                    User.Default.FilterText = User.Default.FilterTextPreset2;
-					UpdateDisplayedTasks();
-                    User.Default.Save();
-                    break;
-
-                case Key.NumPad3:
-                case Key.D3:
-                    User.Default.FilterText = User.Default.FilterTextPreset3;
-					UpdateDisplayedTasks();
-                    User.Default.Save();
-                    break;
-
-                case Key.X:
-                    if (!IsTaskSelected()) break;
-                    ToggleComplete((Task)_window.lbTasks.SelectedItem);
-					UpdateDisplayedTasks();
-                    break;
-                case Key.D:
-                    if (!IsTaskSelected()) break;
-                    if (modifierKeys != ModifierKeys.Windows)
-                    {
-                        var res = MessageBox.Show("Permanently delete the selected task?",
-                                     "Confirm Delete",
-                                     MessageBoxButton.YesNo,
-                                     MessageBoxImage.Warning);
-
-                        if (res == MessageBoxResult.Yes)
-                        {
-                            try
-                            {
-                                _taskList.Delete((Task)_window.lbTasks.SelectedItem);
-                            }
-                            catch (Exception ex)
-                            {
-                                ex.Handle("Error deleting task");
-                            }
-
-							UpdateDisplayedTasks();
-                        }
-                    }
-                    break;
-                case Key.U:
-                case Key.F2:
-                    if (!IsTaskSelected()) break;
-                    _updating = (Task)_window.lbTasks.SelectedItem;
-                    _window.taskText.Text = _updating.ToString();
-                    _window.taskText.Select(_window.taskText.Text.Length, 0); //puts cursor at the end
-                    _window.taskText.Focus();
-                    break;
-                case Key.P:
-                    if (!IsTaskSelected()) break;
-                    PostponeTask((Task)_window.lbTasks.SelectedItem, ShowPostponeDialog());
-                    UpdateDisplayedTasks();
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public void TaskListTextInput(TextCompositionEventArgs e)
-        {
-            var text = e.Text.ToLowerInvariant();
-
-            switch (text)
-            {
-                case "?":
-                    _window.Help(null, null);
-                    break;
-
-                case ".":
-                    Reload();
-                    UpdateDisplayedTasks();
-                    break;
-            }
-        }
-
-        private bool IsTaskSelected()
-        {
-            return _window.lbTasks.SelectedItem != null;
+            UpdateDisplayedTasks();
         }
 
         public void UpdateDisplayedTasks()
@@ -281,9 +133,9 @@ namespace Client
                     case SortType.Priority:
                         sortProperty = "Priority";
                         break;
-					case SortType.Created:
+                    case SortType.Created:
                         sortProperty = "CreationDate";
-						break;
+                        break;
                 }
 
                 _myView = (CollectionView)CollectionViewSource.GetDefaultView(sortedTaskList);
@@ -317,7 +169,7 @@ namespace Client
             {
                 var match = _taskList.Tasks.FirstOrDefault(x => x.Body.Equals(selected.Body, StringComparison.InvariantCultureIgnoreCase));
                 if (match == null)
-                {            
+                {
                     if (selectedIndex == _window.lbTasks.Items.Count)
                     {
                         _window.lbTasks.SelectedIndex = selectedIndex - 1;
@@ -339,23 +191,191 @@ namespace Client
             _window.lbTasks.Focus();
         }
 
-        private void Refresh()
+        private bool IsTaskSelected()
         {
-            Reload();
-			UpdateDisplayedTasks();
+            return _window.lbTasks.SelectedItem != null;
         }
 
-        private void Reload()
+        /// <summary>
+        /// Helper function to determine if the correct keysequence has been entered to create a task.
+        /// Added to enable the check for Ctrl-Enter if set in options.
+        /// </summary>
+        /// <param name="e">The stroked key and any modifiers.</param>
+        /// <returns>true if the task should be added to the list, false otherwise.</returns>
+        private bool ShouldAddTask(KeyEventArgs e)
         {
-            try
+            const Key NewTaskKey = Key.Enter;
+
+            if (e.Key == NewTaskKey)
             {
-                _taskList.ReloadTasks();
+                if (User.Default.RequireCtrlEnter)
+                {
+                    if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+                        return true;
+                }
+                else
+                {
+                    return true;
+                }
             }
-            catch (Exception ex)
+
+            return false;
+        }
+
+        #endregion
+
+        #region Task List ListBox Event Handling Methods
+
+        public void TaskListKeyUp(Key key, ModifierKeys modifierKeys = ModifierKeys.None)
+        {
+        	if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) && key == Key.C)
+		    {
+                CopySelectedTaskToTextBox();
+		        return;
+		    }
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && key == Key.C)
             {
-                ex.Handle("Error loading tasks");
+                CopySelectedTasksToClipboard();
+                return;
+            }
+
+            // create and open can be used when there's no list loaded
+            switch (key)
+            {
+                case Key.C:
+                    NewFile();
+                    return;
+                case Key.O:
+                    OpenFile();
+                    return;
+            }
+
+            if (_taskList == null)
+                return;
+
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+            {
+                return;
+            }
+
+            switch (key)
+            {
+                case Key.N:
+                    AddNewTask();
+                    return;
+                case Key.OemQuestion:
+                    ShowHelpDialog();
+                    return;
+                case Key.F:
+                    ShowFilterDialog();
+                    return;
+                case Key.RightShift:
+                    AddCalendarToTitle();
+                    return;
+                // Filter Presets
+                case Key.NumPad0:
+                case Key.D0:
+                    ApplyFilterPreset0();
+                    return;
+                case Key.NumPad1:
+                case Key.D1:
+                    ApplyFilterPreset1();
+                    return;
+                case Key.NumPad2:
+                case Key.D2:
+                    ApplyFilterPreset2();
+                    return;
+                case Key.NumPad3:
+                case Key.D3:
+                    ApplyFilterPreset3();
+                    return;
+                case Key.X:
+                    ToggleCompletion();
+                    return;
+                case Key.D:
+                    DeleteTask();
+                    return;
+                case Key.U:
+                case Key.F2:
+                    UpdateTask();
+                    return;
+                case Key.P:
+                    PostponeTask();
+                    return;
+                default:
+                    return;
             }
         }
+
+        public void TaskListPreviewKeyDown(KeyEventArgs e)
+        {
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt) && _window.lbTasks.HasItems)
+            {
+                if (!IsTaskSelected()) return;
+
+                switch (e.SystemKey)
+                {
+                    case Key.Up:
+                        IncreasePriority();
+                        break;
+
+                    case Key.Down:
+                        DecreasePriority();
+                        break;
+                    case Key.Left:
+                    case Key.Right:
+                        RemovePriority();
+                        break;
+                }
+                _window.lbTasks.Focus();
+                return;
+            }
+
+            switch (e.Key)
+            {
+                case Key.J:
+                case Key.Down:
+                    if (_window.lbTasks.SelectedIndex < _window.lbTasks.Items.Count - 1)
+                    {
+                        _window.lbTasks.SelectedIndex++;
+                        _window.lbTasks.ScrollIntoView(_window.lbTasks.Items[_window.lbTasks.SelectedIndex]);
+                    }
+                    e.Handled = true;
+                    break;
+                case Key.K:
+                case Key.Up:
+                    if (_window.lbTasks.SelectedIndex > 0)
+                    {
+                        _window.lbTasks.ScrollIntoView(_window.lbTasks.Items[_window.lbTasks.SelectedIndex - 1]);
+                        _window.lbTasks.SelectedIndex = _window.lbTasks.SelectedIndex - 1;
+                    }
+                    e.Handled = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void TaskListTextInput(TextCompositionEventArgs e)
+        {
+            var text = e.Text.ToLowerInvariant();
+
+            switch (text)
+            {
+                case "?":
+                    ShowHelpDialog();
+                    return;
+                case ".":
+                    ReloadFile();
+                    return;
+                default:
+                    return;
+            }
+        }
+
+        #endregion
+
+        #region Filter Methods
 
         public void ShowFilterDialog()
         {
@@ -425,6 +445,53 @@ namespace Client
             return filteredTasks;
         }
 
+        public void ApplyFilterPreset0()
+        {
+            ApplyFilterPreset(0);
+        }
+
+        public void ApplyFilterPreset1()
+        {
+            ApplyFilterPreset(1);
+        }
+
+        public void ApplyFilterPreset2()
+        {
+            ApplyFilterPreset(2);
+        }
+
+        public void ApplyFilterPreset3()
+        {
+            ApplyFilterPreset(3);
+        }
+
+        private void ApplyFilterPreset(int filterPresetNumber)
+        {
+            switch (filterPresetNumber)
+            {
+                case 0:
+                    User.Default.FilterText = "";
+                    break;
+                case 1:
+                    User.Default.FilterText = User.Default.FilterTextPreset1;
+                    break;
+                case 2:
+                    User.Default.FilterText = User.Default.FilterTextPreset2;
+                    break;
+                case 3:
+                    User.Default.FilterText = User.Default.FilterTextPreset3;
+                    break;
+                default:
+                    return;
+            }
+            UpdateDisplayedTasks();
+            User.Default.Save();
+        }
+        
+        #endregion
+
+        #region Sort Methods
+
         public IEnumerable<Task> SortList(IEnumerable<Task> tasks)
         {
             Log.Debug("Sorting {0} tasks by {1}", tasks.Count().ToString(), SortType.ToString());
@@ -467,29 +534,147 @@ namespace Client
             }
         }
 
-        //  Add a quick calendar of the next 7 days to the title bar.  If the calendar is already displayed, toggle it off.
-        private void AddCalendarToTitle()
+        #endregion
+
+        #region Task Methods
+
+        public void AddNewTask()
         {
-            var title = _window.Title;
-
-            if (title.Length < 15)
+            // create one-line string of all filter but not ones beginning with a minus, and use as the starting text for a new task
+            string filters = "";
+            foreach (var filter in User.Default.FilterText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
             {
-                title += "       Calendar:  ";
-
-                for (double i = 0; i < 7; i++)
+                if (filter.Substring(0, 1) != "-")
                 {
-                    var today = DateTime.Now.AddDays(i).ToString("MM-dd");
-                    var today_letter = DateTime.Now.AddDays(i).DayOfWeek.ToString();
-                    today_letter = today_letter.Remove(2);
-                    title += "  " + today_letter + ":" + today;
+                    if (filter.Contains("due:active"))
+                        filters = filters + " " + "due:today"; // If the current filter is "active", replace it here with "today"
+                    else
+                        filters = filters + " " + filter;
                 }
             }
-            else
-            {
-                title = "todotxt.net";
-            }
 
-            _window.Title = title;
+            _window.taskText.Text = filters;
+            _window.taskText.Focus();
+        }
+
+        public void UpdateTask()
+        {
+            if (!IsTaskSelected()) return;
+            _updating = (Task)_window.lbTasks.SelectedItem;
+            _window.taskText.Text = _updating.ToString();
+            _window.taskText.Select(_window.taskText.Text.Length, 0); //puts cursor at the end
+            _window.taskText.Focus();
+        }
+
+        public void DeleteTask()
+        {
+            if (!IsTaskSelected()) return;
+            var res = MessageBox.Show("Permanently delete the selected task?",
+                            "Confirm Delete",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Warning);
+
+            if (res == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    _taskList.Delete((Task)_window.lbTasks.SelectedItem);
+                }
+                catch (Exception ex)
+                {
+                    ex.Handle("Error deleting task");
+                }
+
+                UpdateDisplayedTasks();
+            }
+        }
+
+        public void CopySelectedTaskToTextBox()
+        {
+            var currentTask = _window.lbTasks.SelectedItem as Task;
+            if (currentTask != null)
+            {
+                _window.taskText.Text = currentTask.Raw;
+                _window.taskText.Select(_window.taskText.Text.Length, 0); // puts cursor at the end
+                _window.taskText.Focus();
+            }
+        }
+
+        public void ToggleCompletion()
+        {
+            if (!IsTaskSelected()) return;
+            ToggleComplete((Task)_window.lbTasks.SelectedItem);
+            UpdateDisplayedTasks();
+        }
+
+        public void IncreasePriority()
+        {
+            Task selectedTask = (Task)_window.lbTasks.SelectedItem;
+            if (selectedTask == null) return;
+
+            try
+            {
+                Task newTask = new Task(selectedTask.Raw);
+                newTask.IncPriority();
+                _taskList.Update(selectedTask, newTask);
+            }
+            catch (Exception ex)
+            {
+                ex.Handle("Error while changing priority.");
+            }
+            finally
+            {
+                ReloadFile();
+            }
+        }
+
+        public void DecreasePriority()
+        {
+            Task selectedTask = (Task)_window.lbTasks.SelectedItem;
+            if (selectedTask == null) return;
+
+            try
+            {
+                Task newTask = new Task(selectedTask.Raw);
+                newTask.DecPriority();
+                _taskList.Update(selectedTask, newTask);
+            }
+            catch (Exception ex)
+            {
+                ex.Handle("Error while changing priority.");
+            }
+            finally
+            {
+                ReloadFile();
+            }
+        }
+
+        public void RemovePriority()
+        {
+            if (!IsTaskSelected()) return;
+
+            try
+            {
+                Task selectedTask = (Task)_window.lbTasks.SelectedItem;
+                Task newTask = new Task(selectedTask.Raw);
+                newTask.SetPriority(' ');
+                _taskList.Update(selectedTask, newTask);
+            }
+            catch (Exception ex)
+            {
+                ex.Handle("Error while changing priority.");
+            }
+            finally
+            {
+                ReloadFile();
+            }
+        }
+
+        public void PostponeTask()
+        {
+            if (!IsTaskSelected()) return;
+            PostponeTask((Task)_window.lbTasks.SelectedItem, ShowPostponeDialog());
+            UpdateDisplayedTasks();
         }
 
         private void ToggleComplete(Task task)
@@ -522,29 +707,29 @@ namespace Client
                 ex.Handle("An error occurred while updating the task's completed status");
             }
         }
-        
+
         private void PostponeTask(Task task, int daysToPostpone)
         {
             if (daysToPostpone == 0) // if user entered 0 or junk
             {
                 return;
             }
-        
+
             // Get due date of the selected task. 
             // If current item doesn't have a due date, use today as the due date.
-            DateTime oldDueDate = (task.DueDate.Length > 0) ? 
-                Convert.ToDateTime(task.DueDate) : 
+            DateTime oldDueDate = (task.DueDate.Length > 0) ?
+                Convert.ToDateTime(task.DueDate) :
                 DateTime.Today;
-        
+
             // Add days to that date to create the new due date.
             DateTime newDueDate = oldDueDate.AddDays(daysToPostpone);
-        
+
             // If the item has a due date, exchange the current due date with the new.
             // Else if the item does not have a due date, append the new due date to the task.
             string updatedRaw = (task.DueDate.Length > 0) ?
                 task.Raw.Replace("due:" + task.DueDate, "due:" + newDueDate.ToString("yyyy-MM-dd")) :
                 task.Raw.ToString() + " due:" + newDueDate.ToString("yyyy-MM-dd");
-        
+
             // update the task
             try
             {
@@ -584,6 +769,54 @@ namespace Client
 
         }
 
+        public void CopySelectedTasksToClipboard()
+        {
+            int itemCount = 0;
+            StringBuilder clipboardText = new StringBuilder("");
+            foreach (var item in _window.lbTasks.SelectedItems)
+            {
+                itemCount++;
+                if (itemCount > 1)
+                {
+                    clipboardText.Append(Environment.NewLine);
+                }
+                clipboardText.Append(item.ToString());
+            }
+            Clipboard.SetText(clipboardText.ToString());
+        }
+
+        #endregion
+
+        #region File Methods
+
+        public void NewFile()
+        {
+            var dialog = new SaveFileDialog();
+            dialog.FileName = "todo.txt";
+            dialog.DefaultExt = ".txt";
+            dialog.Filter = "Text documents (.txt)|*.txt";
+
+            var res = dialog.ShowDialog();
+
+            if (res.Value)
+            {
+                File.WriteAllText(dialog.FileName, "");
+                LoadTasks(dialog.FileName);
+            }
+        }
+
+        public void OpenFile()
+        {
+            var dialog = new OpenFileDialog();
+            dialog.DefaultExt = ".txt";
+            dialog.Filter = "Text documents (.txt)|*.txt";
+
+            var res = dialog.ShowDialog();
+
+            if (res.Value)
+                LoadTasks(dialog.FileName);
+        }
+        
         public void ArchiveCompleted()
         {
             if (!File.Exists(User.Default.ArchiveFilePath))
@@ -614,6 +847,7 @@ namespace Client
             {
                 User.Default.ArchiveFilePath = o.tbArchiveFile.Text;
                 User.Default.AutoArchive = o.cbAutoArchive.IsChecked.Value;
+                User.Default.MoveFocusToTaskListAfterAddingNewTask = o.cbMoveFocusToTaskListAfterAddingNewTask.IsChecked.Value;
                 User.Default.AutoRefresh = o.cbAutoRefresh.IsChecked.Value;
                 User.Default.FilterCaseSensitive = o.cbCaseSensitiveFilter.IsChecked.Value;
                 User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
@@ -640,33 +874,9 @@ namespace Client
             }
         }
 
-        public void NewFile()
-        {
-            var dialog = new SaveFileDialog();
-            dialog.FileName = "todo.txt";
-            dialog.DefaultExt = ".txt";
-            dialog.Filter = "Text documents (.txt)|*.txt";
+        #endregion
 
-            var res = dialog.ShowDialog();
-
-            if (res.Value)
-            {
-                File.WriteAllText(dialog.FileName, "");
-                LoadTasks(dialog.FileName);
-            }
-        }
-
-        public void OpenFile()
-        {
-            var dialog = new OpenFileDialog();
-            dialog.DefaultExt = ".txt";
-            dialog.Filter = "Text documents (.txt)|*.txt";
-
-            var res = dialog.ShowDialog();
-
-            if (res.Value)
-                LoadTasks(dialog.FileName);
-        }
+        #region Help Methods
 
         public void ShowHelpDialog()
         {
@@ -689,88 +899,34 @@ namespace Client
             Process.Start(Resource.SiteUrl);
         }
 
-        public void TaskListPreviewKeyDown(KeyEventArgs e)
+        //  Add a quick calendar of the next 7 days to the title bar.  If the calendar is already displayed, toggle it off.
+        public void AddCalendarToTitle()
         {
-            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt) && _window.lbTasks.HasItems)
+            var title = _window.Title;
+
+            if (title.Length < 15)
             {
-                var selected = _window.lbTasks.SelectedItem as Task;
-                if (selected == null)
-                    return;
+                title += "       Calendar:  ";
 
-                var updated = new Task(selected.Raw);
-
-                switch (e.SystemKey)
+                for (double i = 0; i < 7; i++)
                 {
-                    case Key.Up:
-                        updated.IncPriority();
-                        try
-                        {
-                            _taskList.Update(selected, updated);
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Handle("Error while changing priority");
-                        }
-
-                        Refresh();
-
-                        break;
-
-                    case Key.Down:
-                        updated.DecPriority();
-                        try
-                        {
-                            _taskList.Update(selected, updated);
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Handle("Error while changing priority");
-                        }
-
-                        Refresh();
-                        break;
-                    case Key.Left:
-                    case Key.Right:
-                        updated.SetPriority(' ');
-                        try
-                        {
-                            _taskList.Update(selected, updated);
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.Handle("Error while changing priority");
-                        }
-                        Refresh();
-                        break;
+                    var today = DateTime.Now.AddDays(i).ToString("MM-dd");
+                    var today_letter = DateTime.Now.AddDays(i).DayOfWeek.ToString();
+                    today_letter = today_letter.Remove(2);
+                    title += "  " + today_letter + ":" + today;
                 }
-                _window.lbTasks.Focus();
-                return;
+            }
+            else
+            {
+                title = "todotxt.net";
             }
 
-            switch (e.Key)
-            {
-                case Key.J:
-                case Key.Down:
-                    if (_window.lbTasks.SelectedIndex < _window.lbTasks.Items.Count - 1)
-                    {
-                        _window.lbTasks.SelectedIndex++;
-                        _window.lbTasks.ScrollIntoView(_window.lbTasks.Items[_window.lbTasks.SelectedIndex]);
-                    }
-                    e.Handled = true;
-                    break;
-                case Key.K:
-                case Key.Up:
-                    if (_window.lbTasks.SelectedIndex > 0)
-                    {
-                        _window.lbTasks.ScrollIntoView(_window.lbTasks.Items[_window.lbTasks.SelectedIndex - 1]);
-                        _window.lbTasks.SelectedIndex = _window.lbTasks.SelectedIndex - 1;
-                    }
-                    e.Handled = true;
-                    break;
-                default:
-                    break;
-            }
+            _window.Title = title;
         }
+
+        #endregion
+
+        #region New Task TextBox Event Handling Methods
 
         internal void TaskTextPreviewKeyUp(KeyEventArgs e)
         {
@@ -824,7 +980,15 @@ namespace Client
 				UpdateDisplayedTasks();
 
                 _window.Intellisense.IsOpen = false;
-                _window.taskText.Focus();
+                if (User.Default.MoveFocusToTaskListAfterAddingNewTask)
+                {
+                    _window.lbTasks.Focus();
+                }
+                else
+                {
+                    _window.taskText.Focus();
+                }
+                
 
                 return;
             }
@@ -891,46 +1055,16 @@ namespace Client
             }
         }
 
-        /// <summary>
-        /// Helper function to determine if the correct keysequence has been entered to create a task.
-        /// Added to enable the check for Ctrl-Enter if set in options.
-        /// </summary>
-        /// <param name="e">The stroked key and any modifiers.</param>
-        /// <returns>true if the task should be added to the list, false otherwise.</returns>
-        private bool ShouldAddTask(KeyEventArgs e)
+        public void ShowIntellisense(IEnumerable<string> s, Rect placement)
         {
-            const Key NewTaskKey = Key.Enter;
+            if (s.Count() == 0)
+                return;
 
-            if (e.Key == NewTaskKey)
-            {
-                if (User.Default.RequireCtrlEnter)
-                {
-                    if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
-                        return true;
-                }
-                else
-                {
-                    return true;
-                }
-            }
+            _window.Intellisense.PlacementTarget = _window.taskText;
+            _window.Intellisense.PlacementRectangle = placement;
 
-            return false;
-        }
-
-        /// <summary>
-        /// Helper function to add the chosen text in the intellisense into the task string.
-        /// Created to allow the use of both keyboard and mouse clicks.
-        /// </summary>
-        private void InsertTextIntoTaskString()
-        {
-            _window.Intellisense.IsOpen = false;
-
-            _window.taskText.Text = _window.taskText.Text.Remove(_intelliPos, _window.taskText.CaretIndex - _intelliPos);
-
-            var newText = _window.IntellisenseList.SelectedItem.ToString();
-            _window.taskText.Text = _window.taskText.Text.Insert(_intelliPos, newText);
-            _window.taskText.CaretIndex = _intelliPos + newText.Length;
-
+            _window.IntellisenseList.ItemsSource = s;
+            _window.Intellisense.IsOpen = true;
             _window.taskText.Focus();
         }
 
@@ -957,19 +1091,6 @@ namespace Client
             }
         }
 
-        public void ShowIntellisense(IEnumerable<string> s, Rect placement)
-        {
-            if (s.Count() == 0)
-                return;
-
-            _window.Intellisense.PlacementTarget = _window.taskText;
-            _window.Intellisense.PlacementRectangle = placement;
-
-            _window.IntellisenseList.ItemsSource = s;
-            _window.Intellisense.IsOpen = true;
-            _window.taskText.Focus();
-        }
-
         public void IntellisenseMouseUp()
         {
             InsertTextIntoTaskString();
@@ -979,6 +1100,28 @@ namespace Client
         {
             return _window.taskText.Text.Substring(_intelliPos + 1, _window.taskText.CaretIndex - _intelliPos - 1);
         }
+
+        /// <summary>
+        /// Helper function to add the chosen text in the intellisense into the task string.
+        /// Created to allow the use of both keyboard and mouse clicks.
+        /// </summary>
+        private void InsertTextIntoTaskString()
+        {
+            _window.Intellisense.IsOpen = false;
+
+            _window.taskText.Text = _window.taskText.Text.Remove(_intelliPos, _window.taskText.CaretIndex - _intelliPos);
+
+            var newText = _window.IntellisenseList.SelectedItem.ToString();
+            _window.taskText.Text = _window.taskText.Text.Insert(_intelliPos, newText);
+            _window.taskText.CaretIndex = _intelliPos + newText.Length;
+
+            _window.taskText.Focus();
+        }
+
+
+        #endregion
+
+        #region Print Methods
 
         public void SetPrintControlsVisibility(bool PrintControlsVisibility)
         {
@@ -1109,5 +1252,6 @@ namespace Client
 
         }
 
+        #endregion
     }
 }
