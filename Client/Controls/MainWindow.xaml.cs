@@ -74,7 +74,6 @@ namespace Client
             base.OnClosed(e);
         }
 
-
         /// <summary>
         /// Helper function that converts the values stored in the settings into the font values
         /// and then sets the tasklist font values.
@@ -172,111 +171,282 @@ namespace Client
         }
         #endregion
 
-        #region file menu
+        #region command CanExecute methods
 
-		public void File_New(object sender, RoutedEventArgs e)
-            {
-			ViewModel.NewFile();
-            }
-
-		public void File_Open(object sender, RoutedEventArgs e)
+        private void WhenTasksSelectedCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-			ViewModel.OpenFile();
+            e.CanExecute = (lbTasks.SelectedItems.Count > 0) && (!taskText.IsFocused);
+            e.Handled = true;
         }
 
-        private void File_Exit(object sender, RoutedEventArgs e)
+        private void WhenSingleTaskSelectedCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = (lbTasks.SelectedItems.Count == 1) && (!taskText.IsFocused);
+            e.Handled = true;
+        }
+
+        private void WhenTasksLoadedCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = (lbTasks.Items.Count > 0);
+            e.Handled = true;
+        }
+
+        private void AlwaysCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+            e.Handled = true;
+        }
+
+        #endregion
+
+        #region file menu
+
+        private void OpenFileExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OpenFile();
+        }
+
+        public void NewFileExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.NewFile();
+        }
+
+                private void PrintPreviewFileExecuted(object sender, RoutedEventArgs e)
+        {
+            string printContents;
+			printContents = ViewModel.GetPrintContents();
+
+            mshtml.IHTMLDocument2 doc = webBrowser1.Document as mshtml.IHTMLDocument2;
+            doc.clear();
+            doc.write(printContents);
+            doc.close();
+
+			ViewModel.SetPrintControlsVisibility(true);
+        }
+
+        private void PrintFileExecuted(object sender, RoutedEventArgs e)
+        {
+            string printContents;
+			printContents = ViewModel.GetPrintContents();
+
+            mshtml.IHTMLDocument2 doc = webBrowser1.Document as mshtml.IHTMLDocument2;
+            doc.clear();
+            doc.write(printContents);
+            doc.execCommand("Print", true, 0);
+            doc.close();
+        }
+		
+        private void ArchiveCompletedTasksExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ArchiveCompleted();
+        }
+
+        public void ReloadFileExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ReloadFile();
+        }
+
+        public void OptionsExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ShowOptionsDialog();
+        }
+
+        private void ExitApplicationExecuted(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
 
-        private void File_Archive_Completed(object sender, RoutedEventArgs e)
-        {
-			ViewModel.ArchiveCompleted();
-            }
+        #endregion
 
-		public void File_Options(object sender, RoutedEventArgs e)
+        #region Edit Menu
+
+        private void CopyTasksExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-			ViewModel.ShowOptionsDialog();
+            ViewModel.CopySelectedTasksToClipboard();
+        }
+
+        private void CopySelectedTaskToNewTaskExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            ViewModel.CopySelectedTaskToTextBox();
+        }
+
+        #endregion
+
+        #region task menu
+
+        private void NewTaskExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AddNewTask();
+        }
+
+        private void UpdateTaskExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.UpdateTask();
+        }
+
+        private void DeleteTaskExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DeleteTask();
+        }
+
+        private void ToggleCompletionExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ToggleCompletion();
+        }
+
+        private void IncreasePriorityExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.IncreasePriority();
+        }
+
+        private void DecreasePriorityExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DecreasePriority();
+        }
+
+        private void RemovePriorityExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.RemovePriority();
+        }
+
+        private void PostponeTaskExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.PostponeTask();
         }
 
         #endregion
 
         #region sort menu
-        public void Sort_Priority(object sender, RoutedEventArgs e)
+        
+        private void SetSelectedMenuItem(MenuItem menu, string selectedMenuItemTag)
         {
-			ViewModel.SortType = SortType.Priority;
-            ViewModel.UpdateDisplayedTasks();
-            SetSelected((MenuItem)sender);
+            foreach (var item in menu.Items)
+            {
+                if (item is MenuItem)
+                {
+                    MenuItem menuItem = (MenuItem)item;
+                    menuItem.IsChecked = selectedMenuItemTag.Equals(menuItem.Tag);
+                }
+            }
         }
 
-        public void Sort_None(object sender, RoutedEventArgs e)
+        private void SortByFileOrderExecuted(object sender, RoutedEventArgs e)
         {
-			ViewModel.SortType = SortType.None;
+            ViewModel.SortType = SortType.None;
             ViewModel.UpdateDisplayedTasks();
-            SetSelected((MenuItem)sender);
+            SetSelectedMenuItem(sortMenu, "File");
         }
 
-        public void Sort_Context(object sender, RoutedEventArgs e)
+        private void SortByContextExecuted(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.Context;
             ViewModel.UpdateDisplayedTasks();
-            SetSelected((MenuItem)sender);
+            SetSelectedMenuItem(sortMenu, "Context");
         }
 
-        public void Sort_Completed(object sender, RoutedEventArgs e)
+        private void SortByCompletedExecuted(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.Completed;
             ViewModel.UpdateDisplayedTasks();
-            SetSelected((MenuItem)sender);
+            SetSelectedMenuItem(sortMenu, "Completed");
         }
 
-        public void Sort_DueDate(object sender, RoutedEventArgs e)
+        private void SortByDueDateExecuted(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.DueDate;
             ViewModel.UpdateDisplayedTasks();
-            SetSelected((MenuItem)sender);
+            SetSelectedMenuItem(sortMenu, "DueDate");
         }
 
-        public void Sort_Project(object sender, RoutedEventArgs e)
+        private void SortByProjectExecuted(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.Project;
             ViewModel.UpdateDisplayedTasks();
-            SetSelected((MenuItem)sender);
+            SetSelectedMenuItem(sortMenu, "Project");
         }
 
-        public void Sort_Alphabetical(object sender, RoutedEventArgs e)
+        private void SortByAlphabeticalExecuted(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.Alphabetical;
             ViewModel.UpdateDisplayedTasks();
-            SetSelected((MenuItem)sender);
+            SetSelectedMenuItem(sortMenu, "Alphabetical");
         }
 
-        public void Sort_Created(object sender, RoutedEventArgs e)
+        public void SortByCreatedDateExecuted(object sender, RoutedEventArgs e)
         {
             ViewModel.SortType = SortType.Created;
             ViewModel.UpdateDisplayedTasks();
-			SetSelected((MenuItem)sender);
+            SetSelectedMenuItem(sortMenu, "CreatedDate");
         }
+
+        private void SortByPriorityExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SortType = SortType.Priority;
+            ViewModel.UpdateDisplayedTasks();
+            SetSelectedMenuItem(sortMenu, "Priority");
+        }
+
+        #endregion
+
+        #region filter menu
+
+        private void DefineFiltersExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ShowFilterDialog();
+        }
+
+        private void RemoveFilterExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ApplyFilterPreset0();
+            SetSelectedMenuItem(filterMenu, "None");
+        }
+
+        private void ApplyFilterPreset1Executed(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ApplyFilterPreset1();
+            SetSelectedMenuItem(filterMenu, "Preset1");
+        }
+
+        private void ApplyFilterPreset2Executed(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ApplyFilterPreset2();
+            SetSelectedMenuItem(filterMenu, "Preset2");
+        }
+
+        private void ApplyFilterPreset3Executed(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ApplyFilterPreset3();
+            SetSelectedMenuItem(filterMenu, "Preset3");
+        }
+
         #endregion
 
         #region help menu
-		public void Help(object sender, RoutedEventArgs e)
+
+        private void HelpAboutExecuted(object sender, RoutedEventArgs e)
         {
-			ViewModel.ShowHelpDialog();
+            ViewModel.ShowHelpDialog();
         }
 
-        private void ViewLog(object sender, RoutedEventArgs e)
+        private void ViewLogExecuted(object sender, RoutedEventArgs e)
         {
 			ViewModel.ViewLog();
         }
 
-        private void Donate(object sender, RoutedEventArgs e)
+        private void DonateExecuted(object sender, RoutedEventArgs e)
         {
             ViewModel.Donate();
         }
+
+        private void ShowCalendarExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AddCalendarToTitle();
+        }
+        
         #endregion
 
 		#region update menu
+
 		private void GetUpdate(object sender, RoutedEventArgs e)
         {
 			try 
@@ -292,10 +462,6 @@ namespace Client
         #endregion
 
         #region lbTasks
-        private void lbTasks_PreviewKeyUp(object sender, KeyEventArgs e)
-        {
-			ViewModel.TaskListKeyUp(e.Key, e.KeyboardDevice.Modifiers);
-        }
 
 		// Using KeyDown allows for holding the key to navigate
         private void lbTasks_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -303,16 +469,6 @@ namespace Client
 			ViewModel.TaskListPreviewKeyDown(e);
         }
 
-        private void lbTasks_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            e.Handled = true;
-			ViewModel.TaskListKeyUp(Key.U);
-        }
-
-        private void lbTasks_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            ViewModel.TaskListTextInput(e);
-        }
         #endregion
 
 		#region printing

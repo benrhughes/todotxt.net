@@ -226,148 +226,10 @@ namespace Client
 
         #region Task List ListBox Event Handling Methods
 
-        public void TaskListKeyUp(Key key, ModifierKeys modifierKeys = ModifierKeys.None)
-        {
-        	if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) && key == Key.C)
-		    {
-                CopySelectedTaskToTextBox();
-		        return;
-		    }
-            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control) && key == Key.C)
-            {
-                CopySelectedTasksToClipboard();
-                return;
-            }
-
-            // sort hotkeys
-            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
-            {
-                switch (key)
-                {
-                    case Key.NumPad0:
-                    case Key.D0:
-                        _window.Sort_None(_window.None, null);
-                        return;
-                    case Key.NumPad1:
-                    case Key.D1:
-                        _window.Sort_Alphabetical(_window.Alphabetical, null);
-                        return;
-                    case Key.NumPad2:
-                    case Key.D2:
-                        _window.Sort_Completed(_window.Completed, null);
-                        return;
-                    case Key.NumPad3:
-                    case Key.D3:
-                        _window.Sort_Context(_window.Context, null);
-                        return;
-                    case Key.NumPad4:
-                    case Key.D4:
-                        _window.Sort_DueDate(_window.DueDate, null);
-                        return;
-                    case Key.NumPad5:
-                    case Key.D5:
-                        _window.Sort_Created(_window.Created, null);
-                        return;
-                    case Key.NumPad6:
-                    case Key.D6:
-                        _window.Sort_Priority(_window.Priority, null);
-                        return;
-                    case Key.NumPad7:
-                    case Key.D7:
-                        _window.Sort_Project(_window.Project, null);
-                        return;
-                }
-            }
-
-            // create and open can be used when there's no list loaded
-            switch (key)
-            {
-                case Key.C:
-                    NewFile();
-                    return;
-                case Key.O:
-                    OpenFile();
-                    return;
-            }
-
-            if (_taskList == null)
-                return;
-
-            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
-            {
-                return;
-            }
-
-            switch (key)
-            {
-                case Key.N:
-                    AddNewTask();
-                    return;
-                case Key.OemQuestion:
-                    ShowHelpDialog();
-                    return;
-                case Key.F:
-                    ShowFilterDialog();
-                    return;
-                case Key.RightShift:
-                    AddCalendarToTitle();
-                    return;
-                // Filter Presets
-                case Key.NumPad0:
-                case Key.D0:
-                    ApplyFilterPreset0();
-                    return;
-                case Key.NumPad1:
-                case Key.D1:
-                    ApplyFilterPreset1();
-                    return;
-                case Key.NumPad2:
-                case Key.D2:
-                    ApplyFilterPreset2();
-                    return;
-                case Key.NumPad3:
-                case Key.D3:
-                    ApplyFilterPreset3();
-                    return;
-                case Key.X:
-                    ToggleCompletion();
-                    return;
-                case Key.D:
-                    DeleteTask();
-                    return;
-                case Key.U:
-                case Key.F2:
-                    UpdateTask();
-                    return;
-                case Key.P:
-                    PostponeTask();
-                    return;
-                default:
-                    return;
-            }
-        }
-
         public void TaskListPreviewKeyDown(KeyEventArgs e)
         {
-            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Alt) && _window.lbTasks.HasItems)
+            if (!_window.lbTasks.HasItems)
             {
-                if (!IsTaskSelected()) return;
-
-                switch (e.SystemKey)
-                {
-                    case Key.Up:
-                        IncreasePriority();
-                        break;
-
-                    case Key.Down:
-                        DecreasePriority();
-                        break;
-                    case Key.Left:
-                    case Key.Right:
-                        RemovePriority();
-                        break;
-                }
-                _window.lbTasks.Focus();
                 return;
             }
 
@@ -393,23 +255,6 @@ namespace Client
                     break;
                 default:
                     break;
-            }
-        }
-
-        public void TaskListTextInput(TextCompositionEventArgs e)
-        {
-            var text = e.Text.ToLowerInvariant();
-
-            switch (text)
-            {
-                case "?":
-                    ShowHelpDialog();
-                    return;
-                case ".":
-                    ReloadFile();
-                    return;
-                default:
-                    return;
             }
         }
 
@@ -860,10 +705,14 @@ namespace Client
         public void ArchiveCompleted()
         {
             if (!File.Exists(User.Default.ArchiveFilePath))
-                _window.File_Options(null, null);
+            {
+                ShowOptionsDialog();
+            }
 
             if (!File.Exists(User.Default.ArchiveFilePath))
+            {
                 return;
+            }
 
             var archiveList = new TaskList(User.Default.ArchiveFilePath);
             var completed = _taskList.Tasks.Where(t => t.Completed);
