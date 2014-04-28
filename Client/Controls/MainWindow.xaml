@@ -166,9 +166,9 @@
                 <MenuItem Header="_Completed" IsCheckable="True" Command="{StaticResource SortByCompleted}" InputGestureText="Ctrl+2" Tag="Completed"/>
                 <MenuItem Header="Con_text" IsCheckable="True" Command="{StaticResource SortByContext}" InputGestureText="Ctrl+3" Tag="Context"/>
                 <MenuItem Header="_Due Date" IsCheckable="True" Command="{StaticResource SortByDueDate}" InputGestureText="Ctrl+4" Tag="DueDate"/>
-                <MenuItem Header="C_reation Date" IsCheckable="True" Command="{StaticResource SortByCreatedDate}" InputGestureText="Ctrl+4" Tag="CreatedDate"/>
-                <MenuItem Header="_Priority" IsCheckable="True" Command="{StaticResource SortByPriority}" InputGestureText="Ctrl+5" Tag="Priority"/>
-                <MenuItem Header="Pro_ject" IsCheckable="True" Command="{StaticResource SortByProject}" InputGestureText="Ctrl+6" Tag="Project"/>
+                <MenuItem Header="C_reation Date" IsCheckable="True" Command="{StaticResource SortByCreatedDate}" InputGestureText="Ctrl+5" Tag="CreatedDate"/>
+                <MenuItem Header="_Priority" IsCheckable="True" Command="{StaticResource SortByPriority}" InputGestureText="Ctrl+6" Tag="Priority"/>
+                <MenuItem Header="Pro_ject" IsCheckable="True" Command="{StaticResource SortByProject}" InputGestureText="Ctrl+7" Tag="Project"/>
             </MenuItem>
             <MenuItem Header="Filter" Name="filterMenu">
                 <MenuItem Header="Define _Filters" Command="{StaticResource DefineFilters}" InputGestureText="F" IsCheckable="False" FontWeight="Normal" />
