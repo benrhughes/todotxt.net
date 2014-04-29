@@ -15,6 +15,7 @@ using Microsoft.Win32;
 using System.Reflection;
 using System.Diagnostics;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace Client
 {
@@ -555,6 +556,37 @@ namespace Client
             if (!IsTaskSelected()) return;
             PostponeTask((Task)_window.lbTasks.SelectedItem, -1);
             UpdateDisplayedTasks();
+        }
+
+        public void RemoveDueDate()
+        {
+            if (!IsTaskSelected()) 
+            {
+                return;
+            }
+
+            try
+            {
+                Task selectedTask = (Task)_window.lbTasks.SelectedItem;
+                if (String.IsNullOrEmpty(selectedTask.DueDate))
+                {
+                    return;
+                }
+                
+                Regex rgx = new Regex(@"(?i:\sdue:(\d{4})-(\d{2})-(\d{2}))");
+                string newTaskRawText = rgx.Replace(selectedTask.Raw, "");
+                Task newTask = new Task(newTaskRawText);
+
+                _taskList.Update(selectedTask, newTask);
+            }
+            catch (Exception ex)
+            {
+                ex.Handle("Error while removing due date.");
+            }
+            finally
+            {
+                ReloadFile();
+            }
         }
 
         public void PostponeTask()

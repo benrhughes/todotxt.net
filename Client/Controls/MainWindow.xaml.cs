@@ -324,6 +324,11 @@ namespace Client
             ViewModel.DecrementDueDate();
         }
 
+        private void RemoveDueDateExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.RemoveDueDate();
+        }
+
         #endregion
 
         #region sort menu
