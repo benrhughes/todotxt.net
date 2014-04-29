@@ -192,25 +192,26 @@
   </data>
   <data name="HelpText" xml:space="preserve">
     <value>Keyboard shortcuts:
-    - O: open todo.txt file
-    - C: new todo.txt file
+    - O or Ctrl+O: open todo.txt file
+    - C or Ctrl+N: new todo.txt file
     - N: new task
     - J: next task
     - K: prev task
     - X: toggle task completion
-    - D: delete task (with confirmation)
-    - U: update task
-    - F: filter tasks
-    - P: postpone task X days
-    - Right Shift: quick calendar in title bar
-    - .: reload tasks from file
+    - A: archive tasks
+    - D or Del or Backspace: delete task (with confirmation)
+    - U of F2: update task
+    - F: filter tasks (free-text, one filter condition per line)
+    - . or F5: reload tasks from file
     - ?: show help
     - Alt+Up: increase priority
     - Alt+Down: decrease priority
     - Alt+Left/Right: clear priority
-    - Win+Alt+T: Hide/Unhide windows
-    - Ctrl-C: copy task to clipboard
+    - Ctrl+Alt+Up: increase due date by 1 day
+    - Ctrl+Alt+Down: decrease due date by 1 day
+    - Ctrl+C: copy task to clipboard
     - Ctrl+Shift+C: copy task to edit field
+    - Win+Alt+T: hide/unhide windows
 
 Sorting shortcuts:
     - Ctrl+0: None

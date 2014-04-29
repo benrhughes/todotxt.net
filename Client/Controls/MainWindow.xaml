@@ -25,6 +25,8 @@
         <RoutedUICommand x:Key="ExitApplication" Text="Exit" />
         <!-- Edit Menu commands -->
         <RoutedUICommand x:Key="CopySelectedTaskToNewTask" Text="New Task from Selected Task" />
+        <RoutedUICommand x:Key="EmulateUpArrow" Text="Up" />
+        <RoutedUICommand x:Key="EmulateDownArrow" Text="Down" />
         <!-- Task menu commands -->
         <RoutedUICommand x:Key="NewTask" Text="New Task" />
         <RoutedUICommand x:Key="UpdateTask" Text="Update Task" />
@@ -34,6 +36,8 @@
         <RoutedUICommand x:Key="DecreasePriority" Text="Decrease Priority" />
         <RoutedUICommand x:Key="RemovePriority" Text="Remove Priority" />
         <RoutedUICommand x:Key="PostponeTask" Text="Postpone Task" />
+        <RoutedUICommand x:Key="IncrementDueDate" Text="Increase Due Date By 1 Day" />
+        <RoutedUICommand x:Key="DecrementDueDate" Text="Decrease Due Date By 1 Day" />
         <!-- Sort menu commands -->
         <RoutedUICommand x:Key="SortByAlphabetical" Text="Sort By Alphabetical" />
         <RoutedUICommand x:Key="SortByCompleted" Text="Sort By Completed" />
@@ -76,6 +80,8 @@
         <CommandBinding Command="{StaticResource IncreasePriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="IncreasePriorityExecuted"/>
         <CommandBinding Command="{StaticResource DecreasePriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="DecreasePriorityExecuted"/>
         <CommandBinding Command="{StaticResource RemovePriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="RemovePriorityExecuted"/>
+        <CommandBinding Command="{StaticResource IncrementDueDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="IncrementDueDateExecuted"/>
+        <CommandBinding Command="{StaticResource DecrementDueDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="DecrementDueDateExecuted"/>        
         <!-- Sort menu commands -->
         <CommandBinding Command="{StaticResource SortByAlphabetical}" CanExecute="WhenTasksLoadedCanExecute" Executed="SortByAlphabeticalExecuted"/>
         <CommandBinding Command="{StaticResource SortByCompleted}" CanExecute="WhenTasksLoadedCanExecute" Executed="SortByCompletedExecuted"/>
@@ -96,6 +102,9 @@
         <CommandBinding Command="{StaticResource ViewLog}" CanExecute="AlwaysCanExecute" Executed="ViewLogExecuted"/>
         <CommandBinding Command="{StaticResource Donate}" CanExecute="AlwaysCanExecute" Executed="DonateExecuted"/>
         <CommandBinding Command="{StaticResource ShowCalendar}" CanExecute="AlwaysCanExecute" Executed="ShowCalendarExecuted"/>
+        <!-- Task List commands -->
+        <CommandBinding Command="{StaticResource EmulateUpArrow}" CanExecute="WhenTasksLoadedCanExecute" Executed="EmulateUpArrowExecuted"/>
+        <CommandBinding Command="{StaticResource EmulateDownArrow}" CanExecute="WhenTasksLoadedCanExecute" Executed="EmulateDownArrowExecuted"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <!-- File menu commands -->
@@ -159,6 +168,8 @@
                 <MenuItem Header="_Remove Priority" Command="{StaticResource RemovePriority}" InputGestureText="Alt+Left/Right"/>
                 <Separator />
                 <MenuItem Header="Postpone" Command="{StaticResource PostponeTask}" InputGestureText="P"/>
+                <MenuItem Header="Increase Due Date By 1 Day" Command="{StaticResource IncrementDueDate}" InputGestureText="Ctrl+Alt+Up"/>
+                <MenuItem Header="Decrease Due Date By 1 Day" Command="{StaticResource DecrementDueDate}" InputGestureText="Ctrl+Alt+Down"/>
             </MenuItem>
             <MenuItem Header="_Sort" Name="sortMenu">
                 <MenuItem Header="_Order in file" IsCheckable="True" Command="{StaticResource SortByFileOrder}" InputGestureText="Ctrl+0" Tag="File"/>
@@ -205,7 +216,7 @@
                     />
             </Grid>
         </Popup>
-        <ListBox ItemsSource="{Binding Tasks}" Name="lbTasks" Margin="0,46,0,0" SelectedIndex="0" IsTextSearchEnabled="False" PreviewKeyDown="lbTasks_PreviewKeyDown" AlternationCount="2" BorderBrush="{x:Null}">
+        <ListBox ItemsSource="{Binding Tasks}" Name="lbTasks" Margin="0,46,0,0" SelectedIndex="0" IsTextSearchEnabled="False" AlternationCount="2" BorderBrush="{x:Null}">
             <ListBox.CommandBindings>
                 <CommandBinding Command="ApplicationCommands.Copy" CanExecute="WhenTasksSelectedCanExecute" Executed="CopyTasksExecuted" />
             </ListBox.CommandBindings>
@@ -215,6 +226,11 @@
                 <KeyBinding Command="{StaticResource OpenFile}" Key="O" />
                 <KeyBinding Command="{StaticResource NewFile}" Key="C" />
                 <KeyBinding Command="{StaticResource ArchiveCompletedTasks}" Key="A" />
+                <!-- Up/down commands -->
+                <KeyBinding Command="{StaticResource EmulateUpArrow}" Key="Up" />
+                <KeyBinding Command="{StaticResource EmulateUpArrow}" Key="K" />
+                <KeyBinding Command="{StaticResource EmulateDownArrow}" Key="Down" />
+                <KeyBinding Command="{StaticResource EmulateDownArrow}" Key="J" />
                 <!-- Task menu commands -->
                 <KeyBinding Command="{StaticResource NewTask}" Key="N" />
                 <KeyBinding Command="{StaticResource PrintFile}" Key="P" />
@@ -225,6 +241,8 @@
                 <KeyBinding Command="{StaticResource DeleteTask}" Key="Back" />
                 <KeyBinding Command="{StaticResource ToggleCompletion}" Key="X" />
                 <KeyBinding Command="{StaticResource PostponeTask}" Key="P" />
+                <KeyBinding Command="{StaticResource IncrementDueDate}" Key="Up" Modifiers="Control+Alt"/>
+                <KeyBinding Command="{StaticResource DecrementDueDate}" Key="Down" Modifiers="Control+Alt"/>
                 <KeyBinding Command="{StaticResource IncreasePriority}" Key="Up" Modifiers="Alt"/>
                 <KeyBinding Command="{StaticResource DecreasePriority}" Key="Down" Modifiers="Alt"/>
                 <KeyBinding Command="{StaticResource RemovePriority}" Key="Left" Modifiers="Alt"/>

@@ -23,25 +23,29 @@ Please send your pull requests to the 'dev' branch. If you forget it's not a maj
 
  - Sorting by completed status, priority, project, context, alphabetically due date or the order in the file
  - Sorting respects multiple projects and contexts
- - Remembers preferences for the todo.txt file, sort order, window size and postiion
+ - Remembers preferences for the todo.txt file, sort order, window size and position
  - Manual or automatic moving of completed tasks into an archive (done.txt) file
  - Free text filtering/search
  - Intellisense for projects and contexts
- - Minimise to tray icon - double-click the icon or Win-Alt-T to hide or show the app
- - Keyboard shortcuts
-	- O: open todo.txt file
-	- C: new todo.txt file
+ - Minimize to tray icon - double-click the icon or Win-Alt-T to hide or show the app
+ - Keyboard shortcuts:
+	- O or Ctrl+O: open todo.txt file
+	- C or Ctrl+N: new todo.txt file
 	- N: new task
 	- J: next task
 	- K: prev task
 	- X: toggle task completion
-	- D: delete task (with confirmation)
-	- U: update task
+	- A: archive tasks
+	- D or Del or Backspace: delete task (with confirmation)
+	- U of F2: update task
 	- F: filter tasks (free-text, one filter condition per line)
-	- .: reload tasks from file
+	- . or F5: reload tasks from file
 	- ?: show help
 	- Alt+Up: increase priority
 	- Alt+Down: decrease priority
 	- Alt+Left/Right: clear priority
+ 	- Ctrl+Alt+Up: increase due date by 1 day
+	- Ctrl+Alt+Down: decrease due date by 1 day
 	- Ctrl+C: copy task to clipboard
 	- Ctrl+Shift+C: copy task to edit field
+	- Win+Alt+T: hide/unhide windows

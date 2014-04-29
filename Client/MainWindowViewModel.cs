@@ -226,36 +226,24 @@ namespace Client
 
         #region Task List ListBox Event Handling Methods
 
-        public void TaskListPreviewKeyDown(KeyEventArgs e)
+        public void EmulateDownArrow()
         {
-            if (!_window.lbTasks.HasItems)
+            if (_window.lbTasks.SelectedIndex >= _window.lbTasks.Items.Count - 1)
             {
                 return;
             }
+            _window.lbTasks.SelectedIndex++;
+            _window.lbTasks.ScrollIntoView(_window.lbTasks.Items[_window.lbTasks.SelectedIndex]);
+        }
 
-            switch (e.Key)
+        public void EmulateUpArrow()
+        {
+            if (_window.lbTasks.SelectedIndex <= 0)
             {
-                case Key.J:
-                case Key.Down:
-                    if (_window.lbTasks.SelectedIndex < _window.lbTasks.Items.Count - 1)
-                    {
-                        _window.lbTasks.SelectedIndex++;
-                        _window.lbTasks.ScrollIntoView(_window.lbTasks.Items[_window.lbTasks.SelectedIndex]);
-                    }
-                    e.Handled = true;
-                    break;
-                case Key.K:
-                case Key.Up:
-                    if (_window.lbTasks.SelectedIndex > 0)
-                    {
-                        _window.lbTasks.ScrollIntoView(_window.lbTasks.Items[_window.lbTasks.SelectedIndex - 1]);
-                        _window.lbTasks.SelectedIndex = _window.lbTasks.SelectedIndex - 1;
-                    }
-                    e.Handled = true;
-                    break;
-                default:
-                    break;
+                return;
             }
+            _window.lbTasks.ScrollIntoView(_window.lbTasks.Items[_window.lbTasks.SelectedIndex - 1]);
+            _window.lbTasks.SelectedIndex = _window.lbTasks.SelectedIndex - 1;
         }
 
         #endregion
@@ -553,6 +541,20 @@ namespace Client
             {
                 ReloadFile();
             }
+        }
+
+        public void IncrementDueDate()
+        {
+            if (!IsTaskSelected()) return;
+            PostponeTask((Task)_window.lbTasks.SelectedItem, 1);
+            UpdateDisplayedTasks();
+        }
+
+        public void DecrementDueDate()
+        {
+            if (!IsTaskSelected()) return;
+            PostponeTask((Task)_window.lbTasks.SelectedItem, -1);
+            UpdateDisplayedTasks();
         }
 
         public void PostponeTask()

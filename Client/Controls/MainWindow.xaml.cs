@@ -314,6 +314,16 @@ namespace Client
             ViewModel.PostponeTask();
         }
 
+        private void IncrementDueDateExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.IncrementDueDate();
+        }
+
+        private void DecrementDueDateExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DecrementDueDate();
+        }
+
         #endregion
 
         #region sort menu
@@ -463,10 +473,14 @@ namespace Client
 
         #region lbTasks
 
-		// Using KeyDown allows for holding the key to navigate
-        private void lbTasks_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void EmulateDownArrowExecuted(object sender, RoutedEventArgs e)
         {
-			ViewModel.TaskListPreviewKeyDown(e);
+            ViewModel.EmulateDownArrow();
+        }
+
+        private void EmulateUpArrowExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.EmulateUpArrow();
         }
 
         #endregion
