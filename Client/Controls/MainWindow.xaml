@@ -229,6 +229,7 @@
                 <KeyBinding Command="{StaticResource OpenFile}" Key="O" />
                 <KeyBinding Command="{StaticResource NewFile}" Key="C" />
                 <KeyBinding Command="{StaticResource ArchiveCompletedTasks}" Key="A" />
+                <KeyBinding Command="{StaticResource ReloadFile}" Key="OemPeriod" />
                 <!-- Up/down commands -->
                 <KeyBinding Command="{StaticResource EmulateUpArrow}" Key="Up" />
                 <KeyBinding Command="{StaticResource EmulateUpArrow}" Key="K" />
