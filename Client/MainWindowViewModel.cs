@@ -589,6 +589,44 @@ namespace Client
             }
         }
 
+        public void SetDueDate()
+        {
+            if (!IsTaskSelected()) return;
+
+            Task selectedTask = (Task)_window.lbTasks.SelectedItem;
+            string oldTaskRawText = selectedTask.ToString();
+
+            Regex rgx = new Regex(@"(?<=\sdue:)(?<date>(\d{4})-(\d{2})-(\d{2}))");
+            string oldDueDateText = rgx.Match(oldTaskRawText).Groups["date"].Value.Trim();
+
+            DateTime defaultDate = (String.IsNullOrEmpty(oldDueDateText)) ? DateTime.Today : DateTime.Parse(oldDueDateText);
+            DateTime? newDueDate = ShowSetDueDateDialog(defaultDate);
+            if (newDueDate == null) 
+            {
+                return;
+            }
+
+            string newTaskRawText = (String.IsNullOrEmpty(oldDueDateText)) ?
+                oldTaskRawText + " due:" + ((DateTime)newDueDate).ToString("yyyy-MM-dd") : 
+                rgx.Replace(oldTaskRawText, ((DateTime)newDueDate).ToString("yyyy-MM-dd"));
+
+            Task newTask = new Task(newTaskRawText);
+            _taskList.Update(selectedTask, newTask);
+            UpdateDisplayedTasks();
+        }
+
+        private DateTime? ShowSetDueDateDialog(DateTime defaultDate)
+        {
+            var dialog = new SetDueDateDialog(defaultDate);
+            dialog.Owner = _window;
+
+            if (dialog.ShowDialog().Value)
+            {
+                return dialog.DueDatePicker.SelectedDate;
+            }
+            return null;
+        }
+
         public void PostponeTask()
         {
             if (!IsTaskSelected()) return;

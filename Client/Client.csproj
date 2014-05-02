@@ -79,6 +79,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\SetDueDateDialog.xaml.cs">
+      <DependentUpon>SetDueDateDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="GroupConverter.cs" />
     <Compile Include="PortableSettingsProvider.cs" />
@@ -115,6 +118,10 @@
       <DependentUpon>User.settings</DependentUpon>
     </Compile>
     <Compile Include="WindowLocation.cs" />
+    <Page Include="Controls\SetDueDateDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\PostponeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

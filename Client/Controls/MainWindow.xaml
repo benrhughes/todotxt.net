@@ -35,6 +35,7 @@
         <RoutedUICommand x:Key="IncreasePriority" Text="Increase Priority" />
         <RoutedUICommand x:Key="DecreasePriority" Text="Decrease Priority" />
         <RoutedUICommand x:Key="RemovePriority" Text="Remove Priority" />
+        <RoutedUICommand x:Key="SetDueDate" Text="Set Due Date" />
         <RoutedUICommand x:Key="PostponeTask" Text="Postpone Task" />
         <RoutedUICommand x:Key="IncrementDueDate" Text="Increase Due Date By 1 Day" />
         <RoutedUICommand x:Key="DecrementDueDate" Text="Decrease Due Date By 1 Day" />
@@ -77,6 +78,7 @@
         <CommandBinding Command="{StaticResource UpdateTask}" CanExecute="WhenSingleTaskSelectedCanExecute" Executed="UpdateTaskExecuted"/>
         <CommandBinding Command="{StaticResource DeleteTask}" CanExecute="WhenTasksSelectedCanExecute" Executed="DeleteTaskExecuted"/>
         <CommandBinding Command="{StaticResource ToggleCompletion}" CanExecute="WhenTasksSelectedCanExecute" Executed="ToggleCompletionExecuted"/>
+        <CommandBinding Command="{StaticResource SetDueDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="SetDueDateExecuted"/>
         <CommandBinding Command="{StaticResource PostponeTask}" CanExecute="WhenTasksSelectedCanExecute" Executed="PostponeTaskExecuted"/>
         <CommandBinding Command="{StaticResource IncreasePriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="IncreasePriorityExecuted"/>
         <CommandBinding Command="{StaticResource DecreasePriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="DecreasePriorityExecuted"/>
@@ -169,6 +171,7 @@
                 <MenuItem Header="_Decrease Priority" Command="{StaticResource DecreasePriority}" InputGestureText="Alt+Down"/>
                 <MenuItem Header="_Remove Priority" Command="{StaticResource RemovePriority}" InputGestureText="Alt+Left/Right"/>
                 <Separator />
+                <MenuItem Header="_Set Due Date" Command="{StaticResource SetDueDate}" InputGestureText="S"/>
                 <MenuItem Header="Postpone" Command="{StaticResource PostponeTask}" InputGestureText="P"/>
                 <MenuItem Header="Increase Due Date By 1 Day" Command="{StaticResource IncrementDueDate}" InputGestureText="Ctrl+Alt+Up"/>
                 <MenuItem Header="Decrease Due Date By 1 Day" Command="{StaticResource DecrementDueDate}" InputGestureText="Ctrl+Alt+Down"/>
@@ -244,6 +247,7 @@
                 <KeyBinding Command="{StaticResource DeleteTask}" Key="Delete" />
                 <KeyBinding Command="{StaticResource DeleteTask}" Key="Back" />
                 <KeyBinding Command="{StaticResource ToggleCompletion}" Key="X" />
+                <KeyBinding Command="{StaticResource SetDueDate}" Key="S" />
                 <KeyBinding Command="{StaticResource PostponeTask}" Key="P" />
                 <KeyBinding Command="{StaticResource IncrementDueDate}" Key="Up" Modifiers="Control+Alt"/>
                 <KeyBinding Command="{StaticResource DecrementDueDate}" Key="Down" Modifiers="Control+Alt"/>

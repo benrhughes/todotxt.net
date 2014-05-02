@@ -309,6 +309,11 @@ namespace Client
             ViewModel.RemovePriority();
         }
 
+        private void SetDueDateExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SetDueDate();
+        }
+
         private void PostponeTaskExecuted(object sender, RoutedEventArgs e)
         {
             ViewModel.PostponeTask();
