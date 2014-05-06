@@ -481,6 +481,50 @@ namespace Client
             UpdateDisplayedTasks();
         }
 
+        public void SetPriority()
+        {
+            if (!IsTaskSelected())
+            {
+                return;
+            }
+
+            Task selectedTask = (Task)_window.lbTasks.SelectedItem;
+            string oldTaskRawText = selectedTask.ToString();
+
+            Regex rgx = new Regex(@"^\((?<priority>[A-Z])\)\s"); // matches priority strings such as "(A) " (including trailing space)
+            string oldPriorityRaw = rgx.Match(oldTaskRawText).ToString(); // Priority letter plus parentheses and trailing space
+            string oldPriority = rgx.Match(oldTaskRawText).Groups["priority"].Value.Trim(); // Priority letter 
+
+            string defaultPriority = (String.IsNullOrEmpty(oldPriority)) ? "A" : oldPriority; // default for the priority dialog
+            string newPriority = ShowPriorityDialog(defaultPriority); // get priority from priority dialog
+            if (String.IsNullOrEmpty(newPriority) || !Char.IsLetter((char)newPriority[0])) // reject bad input
+            {
+                return;
+            }
+
+            string newPriorityRaw = "(" + newPriority + ") ";
+            string newTaskRawText = (String.IsNullOrEmpty(oldPriority)) ?
+                newPriorityRaw + oldTaskRawText :            // prepend new priority
+                rgx.Replace(oldTaskRawText, newPriorityRaw); // replace old priority (regex) with new priority (formatted)
+
+            // update the task list item and refresh the task list
+            Task newTask = new Task(newTaskRawText);
+            _taskList.Update(selectedTask, newTask);
+            UpdateDisplayedTasks();
+        }
+
+        private string ShowPriorityDialog(string defaultPriority)
+        {
+            var dialog = new SetPriorityDialog(defaultPriority);
+            dialog.Owner = _window;
+
+            if (dialog.ShowDialog().Value)
+            {
+                return dialog.PriorityText;
+            }
+            return null;
+        }
+
         public void IncreasePriority()
         {
             Task selectedTask = (Task)_window.lbTasks.SelectedItem;

@@ -79,6 +79,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\SetPriorityDialog.xaml.cs">
+      <DependentUpon>SetPriorityDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SetDueDateDialog.xaml.cs">
       <DependentUpon>SetDueDateDialog.xaml</DependentUpon>
     </Compile>
@@ -118,6 +121,10 @@
       <DependentUpon>User.settings</DependentUpon>
     </Compile>
     <Compile Include="WindowLocation.cs" />
+    <Page Include="Controls\SetPriorityDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\SetDueDateDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

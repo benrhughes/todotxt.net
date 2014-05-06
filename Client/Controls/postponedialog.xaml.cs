@@ -24,7 +24,6 @@ namespace Client
             get { return tbPostpone.Text; }
 			set { tbPostpone.Text = value; tbPostpone.CaretIndex = tbPostpone.Text.Length; }
         }
-
         
         public PostponeDialog()
         {

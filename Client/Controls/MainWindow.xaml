@@ -32,6 +32,7 @@
         <RoutedUICommand x:Key="UpdateTask" Text="Update Task" />
         <RoutedUICommand x:Key="DeleteTask" Text="Delete Task" />
         <RoutedUICommand x:Key="ToggleCompletion" Text="Toggle Completion" />
+        <RoutedUICommand x:Key="SetPriority" Text="Set Priority" />
         <RoutedUICommand x:Key="IncreasePriority" Text="Increase Priority" />
         <RoutedUICommand x:Key="DecreasePriority" Text="Decrease Priority" />
         <RoutedUICommand x:Key="RemovePriority" Text="Remove Priority" />
@@ -80,6 +81,7 @@
         <CommandBinding Command="{StaticResource ToggleCompletion}" CanExecute="WhenTasksSelectedCanExecute" Executed="ToggleCompletionExecuted"/>
         <CommandBinding Command="{StaticResource SetDueDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="SetDueDateExecuted"/>
         <CommandBinding Command="{StaticResource PostponeTask}" CanExecute="WhenTasksSelectedCanExecute" Executed="PostponeTaskExecuted"/>
+        <CommandBinding Command="{StaticResource SetPriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="SetPriorityExecuted"/>
         <CommandBinding Command="{StaticResource IncreasePriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="IncreasePriorityExecuted"/>
         <CommandBinding Command="{StaticResource DecreasePriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="DecreasePriorityExecuted"/>
         <CommandBinding Command="{StaticResource RemovePriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="RemovePriorityExecuted"/>
@@ -167,6 +169,7 @@
                 <Separator />
                 <MenuItem Header="Toggle _Completion" Command="{StaticResource ToggleCompletion}" InputGestureText="X"/>
                 <Separator />
+                <MenuItem Header="Set Pr_iority" Command="{StaticResource SetPriority}" InputGestureText="I"/>
                 <MenuItem Header="_Increase Priority" Command="{StaticResource IncreasePriority}" InputGestureText="Alt+Up"/>
                 <MenuItem Header="_Decrease Priority" Command="{StaticResource DecreasePriority}" InputGestureText="Alt+Down"/>
                 <MenuItem Header="_Remove Priority" Command="{StaticResource RemovePriority}" InputGestureText="Alt+Left/Right"/>
@@ -253,6 +256,7 @@
                 <KeyBinding Command="{StaticResource DecrementDueDate}" Key="Down" Modifiers="Control+Alt"/>
                 <KeyBinding Command="{StaticResource RemoveDueDate}" Key="Left" Modifiers="Control+Alt"/>
                 <KeyBinding Command="{StaticResource RemoveDueDate}" Key="Right" Modifiers="Control+Alt"/>
+                <KeyBinding Command="{StaticResource SetPriority}" Key="I" />
                 <KeyBinding Command="{StaticResource IncreasePriority}" Key="Up" Modifiers="Alt"/>
                 <KeyBinding Command="{StaticResource DecreasePriority}" Key="Down" Modifiers="Alt"/>
                 <KeyBinding Command="{StaticResource RemovePriority}" Key="Left" Modifiers="Alt"/>

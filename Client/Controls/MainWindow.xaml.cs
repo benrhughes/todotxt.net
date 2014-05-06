@@ -294,6 +294,11 @@ namespace Client
             ViewModel.ToggleCompletion();
         }
 
+        private void SetPriorityExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SetPriority();
+        }
+
         private void IncreasePriorityExecuted(object sender, RoutedEventArgs e)
         {
             ViewModel.IncreasePriority();
