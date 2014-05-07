@@ -159,7 +159,7 @@
             <MenuItem Header="_Edit">
                 <MenuItem Header="Cut" Command="Cut" InputGestureText="Ctrl+X"/>
                 <MenuItem Header="Copy" Command="Copy" InputGestureText="Ctrl+C"/>
-                <MenuItem Header="Copy Task to New Task" Command="{StaticResource CopySelectedTaskToNewTask}" InputGestureText="Ctrl+C"/>
+                <MenuItem Header="Copy Task to New Task" Command="{StaticResource CopySelectedTaskToNewTask}" InputGestureText="Shift+Ctrl+C"/>
                 <MenuItem Header="Paste" Command="Paste" InputGestureText="Ctrl+V"/>
             </MenuItem>
             <MenuItem Header="_Task">
