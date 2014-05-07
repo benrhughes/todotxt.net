@@ -197,6 +197,12 @@ namespace Client
             e.Handled = true;
         }
 
+        private void PasteTasksIntoTaskListCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = (Clipboard.ContainsText());
+            e.Handled = true;
+        }
+
         #endregion
 
         #region file menu
@@ -268,6 +274,11 @@ namespace Client
         private void CopySelectedTaskToNewTaskExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             ViewModel.CopySelectedTaskToTextBox();
+        }
+
+        private void PasteTasksIntoTaskListExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            ViewModel.PasteTasksIntoTaskList();
         }
 
         #endregion

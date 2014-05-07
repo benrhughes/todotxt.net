@@ -418,6 +418,41 @@ namespace Client
 
         #endregion
 
+        #region Edit Methods
+
+        public void CopySelectedTaskToTextBox()
+        {
+            var currentTask = _window.lbTasks.SelectedItem as Task;
+            if (currentTask != null)
+            {
+                _window.taskText.Text = currentTask.Raw;
+                _window.taskText.Select(_window.taskText.Text.Length, 0); // puts cursor at the end
+                _window.taskText.Focus();
+            }
+        }
+
+        public void PasteTasksIntoTaskList()
+        {
+            // Abort if clipboard does not contain text.
+            if (!Clipboard.ContainsText())
+            {
+                return;
+            }
+
+            // Split clipboard text into lines.
+            string clipboardText = Clipboard.GetText();
+            string[] clipboardLines = clipboardText.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+
+            // Add each line from the clipboard to the task list.
+            foreach (string clipboardLine in clipboardLines)
+            {
+                _taskList.Add(new Task(clipboardLine));
+            }
+            UpdateDisplayedTasks();
+        }
+
+        #endregion
+
         #region Task Methods
 
         public void AddNewTask()
@@ -468,17 +503,6 @@ namespace Client
                 }
 
                 UpdateDisplayedTasks();
-            }
-        }
-
-        public void CopySelectedTaskToTextBox()
-        {
-            var currentTask = _window.lbTasks.SelectedItem as Task;
-            if (currentTask != null)
-            {
-                _window.taskText.Text = currentTask.Raw;
-                _window.taskText.Select(_window.taskText.Text.Length, 0); // puts cursor at the end
-                _window.taskText.Focus();
             }
         }
 

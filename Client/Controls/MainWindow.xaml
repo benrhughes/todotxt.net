@@ -228,6 +228,7 @@
         <ListBox ItemsSource="{Binding Tasks}" Name="lbTasks" Margin="0,46,0,0" SelectedIndex="0" IsTextSearchEnabled="False" AlternationCount="2" BorderBrush="{x:Null}">
             <ListBox.CommandBindings>
                 <CommandBinding Command="ApplicationCommands.Copy" CanExecute="WhenTasksSelectedCanExecute" Executed="CopyTasksExecuted" />
+                <CommandBinding Command="ApplicationCommands.Paste" CanExecute="PasteTasksIntoTaskListCanExecute" Executed="PasteTasksIntoTaskListExecuted" />
             </ListBox.CommandBindings>
             <ListBox.InputBindings>
                 <!-- These key bindings need to be here to override default key handling in the list box. -->
