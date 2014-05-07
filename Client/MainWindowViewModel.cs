@@ -374,8 +374,10 @@ namespace Client
             {
                 // nb, we sub-sort by completed for most sorts by prepending either a or z
                 case SortType.Completed:
+                    _window.SetSelectedMenuItem(_window.sortMenu, "Completed");
                     return tasks.OrderBy(t => t.Completed);
                 case SortType.Context:
+                    _window.SetSelectedMenuItem(_window.sortMenu, "Context");
                     return tasks.OrderBy(t =>
                     {
                         var s = t.Completed ? "z" : "a";
@@ -386,12 +388,16 @@ namespace Client
                         return s;
                     });
                 case SortType.Alphabetical:
+                    _window.SetSelectedMenuItem(_window.sortMenu, "Alphabetical");
                     return tasks.OrderBy(t => (t.Completed ? "z" : "a") + t.Raw);
                 case SortType.DueDate:
+                    _window.SetSelectedMenuItem(_window.sortMenu, "DueDate");
                     return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate));
                 case SortType.Priority:
+                    _window.SetSelectedMenuItem(_window.sortMenu, "Priority");
                     return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority));
                 case SortType.Project:
+                    _window.SetSelectedMenuItem(_window.sortMenu, "Project");
                     return tasks.OrderBy(t =>
                     {
                         var s = t.Completed ? "z" : "a";
@@ -401,9 +407,11 @@ namespace Client
                             s += "zzz";
                         return s;
                     });
-				case SortType.Created: 
+				case SortType.Created:
+                    _window.SetSelectedMenuItem(_window.sortMenu, "CreatedDate");
                     return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.CreationDate) ? "9999-99-99" : t.CreationDate));
                 default:
+                    _window.SetSelectedMenuItem(_window.sortMenu, "File");
                     return tasks;
             }
         }

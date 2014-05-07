@@ -18,8 +18,6 @@ namespace Client
     /// </summary>
     public partial class SetDueDateDialog : Window
     {
-		private bool _prevKeyWasEnter;
-
         public DateTime DueDateText
         {
             get { return (DateTime)DueDatePicker.SelectedDate; }

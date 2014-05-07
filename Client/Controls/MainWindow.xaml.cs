@@ -16,7 +16,7 @@ namespace Client
     {
         TrayMainWindows _tray;
         HotKeyMainWindows _hotkey;
-        WindowLocation _previousWindowLocaiton;
+        WindowLocation _previousWindowLocation;
 
         public MainWindow()
         {
@@ -34,7 +34,7 @@ namespace Client
 
 			webBrowser1.Navigate("about:blank");
 
-                SetFont();
+            SetFont();
 
 			SetWindowPosition();
 
@@ -138,7 +138,7 @@ namespace Client
 		#region window location handlers
         private void Window_LocationChanged(object sender, EventArgs e)
         {
-            _previousWindowLocaiton = new WindowLocation();
+            _previousWindowLocation = new WindowLocation();
 
             if (Left >= 0 && Top >= 0)
             {
@@ -152,10 +152,10 @@ namespace Client
         {
             if (WindowState == System.Windows.WindowState.Maximized)
             {
-                User.Default.WindowLeft = _previousWindowLocaiton.Left;
-                User.Default.WindowTop = _previousWindowLocaiton.Top;
-                User.Default.WindowHeight = _previousWindowLocaiton.Height;
-                User.Default.WindowWidth = _previousWindowLocaiton.Width;
+                User.Default.WindowLeft = _previousWindowLocation.Left;
+                User.Default.WindowTop = _previousWindowLocation.Top;
+                User.Default.WindowHeight = _previousWindowLocation.Height;
+                User.Default.WindowWidth = _previousWindowLocation.Width;
                 User.Default.Save();
             }
         }
@@ -343,7 +343,7 @@ namespace Client
 
         #region sort menu
         
-        private void SetSelectedMenuItem(MenuItem menu, string selectedMenuItemTag)
+        public void SetSelectedMenuItem(MenuItem menu, string selectedMenuItemTag)
         {
             foreach (var item in menu.Items)
             {
@@ -359,56 +359,48 @@ namespace Client
         {
             ViewModel.SortType = SortType.None;
             ViewModel.UpdateDisplayedTasks();
-            SetSelectedMenuItem(sortMenu, "File");
         }
 
         private void SortByContextExecuted(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.Context;
             ViewModel.UpdateDisplayedTasks();
-            SetSelectedMenuItem(sortMenu, "Context");
         }
 
         private void SortByCompletedExecuted(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.Completed;
             ViewModel.UpdateDisplayedTasks();
-            SetSelectedMenuItem(sortMenu, "Completed");
         }
 
         private void SortByDueDateExecuted(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.DueDate;
             ViewModel.UpdateDisplayedTasks();
-            SetSelectedMenuItem(sortMenu, "DueDate");
         }
 
         private void SortByProjectExecuted(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.Project;
             ViewModel.UpdateDisplayedTasks();
-            SetSelectedMenuItem(sortMenu, "Project");
         }
 
         private void SortByAlphabeticalExecuted(object sender, RoutedEventArgs e)
         {
 			ViewModel.SortType = SortType.Alphabetical;
             ViewModel.UpdateDisplayedTasks();
-            SetSelectedMenuItem(sortMenu, "Alphabetical");
         }
 
         public void SortByCreatedDateExecuted(object sender, RoutedEventArgs e)
         {
             ViewModel.SortType = SortType.Created;
-            ViewModel.UpdateDisplayedTasks();
-            SetSelectedMenuItem(sortMenu, "CreatedDate");
+            ViewModel.UpdateDisplayedTasks();            
         }
 
         private void SortByPriorityExecuted(object sender, RoutedEventArgs e)
         {
             ViewModel.SortType = SortType.Priority;
-            ViewModel.UpdateDisplayedTasks();
-            SetSelectedMenuItem(sortMenu, "Priority");
+            ViewModel.UpdateDisplayedTasks();            
         }
 
         #endregion
