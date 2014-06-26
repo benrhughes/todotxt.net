@@ -429,48 +429,75 @@ namespace Client
 
         public IEnumerable<Task> SortList(IEnumerable<Task> tasks)
         {
-            Log.Debug("Sorting {0} tasks by {1}", tasks.Count().ToString(), SortType.ToString());
+            Log.Debug("Sorting {0} tasks by {1}.", tasks.Count().ToString(), SortType.ToString());
 
             switch (SortType)
             {
-                // nb, we sub-sort by completed for most sorts by prepending either a or z
                 case SortType.Completed:
                     _window.SetSelectedMenuItem(_window.sortMenu, "Completed");
-                    return tasks.OrderBy(t => t.Completed);
+                    return tasks.OrderBy(t => t.Completed)
+                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority))
+                        .ThenBy(t => (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate))
+                        .ThenBy(t => (string.IsNullOrEmpty(t.CreationDate) ? "0000-00-00" : t.CreationDate));
+                
                 case SortType.Context:
                     _window.SetSelectedMenuItem(_window.sortMenu, "Context");
                     return tasks.OrderBy(t =>
-                    {
-                        var s = t.Completed ? "z" : "a";
-                        if (t.Contexts != null && t.Contexts.Count > 0)
-                            s += t.Contexts.Min().Substring(1);
-                        else
-                            s += "zzz";
-                        return s;
-                    });
+                        {
+                            var s = "";
+                            if (t.Contexts != null && t.Contexts.Count > 0)
+                                s += t.Contexts.Min().Substring(1);
+                            else
+                                s += "zzz";
+                            return s;
+                        })
+                        .ThenBy(t => t.Completed)
+                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority))
+                        .ThenBy(t => (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate))
+                        .ThenBy(t => (string.IsNullOrEmpty(t.CreationDate) ? "0000-00-00" : t.CreationDate));
+
                 case SortType.Alphabetical:
                     _window.SetSelectedMenuItem(_window.sortMenu, "Alphabetical");
-                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + t.Raw);
+                    return tasks.OrderBy(t => t.Raw);
+
                 case SortType.DueDate:
                     _window.SetSelectedMenuItem(_window.sortMenu, "DueDate");
-                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate));
+                    return tasks.OrderBy(t => (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate))
+                        .ThenBy(t => t.Completed)
+                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority))
+                        .ThenBy(t => (string.IsNullOrEmpty(t.CreationDate) ? "0000-00-00" : t.CreationDate));
+
                 case SortType.Priority:
                     _window.SetSelectedMenuItem(_window.sortMenu, "Priority");
-                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority));
+                    return tasks.OrderBy(t => (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority))
+                        .ThenBy(t => t.Completed)
+                        .ThenBy(t => (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate))
+                        .ThenBy(t => (string.IsNullOrEmpty(t.CreationDate) ? "0000-00-00" : t.CreationDate));
+
                 case SortType.Project:
                     _window.SetSelectedMenuItem(_window.sortMenu, "Project");
-                    return tasks.OrderBy(t =>
-                    {
-                        var s = t.Completed ? "z" : "a";
-                        if (t.Projects != null && t.Projects.Count > 0)
-                            s += t.Projects.Min().Substring(1);
-                        else
-                            s += "zzz";
-                        return s;
-                    });
-				case SortType.Created:
+                    return tasks
+                        .OrderBy(t =>
+                        {
+                            var s = "";
+                            if (t.Projects != null && t.Projects.Count > 0)
+                                s += t.Projects.Min().Substring(1);
+                            else
+                                s += "zzz";
+                            return s;
+                        })
+                        .ThenBy(t => t.Completed)
+                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority))
+                        .ThenBy(t => (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate))
+                        .ThenBy(t => (string.IsNullOrEmpty(t.CreationDate) ? "0000-00-00" : t.CreationDate));
+				
+                case SortType.Created:
                     _window.SetSelectedMenuItem(_window.sortMenu, "CreatedDate");
-                    return tasks.OrderBy(t => (t.Completed ? "z" : "a") + (string.IsNullOrEmpty(t.CreationDate) ? "9999-99-99" : t.CreationDate));
+                    return tasks.OrderBy(t => (string.IsNullOrEmpty(t.CreationDate) ? "0000-00-00" : t.CreationDate))
+                        .ThenBy(t => t.Completed)
+                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority))
+                        .ThenBy(t => (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate));
+
                 default:
                     _window.SetSelectedMenuItem(_window.sortMenu, "File");
                     return tasks;
