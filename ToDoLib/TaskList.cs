@@ -33,7 +33,7 @@ namespace ToDoLib
 
 		public void ReloadTasks()
 		{
-			Log.Debug("Loading tasks from {0}", _filePath);
+			Log.Debug("Loading tasks from {0}.", _filePath);
 
 			try
 			{
@@ -46,17 +46,19 @@ namespace ToDoLib
 					while ((raw = reader.ReadLine()) != null) 
 					{
 						if(!raw.IsNullOrEmpty())
+                        {
                             Tasks.Add(new Task(raw));
+                        }                            
 					}
 				}
 
-				Log.Debug("Finished loading tasks from {0}", _filePath);
+				Log.Debug("Finished loading tasks from {0}.", _filePath);
 				
 				_preferredLineEnding = GetPreferredFileLineEndingFromFile();
 			}
 			catch (IOException ex)
 			{
-				var msg = "There was a problem trying to read from your todo.txt file";
+				var msg = "There was a problem trying to read from your todo.txt file.";
 				Log.Error(msg, ex);
 				throw new TaskException(msg, ex);
 			}
@@ -129,31 +131,50 @@ namespace ToDoLib
 			}
 		}
 
-		public void Update(Task currentTask, Task newTask)
+        /// <summary>
+        /// This method updates one task in the file. It works by replacing the "current task" with the "new task".
+        /// </summary>
+        /// <param name="currentTask">The task to replace.</param>
+        /// <param name="newTask">The replacement task.</param>
+        /// <param name="reloadTasksPriorToUpdate">Optionally reload task file prior to the update. Default is TRUE.</param>
+        /// <param name="writeTasks">Optionally write task file after the update. Default is TRUE.</param>
+        /// <param name="reloadTasksAfterUpdate">Optionally reload task file after the update. Default is TRUE.</param>
+        public void Update(Task currentTask, Task newTask, bool reloadTasksPriorToUpdate = true, bool writeTasks = true, bool reloadTasksAfterUpdate = true)
 		{
+            Log.Debug("Updating task '{0}' to '{1}'", currentTask.ToString(), newTask.ToString());
+
+            if (reloadTasksPriorToUpdate)
+            {
+                ReloadTasks();
+            }
+
 			try
 			{
-				Log.Debug("Updating task '{0}' to '{1}'", currentTask.ToString(), newTask.ToString());
-
-				ReloadTasks();
 
 				// ensure that the task list still contains the current task...
 				if (!Tasks.Any(t => t.Raw == currentTask.Raw))
-					throw new Exception("That task no longer exists in to todo.txt file");
+                { 
+					throw new Exception("That task no longer exists in to todo.txt file.");
+                }
 
-				var currentIndex = Tasks.IndexOf(Tasks.First(t => t.Raw == currentTask.Raw));
+                var currentIndex = Tasks.IndexOf(Tasks.First(t => t.Raw == currentTask.Raw));
+                Tasks[currentIndex] = newTask;
 
-				Tasks[currentIndex] = newTask;
+                Log.Debug("Task '{0}' updated", currentTask.ToString());
 
-				WriteAllTasksToFile();
+                if (writeTasks)
+                {
+                    WriteAllTasksToFile();
+                }
 
-				Log.Debug("Task '{0}' updated", currentTask.ToString());
-
-				ReloadTasks();
+                if (reloadTasksAfterUpdate)
+                {
+                    ReloadTasks();
+                }
 			}
 			catch (IOException ex)
 			{
-				var msg = "An error occurred while trying to update your task int the task list file";
+				var msg = "An error occurred while trying to update your task in the task list file.";
 				Log.Error(msg, ex);
 				throw new TaskException(msg, ex);
 			}
@@ -163,7 +184,7 @@ namespace ToDoLib
 				throw;
 			}
 		}
-		
+
 		protected string GetPreferredFileLineEndingFromFile()
 		{
 			try
@@ -217,7 +238,7 @@ namespace ToDoLib
 			}
 			catch (IOException ex)
 			{
-				var msg = "An error occurred while trying to write to the task list file";
+				var msg = "An error occurred while trying to write to the task list file.";
 				Log.Error(msg, ex);
 				throw new TaskException(msg, ex);
 			}

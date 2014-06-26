@@ -14,6 +14,12 @@
         DataContext="{Binding}" 
         StateChanged="Window_StateChanged">
     <Window.Resources>
+        <!-- Data Bidings -->
+        <!--<x:Places
+        
+        <CollectionViewSource x:Key="cvs"-->
+        
+        
         <!-- File menu commands -->
         <RoutedUICommand x:Key="OpenFile" Text="Open File" />
         <RoutedUICommand x:Key="NewFile" Text="New File" />
@@ -225,7 +231,7 @@
                     />
             </Grid>
         </Popup>
-        <ListBox ItemsSource="{Binding Tasks}" Name="lbTasks" Margin="0,46,0,0" SelectedIndex="0" IsTextSearchEnabled="False" AlternationCount="2" BorderBrush="{x:Null}">
+        <ListBox ItemsSource="{Binding Tasks}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedItem}" Name="lbTasks" Margin="0,46,0,0" SelectedIndex="0" IsTextSearchEnabled="False" AlternationCount="2" BorderBrush="{x:Null}" SelectionMode="Extended">
             <ListBox.CommandBindings>
                 <CommandBinding Command="ApplicationCommands.Copy" CanExecute="WhenTasksSelectedCanExecute" Executed="CopyTasksExecuted" />
                 <CommandBinding Command="ApplicationCommands.Paste" CanExecute="PasteTasksIntoTaskListCanExecute" Executed="PasteTasksIntoTaskListExecuted" />
@@ -238,9 +244,9 @@
                 <KeyBinding Command="{StaticResource ArchiveCompletedTasks}" Key="A" />
                 <KeyBinding Command="{StaticResource ReloadFile}" Key="OemPeriod" />
                 <!-- Up/down commands -->
-                <KeyBinding Command="{StaticResource EmulateUpArrow}" Key="Up" />
+                <!--<KeyBinding Command="{StaticResource EmulateUpArrow}" Key="Up" />-->
                 <KeyBinding Command="{StaticResource EmulateUpArrow}" Key="K" />
-                <KeyBinding Command="{StaticResource EmulateDownArrow}" Key="Down" />
+                <!--<KeyBinding Command="{StaticResource EmulateDownArrow}" Key="Down" />-->
                 <KeyBinding Command="{StaticResource EmulateDownArrow}" Key="J" />
                 <!-- Task menu commands -->
                 <KeyBinding Command="{StaticResource NewTask}" Key="N" />

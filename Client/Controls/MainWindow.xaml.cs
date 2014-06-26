@@ -297,7 +297,7 @@ namespace Client
 
         private void DeleteTaskExecuted(object sender, RoutedEventArgs e)
         {
-            ViewModel.DeleteTask();
+            ViewModel.DeleteTasks();
         }
 
         private void ToggleCompletionExecuted(object sender, RoutedEventArgs e)
@@ -332,7 +332,7 @@ namespace Client
 
         private void PostponeTaskExecuted(object sender, RoutedEventArgs e)
         {
-            ViewModel.PostponeTask();
+            ViewModel.Postpone();
         }
 
         private void IncrementDueDateExecuted(object sender, RoutedEventArgs e)
@@ -368,50 +368,42 @@ namespace Client
 
         private void SortByFileOrderExecuted(object sender, RoutedEventArgs e)
         {
-            ViewModel.SortType = SortType.None;
-            ViewModel.UpdateDisplayedTasks();
+            ViewModel.SortList(SortType.None);            
         }
 
         private void SortByContextExecuted(object sender, RoutedEventArgs e)
         {
-			ViewModel.SortType = SortType.Context;
-            ViewModel.UpdateDisplayedTasks();
+            ViewModel.SortList(SortType.Context);
         }
 
         private void SortByCompletedExecuted(object sender, RoutedEventArgs e)
         {
-			ViewModel.SortType = SortType.Completed;
-            ViewModel.UpdateDisplayedTasks();
+            ViewModel.SortList(SortType.Completed);
         }
 
         private void SortByDueDateExecuted(object sender, RoutedEventArgs e)
         {
-			ViewModel.SortType = SortType.DueDate;
-            ViewModel.UpdateDisplayedTasks();
+            ViewModel.SortList(SortType.DueDate);
         }
 
         private void SortByProjectExecuted(object sender, RoutedEventArgs e)
         {
-			ViewModel.SortType = SortType.Project;
-            ViewModel.UpdateDisplayedTasks();
+            ViewModel.SortList(SortType.Project);
         }
 
         private void SortByAlphabeticalExecuted(object sender, RoutedEventArgs e)
         {
-			ViewModel.SortType = SortType.Alphabetical;
-            ViewModel.UpdateDisplayedTasks();
+            ViewModel.SortList(SortType.Alphabetical);
         }
 
         public void SortByCreatedDateExecuted(object sender, RoutedEventArgs e)
         {
-            ViewModel.SortType = SortType.Created;
-            ViewModel.UpdateDisplayedTasks();            
+            ViewModel.SortList(SortType.Created);        
         }
 
         private void SortByPriorityExecuted(object sender, RoutedEventArgs e)
         {
-            ViewModel.SortType = SortType.Priority;
-            ViewModel.UpdateDisplayedTasks();            
+            ViewModel.SortList(SortType.Priority);       
         }
 
         #endregion
