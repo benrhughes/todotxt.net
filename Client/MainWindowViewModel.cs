@@ -220,7 +220,6 @@ namespace Client
 
             // Set the menu item to Bold to easily identify if there is a filter in force
             _window.filterMenu.FontWeight = User.Default.FilterText.Length == 0 ? FontWeights.Normal : FontWeights.Bold;
-            _window.lbTasks.Focus();
         }
 
         /// <summary>
