@@ -45,7 +45,7 @@ namespace ToDoLib
 					string raw;
 					while ((raw = reader.ReadLine()) != null) 
 					{
-						if(!raw.IsNullOrEmpty())
+						if (!raw.IsNullOrEmpty())
                         {
                             Tasks.Add(new Task(raw));
                         }                            
@@ -78,14 +78,16 @@ namespace ToDoLib
 				Log.Debug("Adding task '{0}'", output);
 
 				var text = File.ReadAllText(_filePath);
-				if (text.Length > 0 && !text.EndsWith(_preferredLineEnding))
-					output = _preferredLineEnding + output;
+                if (text.Length > 0 && !text.EndsWith(_preferredLineEnding))
+                {
+                    output = _preferredLineEnding + output;
+                }
 
 				File.AppendAllLines(_filePath, new string[] { output });
 
-				Log.Debug("Task '{0}' added", output);
+                Tasks.Add(task);
 
-				ReloadTasks();
+				Log.Debug("Task '{0}' added", output);
 			}
 			catch (IOException ex)
 			{
@@ -101,13 +103,11 @@ namespace ToDoLib
 
 		}
 
-		public void Delete(Task task)
+        public void Delete(Task task)
 		{
 			try
 			{
 				Log.Debug("Deleting task '{0}'", task.ToString());
-
-				ReloadTasks(); // make sure we're working on the latest file
 
 				if (Tasks.Remove(Tasks.First(t => t.Raw == task.Raw)))
 				{
@@ -115,8 +115,6 @@ namespace ToDoLib
 				}
 
 				Log.Debug("Task '{0}' deleted", task.ToString());
-
-				ReloadTasks();
 			}
 			catch (IOException ex)
 			{
@@ -139,14 +137,9 @@ namespace ToDoLib
         /// <param name="reloadTasksPriorToUpdate">Optionally reload task file prior to the update. Default is TRUE.</param>
         /// <param name="writeTasks">Optionally write task file after the update. Default is TRUE.</param>
         /// <param name="reloadTasksAfterUpdate">Optionally reload task file after the update. Default is TRUE.</param>
-        public void Update(Task currentTask, Task newTask, bool reloadTasksPriorToUpdate = true, bool writeTasks = true, bool reloadTasksAfterUpdate = true)
+        public void Update(Task currentTask, Task newTask, bool writeTasks = true)
 		{
             Log.Debug("Updating task '{0}' to '{1}'", currentTask.ToString(), newTask.ToString());
-
-            if (reloadTasksPriorToUpdate)
-            {
-                ReloadTasks();
-            }
 
 			try
 			{
@@ -165,11 +158,6 @@ namespace ToDoLib
                 if (writeTasks)
                 {
                     WriteAllTasksToFile();
-                }
-
-                if (reloadTasksAfterUpdate)
-                {
-                    ReloadTasks();
                 }
 			}
 			catch (IOException ex)

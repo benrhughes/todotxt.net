@@ -63,13 +63,45 @@ namespace Client
 
             Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
-            _changefile = new FileChangeObserver();
-            _changefile.OnFileChanged += () => _window.Dispatcher.BeginInvoke(new Action(ReloadFile));
+            Log.Debug("Initializing Todotxt.net");
 
             SortType = (SortType)User.Default.CurrentSort;
 
             if (!string.IsNullOrEmpty(User.Default.FilePath))
+            {
                 LoadTasks(User.Default.FilePath);
+            }
+        }
+
+        #endregion
+
+        #region File Change Observer
+
+        private void EnableFileChangeObserver()
+        {
+            if (!User.Default.AutoRefresh)
+            {
+                return;
+            }
+
+            Log.Debug("Enabling file change observer for '{0}'", User.Default.FilePath);
+            _changefile = new FileChangeObserver();
+            _changefile.OnFileChanged += () => _window.Dispatcher.BeginInvoke(new Action(ReloadFile));
+            _changefile.ObserveFile(User.Default.FilePath);
+            Log.Debug("File change observer enabled");
+        }
+
+        private void DisableFileChangeObserver()
+        {
+            if (_changefile == null)
+            {
+                return;
+            }
+
+            Log.Debug("Disabling file change observer for '{0}'", User.Default.FilePath);
+            _changefile.Dispose();
+            _changefile = null;
+            Log.Debug("File change observer disabled");
         }
 
         #endregion
@@ -131,12 +163,13 @@ namespace Client
 
         public void LoadTasks(string filePath)
         {
+            Log.Debug("Loading tasks"); 
             try
             {
                 _taskList = new TaskList(filePath);
                 User.Default.FilePath = filePath;
                 User.Default.Save();
-                _changefile.ObserveFile(User.Default.FilePath);
+                EnableFileChangeObserver();
 				UpdateDisplayedTasks();
             }
             catch (Exception ex)
@@ -147,6 +180,7 @@ namespace Client
 
         public void ReloadFile()
         {
+            Log.Debug("Reloading file");
             try
             {
                 _taskList.ReloadTasks();
@@ -535,12 +569,17 @@ namespace Client
             string clipboardText = Clipboard.GetText();
             string[] clipboardLines = clipboardText.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
 
+            DisableFileChangeObserver();
+
             // Add each line from the clipboard to the task list.
             foreach (string clipboardLine in clipboardLines)
             {
                 _taskList.Add(new Task(clipboardLine));
             }
+            
             UpdateDisplayedTasks();
+
+            EnableFileChangeObserver();
         }
 
         #endregion
@@ -561,8 +600,13 @@ namespace Client
                 return; 
             }
 
+            DisableFileChangeObserver();
+            
             // Save which tasks were selected, because the selection will be lost later when UpdateDisplayedTasks() is called. 
             GetSelectedTasks();
+
+            // Make sure we are working with the latest version of the file.
+            _taskList.ReloadTasks();
 
             // For each selected task, perform the modification, update the task list, and update the copy of the task in _selectedTasks.
             foreach (var task in _selectedTasks)
@@ -577,6 +621,8 @@ namespace Client
 
             // Re-apply the selections captured above in the GetSelectedTasks() method call.
             SetSelectedTasks();
+
+            EnableFileChangeObserver();
         }
 
         public void AddNewTask()
@@ -627,8 +673,13 @@ namespace Client
                 return;
             }
 
+            DisableFileChangeObserver();
+
             try
             {
+                // Make sure we are working with the latest version of the file.
+                _taskList.ReloadTasks();
+
                 foreach (var task in _window.lbTasks.SelectedItems)
                 {
                     _taskList.Delete((Task)task);
@@ -640,6 +691,8 @@ namespace Client
             }
 
             UpdateDisplayedTasks();
+
+            EnableFileChangeObserver();
         }
 
         public void ToggleCompletion()
@@ -953,21 +1006,31 @@ namespace Client
                 return;
             }
 
+            DisableFileChangeObserver();
+
             var archiveList = new TaskList(User.Default.ArchiveFilePath);
             var completed = _taskList.Tasks.Where(t => t.Completed);
+            
+            // Make sure we are working with the latest version of the file.
+            _taskList.ReloadTasks();
+
             foreach (var task in completed)
             {
                 archiveList.Add(task);
                 _taskList.Delete(task);
             }
 
-			UpdateDisplayedTasks();
+            UpdateDisplayedTasks();
+
+            EnableFileChangeObserver();
         }
 
         public void ShowOptionsDialog()
         {
             var o = new Options(FontInfo.GetControlFont(_window.lbTasks));
             o.Owner = _window;
+
+            var autoRefreshOriginalSetting = User.Default.AutoRefresh;
 
             var res = o.ShowDialog();
 
@@ -995,6 +1058,15 @@ namespace Client
                 User.Default.Save();
 
                 Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
+
+                if (User.Default.AutoRefresh != autoRefreshOriginalSetting && User.Default.AutoRefresh)
+                {
+                    EnableFileChangeObserver();
+                }
+                else
+                {
+                    DisableFileChangeObserver();
+                }
 
                 _window.SetFont();
 

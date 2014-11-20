@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace Client
 {
-    class FileChangeObserver
+    class FileChangeObserver : IDisposable
     {
         private string _filename = "";
         private FileSystemWatcher _watcher;
@@ -58,10 +58,23 @@ namespace Client
 
         private void FileChange(object source, FileSystemEventArgs e)
         {
+            Log.Debug("File changed.");
+
 			Thread.Sleep(1000); // give the writing app time to release its lock
-		
-			if (OnFileChanged != null)
-				OnFileChanged();
+
+            if (OnFileChanged != null)
+            {
+                OnFileChanged();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (_watcher != null)
+            {
+                _watcher.Dispose();
+                _filename = null;
+            }
         }
     }
 }
