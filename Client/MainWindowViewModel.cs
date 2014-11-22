@@ -155,6 +155,12 @@ namespace Client
                     }
                 }
             }
+
+            if (selectedItemCount == 0)
+            {
+                _window.lbTasks.SelectedIndex = 0; 
+                SelectTaskByIndex(0);
+            }
         }
 
         /// <summary>
@@ -1027,6 +1033,8 @@ namespace Client
             {
                 return;
             }
+
+            GetSelectedTasks();
             
             DisableFileChangeObserver();
 
@@ -1044,11 +1052,8 @@ namespace Client
 
             UpdateDisplayedTasks();
 
-            if (_window.lbTasks.IsKeyboardFocusWithin)
-            {
-                SelectTaskByIndex(0);
-            }
-
+            SetSelectedTasks();
+            
             EnableFileChangeObserver();
         }
 
