@@ -150,14 +150,27 @@ namespace Client
                         selectedItemCount++;
                         if (selectedItemCount == 1)
                         {
-                            var listBoxItem = (ListBoxItem)_window.lbTasks.ItemContainerGenerator.ContainerFromItem(_window.lbTasks.Items[i]);
-                            if (listBoxItem != null)
-                            {
-                                listBoxItem.Focus();
-                            }
+                            SelectTaskByIndex(i);
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Selects a task in the listbox based on its index in _window.lbtasks.Items
+        /// </summary>
+        /// <param name="index">Index of the task to select</param>
+        private void SelectTaskByIndex(int index)
+        {
+            try
+            {
+                var listBoxItem = (ListBoxItem)_window.lbTasks.ItemContainerGenerator.ContainerFromItem(_window.lbTasks.Items[index]);
+                listBoxItem.Focus();
+            }
+            catch
+            {
+                _window.lbTasks.Focus();
             }
         }
 
@@ -664,6 +677,8 @@ namespace Client
                 return;
             }
 
+            bool isTaskListFocused = _window.lbTasks.IsKeyboardFocusWithin;
+
             var res = MessageBox.Show("Permanently delete the selected tasks?",
                             "Confirm Delete",
                             MessageBoxButton.YesNo,
@@ -673,6 +688,8 @@ namespace Client
                 return;
             }
 
+            GetSelectedTasks();
+            
             DisableFileChangeObserver();
 
             try
@@ -691,6 +708,11 @@ namespace Client
             }
 
             UpdateDisplayedTasks();
+
+            if (isTaskListFocused)
+            {
+                SelectTaskByIndex(0);
+            }
 
             EnableFileChangeObserver();
         }
@@ -1005,7 +1027,7 @@ namespace Client
             {
                 return;
             }
-
+            
             DisableFileChangeObserver();
 
             var archiveList = new TaskList(User.Default.ArchiveFilePath);
@@ -1021,6 +1043,11 @@ namespace Client
             }
 
             UpdateDisplayedTasks();
+
+            if (_window.lbTasks.IsKeyboardFocusWithin)
+            {
+                SelectTaskByIndex(0);
+            }
 
             EnableFileChangeObserver();
         }
