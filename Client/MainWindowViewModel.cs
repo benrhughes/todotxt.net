@@ -894,7 +894,7 @@ namespace Client
 
         private Task SetTaskDueDate(Task task, dynamic newDueDate)
         {
-            Regex rgx = new Regex(@"(?<=\sdue:)(?<date>(\d{4})-(\d{2})-(\d{2}))");
+            Regex rgx = new Regex(@"(?<=(^|\s)due:)(?<date>(\d{4})-(\d{2})-(\d{2}))");
             string oldDueDateText = rgx.Match(task.Raw).Groups["date"].Value.Trim();
             
             string oldTaskRawText = task.Raw;
