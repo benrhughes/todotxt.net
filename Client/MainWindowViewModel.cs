@@ -853,8 +853,8 @@ namespace Client
 
         private Task RemoveTaskDueDate(Task task, dynamic newDueDate = null)
         {
-            Regex rgx = new Regex(@"(?i:\sdue:(\d{4})-(\d{2})-(\d{2}))");
-            Task newTask = new Task(rgx.Replace(task.Raw, ""));
+            Regex rgx = new Regex(@"(?i:(^|\s)due:(\d{4})-(\d{2})-(\d{2}))*");
+            Task newTask = new Task(rgx.Replace(task.Raw, "").TrimStart(' '));
             return newTask;
         }
 
