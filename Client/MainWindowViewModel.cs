@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace Client
 {
@@ -956,6 +957,32 @@ namespace Client
             if (dialog.ShowDialog().Value)
             {
                 string sPostpone = dialog.PostponeText.Trim();
+                // Postpone to a day, not a number of days from now
+                if (sPostpone == "monday" | sPostpone == "tuesday" | sPostpone == "wednesday" |
+                        sPostpone == "thursday" | sPostpone == "friday" | sPostpone == "saturday" |
+                        sPostpone == "sunday")
+                {
+                    DateTime due = DateTime.Now;
+                    var count = 0;
+                    bool isValid = false;
+
+                    // Set the current due date as today, otherwise if the task is overdue or in the future, the following count won't work correctly
+                    ModifySelectedTasks(SetTaskDueDate, DateTime.Today);
+                                        
+                    //if day of week, add days to today until weekday matches input
+                    //if today is the specified weekday, due date will be in one week
+                    do
+                    {
+                        count++;
+                        due = due.AddDays(1);
+                        isValid = string.Equals(due.ToString("dddd", new CultureInfo("en-US")),
+                                                sPostpone,
+                                                StringComparison.CurrentCultureIgnoreCase);
+                    } while (!isValid && (count < 7));
+                    // The count check is to prevent an endless loop in case of other culture.
+
+                    return count;
+                }
 
                 if (sPostpone.Length > 0)
                 {
