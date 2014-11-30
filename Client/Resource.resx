@@ -200,7 +200,8 @@
     - X: toggle task completion
     - A: archive tasks
     - D or Del or Backspace: delete task (with confirmation)
-    - U of F2: update task
+    - U or F2: update task
+    - P: Postpone task (enter days to postpone, or day of week to postpone to)
     - F: filter tasks (free-text, one filter condition per line)
     - . or F5: reload tasks from file
     - ?: show help
