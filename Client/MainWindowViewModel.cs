@@ -141,8 +141,10 @@ namespace Client
             for (int i = 0; i < _window.lbTasks.Items.Count; i++)
             {
                 Task listBoxItemTask = _window.lbTasks.Items[i] as Task;
-                foreach (var task in _selectedTasks)
+                int j = 0;
+                while (j < _selectedTasks.Count)
                 {
+                    Task task = _selectedTasks[j];
                     if (listBoxItemTask.Raw.Equals(task.Raw))
                     {
                         _window.lbTasks.SelectedItems.Add(_window.lbTasks.Items[i]);
@@ -153,6 +155,12 @@ namespace Client
                         {
                             SelectTaskByIndex(i);
                         }
+
+                        _selectedTasks.RemoveAt(j);
+                    }
+                    else
+                    {
+                        j++;
                     }
                 }
             }
