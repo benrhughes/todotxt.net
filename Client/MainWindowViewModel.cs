@@ -1201,6 +1201,78 @@ namespace Client
 
         #region New Task TextBox Event Handling Methods
 
+        /// <summary>
+        /// Adds a new task to the task list with text from the textbox.
+        /// Adds creation date to task if "Add created date to new tasks" option is on.
+        /// If "Move focus to task list after adding new task" option is on, sets selection to the new task in the task list,
+        /// and focus to the newly added task.
+        /// If "Move focus to task list after adding new task" option is off, ensures that tasks selected prior to adding the
+        /// new one are still selected after the new one is added.
+        /// </summary>
+        private void AddTaskFromTextbox()
+        {
+            var taskDetail = _window.taskText.Text.Trim();
+            if (!(taskDetail.Length > 0))
+            {
+                return;
+            }
+
+            if (User.Default.AddCreationDate)
+            {
+                var tmpTask = new Task(taskDetail);
+                var today = DateTime.Today.ToString("yyyy-MM-dd");
+
+                if (string.IsNullOrEmpty(tmpTask.CreationDate))
+                {
+                    if (string.IsNullOrEmpty(tmpTask.Priority))
+                        taskDetail = today + " " + taskDetail;
+                    else
+                        taskDetail = taskDetail.Insert(tmpTask.Priority.Length, " " + today);
+                }
+            }
+
+            try
+            {
+                Task newTask = new Task(taskDetail);
+                _taskList.Add(newTask);
+
+                if (User.Default.MoveFocusToTaskListAfterAddingNewTask)
+                {
+                    _window.lbTasks.Focus();
+                    _selectedTasks.Clear();
+                    _selectedTasks.Add(newTask);
+                    UpdateDisplayedTasks();
+                    SetSelectedTasks();
+                }
+                else
+                {
+                    GetSelectedTasks();
+                    UpdateDisplayedTasks();
+                    SetSelectedTasks();
+                    _window.taskText.Focus();
+                }
+            }
+            catch (TaskException ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Updates a task selected in the task list (_updating) with new text from the textbox.
+        /// Sets selection to the edited task in the task list.
+        /// </summary>
+        private void UpdateTaskFromTextbox()
+        {
+            Task newTask = new Task(_window.taskText.Text.Trim());
+            _selectedTasks.Clear();
+            _selectedTasks.Add(newTask);
+            _taskList.Update(_updating, newTask);
+            _updating = null;
+            UpdateDisplayedTasks();
+            SetSelectedTasks();
+        }
+
         internal void TaskTextPreviewKeyUp(KeyEventArgs e)
         {
             if (_taskList == null)
@@ -1214,54 +1286,17 @@ namespace Client
 
             if (ShouldAddTask(e))
             {
-                if (_updating == null)
+                if (_updating == null) // Adding new tasks
                 {
-                    try
-                    {
-                        var taskDetail = _window.taskText.Text.Trim();
-
-                        if (taskDetail.Length > 0)
-                        {
-                            if (User.Default.AddCreationDate)
-                            {
-                                var tmpTask = new Task(taskDetail);
-                                var today = DateTime.Today.ToString("yyyy-MM-dd");
-
-                                if (string.IsNullOrEmpty(tmpTask.CreationDate))
-                                {
-                                    if (string.IsNullOrEmpty(tmpTask.Priority))
-                                        taskDetail = today + " " + taskDetail;
-                                    else
-                                        taskDetail = taskDetail.Insert(tmpTask.Priority.Length, " " + today);
-                                }
-                            }
-                            _taskList.Add(new Task(taskDetail));
-                        }
-                    }
-                    catch (TaskException ex)
-                    {
-                        MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    AddTaskFromTextbox();
                 }
-                else
+                else // Updating existing tasks
                 {
-                    _taskList.Update(_updating, new Task(_window.taskText.Text.Trim()));
-                    _updating = null;
+                    UpdateTaskFromTextbox();
                 }
 
                 _window.taskText.Text = "";
-				UpdateDisplayedTasks();
-
                 _window.Intellisense.IsOpen = false;
-                if (User.Default.MoveFocusToTaskListAfterAddingNewTask)
-                {
-                    _window.lbTasks.Focus();
-                }
-                else
-                {
-                    _window.taskText.Focus();
-                }
-                
 
                 return;
             }
