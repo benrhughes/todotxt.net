@@ -1348,17 +1348,28 @@ namespace Client
                         _window.IntellisenseList.Items.Filter = (o) => o.ToString().Contains(word);
                         break;
                 }
+
+                return;
             }
-            else
+
+            switch (e.Key)
             {
-                switch (e.Key)
-                {
-                    case Key.Escape:
-                        _updating = null;
+                // In the task text box, the Escape key: 
+                // 1. cancels updates
+                // 2. clears the text box if it is not empty
+                // 3. returns focus to the task list if the text box is empty
+                case Key.Escape:
+                    _updating = null;
+                    if (_window.taskText.Text == "")
+                    {
+                        GetSelectedTasks();
+                        SetSelectedTasks();
+                    }
+                    else
+                    {
                         _window.taskText.Text = "";
-                        _window.lbTasks.Focus();
-                        break;
-                }
+                    }
+                    break;
             }
         }
 
