@@ -506,7 +506,7 @@ namespace Client
                 case SortType.Completed:
                     _window.SetSelectedMenuItem(_window.sortMenu, "Completed");
                     return tasks.OrderBy(t => t.Completed)
-                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority))
+                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(zzz)" : t.Priority))
                         .ThenBy(t => (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate))
                         .ThenBy(t => (string.IsNullOrEmpty(t.CreationDate) ? "0000-00-00" : t.CreationDate));
                 
@@ -522,7 +522,7 @@ namespace Client
                             return s;
                         })
                         .ThenBy(t => t.Completed)
-                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority))
+                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(zzz)" : t.Priority))
                         .ThenBy(t => (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate))
                         .ThenBy(t => (string.IsNullOrEmpty(t.CreationDate) ? "0000-00-00" : t.CreationDate));
 
@@ -534,12 +534,12 @@ namespace Client
                     _window.SetSelectedMenuItem(_window.sortMenu, "DueDate");
                     return tasks.OrderBy(t => (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate))
                         .ThenBy(t => t.Completed)
-                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority))
+                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(zzz)" : t.Priority))
                         .ThenBy(t => (string.IsNullOrEmpty(t.CreationDate) ? "0000-00-00" : t.CreationDate));
 
                 case SortType.Priority:
                     _window.SetSelectedMenuItem(_window.sortMenu, "Priority");
-                    return tasks.OrderBy(t => (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority))
+                    return tasks.OrderBy(t => (string.IsNullOrEmpty(t.Priority) ? "(zzz)" : t.Priority))
                         .ThenBy(t => t.Completed)
                         .ThenBy(t => (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate))
                         .ThenBy(t => (string.IsNullOrEmpty(t.CreationDate) ? "0000-00-00" : t.CreationDate));
@@ -557,7 +557,7 @@ namespace Client
                             return s;
                         })
                         .ThenBy(t => t.Completed)
-                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority))
+                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(zzz)" : t.Priority))
                         .ThenBy(t => (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate))
                         .ThenBy(t => (string.IsNullOrEmpty(t.CreationDate) ? "0000-00-00" : t.CreationDate));
 				
@@ -565,7 +565,7 @@ namespace Client
                     _window.SetSelectedMenuItem(_window.sortMenu, "CreatedDate");
                     return tasks.OrderBy(t => (string.IsNullOrEmpty(t.CreationDate) ? "0000-00-00" : t.CreationDate))
                         .ThenBy(t => t.Completed)
-                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(z)" : t.Priority))
+                        .ThenBy(t => (string.IsNullOrEmpty(t.Priority) ? "(zzz)" : t.Priority))
                         .ThenBy(t => (string.IsNullOrEmpty(t.DueDate) ? "9999-99-99" : t.DueDate));
 
                 default:
