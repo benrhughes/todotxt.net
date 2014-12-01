@@ -157,6 +157,7 @@ namespace Client
                         }
 
                         _selectedTasks.RemoveAt(j);
+                        break;
                     }
                     else
                     {
