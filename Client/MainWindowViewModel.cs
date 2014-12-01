@@ -375,7 +375,9 @@ namespace Client
                 User.Default.FilterTextPreset3 = f.FilterTextPreset3.Trim();
                 User.Default.Save();
 
+                GetSelectedTasks();
 				UpdateDisplayedTasks();
+                SetSelectedTasks();
             }
         }
 
@@ -464,7 +466,11 @@ namespace Client
                 default:
                     return;
             }
+            
+            GetSelectedTasks();
             UpdateDisplayedTasks();
+            SetSelectedTasks();
+            
             User.Default.Save();
         }
         
