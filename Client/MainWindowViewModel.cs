@@ -1107,47 +1107,67 @@ namespace Client
             o.Owner = _window;
 
             var autoRefreshOriginalSetting = User.Default.AutoRefresh;
+            bool updateTaskListRequired = false;
 
             var res = o.ShowDialog();
-
-            if (res.Value)
+            if (!res.Value) // User cancelled Options dialog
             {
-                User.Default.ArchiveFilePath = o.tbArchiveFile.Text;
-                User.Default.AutoArchive = o.cbAutoArchive.IsChecked.Value;
-                User.Default.MoveFocusToTaskListAfterAddingNewTask = o.cbMoveFocusToTaskListAfterAddingNewTask.IsChecked.Value;
-                User.Default.AutoRefresh = o.cbAutoRefresh.IsChecked.Value;
-                User.Default.FilterCaseSensitive = o.cbCaseSensitiveFilter.IsChecked.Value;
-                User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
-                User.Default.DebugLoggingOn = o.cbDebugOn.IsChecked.Value;
-                User.Default.MinimiseToSystemTray = o.cbMinToSysTray.IsChecked.Value;
-                User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
-                User.Default.AllowGrouping = o.cbAllowGrouping.IsChecked.Value;
-
-                // Unfortunately, font classes are not serializable, so all the pieces are tracked instead.
-                User.Default.TaskListFontFamily = o.TaskListFont.Family.ToString();
-                User.Default.TaskListFontSize = o.TaskListFont.Size;
-                User.Default.TaskListFontStyle = o.TaskListFont.Style.ToString();
-                User.Default.TaskListFontWeight = o.TaskListFont.Weight.ToString();
-                User.Default.TaskListFontStretch = o.TaskListFont.Stretch.ToString();
-                User.Default.TaskListFontBrushColor = o.TaskListFont.BrushColor.ToString();
-
-                User.Default.Save();
-
-                Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
-
-                if (User.Default.AutoRefresh != autoRefreshOriginalSetting && User.Default.AutoRefresh)
-                {
-                    EnableFileChangeObserver();
-                }
-                else
-                {
-                    DisableFileChangeObserver();
-                }
-
-                _window.SetFont();
-
-				UpdateDisplayedTasks();
+                return;
             }
+
+            // Update the task list display only if auto-refresh, filter case-sensitivity, grouping,
+            // or font attributes are changed in the Options dialog.
+            updateTaskListRequired = (
+                User.Default.AutoRefresh != o.cbAutoRefresh.IsChecked.Value ||
+                User.Default.FilterCaseSensitive != o.cbCaseSensitiveFilter.IsChecked.Value ||
+                User.Default.AllowGrouping != o.cbAllowGrouping.IsChecked.Value ||
+                User.Default.TaskListFontFamily != o.TaskListFont.Family.ToString() ||
+                User.Default.TaskListFontSize != o.TaskListFont.Size ||
+                User.Default.TaskListFontStyle != o.TaskListFont.Style.ToString() ||
+                User.Default.TaskListFontWeight != o.TaskListFont.Weight.ToString() ||
+                User.Default.TaskListFontStretch != o.TaskListFont.Stretch.ToString() ||
+                User.Default.TaskListFontBrushColor != o.TaskListFont.BrushColor.ToString()
+                );
+
+            User.Default.ArchiveFilePath = o.tbArchiveFile.Text;
+            User.Default.AutoArchive = o.cbAutoArchive.IsChecked.Value;
+            User.Default.MoveFocusToTaskListAfterAddingNewTask = o.cbMoveFocusToTaskListAfterAddingNewTask.IsChecked.Value;
+            User.Default.AutoRefresh = o.cbAutoRefresh.IsChecked.Value;
+            User.Default.FilterCaseSensitive = o.cbCaseSensitiveFilter.IsChecked.Value;
+            User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
+            User.Default.DebugLoggingOn = o.cbDebugOn.IsChecked.Value;
+            User.Default.MinimiseToSystemTray = o.cbMinToSysTray.IsChecked.Value;
+            User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
+            User.Default.AllowGrouping = o.cbAllowGrouping.IsChecked.Value;
+
+            // Unfortunately, font classes are not serializable, so all the pieces are tracked instead.
+            User.Default.TaskListFontFamily = o.TaskListFont.Family.ToString();
+            User.Default.TaskListFontSize = o.TaskListFont.Size;
+            User.Default.TaskListFontStyle = o.TaskListFont.Style.ToString();
+            User.Default.TaskListFontWeight = o.TaskListFont.Weight.ToString();
+            User.Default.TaskListFontStretch = o.TaskListFont.Stretch.ToString();
+            User.Default.TaskListFontBrushColor = o.TaskListFont.BrushColor.ToString();
+
+            User.Default.Save();
+
+            Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
+
+            if (User.Default.AutoRefresh != autoRefreshOriginalSetting && User.Default.AutoRefresh)
+            {
+                EnableFileChangeObserver();
+            }
+            else
+            {
+                DisableFileChangeObserver();
+            }
+
+            if (updateTaskListRequired)
+            {
+                _window.SetFont();
+                GetSelectedTasks();
+                UpdateDisplayedTasks();
+                SetSelectedTasks();
+            }			
         }
 
         #endregion
