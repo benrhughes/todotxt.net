@@ -218,7 +218,9 @@ namespace Client
             {
                 ex.Handle("Error loading tasks");
             }
+            GetSelectedTasks();
             UpdateDisplayedTasks();
+            SetSelectedTasks();
         }
 
         public void UpdateDisplayedTasks()
