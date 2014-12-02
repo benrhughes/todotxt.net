@@ -974,6 +974,11 @@ namespace Client
             if (dialog.ShowDialog().Value)
             {
                 string sPostpone = dialog.PostponeText.Trim();
+
+                // Lower case for the comparison
+                sPostpone = sPostpone.ToLower();
+                            
+
                 // Postpone to a day, not a number of days from now
                 if (sPostpone == "monday" | sPostpone == "tuesday" | sPostpone == "wednesday" |
                         sPostpone == "thursday" | sPostpone == "friday" | sPostpone == "saturday" |
