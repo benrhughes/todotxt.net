@@ -346,5 +346,17 @@ namespace Client {
                 this["MoveFocusToTaskListAfterAddingNewTask"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PreserveWhiteSpace {
+            get {
+                return ((bool)(this["PreserveWhiteSpace"]));
+            }
+            set {
+                this["PreserveWhiteSpace"] = value;
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
 <Window x:Class="Client.Options"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Options" Height="369" Width="512"
+        Title="Options" Height="429" Width="512"
         ResizeMode="NoResize"
         WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
     <Grid>
@@ -22,5 +22,6 @@
         <Button Content="Select Font..." Height="23" HorizontalAlignment="Left" Margin="415,75,0,0" Name="selectFonts" VerticalAlignment="Top" Width="75" Click="selectFonts_Click" />
         <Label Content="Current Font" Height="28" HorizontalAlignment="Left" Margin="25,73,0,0" Name="label2" VerticalAlignment="Top" />
         <TextBox Height="22" HorizontalAlignment="Right" Margin="0,74,96,0" Name="currentFontDisplay" VerticalAlignment="Top" Width="304" IsUndoEnabled="False" IsReadOnly="True" />
+        <CheckBox Content="Preserve Leading Whitespace" Height="16" HorizontalAlignment="Left" Margin="25,311,0,0" Name="cbPreserveWhiteSpace" VerticalAlignment="Top" Width="203" />
     </Grid>
 </Window>

@@ -1144,6 +1144,7 @@ namespace Client
             User.Default.MinimiseToSystemTray = o.cbMinToSysTray.IsChecked.Value;
             User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
             User.Default.AllowGrouping = o.cbAllowGrouping.IsChecked.Value;
+            User.Default.PreserveWhiteSpace = o.cbPreserveWhiteSpace.IsChecked.Value;
 
             // Unfortunately, font classes are not serializable, so all the pieces are tracked instead.
             User.Default.TaskListFontFamily = o.TaskListFont.Family.ToString();
@@ -1239,7 +1240,15 @@ namespace Client
         /// </summary>
         private void AddTaskFromTextbox()
         {
-            var taskDetail = _window.taskText.Text.Trim();
+            string taskString = _window.taskText.Text;
+
+            if (!User.Default.PreserveWhiteSpace)
+            {
+                taskString = _window.taskText.Text.Trim();
+            }
+           
+            var taskDetail = taskString;
+                
             if (!(taskDetail.Length > 0))
             {
                 return;
@@ -1292,7 +1301,15 @@ namespace Client
         /// </summary>
         private void UpdateTaskFromTextbox()
         {
-            Task newTask = new Task(_window.taskText.Text.Trim());
+            string taskString = _window.taskText.Text;
+
+            if (!User.Default.PreserveWhiteSpace)
+            {
+                taskString = _window.taskText.Text.Trim();
+            }
+
+            Task newTask = new Task(taskString);
+
             _selectedTasks.Clear();
             _selectedTasks.Add(newTask);
             _taskList.Update(_updating, newTask);
