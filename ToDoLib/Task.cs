@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Linq;
 using CommonExtensions;
 
 namespace ToDoLib
@@ -171,30 +172,27 @@ namespace ToDoLib
             CreationDate = reg.Match(raw).Groups["date"].Value.Trim();
             raw = reg.Replace(raw, "");
 
-            Projects = new List<string>();
+            var ProjectSet = new SortedSet<string>();
             reg = new Regex(ProjectPattern);
             var projects = reg.Matches(raw);
-
             foreach(Match project in projects)
             {
                 var p = project.Groups["proj"].Value.Trim();
-                Projects.Add(p);
+                ProjectSet.Add(p);
             }
-
+            Projects = ProjectSet.ToList<string>();
             raw = reg.Replace(raw, "");
 
-            Contexts = new List<string>();
+            var ContextsSet = new SortedSet<string>();
             reg = new Regex(ContextPattern);
             var contexts = reg.Matches(raw);
-
             foreach(Match context in contexts)
             {
                 var c = context.Groups["context"].Value.Trim();
-                Contexts.Add(c);
+                ContextsSet.Add(c);
             }
-
+            Contexts = ContextsSet.ToList<string>();
             raw = reg.Replace(raw, "");
-
 
             Body = raw.Trim();
         }
