@@ -17,21 +17,62 @@ namespace ToDoLib
 		// Although this does lead to some extra IO, it's a small price for maintaining the integrity of the file.
 
 		// NB, this is not the place for higher-level functions like searching, task manipulation etc. It's simply 
-		// for CRUDing the todo.txt file. 
+        // for CRUDing the todo.txt file. 
 
-		string _filePath = null;
+        #region Properties
+
+        string _filePath = null;
 		string _preferredLineEnding = null;
-
 		public List<Task> Tasks { get; private set; }
 
-		public TaskList(string filePath)
-		{
-			_filePath = filePath;
-			_preferredLineEnding = Environment.NewLine;
-			ReloadTasks();
-		}
+        // Task List MetaData
+        public List<string> Projects { get; private set; }
+        public List<string> Contexts { get; private set; }
+        public List<string> Priorities { get; private set; }
 
-		public void ReloadTasks()
+        #endregion
+
+        #region Constructor
+
+        public TaskList(string filePath)
+        {
+            _filePath = filePath;
+            _preferredLineEnding = Environment.NewLine;
+            ReloadTasks();
+        }
+
+        #endregion
+
+        #region Task List Metadata Methods
+
+        public void UpdateTaskListMetaData()
+        {
+            var UniqueProjects = new SortedSet<string>();
+            var UniqueContexts = new SortedSet<string>();
+            var UniquePriorities = new SortedSet<string>();
+
+            foreach (Task t in Tasks)
+            {
+                foreach (string p in t.Projects)
+                {
+                    UniqueProjects.Add(p);
+                }
+                foreach (string c in t.Contexts)
+                {
+                    UniqueContexts.Add(c);
+                }
+                UniquePriorities.Add(t.Priority);
+            }
+
+            this.Projects = UniqueProjects.ToList<string>();
+            this.Contexts = UniqueContexts.ToList<string>();
+            this.Priorities = UniquePriorities.ToList<string>();
+        }
+
+        #endregion
+
+
+        public void ReloadTasks()
 		{
 			Log.Debug("Loading tasks from {0}.", _filePath);
 
@@ -67,6 +108,10 @@ namespace ToDoLib
 				Log.Error(ex.ToString());
 				throw;
 			}
+            finally
+            {
+                UpdateTaskListMetaData();
+            }
 		}
 
 		public void Add(Task task)
@@ -100,7 +145,10 @@ namespace ToDoLib
 				Log.Error(ex.ToString());
 				throw;
 			}
-
+            finally
+            {
+                UpdateTaskListMetaData();
+            }
 		}
 
         public void Delete(Task task)
@@ -127,6 +175,10 @@ namespace ToDoLib
 				Log.Error(ex.ToString());
 				throw;
 			}
+            finally
+            {
+                UpdateTaskListMetaData();
+            }
 		}
 
         /// <summary>
@@ -171,6 +223,10 @@ namespace ToDoLib
 				Log.Error(ex.ToString());
 				throw;
 			}
+            finally
+            {
+                UpdateTaskListMetaData();
+            }
 		}
 
 		protected string GetPreferredFileLineEndingFromFile()
