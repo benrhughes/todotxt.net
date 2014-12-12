@@ -1406,15 +1406,13 @@ namespace Client
             switch (lastAddedCharacter)
             {
                 case "+":
-                    var projects = _taskList.Tasks.SelectMany(task => task.Projects);
                     _intelliPos = _window.taskText.CaretIndex - 1;
-                    ShowIntellisense(projects.Distinct().OrderBy(s => s), _window.taskText.GetRectFromCharacterIndex(_intelliPos));
+                    ShowIntellisense(_taskList.Projects, _window.taskText.GetRectFromCharacterIndex(_intelliPos));
                     break;
 
                 case "@":
-                    var contexts = _taskList.Tasks.SelectMany(task => task.Contexts);
                     _intelliPos = _window.taskText.CaretIndex - 1;
-                    ShowIntellisense(contexts.Distinct().OrderBy(s => s), _window.taskText.GetRectFromCharacterIndex(_intelliPos));
+                    ShowIntellisense(_taskList.Contexts, _window.taskText.GetRectFromCharacterIndex(_intelliPos));
                     break;
             }
         }
