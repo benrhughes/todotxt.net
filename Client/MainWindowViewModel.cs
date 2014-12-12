@@ -516,7 +516,7 @@ namespace Client
                         {
                             var s = "";
                             if (t.Contexts != null && t.Contexts.Count > 0)
-                                s += t.Contexts.Min().Substring(1);
+                                s += t.PrimaryContext;
                             else
                                 s += "zzz";
                             return s;
@@ -551,7 +551,7 @@ namespace Client
                         {
                             var s = "";
                             if (t.Projects != null && t.Projects.Count > 0)
-                                s += t.Projects.Min().Substring(1);
+                                s += t.PrimaryProject;
                             else
                                 s += "zzz";
                             return s;

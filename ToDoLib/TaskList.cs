@@ -71,7 +71,6 @@ namespace ToDoLib
 
         #endregion
 
-
         public void ReloadTasks()
 		{
 			Log.Debug("Loading tasks from {0}.", _filePath);

@@ -28,7 +28,9 @@ namespace ToDoLib
         private const string ContextPattern = @"(^|\s)(?<context>\@[^\s]+)";
 
         public List<string> Projects { get; set; }
+        public string PrimaryProject { get; private set; }
         public List<string> Contexts { get; set; }
+        public string PrimaryContext { get; private set; }
         public string DueDate { get; set; }
         public string CompletedDate { get; set; }
         public string CreationDate { get; set; }
@@ -175,10 +177,17 @@ namespace ToDoLib
             var ProjectSet = new SortedSet<string>();
             reg = new Regex(ProjectPattern);
             var projects = reg.Matches(raw);
+            PrimaryProject = null;
+            int i = 0;
             foreach(Match project in projects)
             {
                 var p = project.Groups["proj"].Value.Trim();
                 ProjectSet.Add(p);
+                if (i == 0)
+                {
+                    PrimaryProject = p;
+                }
+                i++;
             }
             Projects = ProjectSet.ToList<string>();
             raw = reg.Replace(raw, "");
@@ -186,10 +195,17 @@ namespace ToDoLib
             var ContextsSet = new SortedSet<string>();
             reg = new Regex(ContextPattern);
             var contexts = reg.Matches(raw);
+            PrimaryContext = null;
+            i = 0;
             foreach(Match context in contexts)
             {
                 var c = context.Groups["context"].Value.Trim();
                 ContextsSet.Add(c);
+                if (i == 0)
+                {
+                    PrimaryContext = c;
+                }
+                i++;
             }
             Contexts = ContextsSet.ToList<string>();
             raw = reg.Replace(raw, "");
