@@ -90,7 +90,13 @@ namespace Client
         /// </summary>
         private void InsertIntellisenseText()
         {
-            this.IntellisensePopup.IsOpen = false;
+            HideIntellisensePopup();
+
+            if (this.IntellisenseList.SelectedItem == null)
+            {
+                this.Focus();
+                return;
+            }
 
             this.Text = this.Text.Remove(this.IntelliPos, this.CaretIndex - this.IntelliPos);
 
