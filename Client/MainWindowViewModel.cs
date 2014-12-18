@@ -26,6 +26,7 @@ namespace Client
 
         private CollectionView _myView;
         private TaskList _taskList;
+        public TaskList TaskList { get { return _taskList; } set { _taskList = value;  } }
         private FileChangeObserver _changefile;
         private SortType _sortType;
         private MainWindow _window;
