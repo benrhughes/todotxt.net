@@ -31,7 +31,6 @@ namespace Client
         private SortType _sortType;
         private MainWindow _window;
         private Task _updating;
-        int _intelliPos;
         private int _numberOfItemsInCurrentGroup;
         private List<CollectionViewGroup> _viewGroups;
         private int _nextGroupAtTaskNumber;
@@ -1342,36 +1341,6 @@ namespace Client
                 }
 
                 _window.taskText.Text = "";
-                _window.Intellisense.IsOpen = false;
-
-                return;
-            }
-
-            if (_window.Intellisense.IsOpen && !_window.IntellisenseList.IsFocused)
-            {
-                if (_window.taskText.CaretIndex <= _intelliPos) // we've moved behind the symbol, drop out of intellisense
-                {
-                    _window.Intellisense.IsOpen = false;
-                    return;
-                }
-
-                switch (e.Key)
-                {
-                    case Key.Down:
-                        _window.IntellisenseList.Focus();
-                        Keyboard.Focus(_window.IntellisenseList);
-                        _window.IntellisenseList.SelectedIndex = 0;
-                        break;
-                    case Key.Escape:
-                    case Key.Space:
-                        _window.Intellisense.IsOpen = false;
-                        break;
-                    default:
-                        var word = FindIntelliWord();
-                        _window.IntellisenseList.Items.Filter = (o) => o.ToString().Contains(word);
-                        break;
-                }
-
                 return;
             }
 
@@ -1395,92 +1364,6 @@ namespace Client
                     break;
             }
         }
-
-        public void TaskTextPreviewTextChanged(TextChangedEventArgs e)
-        {
-            if (e.Changes.Count != 1) return;
-            if (e.Changes.First().AddedLength < 1) return;
-            if (_window.taskText.CaretIndex < 1) return;
-
-            var lastAddedCharacter = _window.taskText.Text.Substring(_window.taskText.CaretIndex - 1, 1);
-
-            switch (lastAddedCharacter)
-            {
-                case "+":
-                    _intelliPos = _window.taskText.CaretIndex - 1;
-                    ShowIntellisense(_taskList.Projects, _window.taskText.GetRectFromCharacterIndex(_intelliPos));
-                    break;
-
-                case "@":
-                    _intelliPos = _window.taskText.CaretIndex - 1;
-                    ShowIntellisense(_taskList.Contexts, _window.taskText.GetRectFromCharacterIndex(_intelliPos));
-                    break;
-            }
-        }
-
-        public void ShowIntellisense(IEnumerable<string> s, Rect placement)
-        {
-            if (s.Count() == 0)
-                return;
-
-            _window.Intellisense.PlacementTarget = _window.taskText;
-            _window.Intellisense.PlacementRectangle = placement;
-
-            _window.IntellisenseList.ItemsSource = s;
-            _window.Intellisense.IsOpen = true;
-            _window.taskText.Focus();
-        }
-
-        /// <summary>
-        /// Tab, Enter and Space keys will all added the selected text into the task string.
-        /// Escape key cancels out.
-        /// </summary>
-        /// <param name="sender">Not used.</param>
-        /// <param name="e">The key to trigger on.</param>
-        public void IntellisenseKeyDown(KeyEventArgs e)
-        {
-            switch (e.Key)
-            {
-                case Key.Enter:
-                case Key.Tab:
-                case Key.Space:
-                    InsertTextIntoTaskString();
-                    break;
-                case Key.Escape:
-                    _window.Intellisense.IsOpen = false;
-                    _window.taskText.CaretIndex = _window.taskText.Text.Length;
-                    _window.taskText.Focus();
-                    break;
-            }
-        }
-
-        public void IntellisenseMouseUp()
-        {
-            InsertTextIntoTaskString();
-        }
-
-        private string FindIntelliWord()
-        {
-            return _window.taskText.Text.Substring(_intelliPos + 1, _window.taskText.CaretIndex - _intelliPos - 1);
-        }
-
-        /// <summary>
-        /// Helper function to add the chosen text in the intellisense into the task string.
-        /// Created to allow the use of both keyboard and mouse clicks.
-        /// </summary>
-        private void InsertTextIntoTaskString()
-        {
-            _window.Intellisense.IsOpen = false;
-
-            _window.taskText.Text = _window.taskText.Text.Remove(_intelliPos, _window.taskText.CaretIndex - _intelliPos);
-
-            var newText = _window.IntellisenseList.SelectedItem.ToString();
-            _window.taskText.Text = _window.taskText.Text.Insert(_intelliPos, newText);
-            _window.taskText.CaretIndex = _intelliPos + newText.Length;
-
-            _window.taskText.Focus();
-        }
-
 
         #endregion
 
