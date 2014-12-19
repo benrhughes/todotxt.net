@@ -68,6 +68,8 @@ namespace Client
 
             SortType = (SortType)User.Default.CurrentSort;
 
+            TaskList.pbPreserveWhiteSpace = User.Default.PreserveWhiteSpace;
+
             if (!string.IsNullOrEmpty(User.Default.FilePath))
             {
                 LoadTasks(User.Default.FilePath);
@@ -1145,6 +1147,7 @@ namespace Client
             User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
             User.Default.AllowGrouping = o.cbAllowGrouping.IsChecked.Value;
             User.Default.PreserveWhiteSpace = o.cbPreserveWhiteSpace.IsChecked.Value;
+            TaskList.pbPreserveWhiteSpace = User.Default.PreserveWhiteSpace; 
 
             // Unfortunately, font classes are not serializable, so all the pieces are tracked instead.
             User.Default.TaskListFontFamily = o.TaskListFont.Family.ToString();

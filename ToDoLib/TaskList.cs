@@ -24,6 +24,19 @@ namespace ToDoLib
 
 		public List<Task> Tasks { get; private set; }
 
+        static private bool _pbPreserveWhiteSpace = false; 
+        static public bool pbPreserveWhiteSpace
+        {
+            get
+            {
+                return _pbPreserveWhiteSpace;
+            }
+            set
+            {
+                _pbPreserveWhiteSpace = value;
+            }
+        }
+
 		public TaskList(string filePath)
 		{
 			_filePath = filePath;
@@ -45,7 +58,7 @@ namespace ToDoLib
 					string raw;
 					while ((raw = reader.ReadLine()) != null) 
 					{
-						if (!raw.IsNullOrEmpty())
+						if (!raw.IsNullOrEmpty() || pbPreserveWhiteSpace)
                         {
                             Tasks.Add(new Task(raw));
                         }                            
