@@ -22,11 +22,7 @@ namespace Client
 {
     public class MainWindowViewModel
     {
-        #region Properties
-
         private CollectionView _myView;
-        private TaskList _taskList;
-        public TaskList TaskList { get { return _taskList; } set { _taskList = value;  } }
         private FileChangeObserver _changefile;
         private SortType _sortType;
         private MainWindow _window;
@@ -36,6 +32,8 @@ namespace Client
         private int _nextGroupAtTaskNumber;
         private List<Task> _selectedTasks;
         
+        public TaskList TaskList { get; set; }
+        public Help HelpPage { get; private set; }
         public SortType SortType
         {
             get { return _sortType; }
@@ -51,11 +49,6 @@ namespace Client
             }
         }
 
-        public Help HelpPage { get; private set; }
-
-        #endregion
-
-        #region Constructors
 
         public MainWindowViewModel(MainWindow window)
         {
@@ -68,13 +61,12 @@ namespace Client
 
             SortType = (SortType)User.Default.CurrentSort;
 
+
             if (!string.IsNullOrEmpty(User.Default.FilePath))
             {
                 LoadTasks(User.Default.FilePath);
             }
         }
-
-        #endregion
 
         #region File Change Observer
 
@@ -195,9 +187,10 @@ namespace Client
             Log.Debug("Loading tasks"); 
             try
             {
-                _taskList = new TaskList(filePath);
+                TaskList = new TaskList(filePath);
                 User.Default.FilePath = filePath;
                 User.Default.Save();
+                TaskList.PreserveWhiteSpace = User.Default.PreserveWhiteSpace;
                 EnableFileChangeObserver();
 				UpdateDisplayedTasks();
             }
@@ -212,7 +205,7 @@ namespace Client
             Log.Debug("Reloading file");
             try
             {
-                _taskList.ReloadTasks();
+                TaskList.ReloadTasks();
             }
             catch (Exception ex)
             {
@@ -225,7 +218,7 @@ namespace Client
 
         public void UpdateDisplayedTasks()
         {
-            if (_taskList == null)
+            if (TaskList == null)
             {
                 return;
             }
@@ -234,7 +227,7 @@ namespace Client
 
             try
             {
-                var sortedTaskList = FilterList(_taskList.Tasks);
+                var sortedTaskList = FilterList(TaskList.Tasks);
                 sortedTaskList = SortList(sortedTaskList);
 
                 switch (SortType)
@@ -611,7 +604,7 @@ namespace Client
             // Add each line from the clipboard to the task list.
             foreach (string clipboardLine in clipboardLines)
             {
-                _taskList.Add(new Task(clipboardLine));
+                TaskList.Add(new Task(clipboardLine));
             }
             
             UpdateDisplayedTasks();
@@ -643,13 +636,13 @@ namespace Client
             GetSelectedTasks();
 
             // Make sure we are working with the latest version of the file.
-            _taskList.ReloadTasks();
+            TaskList.ReloadTasks();
 
             // For each selected task, perform the modification, update the task list, and update the copy of the task in _selectedTasks.
             foreach (var task in _selectedTasks)
         	{
                 Task newTask = modificationFunction(task, parameter);
-                _taskList.Update(task, newTask);
+                TaskList.Update(task, newTask);
                 task.Raw = newTask.Raw;
 	        }
 
@@ -719,11 +712,11 @@ namespace Client
             try
             {
                 // Make sure we are working with the latest version of the file.
-                _taskList.ReloadTasks();
+                TaskList.ReloadTasks();
 
                 foreach (var task in _window.lbTasks.SelectedItems)
                 {
-                    _taskList.Delete((Task)task);
+                    TaskList.Delete((Task)task);
                 }
             }
             catch (Exception ex)
@@ -1088,15 +1081,15 @@ namespace Client
             DisableFileChangeObserver();
 
             var archiveList = new TaskList(User.Default.ArchiveFilePath);
-            var completed = _taskList.Tasks.Where(t => t.Completed);
+            var completed = TaskList.Tasks.Where(t => t.Completed);
             
             // Make sure we are working with the latest version of the file.
-            _taskList.ReloadTasks();
+            TaskList.ReloadTasks();
 
             foreach (var task in completed)
             {
                 archiveList.Add(task);
-                _taskList.Delete(task);
+                TaskList.Delete(task);
             }
 
             UpdateDisplayedTasks();
@@ -1145,6 +1138,7 @@ namespace Client
             User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
             User.Default.AllowGrouping = o.cbAllowGrouping.IsChecked.Value;
             User.Default.PreserveWhiteSpace = o.cbPreserveWhiteSpace.IsChecked.Value;
+            TaskList.PreserveWhiteSpace = User.Default.PreserveWhiteSpace; 
 
             // Unfortunately, font classes are not serializable, so all the pieces are tracked instead.
             User.Default.TaskListFontFamily = o.TaskListFont.Family.ToString();
@@ -1271,7 +1265,7 @@ namespace Client
             try
             {
                 Task newTask = new Task(taskDetail);
-                _taskList.Add(newTask);
+                TaskList.Add(newTask);
 
                 if (User.Default.MoveFocusToTaskListAfterAddingNewTask)
                 {
@@ -1312,7 +1306,7 @@ namespace Client
 
             _selectedTasks.Clear();
             _selectedTasks.Add(newTask);
-            _taskList.Update(_updating, newTask);
+            TaskList.Update(_updating, newTask);
             _updating = null;
             UpdateDisplayedTasks();
             SetSelectedTasks();
@@ -1320,7 +1314,7 @@ namespace Client
 
         internal void TaskTextPreviewKeyUp(KeyEventArgs e)
         {
-            if (_taskList == null)
+            if (TaskList == null)
             {
                 MessageBox.Show("You don't have a todo.txt file open - please use File\\New or File\\Open",
                     "Please open a file", MessageBoxButton.OK, MessageBoxImage.Error);

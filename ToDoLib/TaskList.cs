@@ -29,8 +29,9 @@ namespace ToDoLib
         public List<string> Projects { get; private set; }
         public List<string> Contexts { get; private set; }
         public List<string> Priorities { get; private set; }
+	    public bool PreserveWhiteSpace { get; set; }
 
-        #endregion
+	    #endregion
 
         #region Constructor
 
@@ -41,7 +42,7 @@ namespace ToDoLib
             ReloadTasks();
         }
 
-        #endregion
+	    #endregion
 
         #region Task List Metadata Methods
 
@@ -85,7 +86,7 @@ namespace ToDoLib
 					string raw;
 					while ((raw = reader.ReadLine()) != null) 
 					{
-						if (!raw.IsNullOrEmpty())
+						if (!raw.IsNullOrEmpty() || PreserveWhiteSpace)
                         {
                             Tasks.Add(new Task(raw));
                         }                            
