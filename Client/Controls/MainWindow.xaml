@@ -14,12 +14,6 @@
         DataContext="{Binding}" 
         StateChanged="Window_StateChanged">
     <Window.Resources>
-        <!-- Data Bidings -->
-        <!--<x:Places
-        
-        <CollectionViewSource x:Key="cvs"-->
-        
-        
         <!-- File menu commands -->
         <RoutedUICommand x:Key="OpenFile" Text="Open File" />
         <RoutedUICommand x:Key="NewFile" Text="New File" />
@@ -219,18 +213,8 @@
                 </LinearGradientBrush>
             </Menu.Background>
         </Menu>
-        <TextBox Height="23" Margin="0,23,0,0" Name="taskText" AcceptsReturn="False" Cursor="IBeam" KeyUp="taskText_PreviewKeyUp" TextChanged="taskText_PreviewTextChanged" VerticalAlignment="Top"/>
-        <Popup Name="Intellisense" Width="150" Height="auto" StaysOpen="False" Placement="Bottom" IsOpen="False">
-            <Grid>
-                <ListBox Name="IntellisenseList"
-                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                    ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                    PreviewKeyUp="Intellisense_KeyDown"
-                         MouseUp="IntellisenseList_MouseUp"
-                    IsTextSearchEnabled="True"
-                    />
-            </Grid>
-        </Popup>
+        <local:IntellisenseTextBox Height="23" Margin="0,23,0,0" x:Name="taskText" AcceptsReturn="False" Cursor="IBeam" VerticalAlignment="Top"
+                                   KeyUp="taskText_PreviewKeyUp" />
         <ListBox ItemsSource="{Binding Tasks}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedItem}" Name="lbTasks" Margin="0,46,0,0" SelectedIndex="0" IsTextSearchEnabled="False" AlternationCount="2" BorderBrush="{x:Null}" SelectionMode="Extended">
             <ListBox.CommandBindings>
                 <CommandBinding Command="ApplicationCommands.Copy" CanExecute="WhenTasksSelectedCanExecute" Executed="CopyTasksExecuted" />

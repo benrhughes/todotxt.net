@@ -541,37 +541,12 @@ namespace Client
 
 		#region taskText
 
-		private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
+        private void taskText_PreviewKeyUp(object sender, KeyEventArgs e)
         {
-			ViewModel.TaskTextPreviewKeyUp(e);
-        }
-
-        private void taskText_PreviewTextChanged(object sender, TextChangedEventArgs e)
-        {
-            ViewModel.TaskTextPreviewTextChanged(e);
+            ViewModel.TaskTextPreviewKeyUp(e);
         }
 
         #endregion
-
-        #region intellisense
-
-        private void Intellisense_KeyDown(object sender, KeyEventArgs e)
-        {
-			ViewModel.IntellisenseKeyDown(e);
-            e.Handled = true;
-        }
-
-        private void ShowIntellisense(IEnumerable<string> s, Rect placement)
-        {
-			ViewModel.ShowIntellisense(s, placement);
-        }
-
-        private void IntellisenseList_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-			ViewModel.IntellisenseMouseUp();
-        }
-        #endregion
-
     }
 }
 

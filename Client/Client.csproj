@@ -79,6 +79,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\IntellisenseTextBox.cs" />
     <Compile Include="Controls\SetPriorityDialog.xaml.cs">
       <DependentUpon>SetPriorityDialog.xaml</DependentUpon>
     </Compile>

@@ -22,20 +22,18 @@ namespace Client
 {
     public class MainWindowViewModel
     {
-        #region Properties
-
         private CollectionView _myView;
-        private TaskList _taskList;
         private FileChangeObserver _changefile;
         private SortType _sortType;
         private MainWindow _window;
         private Task _updating;
-        int _intelliPos;
         private int _numberOfItemsInCurrentGroup;
         private List<CollectionViewGroup> _viewGroups;
         private int _nextGroupAtTaskNumber;
         private List<Task> _selectedTasks;
         
+        public TaskList TaskList { get; set; }
+        public Help HelpPage { get; private set; }
         public SortType SortType
         {
             get { return _sortType; }
@@ -51,11 +49,6 @@ namespace Client
             }
         }
 
-        public Help HelpPage { get; private set; }
-
-        #endregion
-
-        #region Constructors
 
         public MainWindowViewModel(MainWindow window)
         {
@@ -68,15 +61,12 @@ namespace Client
 
             SortType = (SortType)User.Default.CurrentSort;
 
-            TaskList.pbPreserveWhiteSpace = User.Default.PreserveWhiteSpace;
 
             if (!string.IsNullOrEmpty(User.Default.FilePath))
             {
                 LoadTasks(User.Default.FilePath);
             }
         }
-
-        #endregion
 
         #region File Change Observer
 
@@ -197,9 +187,10 @@ namespace Client
             Log.Debug("Loading tasks"); 
             try
             {
-                _taskList = new TaskList(filePath);
+                TaskList = new TaskList(filePath);
                 User.Default.FilePath = filePath;
                 User.Default.Save();
+                TaskList.PreserveWhiteSpace = User.Default.PreserveWhiteSpace;
                 EnableFileChangeObserver();
 				UpdateDisplayedTasks();
             }
@@ -214,7 +205,7 @@ namespace Client
             Log.Debug("Reloading file");
             try
             {
-                _taskList.ReloadTasks();
+                TaskList.ReloadTasks();
             }
             catch (Exception ex)
             {
@@ -227,7 +218,7 @@ namespace Client
 
         public void UpdateDisplayedTasks()
         {
-            if (_taskList == null)
+            if (TaskList == null)
             {
                 return;
             }
@@ -236,7 +227,7 @@ namespace Client
 
             try
             {
-                var sortedTaskList = FilterList(_taskList.Tasks);
+                var sortedTaskList = FilterList(TaskList.Tasks);
                 sortedTaskList = SortList(sortedTaskList);
 
                 switch (SortType)
@@ -518,7 +509,7 @@ namespace Client
                         {
                             var s = "";
                             if (t.Contexts != null && t.Contexts.Count > 0)
-                                s += t.Contexts.Min().Substring(1);
+                                s += t.PrimaryContext;
                             else
                                 s += "zzz";
                             return s;
@@ -553,7 +544,7 @@ namespace Client
                         {
                             var s = "";
                             if (t.Projects != null && t.Projects.Count > 0)
-                                s += t.Projects.Min().Substring(1);
+                                s += t.PrimaryProject;
                             else
                                 s += "zzz";
                             return s;
@@ -613,7 +604,7 @@ namespace Client
             // Add each line from the clipboard to the task list.
             foreach (string clipboardLine in clipboardLines)
             {
-                _taskList.Add(new Task(clipboardLine));
+                TaskList.Add(new Task(clipboardLine));
             }
             
             UpdateDisplayedTasks();
@@ -645,13 +636,13 @@ namespace Client
             GetSelectedTasks();
 
             // Make sure we are working with the latest version of the file.
-            _taskList.ReloadTasks();
+            TaskList.ReloadTasks();
 
             // For each selected task, perform the modification, update the task list, and update the copy of the task in _selectedTasks.
             foreach (var task in _selectedTasks)
         	{
                 Task newTask = modificationFunction(task, parameter);
-                _taskList.Update(task, newTask);
+                TaskList.Update(task, newTask);
                 task.Raw = newTask.Raw;
 	        }
 
@@ -721,11 +712,11 @@ namespace Client
             try
             {
                 // Make sure we are working with the latest version of the file.
-                _taskList.ReloadTasks();
+                TaskList.ReloadTasks();
 
                 foreach (var task in _window.lbTasks.SelectedItems)
                 {
-                    _taskList.Delete((Task)task);
+                    TaskList.Delete((Task)task);
                 }
             }
             catch (Exception ex)
@@ -1090,15 +1081,15 @@ namespace Client
             DisableFileChangeObserver();
 
             var archiveList = new TaskList(User.Default.ArchiveFilePath);
-            var completed = _taskList.Tasks.Where(t => t.Completed);
+            var completed = TaskList.Tasks.Where(t => t.Completed);
             
             // Make sure we are working with the latest version of the file.
-            _taskList.ReloadTasks();
+            TaskList.ReloadTasks();
 
             foreach (var task in completed)
             {
                 archiveList.Add(task);
-                _taskList.Delete(task);
+                TaskList.Delete(task);
             }
 
             UpdateDisplayedTasks();
@@ -1147,7 +1138,7 @@ namespace Client
             User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
             User.Default.AllowGrouping = o.cbAllowGrouping.IsChecked.Value;
             User.Default.PreserveWhiteSpace = o.cbPreserveWhiteSpace.IsChecked.Value;
-            TaskList.pbPreserveWhiteSpace = User.Default.PreserveWhiteSpace; 
+            TaskList.PreserveWhiteSpace = User.Default.PreserveWhiteSpace; 
 
             // Unfortunately, font classes are not serializable, so all the pieces are tracked instead.
             User.Default.TaskListFontFamily = o.TaskListFont.Family.ToString();
@@ -1274,7 +1265,7 @@ namespace Client
             try
             {
                 Task newTask = new Task(taskDetail);
-                _taskList.Add(newTask);
+                TaskList.Add(newTask);
 
                 if (User.Default.MoveFocusToTaskListAfterAddingNewTask)
                 {
@@ -1315,7 +1306,7 @@ namespace Client
 
             _selectedTasks.Clear();
             _selectedTasks.Add(newTask);
-            _taskList.Update(_updating, newTask);
+            TaskList.Update(_updating, newTask);
             _updating = null;
             UpdateDisplayedTasks();
             SetSelectedTasks();
@@ -1323,7 +1314,7 @@ namespace Client
 
         internal void TaskTextPreviewKeyUp(KeyEventArgs e)
         {
-            if (_taskList == null)
+            if (TaskList == null)
             {
                 MessageBox.Show("You don't have a todo.txt file open - please use File\\New or File\\Open",
                     "Please open a file", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -1344,36 +1335,6 @@ namespace Client
                 }
 
                 _window.taskText.Text = "";
-                _window.Intellisense.IsOpen = false;
-
-                return;
-            }
-
-            if (_window.Intellisense.IsOpen && !_window.IntellisenseList.IsFocused)
-            {
-                if (_window.taskText.CaretIndex <= _intelliPos) // we've moved behind the symbol, drop out of intellisense
-                {
-                    _window.Intellisense.IsOpen = false;
-                    return;
-                }
-
-                switch (e.Key)
-                {
-                    case Key.Down:
-                        _window.IntellisenseList.Focus();
-                        Keyboard.Focus(_window.IntellisenseList);
-                        _window.IntellisenseList.SelectedIndex = 0;
-                        break;
-                    case Key.Escape:
-                    case Key.Space:
-                        _window.Intellisense.IsOpen = false;
-                        break;
-                    default:
-                        var word = FindIntelliWord();
-                        _window.IntellisenseList.Items.Filter = (o) => o.ToString().Contains(word);
-                        break;
-                }
-
                 return;
             }
 
@@ -1397,94 +1358,6 @@ namespace Client
                     break;
             }
         }
-
-        public void TaskTextPreviewTextChanged(TextChangedEventArgs e)
-        {
-            if (e.Changes.Count != 1) return;
-            if (e.Changes.First().AddedLength < 1) return;
-            if (_window.taskText.CaretIndex < 1) return;
-
-            var lastAddedCharacter = _window.taskText.Text.Substring(_window.taskText.CaretIndex - 1, 1);
-
-            switch (lastAddedCharacter)
-            {
-                case "+":
-                    var projects = _taskList.Tasks.SelectMany(task => task.Projects);
-                    _intelliPos = _window.taskText.CaretIndex - 1;
-                    ShowIntellisense(projects.Distinct().OrderBy(s => s), _window.taskText.GetRectFromCharacterIndex(_intelliPos));
-                    break;
-
-                case "@":
-                    var contexts = _taskList.Tasks.SelectMany(task => task.Contexts);
-                    _intelliPos = _window.taskText.CaretIndex - 1;
-                    ShowIntellisense(contexts.Distinct().OrderBy(s => s), _window.taskText.GetRectFromCharacterIndex(_intelliPos));
-                    break;
-            }
-        }
-
-        public void ShowIntellisense(IEnumerable<string> s, Rect placement)
-        {
-            if (s.Count() == 0)
-                return;
-
-            _window.Intellisense.PlacementTarget = _window.taskText;
-            _window.Intellisense.PlacementRectangle = placement;
-
-            _window.IntellisenseList.ItemsSource = s;
-            _window.Intellisense.IsOpen = true;
-            _window.taskText.Focus();
-        }
-
-        /// <summary>
-        /// Tab, Enter and Space keys will all added the selected text into the task string.
-        /// Escape key cancels out.
-        /// </summary>
-        /// <param name="sender">Not used.</param>
-        /// <param name="e">The key to trigger on.</param>
-        public void IntellisenseKeyDown(KeyEventArgs e)
-        {
-            switch (e.Key)
-            {
-                case Key.Enter:
-                case Key.Tab:
-                case Key.Space:
-                    InsertTextIntoTaskString();
-                    break;
-                case Key.Escape:
-                    _window.Intellisense.IsOpen = false;
-                    _window.taskText.CaretIndex = _window.taskText.Text.Length;
-                    _window.taskText.Focus();
-                    break;
-            }
-        }
-
-        public void IntellisenseMouseUp()
-        {
-            InsertTextIntoTaskString();
-        }
-
-        private string FindIntelliWord()
-        {
-            return _window.taskText.Text.Substring(_intelliPos + 1, _window.taskText.CaretIndex - _intelliPos - 1);
-        }
-
-        /// <summary>
-        /// Helper function to add the chosen text in the intellisense into the task string.
-        /// Created to allow the use of both keyboard and mouse clicks.
-        /// </summary>
-        private void InsertTextIntoTaskString()
-        {
-            _window.Intellisense.IsOpen = false;
-
-            _window.taskText.Text = _window.taskText.Text.Remove(_intelliPos, _window.taskText.CaretIndex - _intelliPos);
-
-            var newText = _window.IntellisenseList.SelectedItem.ToString();
-            _window.taskText.Text = _window.taskText.Text.Insert(_intelliPos, newText);
-            _window.taskText.CaretIndex = _intelliPos + newText.Length;
-
-            _window.taskText.Focus();
-        }
-
 
         #endregion
 
