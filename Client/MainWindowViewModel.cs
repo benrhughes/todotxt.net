@@ -187,10 +187,9 @@ namespace Client
             Log.Debug("Loading tasks"); 
             try
             {
-                TaskList = new TaskList(filePath);
+                TaskList = new TaskList(filePath, User.Default.PreserveWhiteSpace);
                 User.Default.FilePath = filePath;
                 User.Default.Save();
-                TaskList.PreserveWhiteSpace = User.Default.PreserveWhiteSpace;
                 EnableFileChangeObserver();
 				UpdateDisplayedTasks();
             }
@@ -1080,7 +1079,7 @@ namespace Client
             
             DisableFileChangeObserver();
 
-            var archiveList = new TaskList(User.Default.ArchiveFilePath);
+            var archiveList = new TaskList(User.Default.ArchiveFilePath, User.Default.PreserveWhiteSpace);
             var completed = TaskList.Tasks.Where(t => t.Completed);
             
             // Make sure we are working with the latest version of the file.

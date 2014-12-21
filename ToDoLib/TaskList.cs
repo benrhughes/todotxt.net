@@ -35,10 +35,11 @@ namespace ToDoLib
 
         #region Constructor
 
-        public TaskList(string filePath)
+        public TaskList(string filePath, bool preserveWhitespace = false)
         {
             _filePath = filePath;
             _preferredLineEnding = Environment.NewLine;
+            PreserveWhiteSpace = preserveWhitespace;
             ReloadTasks();
         }
 
