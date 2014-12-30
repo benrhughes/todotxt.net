@@ -63,7 +63,7 @@ namespace Client
         /// <param name="placement">This value should be set to the cursor position in the text box.</param>
         public void ShowIntellisensePopup(IEnumerable<string> s, Rect placement)
         {
-            if (s.Count() == 0)
+            if (s == null || s.Count() == 0)
             {
                 return;
             }
@@ -205,18 +205,22 @@ namespace Client
                 return;
             }
 
+            this.TaskList = ((MainWindow)System.Windows.Application.Current.MainWindow).ViewModel.TaskList;
+            if (this.TaskList == null)
+            {
+                return;
+            }
+
             var lastAddedCharacter = this.Text.Substring(this.CaretIndex - 1, 1);
             switch (lastAddedCharacter)
             {
                 case "+":
                     this.IntelliPos = this.CaretIndex - 1;
-                    this.TaskList = ((MainWindow)System.Windows.Application.Current.MainWindow).ViewModel.TaskList;
                     ShowIntellisensePopup(this.TaskList.Projects, this.GetRectFromCharacterIndex(this.IntelliPos));
                     break;
 
                 case "@":
                     this.IntelliPos = this.CaretIndex - 1;
-                    this.TaskList = ((MainWindow)System.Windows.Application.Current.MainWindow).ViewModel.TaskList;
                     ShowIntellisensePopup(this.TaskList.Contexts, this.GetRectFromCharacterIndex(this.IntelliPos));
                     break;
             }
