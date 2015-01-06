@@ -21,7 +21,20 @@ namespace Client
         private Popup IntellisensePopup { get; set; }
         private ListBox IntellisenseList { get; set; }
         private int IntelliPos { get; set; } // used to position the Intellisense popup
-        private TaskList TaskList { get; set; }
+
+	    private TaskList TaskList
+	    {
+		    get { return MainWindowViewModel.TaskList; }
+	    }
+
+	    public MainWindowViewModel MainWindowViewModel
+	    {
+		    get { return (MainWindowViewModel) GetValue(MainWindowViewModelProperty); }
+		    set { SetValue(MainWindowViewModelProperty, value); }
+	    }
+
+	    public static readonly DependencyProperty MainWindowViewModelProperty =
+		DependencyProperty.Register("MainWindowViewModel", typeof(MainWindowViewModel), typeof(IntellisenseTextBox), new UIPropertyMetadata(null));
 
         #endregion
 
@@ -51,8 +64,8 @@ namespace Client
             // Set up an event handler on the text box to trigger Intellisense.
             this.TextChanged += new TextChangedEventHandler(IntellisenseTextBox_TextChanged);
         }
-
-        #endregion
+		
+	    #endregion
 
         #region Intellisense Popup-related Methods
 
@@ -204,8 +217,7 @@ namespace Client
             {
                 return;
             }
-
-            this.TaskList = ((MainWindow)System.Windows.Application.Current.MainWindow).ViewModel.TaskList;
+			
             if (this.TaskList == null)
             {
                 return;
