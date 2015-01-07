@@ -139,6 +139,7 @@ namespace Client
                     HideIntellisensePopup();
                     this.CaretIndex = this.Text.Length;
                     this.Focus();
+                    e.Handled = true;
                     break;
             }
         }
