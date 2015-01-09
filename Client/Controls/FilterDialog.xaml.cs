@@ -9,6 +9,7 @@ namespace Client
     public partial class FilterDialog : Window
     {
 		private bool _prevKeyWasEnter;
+        private MainWindowViewModel _parentWindowViewModel;
 
         public string FilterText
         {
@@ -33,11 +34,18 @@ namespace Client
             get { return tbFilterPreset3.Text; }
             set { tbFilterPreset3.Text = value; tbFilterPreset3.CaretIndex = tbFilterPreset3.Text.Length; }
         }
-        
+
+        public FilterDialog(MainWindowViewModel parentWindowViewModel) : this()
+        {
+            _parentWindowViewModel = parentWindowViewModel;
+            this.DataContext = _parentWindowViewModel;
+        }
+
         public FilterDialog()
         {
             InitializeComponent();
             tbFilter.Focus();
+            _parentWindowViewModel = null;
         }
 
         private void OK_Click(object sender, RoutedEventArgs e)

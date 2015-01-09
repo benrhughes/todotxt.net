@@ -26,13 +26,13 @@
             </TextBlock>
         </Label>
         <Label Content="Currently active filter:" />
-        <local:IntellisenseTextBox x:Name="tbFilter" PreviewKeyUp="tbFilter_PreviewKeyUp" />
+        <local:IntellisenseTextBox x:Name="tbFilter" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
         <Label Content="Preset filter #1:" />
-        <local:IntellisenseTextBox x:Name="tbFilterPreset1" PreviewKeyUp="tbFilter_PreviewKeyUp" />
+        <local:IntellisenseTextBox x:Name="tbFilterPreset1" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
         <Label Content="Preset filter #2:" />
-        <local:IntellisenseTextBox x:Name="tbFilterPreset2" PreviewKeyUp="tbFilter_PreviewKeyUp" />
+        <local:IntellisenseTextBox x:Name="tbFilterPreset2" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
         <Label Content="Preset filter #3:" />
-        <local:IntellisenseTextBox x:Name="tbFilterPreset3" PreviewKeyUp="tbFilter_PreviewKeyUp" />
+        <local:IntellisenseTextBox x:Name="tbFilterPreset3" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
         <Grid Margin="0,12,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="23"/>

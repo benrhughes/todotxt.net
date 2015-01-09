@@ -21,20 +21,19 @@ namespace Client
         private Popup IntellisensePopup { get; set; }
         private ListBox IntellisenseList { get; set; }
         private int IntelliPos { get; set; } // used to position the Intellisense popup
-
-	    private TaskList TaskList
-	    {
-		    get { return MainWindowViewModel.TaskList; }
-	    }
-
-	    public MainWindowViewModel MainWindowViewModel
-	    {
-		    get { return (MainWindowViewModel) GetValue(MainWindowViewModelProperty); }
-		    set { SetValue(MainWindowViewModelProperty, value); }
-	    }
-
-	    public static readonly DependencyProperty MainWindowViewModelProperty =
-		DependencyProperty.Register("MainWindowViewModel", typeof(MainWindowViewModel), typeof(IntellisenseTextBox), new UIPropertyMetadata(null));
+        public TaskList TaskList
+        {
+            get
+            {
+                return (TaskList)GetValue(TaskListProperty);
+            }
+            set
+            {
+                SetValue(TaskListProperty, value);
+            }
+        }
+        public static readonly DependencyProperty TaskListProperty =
+            DependencyProperty.Register("TaskList", typeof(TaskList), typeof(IntellisenseTextBox), new UIPropertyMetadata(null));
 
         #endregion
 

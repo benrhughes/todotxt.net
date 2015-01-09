@@ -362,7 +362,7 @@ namespace Client
 
         public void ShowFilterDialog()
         {
-            var f = new FilterDialog();
+            var f = new FilterDialog(this);
             f.Owner = _window;
 
             f.FilterText = User.Default.FilterText;
