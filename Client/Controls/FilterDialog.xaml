@@ -17,23 +17,43 @@
             <Setter Property="AcceptsReturn" Value="True"/>
         </Style>
     </Window.Resources>
-    <StackPanel Margin="12">
-        <Label>
-            <TextBlock>
-                To invoke a filter from the main window, press '1', '2' or '3'.
-                <LineBreak/>
-                '0' will clear current active filter.
-            </TextBlock>
-        </Label>
-        <Label Content="Currently active filter:" />
-        <local:IntellisenseTextBox x:Name="tbFilter" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
-        <Label Content="Preset filter #1:" />
-        <local:IntellisenseTextBox x:Name="tbFilterPreset1" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
-        <Label Content="Preset filter #2:" />
-        <local:IntellisenseTextBox x:Name="tbFilterPreset2" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
-        <Label Content="Preset filter #3:" />
-        <local:IntellisenseTextBox x:Name="tbFilterPreset3" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
-        <Grid Margin="0,12,0,0">
+    <StackPanel>
+        <StackPanel Margin="12">
+            <Label Margin="0">
+                <TextBlock>
+                    To invoke a filter from the main window, press a number key (<Bold>1</Bold>-<Bold>9</Bold>).
+                    <LineBreak/>
+                    <Bold>0</Bold> will clear current active filter.
+                </TextBlock>
+            </Label>
+        </StackPanel>
+        <Border Margin="0" BorderThickness="0,1,0,1" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Background="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}">
+            <ScrollViewer Height="324">
+                <StackPanel Margin="12">
+                    <Label Content="Currently active filter:" Margin="0"/>
+                    <local:IntellisenseTextBox x:Name="tbFilter" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <Label Content="Preset filter #1:"/>
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset1" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <Label Content="Preset filter #2:" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset2" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <Label Content="Preset filter #3:" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset3" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <Label Content="Preset filter #4:" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset4" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <Label Content="Preset filter #5:" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset5" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <Label Content="Preset filter #6:" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset6" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <Label Content="Preset filter #7:" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset7" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <Label Content="Preset filter #8:" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset8" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <Label Content="Preset filter #9:" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset9" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+        <Grid Margin="12">
             <Grid.RowDefinitions>
                 <RowDefinition Height="23"/>
             </Grid.RowDefinitions>
@@ -49,5 +69,5 @@
             <Button Grid.Row="1" Grid.Column="3" Content="Cancel" HorizontalAlignment="Right" Name="Cancel" Click="Cancel_Click" />
             <Button Grid.Row="1" Grid.Column="4" Content="_OK" HorizontalAlignment="Right" Name="OK" IsDefault="True" Click="OK_Click"  />
         </Grid>
-    </StackPanel>
+    </StackPanel>    
 </Window>

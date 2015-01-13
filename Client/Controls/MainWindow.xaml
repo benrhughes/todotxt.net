@@ -57,6 +57,12 @@
         <RoutedUICommand x:Key="ApplyFilterPreset1" Text="Apply Preset Filter 1" />
         <RoutedUICommand x:Key="ApplyFilterPreset2" Text="Apply Preset Filter 2" />
         <RoutedUICommand x:Key="ApplyFilterPreset3" Text="Apply Preset Filter 3" />
+        <RoutedUICommand x:Key="ApplyFilterPreset4" Text="Apply Preset Filter 4" />
+        <RoutedUICommand x:Key="ApplyFilterPreset5" Text="Apply Preset Filter 5" />
+        <RoutedUICommand x:Key="ApplyFilterPreset6" Text="Apply Preset Filter 6" />
+        <RoutedUICommand x:Key="ApplyFilterPreset7" Text="Apply Preset Filter 7" />
+        <RoutedUICommand x:Key="ApplyFilterPreset8" Text="Apply Preset Filter 8" />
+        <RoutedUICommand x:Key="ApplyFilterPreset9" Text="Apply Preset Filter 9" />
         <!-- Help menu commands -->
         <RoutedUICommand x:Key="HelpAbout" Text="About" />
         <RoutedUICommand x:Key="ViewLog" Text="View Log" />
@@ -104,6 +110,12 @@
         <CommandBinding Command="{StaticResource ApplyFilterPreset1}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset1Executed"/>
         <CommandBinding Command="{StaticResource ApplyFilterPreset2}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset2Executed"/>
         <CommandBinding Command="{StaticResource ApplyFilterPreset3}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset3Executed"/>
+        <CommandBinding Command="{StaticResource ApplyFilterPreset4}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset4Executed"/>
+        <CommandBinding Command="{StaticResource ApplyFilterPreset5}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset5Executed"/>
+        <CommandBinding Command="{StaticResource ApplyFilterPreset6}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset6Executed"/>
+        <CommandBinding Command="{StaticResource ApplyFilterPreset7}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset7Executed"/>
+        <CommandBinding Command="{StaticResource ApplyFilterPreset8}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset8Executed"/>
+        <CommandBinding Command="{StaticResource ApplyFilterPreset9}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset9Executed"/>
         <!-- Help menu commands -->
         <CommandBinding Command="{StaticResource HelpAbout}" CanExecute="AlwaysCanExecute" Executed="HelpAboutExecuted"/>
         <CommandBinding Command="{StaticResource ViewLog}" CanExecute="AlwaysCanExecute" Executed="ViewLogExecuted"/>
@@ -199,6 +211,12 @@
                 <MenuItem Header="Apply Preset Filter _1" Command="{StaticResource ApplyFilterPreset1}" InputGestureText="1" IsCheckable="True" Tag="Preset1" FontWeight="Normal" />
                 <MenuItem Header="Apply Preset Filter _2" Command="{StaticResource ApplyFilterPreset2}" InputGestureText="2" IsCheckable="True" Tag="Preset2" FontWeight="Normal" />
                 <MenuItem Header="Apply Preset Filter _3" Command="{StaticResource ApplyFilterPreset3}" InputGestureText="3" IsCheckable="True" Tag="Preset3" FontWeight="Normal" />
+                <MenuItem Header="Apply Preset Filter _4" Command="{StaticResource ApplyFilterPreset4}" InputGestureText="4" IsCheckable="True" Tag="Preset4" FontWeight="Normal" />
+                <MenuItem Header="Apply Preset Filter _5" Command="{StaticResource ApplyFilterPreset5}" InputGestureText="5" IsCheckable="True" Tag="Preset5" FontWeight="Normal" />
+                <MenuItem Header="Apply Preset Filter _6" Command="{StaticResource ApplyFilterPreset6}" InputGestureText="6" IsCheckable="True" Tag="Preset6" FontWeight="Normal" />
+                <MenuItem Header="Apply Preset Filter _7" Command="{StaticResource ApplyFilterPreset7}" InputGestureText="7" IsCheckable="True" Tag="Preset7" FontWeight="Normal" />
+                <MenuItem Header="Apply Preset Filter _8" Command="{StaticResource ApplyFilterPreset8}" InputGestureText="8" IsCheckable="True" Tag="Preset8" FontWeight="Normal" />
+                <MenuItem Header="Apply Preset Filter _9" Command="{StaticResource ApplyFilterPreset9}" InputGestureText="9" IsCheckable="True" Tag="Preset9" FontWeight="Normal" />
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_About" Command="{StaticResource HelpAbout}" InputGestureText="?" />
@@ -264,6 +282,18 @@
                 <KeyBinding Command="{StaticResource ApplyFilterPreset2}" Key="D2"/>
                 <KeyBinding Command="{StaticResource ApplyFilterPreset3}" Key="NumPad3"/>
                 <KeyBinding Command="{StaticResource ApplyFilterPreset3}" Key="D3"/>
+                <KeyBinding Command="{StaticResource ApplyFilterPreset4}" Key="NumPad4"/>
+                <KeyBinding Command="{StaticResource ApplyFilterPreset4}" Key="D4"/>
+                <KeyBinding Command="{StaticResource ApplyFilterPreset5}" Key="NumPad5"/>
+                <KeyBinding Command="{StaticResource ApplyFilterPreset5}" Key="D5"/>
+                <KeyBinding Command="{StaticResource ApplyFilterPreset6}" Key="NumPad6"/>
+                <KeyBinding Command="{StaticResource ApplyFilterPreset6}" Key="D6"/>
+                <KeyBinding Command="{StaticResource ApplyFilterPreset7}" Key="NumPad7"/>
+                <KeyBinding Command="{StaticResource ApplyFilterPreset7}" Key="D7"/>
+                <KeyBinding Command="{StaticResource ApplyFilterPreset8}" Key="NumPad8"/>
+                <KeyBinding Command="{StaticResource ApplyFilterPreset8}" Key="D8"/>
+                <KeyBinding Command="{StaticResource ApplyFilterPreset9}" Key="NumPad9"/>
+                <KeyBinding Command="{StaticResource ApplyFilterPreset9}" Key="D9"/>
                 <!-- Help menu commands -->
                 <KeyBinding Command="{StaticResource HelpAbout}" Key="OemQuestion" Modifiers="Shift"/>
                 <KeyBinding Command="{StaticResource ShowCalendar}" Key="RightShift"/>

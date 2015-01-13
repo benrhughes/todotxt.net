@@ -358,5 +358,77 @@ namespace Client {
                 this["PreserveWhiteSpace"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FilterTextPreset4 {
+            get {
+                return ((string)(this["FilterTextPreset4"]));
+            }
+            set {
+                this["FilterTextPreset4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FilterTextPreset5 {
+            get {
+                return ((string)(this["FilterTextPreset5"]));
+            }
+            set {
+                this["FilterTextPreset5"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FilterTextPreset6 {
+            get {
+                return ((string)(this["FilterTextPreset6"]));
+            }
+            set {
+                this["FilterTextPreset6"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FilterTextPreset7 {
+            get {
+                return ((string)(this["FilterTextPreset7"]));
+            }
+            set {
+                this["FilterTextPreset7"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FilterTextPreset8 {
+            get {
+                return ((string)(this["FilterTextPreset8"]));
+            }
+            set {
+                this["FilterTextPreset8"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FilterTextPreset9 {
+            get {
+                return ((string)(this["FilterTextPreset9"]));
+            }
+            set {
+                this["FilterTextPreset9"] = value;
+            }
+        }
     }
 }

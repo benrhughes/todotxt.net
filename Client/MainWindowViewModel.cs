@@ -369,6 +369,12 @@ namespace Client
             f.FilterTextPreset1 = User.Default.FilterTextPreset1;
             f.FilterTextPreset2 = User.Default.FilterTextPreset2;
             f.FilterTextPreset3 = User.Default.FilterTextPreset3;
+            f.FilterTextPreset4 = User.Default.FilterTextPreset4;
+            f.FilterTextPreset5 = User.Default.FilterTextPreset5;
+            f.FilterTextPreset6 = User.Default.FilterTextPreset6;
+            f.FilterTextPreset7 = User.Default.FilterTextPreset7;
+            f.FilterTextPreset8 = User.Default.FilterTextPreset8;
+            f.FilterTextPreset9 = User.Default.FilterTextPreset9;
 
             if (f.ShowDialog().Value)
             {
@@ -376,6 +382,13 @@ namespace Client
                 User.Default.FilterTextPreset1 = f.FilterTextPreset1.Trim();
                 User.Default.FilterTextPreset2 = f.FilterTextPreset2.Trim();
                 User.Default.FilterTextPreset3 = f.FilterTextPreset3.Trim();
+                User.Default.FilterTextPreset4 = f.FilterTextPreset4.Trim();
+                User.Default.FilterTextPreset5 = f.FilterTextPreset5.Trim();
+                User.Default.FilterTextPreset6 = f.FilterTextPreset6.Trim();
+                User.Default.FilterTextPreset7 = f.FilterTextPreset7.Trim();
+                User.Default.FilterTextPreset8 = f.FilterTextPreset8.Trim();
+                User.Default.FilterTextPreset9 = f.FilterTextPreset9.Trim();
+
                 User.Default.Save();
 
                 GetSelectedTasks();
@@ -450,6 +463,36 @@ namespace Client
             ApplyFilterPreset(3);
         }
 
+        public void ApplyFilterPreset4()
+        {
+            ApplyFilterPreset(4);
+        }
+
+        public void ApplyFilterPreset5()
+        {
+            ApplyFilterPreset(5);
+        }
+
+        public void ApplyFilterPreset6()
+        {
+            ApplyFilterPreset(6);
+        }
+
+        public void ApplyFilterPreset7()
+        {
+            ApplyFilterPreset(7);
+        }
+
+        public void ApplyFilterPreset8()
+        {
+            ApplyFilterPreset(8);
+        }
+
+        public void ApplyFilterPreset9()
+        {
+            ApplyFilterPreset(9);
+        }
+
         private void ApplyFilterPreset(int filterPresetNumber)
         {
             switch (filterPresetNumber)
@@ -465,6 +508,24 @@ namespace Client
                     break;
                 case 3:
                     User.Default.FilterText = User.Default.FilterTextPreset3;
+                    break;
+                case 4:
+                    User.Default.FilterText = User.Default.FilterTextPreset4;
+                    break;
+                case 5:
+                    User.Default.FilterText = User.Default.FilterTextPreset5;
+                    break;
+                case 6:
+                    User.Default.FilterText = User.Default.FilterTextPreset6;
+                    break;
+                case 7:
+                    User.Default.FilterText = User.Default.FilterTextPreset7;
+                    break;
+                case 8:
+                    User.Default.FilterText = User.Default.FilterTextPreset8;
+                    break;
+                case 9:
+                    User.Default.FilterText = User.Default.FilterTextPreset9;
                     break;
                 default:
                     return;

@@ -439,6 +439,42 @@ namespace Client
             SetSelectedMenuItem(filterMenu, "Preset3");
         }
 
+        private void ApplyFilterPreset4Executed(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ApplyFilterPreset4();
+            SetSelectedMenuItem(filterMenu, "Preset4");
+        }
+
+        private void ApplyFilterPreset5Executed(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ApplyFilterPreset5();
+            SetSelectedMenuItem(filterMenu, "Preset5");
+        }
+        
+        private void ApplyFilterPreset6Executed(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ApplyFilterPreset6();
+            SetSelectedMenuItem(filterMenu, "Preset6");
+        }
+        
+        private void ApplyFilterPreset7Executed(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ApplyFilterPreset7();
+            SetSelectedMenuItem(filterMenu, "Preset7");
+        }
+        
+        private void ApplyFilterPreset8Executed(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ApplyFilterPreset8();
+            SetSelectedMenuItem(filterMenu, "Preset8");
+        }
+        
+        private void ApplyFilterPreset9Executed(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ApplyFilterPreset9();
+            SetSelectedMenuItem(filterMenu, "Preset9");
+        }
+
         #endregion
 
         #region help menu
