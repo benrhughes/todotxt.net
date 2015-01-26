@@ -68,6 +68,29 @@
         <RoutedUICommand x:Key="ViewLog" Text="View Log" />
         <RoutedUICommand x:Key="Donate" Text="Donate" />
         <RoutedUICommand x:Key="ShowCalendar" Text="Show Calendar" />
+        <!-- Control style templates -->
+        <Style x:Key="WordWrapEnabledListBox" TargetType="ListBox">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="True">
+                    <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
+                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="False">
+                    <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="WordWrapEnabledTextBlock" TargetType="TextBlock">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="True">
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="False">
+                    <Setter Property="TextWrapping" Value="NoWrap" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Window.CommandBindings>
         <!-- File menu commands -->
@@ -235,7 +258,7 @@
         <local:IntellisenseTextBox Height="23" Margin="0,23,0,0" x:Name="taskText" AcceptsReturn="False" Cursor="IBeam" VerticalAlignment="Top"
                                    KeyUp="taskText_PreviewKeyUp" 
                                    TaskList="{Binding TaskList}" />
-        <ListBox ItemsSource="{Binding Tasks}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedItem}" Name="lbTasks" Margin="0,46,0,0" SelectedIndex="0" IsTextSearchEnabled="False" AlternationCount="2" BorderBrush="{x:Null}" SelectionMode="Extended">
+        <ListBox ItemsSource="{Binding Tasks}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedItem}" Name="lbTasks" Margin="0,46,0,0" SelectedIndex="0" IsTextSearchEnabled="False" AlternationCount="2" BorderBrush="{x:Null}" SelectionMode="Extended" Style="{StaticResource WordWrapEnabledListBox}">
             <ListBox.CommandBindings>
                 <CommandBinding Command="ApplicationCommands.Copy" CanExecute="WhenTasksSelectedCanExecute" Executed="CopyTasksExecuted" />
                 <CommandBinding Command="ApplicationCommands.Paste" CanExecute="PasteTasksIntoTaskListCanExecute" Executed="PasteTasksIntoTaskListExecuted" />
@@ -301,7 +324,7 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock local:UrlService.Text="{Binding Raw}">
+                        <TextBlock local:UrlService.Text="{Binding Raw}" Style="{StaticResource WordWrapEnabledTextBlock}">
                             <TextBlock.InputBindings>
                                 <MouseBinding Gesture="LeftDoubleClick" Command="{StaticResource UpdateTask}" />
                             </TextBlock.InputBindings>

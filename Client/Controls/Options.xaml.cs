@@ -35,6 +35,7 @@ namespace Client
             cbAllowGrouping.IsChecked = User.Default.AllowGrouping;
             cbMoveFocusToTaskListAfterAddingNewTask.IsChecked = User.Default.MoveFocusToTaskListAfterAddingNewTask;
             cbPreserveWhiteSpace.IsChecked = User.Default.PreserveWhiteSpace;
+            cbWordWrap.IsChecked = User.Default.WordWrap;
             this.TaskListFont = taskFont;
         }
 
