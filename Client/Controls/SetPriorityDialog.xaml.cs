@@ -43,41 +43,6 @@ namespace Client
             this.DialogResult = false;
         }
 
-        private void PriorityTextBox_PreviewKeyUp(object sender, KeyEventArgs e)
-        {
-            // "Up" key increases priority.
-            if (e.Key == Key.Up)
-            {
-                e.Handled = true;
-                IncreasePriorityExecuted(sender, e);
-                return;
-            }
-
-            // "Down" key decreases priority.
-            if (e.Key == Key.Down)
-            {
-                e.Handled = true;
-                DecreasePriorityExecuted(sender, e);
-                return;
-            }
-
-            // "Enter" key accepts value.
-            if (e.Key == Key.Enter || e.Key == Key.Return)
-            {
-                e.Handled = true;
-                OK_Click(sender, e);
-                return;
-            }
-
-            // "Escape" key cancels the change.            
-            if (e.Key == Key.Escape)
-            {
-                e.Handled = true;
-                Cancel_Click(sender, e);
-                return;
-            }
-        }
-
         private void IncreasePriorityExecuted(object sender, RoutedEventArgs e)
         {
             if (String.IsNullOrEmpty(this.PriorityText))

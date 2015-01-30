@@ -14,17 +14,23 @@
         </Style>
         <RoutedUICommand x:Key="OK" Text="OK" />
         <RoutedUICommand x:Key="Cancel" Text="Cancel" />
+        <RoutedUICommand x:Key="IncreasePriorityCommand" Text="Increase Priority" />
+        <RoutedUICommand x:Key="DecreasePriorityCommand" Text="Decrease Priority" />
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="{StaticResource OK}" Executed="OK_Click"/>
         <CommandBinding Command="{StaticResource Cancel}" Executed="Cancel_Click"/>
+        <CommandBinding Command="{StaticResource IncreasePriorityCommand}" Executed="IncreasePriorityExecuted"/>
+        <CommandBinding Command="{StaticResource DecreasePriorityCommand}" Executed="DecreasePriorityExecuted"/>
     </Window.CommandBindings>
     <StackPanel Orientation="Horizontal" Margin="12">
         <Label Content="Set priority to:" Padding="0,5,5,5" />
-        <TextBox Name="PriorityTextBox" MaxLength="1" Width="75" PreviewKeyUp="PriorityTextBox_PreviewKeyUp">
+        <TextBox Name="PriorityTextBox" MaxLength="1" Width="75">
             <TextBox.InputBindings>
                 <KeyBinding Key="Enter" Command="{StaticResource OK}" />
                 <KeyBinding Key="Escape" Command="{StaticResource Cancel}" />
+                <KeyBinding Key="Up" Command="{StaticResource IncreasePriorityCommand}" />
+                <KeyBinding Key="Down" Command="{StaticResource DecreasePriorityCommand}" />
             </TextBox.InputBindings>
         </TextBox>
         <Button Content="OK" Name="OK" IsDefault="True" Command="{StaticResource OK}" />
