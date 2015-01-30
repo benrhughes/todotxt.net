@@ -18,17 +18,16 @@ namespace Client
     /// </summary>
     public partial class PostponeDialog : Window
     {
-		private bool _prevKeyWasEnter;
         public string PostponeText
         {
             get { return tbPostpone.Text; }
-			set { tbPostpone.Text = value; tbPostpone.CaretIndex = tbPostpone.Text.Length; }
+			set { this.tbPostpone.Text = value; tbPostpone.CaretIndex = tbPostpone.Text.Length; }
         }
         
         public PostponeDialog()
         {
             InitializeComponent();
-            tbPostpone.Focus();
+            this.tbPostpone.Focus();
         }
 
         private void OK_Click(object sender, RoutedEventArgs e)
@@ -40,24 +39,5 @@ namespace Client
         {
             this.DialogResult = false;
         }
-
-
-        private void tbPostpone_PreviewKeyUp(object sender, KeyEventArgs e)
-        {
-			if (e.Key == Key.Escape)
-				this.DialogResult = false;
-			else if (e.Key == Key.Enter && _prevKeyWasEnter)
-				this.DialogResult = true;
-			else if (e.Key == Key.Enter)
-				_prevKeyWasEnter = true;
-			else
-				_prevKeyWasEnter = false;
-        }
-
-       /* private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }*/
-
     }
 }

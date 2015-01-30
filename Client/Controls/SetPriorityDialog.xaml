@@ -1,8 +1,17 @@
 ﻿<Window x:Class="Client.SetPriorityDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Set priority" Height="84" Width="385" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
+        Title="Set priority" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight">
     <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Height" Value="23" />
+            <Setter Property="TextWrapping" Value="NoWrap" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="23"/>
+            <Setter Property="Width" Value="75"/>
+            <Setter Property="Margin" Value="8,0,0,0"/>
+        </Style>
         <RoutedUICommand x:Key="OK" Text="OK" />
         <RoutedUICommand x:Key="Cancel" Text="Cancel" />
     </Window.Resources>
@@ -10,19 +19,15 @@
         <CommandBinding Command="{StaticResource OK}" Executed="OK_Click"/>
         <CommandBinding Command="{StaticResource Cancel}" Executed="Cancel_Click"/>
     </Window.CommandBindings>
-    <Grid Height="454">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="44*"/>
-            <ColumnDefinition Width="333*"/>
-        </Grid.ColumnDefinitions>
-        <Label Content="Set priority to:" Height="28" HorizontalAlignment="Left" Margin="1,10,0,0" Name="label5" VerticalAlignment="Top" Grid.ColumnSpan="2" />
-        <TextBox Height="26" Margin="51,12,183,0" Name="PriorityTextBox" VerticalAlignment="Top" MaxLength="1" Grid.Column="1" PreviewKeyUp="PriorityTextBox_PreviewKeyUp">
+    <StackPanel Orientation="Horizontal" Margin="12">
+        <Label Content="Set priority to:" Padding="0,5,5,5" />
+        <TextBox Name="PriorityTextBox" MaxLength="1" Width="75" PreviewKeyUp="PriorityTextBox_PreviewKeyUp">
             <TextBox.InputBindings>
                 <KeyBinding Key="Enter" Command="{StaticResource OK}" />
                 <KeyBinding Key="Escape" Command="{StaticResource Cancel}" />
             </TextBox.InputBindings>
         </TextBox>
-        <Button Content="OK" Height="23" HorizontalAlignment="Right" Name="OK" VerticalAlignment="Bottom" Width="75" IsDefault="True" Command="{StaticResource OK}" Margin="0,0,92,417" Grid.Column="1" />
-        <Button Content="Cancel" Height="23" HorizontalAlignment="Right" Margin="0,0,12,417" Name="Cancel" VerticalAlignment="Bottom" Width="75" Command="{StaticResource Cancel}" Grid.Column="1" />
-    </Grid>
+        <Button Content="OK" Name="OK" IsDefault="True" Command="{StaticResource OK}" />
+        <Button Content="Cancel" Name="Cancel" IsCancel="True" Command="{StaticResource Cancel}" />
+    </StackPanel>
 </Window>

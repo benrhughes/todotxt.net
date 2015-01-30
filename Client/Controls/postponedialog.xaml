@@ -1,11 +1,32 @@
 ﻿<Window x:Class="Client.PostponeDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Postpone" Height="84" Width="385" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" >
-    <Grid Height="454">
-        <Button Content="OK" Height="23" HorizontalAlignment="Right" Name="OK" VerticalAlignment="Bottom" Width="75" IsDefault="True" Click="OK_Click" Margin="0,0,99,417" />
-        <Button Content="Cancel" Height="23" HorizontalAlignment="Right" Margin="0,0,12,417" Name="Cancel" VerticalAlignment="Bottom" Width="75" Click="Cancel_Click" />
-        <TextBox AcceptsReturn="False" Height="26" Margin="108,12,185,0" Name="tbPostpone" TextWrapping="Wrap" PreviewKeyUp="tbPostpone_PreviewKeyUp" VerticalAlignment="Top" />
-        <Label Content="Days to postpone:" Height="28" HorizontalAlignment="Left" Margin="1,10,0,0" Name="label5" VerticalAlignment="Top" />
-    </Grid>
+        Title="Postpone" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Height" Value="23"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="23"/>
+            <Setter Property="Width" Value="75"/>
+            <Setter Property="Margin" Value="8,0,0,0"/>
+        </Style>
+        <RoutedUICommand x:Key="OK" Text="OK" />
+        <RoutedUICommand x:Key="Cancel" Text="Cancel" />
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource OK}" Executed="OK_Click"/>
+        <CommandBinding Command="{StaticResource Cancel}" Executed="Cancel_Click"/>
+    </Window.CommandBindings>
+    <StackPanel Orientation="Horizontal" Margin="12">
+        <Label Content="Days to postpone:" Padding="0,5,5,5" />
+        <TextBox AcceptsReturn="False" Name="tbPostpone" Width="75">
+            <TextBox.InputBindings>
+                <KeyBinding Key="Enter" Command="{StaticResource OK}" />
+                <KeyBinding Key="Escape" Command="{StaticResource Cancel}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <Button Content="OK" Name="OK" IsDefault="True" Command="{StaticResource OK}" />
+        <Button Content="Cancel" Name="Cancel" Command="{StaticResource Cancel}" />
+    </StackPanel>
 </Window>

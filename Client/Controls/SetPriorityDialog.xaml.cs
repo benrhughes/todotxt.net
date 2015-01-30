@@ -94,7 +94,6 @@ namespace Client
                 this.PriorityText = newPriority.ToString();
                 this.PriorityTextBox.SelectAll();
             }
-
         }
 
         private void DecreasePriorityExecuted(object sender, RoutedEventArgs e)
