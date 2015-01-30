@@ -1014,7 +1014,7 @@ namespace Client
 
         private int ShowPostponeDialog()
         {
-            if (!IsTaskSelected())
+            if (!AreTasksSelected())
             {
                 return 0;
             }
