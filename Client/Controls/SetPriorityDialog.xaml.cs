@@ -82,29 +82,36 @@ namespace Client
         {
             if (String.IsNullOrEmpty(this.PriorityText))
             {
+                this.PriorityText = "A";
+                this.PriorityTextBox.SelectAll();
                 return;
             }
 
-            Regex rgx = new Regex("[^A-Z]");
+            Regex rgx = new Regex("[A-Z]");
             if (rgx.IsMatch(this.PriorityText) && this.PriorityText[0] != 'A')
             {
                 char newPriority = (char)((int)this.PriorityText[0] - 1);
                 this.PriorityText = newPriority.ToString();
+                this.PriorityTextBox.SelectAll();
             }
+
         }
 
         private void DecreasePriorityExecuted(object sender, RoutedEventArgs e)
         {
             if (String.IsNullOrEmpty(this.PriorityText))
             {
+                this.PriorityText = "A";
+                this.PriorityTextBox.SelectAll();
                 return;
             }
 
-            Regex rgx = new Regex("[^A-Z]");
+            Regex rgx = new Regex("[A-Z]");
             if (rgx.IsMatch(this.PriorityText) && this.PriorityText[0] != 'Z')
             {
                 char newPriority = (char)((int)this.PriorityText[0] + 1);
                 this.PriorityText = newPriority.ToString();
+                this.PriorityTextBox.SelectAll();
             }
         }
     }
