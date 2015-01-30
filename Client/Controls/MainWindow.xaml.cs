@@ -295,6 +295,11 @@ namespace Client
             ViewModel.UpdateTask();
         }
 
+        private void AppendTextExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AppendText();
+        }
+
         private void DeleteTaskExecuted(object sender, RoutedEventArgs e)
         {
             ViewModel.DeleteTasks();

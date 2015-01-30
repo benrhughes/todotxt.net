@@ -32,6 +32,7 @@
         <RoutedUICommand x:Key="NewTask" Text="New Task" />
         <RoutedUICommand x:Key="UpdateTask" Text="Update Task" />
         <RoutedUICommand x:Key="DeleteTask" Text="Delete Task" />
+        <RoutedUICommand x:Key="AppendText" Text="Append Text" />
         <RoutedUICommand x:Key="ToggleCompletion" Text="Toggle Completion" />
         <RoutedUICommand x:Key="SetPriority" Text="Set Priority" />
         <RoutedUICommand x:Key="IncreasePriority" Text="Increase Priority" />
@@ -107,6 +108,7 @@
         <!-- Task menu commands -->
         <CommandBinding Command="{StaticResource NewTask}" CanExecute="AlwaysCanExecute" Executed="NewTaskExecuted"/>
         <CommandBinding Command="{StaticResource UpdateTask}" CanExecute="WhenSingleTaskSelectedCanExecute" Executed="UpdateTaskExecuted"/>
+        <CommandBinding Command="{StaticResource AppendText}" CanExecute="WhenTasksSelectedCanExecute" Executed="AppendTextExecuted"/>
         <CommandBinding Command="{StaticResource DeleteTask}" CanExecute="WhenTasksSelectedCanExecute" Executed="DeleteTaskExecuted"/>
         <CommandBinding Command="{StaticResource ToggleCompletion}" CanExecute="WhenTasksSelectedCanExecute" Executed="ToggleCompletionExecuted"/>
         <CommandBinding Command="{StaticResource SetDueDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="SetDueDateExecuted"/>
@@ -201,6 +203,7 @@
             <MenuItem Header="_Task">
                 <MenuItem Header="Add _New Task" Command="{StaticResource NewTask}" InputGestureText="N"/>
                 <MenuItem Header="_Update Task" Command="{StaticResource UpdateTask}" InputGestureText="U"/>
+                <MenuItem Header="Append _Text" Command="{StaticResource AppendText}" InputGestureText="T"/>
                 <MenuItem Header="_Delete Task" Command="{StaticResource DeleteTask}" InputGestureText="D"/>
                 <Separator />
                 <MenuItem Header="Toggle _Completion" Command="{StaticResource ToggleCompletion}" InputGestureText="X"/>
@@ -280,6 +283,7 @@
                 <KeyBinding Command="{StaticResource PrintFile}" Key="P" />
                 <KeyBinding Command="{StaticResource UpdateTask}" Key="U" />
                 <KeyBinding Command="{StaticResource UpdateTask}" Key="F2" />
+                <KeyBinding Command="{StaticResource AppendText}" Key="T" />
                 <KeyBinding Command="{StaticResource DeleteTask}" Key="D" />
                 <KeyBinding Command="{StaticResource DeleteTask}" Key="Delete" />
                 <KeyBinding Command="{StaticResource DeleteTask}" Key="Back" />

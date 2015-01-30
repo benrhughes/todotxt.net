@@ -37,7 +37,8 @@ Please send your pull requests to the 'dev' branch. If you forget it's not a maj
 	- X: toggle task completion
 	- A: archive tasks
 	- D or Del or Backspace: delete task (with confirmation)
-	- U of F2: update task
+	- U or F2: update task
+    - T: append text to selected tasks
 	- F: filter tasks (free-text, one filter condition per line)
 	- . or F5: reload tasks from file
 	- ?: show help

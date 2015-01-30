@@ -80,6 +80,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\IntellisenseTextBox.cs" />
+    <Compile Include="Controls\AppendTextDialog.xaml.cs">
+      <DependentUpon>AppendTextDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SetPriorityDialog.xaml.cs">
       <DependentUpon>SetPriorityDialog.xaml</DependentUpon>
     </Compile>
@@ -122,6 +125,10 @@
       <DependentUpon>User.settings</DependentUpon>
     </Compile>
     <Compile Include="WindowLocation.cs" />
+    <Page Include="Controls\AppendTextDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\SetPriorityDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -794,6 +794,40 @@ namespace Client
             EnableFileChangeObserver();
         }
 
+        public void AppendText()
+        {
+            string textToAppend = ShowAppendTextDialog();
+            if (textToAppend.IsNullOrEmpty())
+            {
+                return;
+            }
+
+            ModifySelectedTasks(AppendTaskText, textToAppend);
+        }
+
+        private Task AppendTaskText(Task task, dynamic text = null)
+        {
+            Task newTask = new Task(string.Concat(task.Raw, " ", text));
+            return newTask;
+        }
+
+        private string ShowAppendTextDialog()
+        {
+            if (!AreTasksSelected())
+            {
+                return "";
+            }
+
+            var dialog = new AppendTextDialog(this);
+            dialog.Owner = _window;
+            if (dialog.ShowDialog().Value)
+            {
+                return dialog.TextToAppend.Trim();
+            }
+
+            return "";
+        }
+
         public void ToggleCompletion()
         {
             ModifySelectedTasks(SetTaskCompletion, null);
