@@ -1123,7 +1123,7 @@ namespace Client
                 }
                 clipboardText.Append(item.ToString());
             }
-            Clipboard.SetText(clipboardText.ToString());
+            Clipboard.SetDataObject(clipboardText.ToString());
         }
 
         #endregion
