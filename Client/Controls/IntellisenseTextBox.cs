@@ -133,6 +133,7 @@ namespace Client
                 case Key.Tab:
                 case Key.Space:
                     InsertIntellisenseText();
+                    e.Handled = true;
                     break;
                 case Key.Escape:
                     HideIntellisensePopup();
@@ -158,6 +159,21 @@ namespace Client
         #region TextBox Event Handler Overrides
 
         /// <summary>
+        /// Ensure that tabbing away from the text box hides the Intellisense popup before focus is lost.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            base.OnPreviewKeyDown(e);
+
+            if (e.Key == Key.Tab)
+            {
+                HideIntellisensePopup();
+                e.Handled = false;
+            }
+        }
+
+        /// <summary>
         /// Handle key events in the textbox that impact the Intellisense list and popup.
         /// </summary>
         /// <param name="e"></param>
@@ -170,34 +186,37 @@ namespace Client
                 if (this.CaretIndex <= this.IntelliPos) // we've moved behind the symbol, drop out of intellisense
                 {
                     HideIntellisensePopup();
+                    e.Handled = false; // allow key event to be passed to TextBox
                     return;
                 }
 
-                ProcessOnPreviewKeyUpIntellisenseKeyHandlers(e.Key);
-            }
-        }
-
-        /// <summary>
-        /// Handle key events in the textbox that impact the Intellisense list and popup.
-        /// </summary>
-        /// <param name="key">The last key pressed</param>
-        public virtual void ProcessOnPreviewKeyUpIntellisenseKeyHandlers(Key key)
-        {
-            switch (key)
-            {
-                case Key.Down:
-                    this.IntellisenseList.Focus();
-                    Keyboard.Focus(this.IntellisenseList);
-                    this.IntellisenseList.SelectedIndex = 0;
-                    break;
-                case Key.Escape:
-                case Key.Space:
-                    HideIntellisensePopup();
-                    break;
-                default:
-                    var word = FindIntelliWord();
-                    this.IntellisenseList.Items.Filter = (o) => o.ToString().Contains(word);
-                    break;
+                switch (e.Key)
+                {
+                    case Key.Down:
+                        if (this.IntellisenseList.Items.Count != 0)
+                        {
+                            this.IntellisenseList.SelectedIndex = 0; 
+                            var listBoxItem = (ListBoxItem)this.IntellisenseList.ItemContainerGenerator.ContainerFromItem(
+                                this.IntellisenseList.SelectedItem);
+                            listBoxItem.Focus();
+                        }
+                        e.Handled = true;
+                        break;
+                    case Key.Escape:
+                        HideIntellisensePopup();
+                        e.Handled = true;
+                        break;
+                    case Key.Space:
+                    case Key.Enter:
+                        HideIntellisensePopup();
+                        e.Handled = false; // allow key event to be passed to TextBox
+                        break;
+                    default:
+                        var word = FindIntelliWord();
+                        this.IntellisenseList.Items.Filter = (o) => o.ToString().Contains(word);
+                        e.Handled = true;
+                        break;
+                }
             }
         }
 
