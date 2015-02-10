@@ -41,11 +41,12 @@
             <CheckBox Content="Move focus to task list after creating new task" x:Name="cbMoveFocusToTaskListAfterAddingNewTask" />
             <CheckBox Content="Automatically refresh task list from file" x:Name="cbAutoRefresh" />
             <CheckBox Content="Filter text is case-sensitive" x:Name="cbCaseSensitiveFilter" />
+            <CheckBox Content="Intellisense project and context suggestions are case-sensitive" x:Name="cbIntellisenseCaseSensitive" />
             <CheckBox Content="Minimise to system tray (requires restart)" x:Name="cbMinToSysTray"  />
             <CheckBox Content="Enable debug logging" x:Name="cbDebugOn" />
             <CheckBox Content="Use Ctrl-Enter to create new task" x:Name="cbRequireCtrlEnter" />
             <CheckBox Content="Allow grouping of tasks" x:Name="cbAllowGrouping" />
-            <CheckBox Content="Preserve Leading Whitespace and Blank Lines" x:Name="cbPreserveWhiteSpace"  />
+            <CheckBox Content="Preserve leading whitespace and blank lines" x:Name="cbPreserveWhiteSpace"  />
             <CheckBox Content="Apply word wrap to task list" x:Name="cbWordWrap"  />
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

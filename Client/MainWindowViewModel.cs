@@ -1226,6 +1226,7 @@ namespace Client
             User.Default.MoveFocusToTaskListAfterAddingNewTask = o.cbMoveFocusToTaskListAfterAddingNewTask.IsChecked.Value;
             User.Default.AutoRefresh = o.cbAutoRefresh.IsChecked.Value;
             User.Default.FilterCaseSensitive = o.cbCaseSensitiveFilter.IsChecked.Value;
+            User.Default.IntellisenseCaseSensitive = o.cbIntellisenseCaseSensitive.IsChecked.Value;
             User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
             User.Default.DebugLoggingOn = o.cbDebugOn.IsChecked.Value;
             User.Default.MinimiseToSystemTray = o.cbMinToSysTray.IsChecked.Value;

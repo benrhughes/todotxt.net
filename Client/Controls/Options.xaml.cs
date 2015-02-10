@@ -28,6 +28,7 @@ namespace Client
             cbAutoArchive.IsChecked = User.Default.AutoArchive;
             cbAutoRefresh.IsChecked = User.Default.AutoRefresh;
             cbCaseSensitiveFilter.IsChecked = User.Default.FilterCaseSensitive;
+            cbIntellisenseCaseSensitive.IsChecked = User.Default.IntellisenseCaseSensitive;
             cbAddCreationDate.IsChecked = User.Default.AddCreationDate;
             cbDebugOn.IsChecked = User.Default.DebugLoggingOn;
             cbMinToSysTray.IsChecked = User.Default.MinimiseToSystemTray;

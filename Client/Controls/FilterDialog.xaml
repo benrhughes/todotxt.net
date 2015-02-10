@@ -31,25 +31,25 @@
             <ScrollViewer Height="430">
                 <StackPanel Margin="12">
                     <Label Content="Currently active filter:" Margin="0"/>
-                    <local:IntellisenseTextBox x:Name="tbFilter" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <local:IntellisenseTextBox x:Name="tbFilter" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" CaseSensitive="{Binding Source={x:Static local:User.Default}, Path=IntellisenseCaseSensitive}" />
                     <Label Content="Preset filter #1:"/>
-                    <local:IntellisenseTextBox x:Name="tbFilterPreset1" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset1" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" CaseSensitive="{Binding Source={x:Static local:User.Default}, Path=IntellisenseCaseSensitive}" />
                     <Label Content="Preset filter #2:" />
-                    <local:IntellisenseTextBox x:Name="tbFilterPreset2" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset2" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" CaseSensitive="{Binding Source={x:Static local:User.Default}, Path=IntellisenseCaseSensitive}" />
                     <Label Content="Preset filter #3:" />
-                    <local:IntellisenseTextBox x:Name="tbFilterPreset3" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset3" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" CaseSensitive="{Binding Source={x:Static local:User.Default}, Path=IntellisenseCaseSensitive}" />
                     <Label Content="Preset filter #4:" />
-                    <local:IntellisenseTextBox x:Name="tbFilterPreset4" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset4" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" CaseSensitive="{Binding Source={x:Static local:User.Default}, Path=IntellisenseCaseSensitive}" />
                     <Label Content="Preset filter #5:" />
-                    <local:IntellisenseTextBox x:Name="tbFilterPreset5" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset5" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" CaseSensitive="{Binding Source={x:Static local:User.Default}, Path=IntellisenseCaseSensitive}" />
                     <Label Content="Preset filter #6:" />
-                    <local:IntellisenseTextBox x:Name="tbFilterPreset6" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset6" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" CaseSensitive="{Binding Source={x:Static local:User.Default}, Path=IntellisenseCaseSensitive}" />
                     <Label Content="Preset filter #7:" />
-                    <local:IntellisenseTextBox x:Name="tbFilterPreset7" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset7" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" CaseSensitive="{Binding Source={x:Static local:User.Default}, Path=IntellisenseCaseSensitive}" />
                     <Label Content="Preset filter #8:" />
-                    <local:IntellisenseTextBox x:Name="tbFilterPreset8" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset8" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" CaseSensitive="{Binding Source={x:Static local:User.Default}, Path=IntellisenseCaseSensitive}" />
                     <Label Content="Preset filter #9:" />
-                    <local:IntellisenseTextBox x:Name="tbFilterPreset9" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" />
+                    <local:IntellisenseTextBox x:Name="tbFilterPreset9" PreviewKeyUp="tbFilter_PreviewKeyUp" TaskList="{Binding TaskList}" CaseSensitive="{Binding Source={x:Static local:User.Default}, Path=IntellisenseCaseSensitive}" />
                 </StackPanel>
             </ScrollViewer>
         </Border>

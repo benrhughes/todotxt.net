@@ -21,6 +21,7 @@ namespace Client
         private Popup IntellisensePopup { get; set; }
         private ListBox IntellisenseList { get; set; }
         private int IntelliPos { get; set; } // used to position the Intellisense popup
+
         public TaskList TaskList
         {
             get
@@ -34,6 +35,20 @@ namespace Client
         }
         public static readonly DependencyProperty TaskListProperty =
             DependencyProperty.Register("TaskList", typeof(TaskList), typeof(IntellisenseTextBox), new UIPropertyMetadata(null));
+
+        public bool CaseSensitive
+        {
+            get
+            {
+                return (bool)GetValue(CaseSensitiveProperty);
+            }
+            set
+            {
+                SetValue(CaseSensitiveProperty, value);
+            }
+        }
+        public static readonly DependencyProperty CaseSensitiveProperty =
+            DependencyProperty.Register("CaseSensitive", typeof(bool), typeof(IntellisenseTextBox), new UIPropertyMetadata(false));
 
         #endregion
 
@@ -213,7 +228,14 @@ namespace Client
                         break;
                     default:
                         var word = FindIntelliWord();
-                        this.IntellisenseList.Items.Filter = (o) => o.ToString().Contains(word);
+                        if (this.CaseSensitive)
+                        {
+                            this.IntellisenseList.Items.Filter = (o) => o.ToString().Contains(word);
+                        }
+                        else
+                        {
+                            this.IntellisenseList.Items.Filter = (o) => (o.ToString().IndexOf(word, StringComparison.CurrentCultureIgnoreCase) >= 0);
+                        }
                         e.Handled = true;
                         break;
                 }

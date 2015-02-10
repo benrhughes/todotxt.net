@@ -442,5 +442,17 @@ namespace Client {
                 this["WordWrap"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IntellisenseCaseSensitive {
+            get {
+                return ((bool)(this["IntellisenseCaseSensitive"]));
+            }
+            set {
+                this["IntellisenseCaseSensitive"] = value;
+            }
+        }
     }
 }
