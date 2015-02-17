@@ -79,6 +79,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\DeleteConfirmationDialog.xaml.cs">
+      <DependentUpon>DeleteConfirmationDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\IntellisenseTextBox.cs" />
     <Compile Include="Controls\AppendTextDialog.xaml.cs">
       <DependentUpon>AppendTextDialog.xaml</DependentUpon>
@@ -125,6 +128,10 @@
       <DependentUpon>User.settings</DependentUpon>
     </Compile>
     <Compile Include="WindowLocation.cs" />
+    <Page Include="Controls\DeleteConfirmationDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\AppendTextDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -756,11 +756,8 @@ namespace Client
 
             bool isTaskListFocused = _window.lbTasks.IsKeyboardFocusWithin;
 
-            var res = MessageBox.Show("Permanently delete the selected tasks?",
-                            "Confirm Delete",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Warning);
-            if (res != MessageBoxResult.Yes)
+            var res = ShowDeleteConfirmationDialog();
+            if (!res)
             {
                 return;
             }
@@ -792,6 +789,18 @@ namespace Client
             }
 
             EnableFileChangeObserver();
+        }
+
+        private bool ShowDeleteConfirmationDialog()
+        {
+            if (!AreTasksSelected())
+            {
+                return false;
+            }
+
+            var dialog = new DeleteConfirmationDialog();
+            dialog.Owner = _window;
+            return dialog.ShowDialog().Value;
         }
 
         public void AppendText()
