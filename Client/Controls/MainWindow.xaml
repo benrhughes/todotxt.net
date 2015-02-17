@@ -71,13 +71,12 @@
         <RoutedUICommand x:Key="ShowCalendar" Text="Show Calendar" />
         <!-- Control style templates -->
         <Style x:Key="WordWrapEnabledListBox" TargetType="ListBox">
+            <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="True">
-                    <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
                     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="False">
-                    <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
                     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
                 </DataTrigger>
             </Style.Triggers>
