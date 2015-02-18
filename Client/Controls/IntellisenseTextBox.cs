@@ -96,8 +96,8 @@ namespace Client
             }
 
             this.IntellisensePopup.PlacementRectangle = placement;
-
             this.IntellisenseList.ItemsSource = s;
+            this.IntellisenseList.SelectedItem = null;
             this.IntellisensePopup.IsOpen = true;
 
             this.Focus();
