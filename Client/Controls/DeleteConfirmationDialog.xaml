@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Client.DeleteConfirmationDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Confirm Delete" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight">
+        Title="Confirm Deletion" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight">
         <Window.Resources>
             <Style TargetType="TextBox">
                 <Setter Property="Height" Value="23" />
@@ -21,14 +21,16 @@
         </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="Enter" Command="{StaticResource OK}" />
+        <KeyBinding Key="Y" Command="{StaticResource OK}" />
         <KeyBinding Key="Escape" Command="{StaticResource Cancel}" />
+        <KeyBinding Key="N" Command="{StaticResource Cancel}" />
     </Window.InputBindings>
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal" Margin="12">
             <Image Name="img" Height="24" Width="24" />
             <Label Content="Permanently delete the selected tasks?" />
-            <Button Content="OK" Name="OK" IsDefault="True" Command="{StaticResource OK}" />
-            <Button Content="Cancel" Name="Cancel" Command="{StaticResource Cancel}" />
+            <Button Content="Yes" Name="OK" IsDefault="True" Command="{StaticResource OK}" />
+            <Button Content="No" Name="Cancel" Command="{StaticResource Cancel}" />
         </StackPanel>
     </StackPanel>
 </Window>
