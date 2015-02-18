@@ -787,6 +787,11 @@ namespace Client
                 return;
             }
 
+            if (_window.lbTasks.SelectedItems.Contains(_updating))
+            {
+                _updating = null;
+            }
+
             GetSelectedTasks();
             
             DisableFileChangeObserver();
