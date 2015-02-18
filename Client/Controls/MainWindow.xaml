@@ -89,6 +89,15 @@
                 <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="False">
                     <Setter Property="TextWrapping" Value="NoWrap" />
                 </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=lbTasks, Path=IsGrouping}" Value="True">
+                    <Setter Property="Padding" Value="5,0,0,0" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=lbTasks, Path=IsGrouping}" Value="False">
+                    <Setter Property="Padding" Value="0,0,0,0" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Completed}" Value="True">
+                    <Setter Property="TextDecorations" Value="Strikethrough" />
+                </DataTrigger>
             </Style.Triggers>
         </Style>
     </Window.Resources>
@@ -338,11 +347,24 @@
             </ListBox.ItemTemplate>
             <ListBox.GroupStyle>
                 <GroupStyle HidesIfEmpty="False">
-                    <GroupStyle.HeaderTemplate>
-                        <DataTemplate>
-                            <TextBlock FontWeight="Bold" Text="{Binding Name}" Margin="0,10,0,3"/>
-                        </DataTemplate>
-                    </GroupStyle.HeaderTemplate>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="GroupItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="GroupItem">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Grid.Row="0" local:UrlService.Text="{Binding Name}" Margin="0,10,0,3" FontWeight="Bold"/>
+                                            <ItemsPresenter Grid.Row="1"/>
+                                        </Grid>
+                                        </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
                 </GroupStyle>
             </ListBox.GroupStyle>
         </ListBox>

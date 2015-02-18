@@ -42,12 +42,5 @@
                 </MultiDataTrigger>
             </Style.Triggers>
         </Style>
-        <Style TargetType="{x:Type TextBlock}">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=Completed}" Value="True">
-                    <Setter Property="TextDecorations" Value="Strikethrough" />
-                </DataTrigger>
-            </Style.Triggers>    
-        </Style>
     </Application.Resources>
 </Application>
