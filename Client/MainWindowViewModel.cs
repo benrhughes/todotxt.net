@@ -425,6 +425,31 @@ namespace Client
                         && !task.DueDate.IsNullOrEmpty()
                         && !task.DueDate.IsDateGreaterThan(DateTime.Now))
                         continue;
+                    else if (filter.Equals("-due:today", StringComparison.OrdinalIgnoreCase)
+                        && task.DueDate == DateTime.Now.ToString("yyyy-MM-dd"))
+                    {
+                        include = false;
+                        continue;
+                    }                       
+                    else if (filter.Equals("-due:future", StringComparison.OrdinalIgnoreCase)
+                        && task.DueDate.IsDateGreaterThan(DateTime.Now))
+                    {
+                        include = false;
+                        continue;
+                    }
+                    else if (filter.Equals("-due:past", StringComparison.OrdinalIgnoreCase)
+                        && task.DueDate.IsDateLessThan(DateTime.Now))
+                    {
+                        include = false;
+                        continue;
+                    }
+                    else if (filter.Equals("-due:active", StringComparison.OrdinalIgnoreCase)
+                        && !task.DueDate.IsNullOrEmpty()
+                        && !task.DueDate.IsDateGreaterThan(DateTime.Now))
+                    {
+                        include = false;
+                        continue;
+                    }                       
 
                     if (filter.Substring(0, 1) == "-")
                     {
