@@ -323,7 +323,7 @@
                 <KeyBinding Command="{StaticResource ApplyFilterPreset9}" Key="D9"/>
                 <!-- Help menu commands -->
                 <KeyBinding Command="{StaticResource HelpAbout}" Key="OemQuestion" Modifiers="Shift"/>
-                <KeyBinding Command="{StaticResource ShowCalendar}" Key="RightShift"/>
+                <KeyBinding Command="{StaticResource ShowCalendar}" Key="RightShift" Modifiers="Shift"/>
             </ListBox.InputBindings>
             <ListBox.ItemTemplate>
                 <DataTemplate>
