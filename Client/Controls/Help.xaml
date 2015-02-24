@@ -2,17 +2,24 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Help" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" KeyDown="Help_OnKeyDown">
-	<ScrollViewer>
-		<Grid>
-			<TextBlock Height="35" FontSize="20" Margin="23,0,0,0" Name="tbTitle" Text="Title" VerticalAlignment="Top" HorizontalAlignment="Left" />
-			<TextBlock Name="tbVersion" Text="Version" Margin="0,9,44,0" Height="23" VerticalAlignment="Top" HorizontalAlignment="Right"  />
-			<StackPanel>
-				<TextBlock Height="auto" HorizontalAlignment="Left" Margin="23,38,0,0" Name="tbHelpText" Text="Help Text" VerticalAlignment="Top" />
-				<TextBlock HorizontalAlignment="Left" Margin="23,10,0,0" Name="textBlock1" Text="More info available at " Height="23" VerticalAlignment="Top">
+    <ScrollViewer>
+        <Grid Margin="12">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Name="tbTitle" Text="Title" LineHeight="35" LineStackingStrategy="BlockLineHeight" FontSize="20" HorizontalAlignment="Left" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Name="tbVersion" Text="Version" LineHeight="35" LineStackingStrategy="BlockLineHeight" HorizontalAlignment="Right"  />
+            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                <TextBlock Height="auto" HorizontalAlignment="Left" Margin="0,12,0,0" Name="tbHelpText" Text="Help Text" VerticalAlignment="Top" />
+                <TextBlock HorizontalAlignment="Left" Margin="0,12,0,0" Name="textBlock1" Text="More info available at " Height="23" VerticalAlignment="Top">
 				<Hyperlink Name="hLink" RequestNavigate="Hyperlink_RequestNavigate"><TextBlock Name="tbLink" Text="benrhughes.com/todotxt.net" /></Hyperlink>
 			</TextBlock>
-			</StackPanel>
-		</Grid>
-	</ScrollViewer>
-
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </Window>

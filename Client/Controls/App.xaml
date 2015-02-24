@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Startup="Application_Startup">
     <Application.Resources>
-        <Style  TargetType="{x:Type ListBoxItem}">
+        <Style TargetType="{x:Type ListBoxItem}">
 			<Setter Property="BorderBrush" Value="{x:Null}"/>
             <Style.Triggers>                                
                 <Trigger Property="ItemsControl.AlternationIndex"

@@ -201,8 +201,11 @@
     - A: archive tasks
     - D or Del or Backspace: delete task (with confirmation)
     - U or F2: update task
+    - T: append text to selected tasks
     - P: Postpone task (enter days to postpone, or day of week to postpone to)
     - F: filter tasks (free-text, one filter condition per line)
+    - 0: clear filter
+    - 1-9: apply numbered filter preset
     - . or F5: reload tasks from file
     - ?: show help
     - Alt+Up: increase priority
@@ -237,7 +240,8 @@ Filtering
     - to exclude a term, start the line with a '-', eg -@work
     - due date filtering: due:today, due:past, due:future 
       or due:active (today and past)
-    - press Enter twice to save and close the filter
+    - precede due date filter with a '-' to produce the opposite due date filter
+    - press Enter twice, or press Control+Enter, to save and close the filter
     - set filter case sensistivity under File -&gt; Options...
 
 Font selector based on Alessio Saltarin's code: http://goo.gl/vmujX

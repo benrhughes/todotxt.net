@@ -106,13 +106,11 @@ namespace Client {
         ///    - A: archive tasks
         ///    - D or Del or Backspace: delete task (with confirmation)
         ///    - U or F2: update task
+        ///    - T: append text to selected tasks
         ///    - P: Postpone task (enter days to postpone, or day of week to postpone to)
         ///    - F: filter tasks (free-text, one filter condition per line)
-        ///    - . or F5: reload tasks from file
-        ///    - ?: show help
-        ///    - Alt+Up: increase priority
-        ///    - Alt+Down: decrease priority
-        ///    - Alt+Left/ [rest of string was truncated]&quot;;.
+        ///    - 0: clear filter
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string HelpText {
             get {
