@@ -69,7 +69,8 @@ namespace Client
             this.IntellisensePopup = new Popup();
             this.IntellisensePopup.IsOpen = false;
             this.IntellisensePopup.Height = Double.NaN; // auto
-            this.IntellisensePopup.Width = 150;
+            this.IntellisensePopup.MinWidth = 150;
+            this.IntellisensePopup.MaxWidth = 500;
             this.IntellisensePopup.StaysOpen = false;
             this.IntellisensePopup.Placement = PlacementMode.Bottom;
             this.IntellisensePopup.PlacementTarget = this;
