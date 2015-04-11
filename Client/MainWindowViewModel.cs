@@ -1272,7 +1272,10 @@ namespace Client
             User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
             User.Default.AllowGrouping = o.cbAllowGrouping.IsChecked.Value;
             User.Default.PreserveWhiteSpace = o.cbPreserveWhiteSpace.IsChecked.Value;
-            TaskList.PreserveWhiteSpace = User.Default.PreserveWhiteSpace;
+            if (TaskList != null)
+            {
+                TaskList.PreserveWhiteSpace = User.Default.PreserveWhiteSpace;
+            }
             User.Default.WordWrap = o.cbWordWrap.IsChecked.Value;
 
             // Unfortunately, font classes are not serializable, so all the pieces are tracked instead.
