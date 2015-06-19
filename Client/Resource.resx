@@ -204,6 +204,7 @@
     - T: append text to selected tasks
     - P: Postpone task (enter days to postpone, or day of week to postpone to)
     - F: filter tasks (free-text, one filter condition per line)
+    - I: set priority
     - 0: clear filter
     - 1-9: apply numbered filter preset
     - . or F5: reload tasks from file
