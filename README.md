@@ -40,6 +40,7 @@ Please send your pull requests to the 'dev' branch. If you forget it's not a maj
 	- U or F2: update task
     - T: append text to selected tasks
 	- F: filter tasks (free-text, one filter condition per line)
+	- I: set priority
     - 0: clear filter
     - 1-9: apply numbered filter preset
 	- . or F5: reload tasks from file
