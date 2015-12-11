@@ -450,6 +450,16 @@ namespace Client
                         include = false;
                         continue;
                     }                       
+                    else if (filter.Equals("-DONE", StringComparison.Ordinal) && task.Completed)
+                    {
+                        include = false;
+                        continue;
+                    }
+                    else if (filter.Equals("DONE", StringComparison.Ordinal) && !task.Completed)
+                    {
+                        include = false;
+                        continue;
+                    }
 
                     if (filter.Substring(0, 1) == "-")
                     {
