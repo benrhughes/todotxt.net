@@ -760,6 +760,9 @@ namespace Client
                 {
                     if (filter.Contains("due:active"))
                         filters = filters + " " + "due:today"; // If the current filter is "active", replace it here with "today"
+                    else if (filter.Equals("DONE", StringComparison.Ordinal) 
+                        || filter.Equals("-DONE", StringComparison.Ordinal))
+                        continue
                     else
                         filters = filters + " " + filter;
                 }
