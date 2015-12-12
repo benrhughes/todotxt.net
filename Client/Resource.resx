@@ -242,6 +242,7 @@ Filtering
     - due date filtering: due:today, due:past, due:future 
       or due:active (today and past)
     - precede due date filter with a '-' to produce the opposite due date filter
+    - filter by completion: DONE, -DONE (case sensitive)
     - press Enter twice, or press Control+Enter, to save and close the filter
     - set filter case sensistivity under File -&gt; Options...
 
