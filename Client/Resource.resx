@@ -190,6 +190,7 @@
             width: 60px;
         }</value>
   </data>
+  
   <data name="HelpText" xml:space="preserve">
     <value>Keyboard shortcuts:
     - O or Ctrl+O: open todo.txt file
