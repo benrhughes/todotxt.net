@@ -28,7 +28,6 @@ namespace Client
 			tbHelpText.Text = helpText;
 			hLink.NavigateUri = new Uri(helpUrl);
 			tbLink.Text = helpUrlText;
-            Application.Current.MainWindow.MaxHeight = 500;
 		}
 
 		private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
