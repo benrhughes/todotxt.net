@@ -1,24 +1,55 @@
 ﻿<Window x:Class="Client.Help"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Help" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" KeyDown="Help_OnKeyDown">
-    <ScrollViewer>
+        Title="Help"
+        Width="400"
+        Height="500"
+        KeyDown="Help_OnKeyDown"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterScreen">
+    <ScrollViewer MaxHeight="500">
         <Grid Margin="12">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Name="tbTitle" Text="Title" LineHeight="35" LineStackingStrategy="BlockLineHeight" FontSize="20" HorizontalAlignment="Left" />
-            <TextBlock Grid.Row="0" Grid.Column="1" Name="tbVersion" Text="Version" LineHeight="35" LineStackingStrategy="BlockLineHeight" HorizontalAlignment="Right"  />
-            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-                <TextBlock Height="auto" HorizontalAlignment="Left" Margin="0,12,0,0" Name="tbHelpText" Text="Help Text" VerticalAlignment="Top" />
-                <TextBlock HorizontalAlignment="Left" Margin="0,12,0,0" Name="textBlock1" Text="More info available at " Height="23" VerticalAlignment="Top">
-				<Hyperlink Name="hLink" RequestNavigate="Hyperlink_RequestNavigate"><TextBlock Name="tbLink" Text="benrhughes.com/todotxt.net" /></Hyperlink>
-			</TextBlock>
+            <TextBlock Name="tbTitle"
+                       Grid.Row="0"
+                       Grid.Column="0"
+                       HorizontalAlignment="Left"
+                       FontSize="20"
+                       LineHeight="35"
+                       LineStackingStrategy="BlockLineHeight"
+                       Text="Title" />
+            <TextBlock Name="tbVersion"
+                       Grid.Row="0"
+                       Grid.Column="1"
+                       HorizontalAlignment="Right"
+                       LineHeight="35"
+                       LineStackingStrategy="BlockLineHeight"
+                       Text="Version" />
+            <StackPanel Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2">
+                <TextBlock Name="tbHelpText"
+                           Margin="0,12,0,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Text="Help Text" />
+                <TextBlock Name="textBlock1"
+                           Height="23"
+                           Margin="0,12,0,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Text="More info available at ">
+                    <Hyperlink Name="hLink" RequestNavigate="Hyperlink_RequestNavigate">
+                        <TextBlock Name="tbLink" Text="benrhughes.com/todotxt.net" />
+                    </Hyperlink>
+                </TextBlock>
             </StackPanel>
         </Grid>
     </ScrollViewer>
