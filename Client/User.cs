@@ -1,4 +1,6 @@
-﻿namespace Client 
+﻿using System.IO;
+
+namespace Client 
 {      
     // This class allows you to handle specific events on the settings class:
     //  The SettingChanging event is raised before a setting's value is changed.
@@ -25,6 +27,17 @@
         private void SettingsSavingEventHandler(object sender, System.ComponentModel.CancelEventArgs e) 
         {
             // Add code to handle the SettingsSaving event here.
+        }
+
+        public string SelectedArchiveFilePath
+        {
+            get
+            {
+                return
+                    AutoSelectArchivePath
+                    ? Path.Combine(Path.GetDirectoryName(FilePath), "done.txt")
+                    : ArchiveFilePath;
+            }
         }
     }
 }

@@ -20,7 +20,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="23"/>
-                <RowDefinition Height="46"/>
+                <RowDefinition Height="55"/>
                 <RowDefinition Height="23"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -31,7 +31,10 @@
             <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Content="Archive File" />
             <TextBox Grid.Row="0" Grid.Column="1" Name="tbArchiveFile" />
             <Button Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Content="Select..." Name="button1" Click="button1_Click" />
-            <CheckBox Grid.Row="1" Grid.Column="1" Content="Automatically archive completed tasks" Name="cbAutoArchive" />
+            <StackPanel Grid.Row="1" Grid.Column="1">
+                <CheckBox Content="Automatically archive completed tasks" Name="cbAutoArchive" />
+                <CheckBox Content="Automatically select archive path" Name="cbAutoSelectArchivePath" />
+            </StackPanel>
             <Label Grid.Row="2" Grid.Column="0" Content="Current Font" />
             <TextBox Grid.Row="2" Grid.Column="1" Name="currentFontDisplay" IsUndoEnabled="False" IsReadOnly="True" />
             <Button Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" Content="Select Font..." Name="selectFonts" Click="selectFonts_Click" />

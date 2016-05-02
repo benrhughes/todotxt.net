@@ -1212,12 +1212,12 @@ namespace Client
         
         public void ArchiveCompleted()
         {
-            if (!File.Exists(User.Default.ArchiveFilePath))
+            if (!File.Exists(User.Default.SelectedArchiveFilePath))
             {
                 ShowOptionsDialog();
             }
 
-            if (!File.Exists(User.Default.ArchiveFilePath))
+            if (!File.Exists(User.Default.SelectedArchiveFilePath))
             {
                 return;
             }
@@ -1226,7 +1226,7 @@ namespace Client
             
             DisableFileChangeObserver();
 
-            var archiveList = new TaskList(User.Default.ArchiveFilePath, User.Default.PreserveWhiteSpace);
+            var archiveList = new TaskList(User.Default.SelectedArchiveFilePath, User.Default.PreserveWhiteSpace);
             var completed = TaskList.Tasks.Where(t => t.Completed);
             
             // Make sure we are working with the latest version of the file.
@@ -1275,6 +1275,7 @@ namespace Client
 
             User.Default.ArchiveFilePath = o.tbArchiveFile.Text;
             User.Default.AutoArchive = o.cbAutoArchive.IsChecked.Value;
+            User.Default.AutoSelectArchivePath = o.cbAutoSelectArchivePath.IsChecked.Value;
             User.Default.MoveFocusToTaskListAfterAddingNewTask = o.cbMoveFocusToTaskListAfterAddingNewTask.IsChecked.Value;
             User.Default.AutoRefresh = o.cbAutoRefresh.IsChecked.Value;
             User.Default.FilterCaseSensitive = o.cbCaseSensitiveFilter.IsChecked.Value;
