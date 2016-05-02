@@ -26,6 +26,7 @@ namespace Client
 
             tbArchiveFile.Text = User.Default.ArchiveFilePath;
             cbAutoArchive.IsChecked = User.Default.AutoArchive;
+            cbAutoSelectArchivePath.IsChecked = User.Default.AutoSelectArchivePath;
             cbAutoRefresh.IsChecked = User.Default.AutoRefresh;
             cbCaseSensitiveFilter.IsChecked = User.Default.FilterCaseSensitive;
             cbIntellisenseCaseSensitive.IsChecked = User.Default.IntellisenseCaseSensitive;

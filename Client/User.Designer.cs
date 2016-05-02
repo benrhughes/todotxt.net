@@ -454,5 +454,17 @@ namespace Client {
                 this["IntellisenseCaseSensitive"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoSelectArchivePath {
+            get {
+                return ((bool)(this["AutoSelectArchivePath"]));
+            }
+            set {
+                this["AutoSelectArchivePath"] = value;
+            }
+        }
     }
 }
