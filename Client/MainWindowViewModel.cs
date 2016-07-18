@@ -20,7 +20,8 @@ using System.Globalization;
 
 namespace Client
 {
-    public class MainWindowViewModel
+    // INotifyPropertyChanged interface implemented to notify UI for status bar changes.
+    public class MainWindowViewModel : INotifyPropertyChanged
     {
         private CollectionView _myView;
         private FileChangeObserver _changefile;
@@ -39,16 +40,41 @@ namespace Client
             get { return _sortType; }
             set
             {
+                bool raiseEvent = false;
                 if (_sortType != value)
                 {
                     User.Default.CurrentSort = (int)value;
                     User.Default.Save();
+                    raiseEvent = true;
                 }
 
                 _sortType = value;
+
+                if(raiseEvent)
+                {
+                    RaiseProperyChanged(nameof(SortType));
+                }
             }
         }
 
+        private String _filterDescription = String.Empty;
+        public String FilterDescription
+        {
+            get
+            {
+                return _filterDescription;
+            }
+            private set
+            {
+                if (!_filterDescription.Equals(value))
+                {
+                    _filterDescription = value;
+                    RaiseProperyChanged(nameof(FilterDescription));
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public MainWindowViewModel(MainWindow window)
         {
@@ -61,6 +87,7 @@ namespace Client
 
             SortType = (SortType)User.Default.CurrentSort;
 
+            FilterDescription = "Filter: None";
 
             if (!string.IsNullOrEmpty(User.Default.FilePath))
             {
@@ -571,8 +598,9 @@ namespace Client
             SetSelectedTasks();
             
             User.Default.Save();
+
+            FilterDescription = String.Format("Filter #{0}", filterPresetNumber);
         }
-        
         #endregion
 
         #region Sort Methods
@@ -1644,6 +1672,16 @@ namespace Client
 
         }
 
+        #endregion
+
+        #region Utility Methods
+        private void RaiseProperyChanged(String propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
         #endregion
     }
 }
