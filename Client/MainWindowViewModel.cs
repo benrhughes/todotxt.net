@@ -32,7 +32,7 @@ namespace Client
         private List<CollectionViewGroup> _viewGroups;
         private int _nextGroupAtTaskNumber;
         private List<Task> _selectedTasks;
-        
+
         public TaskList TaskList { get; set; }
         public Help HelpPage { get; private set; }
         public SortType SortType
@@ -57,22 +57,117 @@ namespace Client
             }
         }
 
-        private String _filterDescription = String.Empty;
-        public String FilterDescription
+        private int _activeFilterNumber = -1;
+        public int ActiveFilterNumber
         {
             get
             {
-                return _filterDescription;
+                return _activeFilterNumber;
             }
             private set
             {
-                if (!_filterDescription.Equals(value))
+                if (_activeFilterNumber != value)
                 {
-                    _filterDescription = value;
-                    RaiseProperyChanged(nameof(FilterDescription));
+                    _activeFilterNumber = value;
+                    RaiseProperyChanged(nameof(ActiveFilterNumber));
                 }
             }
         }
+
+        private int totalTasks = 0;
+        public int TotalTasks
+        {
+            get
+            {
+                return totalTasks;
+            }
+
+            set
+            {
+                if (totalTasks != value)
+                {
+                    totalTasks = value;
+                    RaiseProperyChanged(nameof(TotalTasks));
+                }
+            }
+        }
+
+        private int filteredTasks = 0;
+        public int FilteredTasks
+        {
+            get
+            {
+                return filteredTasks;
+            }
+
+            set
+            {
+                if (filteredTasks != value)
+                {
+                    filteredTasks = value;
+                    RaiseProperyChanged(nameof(FilteredTasks));
+                }
+            }
+        }
+
+        private int incompleteTasks = 0;
+        public int IncompleteTasks
+        {
+            get
+            {
+                return incompleteTasks;
+            }
+
+            set
+            {
+                if (incompleteTasks != value)
+                {
+                    incompleteTasks = value;
+                    RaiseProperyChanged(nameof(IncompleteTasks));
+                }
+            }
+        }
+
+        private int tasksDueToday = 0;
+
+        public int TasksDueToday
+        {
+            get
+            {
+                return tasksDueToday;
+            }
+
+            set
+            {
+                if (tasksDueToday != value)
+                {
+                    tasksDueToday = value;
+                    RaiseProperyChanged(nameof(TasksDueToday));
+                }
+            }
+        }
+
+        public int TasksOverdue
+        {
+            get
+            {
+                return tasksOverdue;
+            }
+
+            set
+            {
+                if (tasksOverdue != value)
+                {
+                    tasksOverdue = value;
+                    RaiseProperyChanged(nameof(TasksOverdue));
+                }
+            }
+        }
+
+        private int tasksOverdue = 0;
+
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -87,7 +182,7 @@ namespace Client
 
             SortType = (SortType)User.Default.CurrentSort;
 
-            FilterDescription = "Filter: None";
+            ActiveFilterNumber=0;
 
             if (!string.IsNullOrEmpty(User.Default.FilePath))
             {
@@ -215,6 +310,13 @@ namespace Client
             try
             {
                 TaskList = new TaskList(filePath, User.Default.PreserveWhiteSpace);
+                if (TaskList != null)
+                {
+                    // The first time the task list has been modified before we got a chance to hook to the modified event
+                    // so call the method and then hook to the Modified event
+                    TaskList.Modified += TaskList_Modified;
+                    TaskList_Modified(TaskList, EventArgs.Empty);
+                }
                 User.Default.FilePath = filePath;
                 User.Default.Save();
                 EnableFileChangeObserver();
@@ -224,6 +326,11 @@ namespace Client
             {
                 ex.Handle("An error occurred while opening " + filePath);
             }
+        }
+
+        private void TaskList_Modified(object sender, EventArgs e)
+        {
+            this.TotalTasks = TaskList.Tasks.Count;
         }
 
         public void ReloadFile()
@@ -294,8 +401,12 @@ namespace Client
                 {
                     _myView.GroupDescriptions.Clear();
                 }
+
+                var selectedTasksList = sortedTaskList.ToList();
                 _window.lbTasks.ItemsSource = sortedTaskList;
                 _window.lbTasks.UpdateLayout();
+                //sortedTaskList.
+                UpdateSummary(selectedTasksList);
             }
             catch (Exception ex)
             {
@@ -304,6 +415,41 @@ namespace Client
 
             // Set the menu item to Bold to easily identify if there is a filter in force
             _window.filterMenu.FontWeight = User.Default.FilterText.Length == 0 ? FontWeights.Normal : FontWeights.Bold;
+        }
+
+        protected void UpdateSummary(List<Task> selectedTasksList)
+        {
+            FilteredTasks = selectedTasksList.Count;
+
+            int fTask = 0, incompTask = 0, dueTodayTask = 0, overdueTask = 0;
+            foreach (Task t in selectedTasksList)
+            {
+                if (!t.Completed)
+                {
+                    incompTask++;
+
+
+                    if (!String.IsNullOrEmpty(t.DueDate))
+                    {
+                        DateTime dueDt;
+
+                        if (DateTime.TryParseExact(t.DueDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out dueDt))
+                        {
+                            if (dueDt.Date == DateTime.Today.Date)
+                            {
+                                dueTodayTask++;
+                            }
+                            else if (dueDt.Date < DateTime.Today)
+                            {
+                                overdueTask++;
+                            }
+                        }
+                    }
+                }
+            }
+            IncompleteTasks = incompTask;
+            TasksOverdue = overdueTask;
+            TasksDueToday = dueTodayTask;
         }
 
         /// <summary>
@@ -599,7 +745,7 @@ namespace Client
             
             User.Default.Save();
 
-            FilterDescription = String.Format("Filter #{0}", filterPresetNumber);
+            ActiveFilterNumber = filterPresetNumber;
         }
         #endregion
 
