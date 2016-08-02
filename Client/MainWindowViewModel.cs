@@ -188,6 +188,8 @@ namespace Client
             {
                 LoadTasks(User.Default.FilePath);
             }
+
+            window.sbTaskSummary.Visibility = User.Default.DisplayStatusBar ? Visibility.Visible : Visibility.Collapsed;
         }
 
         #region File Change Observer
@@ -1474,6 +1476,8 @@ namespace Client
             User.Default.TaskListFontStretch = o.TaskListFont.Stretch.ToString();
             User.Default.TaskListFontBrushColor = o.TaskListFont.BrushColor.ToString();
 
+            User.Default.DisplayStatusBar = o.cbDisplayStatusBar.IsChecked.Value;
+
             User.Default.Save();
 
             Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
@@ -1493,7 +1497,10 @@ namespace Client
                 GetSelectedTasks();
                 UpdateDisplayedTasks();
                 SetSelectedTasks();
-            }			
+            }
+
+            _window.sbTaskSummary.Visibility = User.Default.DisplayStatusBar ? Visibility.Visible : Visibility.Collapsed;
+            _window.sbTaskSummary.UpdateLayout();
         }
 
         #endregion
