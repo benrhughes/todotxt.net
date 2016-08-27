@@ -11,7 +11,7 @@ namespace Client.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ((int)value > 0) ? String.Format("Filter #:{0}", value) : "Filter: None";
+            return ((int)value > 0) ? String.Format("Filter #: {0}", value) : "Filter: None";
 
         }
 
