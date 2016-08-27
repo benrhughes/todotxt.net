@@ -43,7 +43,11 @@ namespace ToDoLib
             ReloadTasks();
         }
 
-	    #endregion
+        #endregion
+
+        #region Events
+        public event EventHandler Modified;
+        #endregion
 
         #region Task List Metadata Methods
 
@@ -112,6 +116,7 @@ namespace ToDoLib
             finally
             {
                 UpdateTaskListMetaData();
+                RaiseModifiedEvent();
             }
 		}
 
@@ -149,8 +154,17 @@ namespace ToDoLib
             finally
             {
                 UpdateTaskListMetaData();
+                RaiseModifiedEvent();
             }
 		}
+
+        private void RaiseModifiedEvent()
+        {
+            if(Modified != null)
+            {
+                Modified(this, new EventArgs());
+            }
+        }
 
         public void Delete(Task task)
 		{
@@ -179,6 +193,7 @@ namespace ToDoLib
             finally
             {
                 UpdateTaskListMetaData();
+                RaiseModifiedEvent();
             }
 		}
 
@@ -227,6 +242,7 @@ namespace ToDoLib
             finally
             {
                 UpdateTaskListMetaData();
+                RaiseModifiedEvent();
             }
 		}
 

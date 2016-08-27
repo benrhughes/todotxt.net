@@ -54,6 +54,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Client\Client.csproj">
+      <Project>{fc3f905a-dee1-454e-8746-936492d66cf2}</Project>
+      <Name>Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ToDoLib\ToDoLib.csproj">
       <Project>{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}</Project>
       <Name>ToDoLib</Name>

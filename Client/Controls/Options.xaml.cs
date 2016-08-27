@@ -39,6 +39,7 @@ namespace Client
             cbPreserveWhiteSpace.IsChecked = User.Default.PreserveWhiteSpace;
             cbWordWrap.IsChecked = User.Default.WordWrap;
             this.TaskListFont = taskFont;
+            this.cbDisplayStatusBar.IsChecked = User.Default.DisplayStatusBar;
         }
 
         private FontInfo taskListFont;

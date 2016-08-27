@@ -51,6 +51,7 @@
             <CheckBox Content="Allow grouping of tasks" x:Name="cbAllowGrouping" />
             <CheckBox Content="Preserve leading whitespace and blank lines" x:Name="cbPreserveWhiteSpace"  />
             <CheckBox Content="Apply word wrap to task list" x:Name="cbWordWrap"  />
+            <CheckBox Content="Display status bar" x:Name="cbDisplayStatusBar" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="Cancel" Name="Cancel" Click="Cancel_Click" IsCancel="True" Margin="0,0,7,0"/>

@@ -20,7 +20,8 @@ using System.Globalization;
 
 namespace Client
 {
-    public class MainWindowViewModel
+    // INotifyPropertyChanged interface implemented to notify UI for status bar changes.
+    public class MainWindowViewModel : INotifyPropertyChanged
     {
         private CollectionView _myView;
         private FileChangeObserver _changefile;
@@ -31,7 +32,7 @@ namespace Client
         private List<CollectionViewGroup> _viewGroups;
         private int _nextGroupAtTaskNumber;
         private List<Task> _selectedTasks;
-        
+
         public TaskList TaskList { get; set; }
         public Help HelpPage { get; private set; }
         public SortType SortType
@@ -39,16 +40,136 @@ namespace Client
             get { return _sortType; }
             set
             {
+                bool raiseEvent = false;
                 if (_sortType != value)
                 {
                     User.Default.CurrentSort = (int)value;
                     User.Default.Save();
+                    raiseEvent = true;
                 }
 
                 _sortType = value;
+
+                if(raiseEvent)
+                {
+                    RaiseProperyChanged(nameof(SortType));
+                }
             }
         }
 
+        private int _activeFilterNumber = -1;
+        public int ActiveFilterNumber
+        {
+            get
+            {
+                return _activeFilterNumber;
+            }
+            private set
+            {
+                if (_activeFilterNumber != value)
+                {
+                    _activeFilterNumber = value;
+                    RaiseProperyChanged(nameof(ActiveFilterNumber));
+                }
+            }
+        }
+
+        private int totalTasks = 0;
+        public int TotalTasks
+        {
+            get
+            {
+                return totalTasks;
+            }
+
+            set
+            {
+                if (totalTasks != value)
+                {
+                    totalTasks = value;
+                    RaiseProperyChanged(nameof(TotalTasks));
+                }
+            }
+        }
+
+        private int filteredTasks = 0;
+        public int FilteredTasks
+        {
+            get
+            {
+                return filteredTasks;
+            }
+
+            set
+            {
+                if (filteredTasks != value)
+                {
+                    filteredTasks = value;
+                    RaiseProperyChanged(nameof(FilteredTasks));
+                }
+            }
+        }
+
+        private int incompleteTasks = 0;
+        public int IncompleteTasks
+        {
+            get
+            {
+                return incompleteTasks;
+            }
+
+            set
+            {
+                if (incompleteTasks != value)
+                {
+                    incompleteTasks = value;
+                    RaiseProperyChanged(nameof(IncompleteTasks));
+                }
+            }
+        }
+
+        private int tasksDueToday = 0;
+
+        public int TasksDueToday
+        {
+            get
+            {
+                return tasksDueToday;
+            }
+
+            set
+            {
+                if (tasksDueToday != value)
+                {
+                    tasksDueToday = value;
+                    RaiseProperyChanged(nameof(TasksDueToday));
+                }
+            }
+        }
+
+        public int TasksOverdue
+        {
+            get
+            {
+                return tasksOverdue;
+            }
+
+            set
+            {
+                if (tasksOverdue != value)
+                {
+                    tasksOverdue = value;
+                    RaiseProperyChanged(nameof(TasksOverdue));
+                }
+            }
+        }
+
+        private int tasksOverdue = 0;
+
+
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public MainWindowViewModel(MainWindow window)
         {
@@ -61,11 +182,14 @@ namespace Client
 
             SortType = (SortType)User.Default.CurrentSort;
 
+            ActiveFilterNumber=0;
 
             if (!string.IsNullOrEmpty(User.Default.FilePath))
             {
                 LoadTasks(User.Default.FilePath);
             }
+
+            window.sbTaskSummary.Visibility = User.Default.DisplayStatusBar ? Visibility.Visible : Visibility.Collapsed;
         }
 
         #region File Change Observer
@@ -188,6 +312,13 @@ namespace Client
             try
             {
                 TaskList = new TaskList(filePath, User.Default.PreserveWhiteSpace);
+                if (TaskList != null)
+                {
+                    // The first time the task list has been modified before we got a chance to hook to the modified event
+                    // so call the method and then hook to the Modified event
+                    TaskList.Modified += TaskList_Modified;
+                    TaskList_Modified(TaskList, EventArgs.Empty);
+                }
                 User.Default.FilePath = filePath;
                 User.Default.Save();
                 EnableFileChangeObserver();
@@ -197,6 +328,11 @@ namespace Client
             {
                 ex.Handle("An error occurred while opening " + filePath);
             }
+        }
+
+        private void TaskList_Modified(object sender, EventArgs e)
+        {
+            this.TotalTasks = TaskList.Tasks.Count;
         }
 
         public void ReloadFile()
@@ -267,8 +403,12 @@ namespace Client
                 {
                     _myView.GroupDescriptions.Clear();
                 }
+
+                var selectedTasksList = sortedTaskList.ToList();
                 _window.lbTasks.ItemsSource = sortedTaskList;
                 _window.lbTasks.UpdateLayout();
+                //sortedTaskList.
+                UpdateSummary(selectedTasksList);
             }
             catch (Exception ex)
             {
@@ -277,6 +417,41 @@ namespace Client
 
             // Set the menu item to Bold to easily identify if there is a filter in force
             _window.filterMenu.FontWeight = User.Default.FilterText.Length == 0 ? FontWeights.Normal : FontWeights.Bold;
+        }
+
+        protected void UpdateSummary(List<Task> selectedTasksList)
+        {
+            FilteredTasks = selectedTasksList.Count;
+
+            int fTask = 0, incompTask = 0, dueTodayTask = 0, overdueTask = 0;
+            foreach (Task t in selectedTasksList)
+            {
+                if (!t.Completed)
+                {
+                    incompTask++;
+
+
+                    if (!String.IsNullOrEmpty(t.DueDate))
+                    {
+                        DateTime dueDt;
+
+                        if (DateTime.TryParseExact(t.DueDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out dueDt))
+                        {
+                            if (dueDt.Date == DateTime.Today.Date)
+                            {
+                                dueTodayTask++;
+                            }
+                            else if (dueDt.Date < DateTime.Today)
+                            {
+                                overdueTask++;
+                            }
+                        }
+                    }
+                }
+            }
+            IncompleteTasks = incompTask;
+            TasksOverdue = overdueTask;
+            TasksDueToday = dueTodayTask;
         }
 
         /// <summary>
@@ -571,8 +746,9 @@ namespace Client
             SetSelectedTasks();
             
             User.Default.Save();
+
+            ActiveFilterNumber = filterPresetNumber;
         }
-        
         #endregion
 
         #region Sort Methods
@@ -1300,6 +1476,8 @@ namespace Client
             User.Default.TaskListFontStretch = o.TaskListFont.Stretch.ToString();
             User.Default.TaskListFontBrushColor = o.TaskListFont.BrushColor.ToString();
 
+            User.Default.DisplayStatusBar = o.cbDisplayStatusBar.IsChecked.Value;
+
             User.Default.Save();
 
             Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
@@ -1319,7 +1497,10 @@ namespace Client
                 GetSelectedTasks();
                 UpdateDisplayedTasks();
                 SetSelectedTasks();
-            }			
+            }
+
+            _window.sbTaskSummary.Visibility = User.Default.DisplayStatusBar ? Visibility.Visible : Visibility.Collapsed;
+            _window.sbTaskSummary.UpdateLayout();
         }
 
         #endregion
@@ -1644,6 +1825,16 @@ namespace Client
 
         }
 
+        #endregion
+
+        #region Utility Methods
+        private void RaiseProperyChanged(String propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
         #endregion
     }
 }
