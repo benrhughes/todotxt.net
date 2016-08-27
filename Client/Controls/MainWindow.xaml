@@ -381,6 +381,7 @@
         <WebBrowser Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,0" Name="webBrowser1" VerticalAlignment="Stretch" Width="Auto" Visibility="Hidden" Grid.ColumnSpan="2" />
         <Button Grid.Row="0" Grid.RowSpan="2" Content="Print" Height="23" HorizontalAlignment="Left" Margin="0,23,207,0" Name="btnPrint" VerticalAlignment="Top" Width="92" Visibility="Hidden" Click="btnPrint_Click" />
         <Button Grid.Row="0" Grid.RowSpan="2"  Content="Cancel" Height="23" HorizontalAlignment="Left" Margin="97,23,0,0" Name="btnCancelPrint" VerticalAlignment="Top" Width="92" Visibility="Hidden" Click="btnCancelPrint_Click" />
+        <!-- Status bar inspired by TodoTxtMac  -->
         <StatusBar Grid.Row="3" Name="sbTaskSummary">
             <TextBlock Name="lblFilterStatus" Text="{Binding ActiveFilterNumber, Mode=OneWay, Converter= {StaticResource filterToStatusConv}}" VerticalAlignment="Bottom"></TextBlock>
             <Separator></Separator>
