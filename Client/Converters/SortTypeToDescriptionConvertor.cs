@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Data;
-using static Client.Utilities.EnumExtensions;
+using Client.Utilities;
 
 namespace Client.Converters
 {
