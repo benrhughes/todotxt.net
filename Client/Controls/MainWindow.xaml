@@ -44,6 +44,8 @@
         <RoutedUICommand x:Key="IncrementDueDate" Text="Increase Due Date By 1 Day" />
         <RoutedUICommand x:Key="DecrementDueDate" Text="Decrease Due Date By 1 Day" />
         <RoutedUICommand x:Key="RemoveDueDate" Text="Remove Due Date" />
+
+
         <!-- Sort menu commands -->
         <RoutedUICommand x:Key="SortByAlphabetical" Text="Sort By Alphabetical" />
         <RoutedUICommand x:Key="SortByCompleted" Text="Sort By Completed" />
@@ -53,6 +55,7 @@
         <RoutedUICommand x:Key="SortByPriority" Text="Sort By Priority" />
         <RoutedUICommand x:Key="SortByProject" Text="Sort By Priority" />
         <RoutedUICommand x:Key="SortByFileOrder" Text="Sort By File Order" />
+
         <!-- Filter menu commands -->
         <RoutedUICommand x:Key="DefineFilters" Text="Define Filters" />
         <RoutedUICommand x:Key="RemoveFilter" Text="Remove Filter" />
@@ -65,11 +68,17 @@
         <RoutedUICommand x:Key="ApplyFilterPreset7" Text="Apply Preset Filter 7" />
         <RoutedUICommand x:Key="ApplyFilterPreset8" Text="Apply Preset Filter 8" />
         <RoutedUICommand x:Key="ApplyFilterPreset9" Text="Apply Preset Filter 9" />
+        
         <!-- Help menu commands -->
         <RoutedUICommand x:Key="HelpAbout" Text="About" />
         <RoutedUICommand x:Key="ViewLog" Text="View Log" />
         <RoutedUICommand x:Key="Donate" Text="Donate" />
         <RoutedUICommand x:Key="ShowCalendar" Text="Show Calendar" />
+
+        <!-- Record -->
+        <RoutedUICommand x:Key="AddTaskRecord" Text="Add Task Record" />
+        <RoutedUICommand x:Key="StartPomodoroTimer" Text="Start pomodoro timer" />
+
         <!-- Control style templates -->
         <Style x:Key="WordWrapEnabledListBox" TargetType="ListBox">
             <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
@@ -160,7 +169,11 @@
         <!-- Task List commands -->
         <CommandBinding Command="{StaticResource EmulateUpArrow}" CanExecute="WhenTasksLoadedCanExecute" Executed="EmulateUpArrowExecuted"/>
         <CommandBinding Command="{StaticResource EmulateDownArrow}" CanExecute="WhenTasksLoadedCanExecute" Executed="EmulateDownArrowExecuted"/>
+        <!--Record commands-->
+        <CommandBinding Command="{StaticResource AddTaskRecord}" CanExecute="WhenTasksLoadedCanExecute" Executed="AddTaskRecordExecuted"/>
+        <CommandBinding Command="{StaticResource StartPomodoroTimer}" CanExecute="WhenSingleTaskSelectedCanExecute" Executed="StartPomodoroTimerExecuted"/>
     </Window.CommandBindings>
+
     <Window.InputBindings>
         <!-- File menu commands -->
         <KeyBinding Command="{StaticResource OpenFile}" Key="O" Modifiers="Control" />
@@ -342,6 +355,11 @@
                 <!-- Help menu commands -->
                 <KeyBinding Command="{StaticResource HelpAbout}" Key="OemQuestion" Modifiers="Shift"/>
                 <KeyBinding Command="{StaticResource ShowCalendar}" Key="RightShift" Modifiers="Shift"/>
+
+                <!--Record-->
+                <KeyBinding Command="{StaticResource AddTaskRecord}" Key="R" />
+                <KeyBinding Command="{StaticResource StartPomodoroTimer}" Key="Y" />
+
             </ListBox.InputBindings>
             <ListBox.ItemTemplate>
                 <DataTemplate>
