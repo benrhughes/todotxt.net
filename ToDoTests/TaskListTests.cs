@@ -45,11 +45,11 @@ namespace ToDoTests
         [Test]
         public void Add_ToCollection()
         {
-            var task = new TaskItem("(B) Add_ToCollection +test @task");
+            var task = new Task("(B) Add_ToCollection +test @task");
 
             var tl = new TaskList(Data.TestDataPath);
 
-            var tasks = new List<TaskItem>(tl.Tasks);
+            var tasks = new List<Task>(tl.Tasks);
             tasks.Add(task);
 
             tl.Add(task);
@@ -68,7 +68,7 @@ namespace ToDoTests
             var fileContents = File.ReadAllLines(Data.TestDataPath).ToList();
             fileContents.Add("(B) Add_ToFile +test @task");
 
-            var task = new TaskItem(fileContents.Last());
+            var task = new Task(fileContents.Last());
             var tl = new TaskList(Data.TestDataPath);
             tl.Add(task);
 
@@ -84,7 +84,7 @@ namespace ToDoTests
             File.WriteAllLines(Data.TestDataPath, new string[] { }); // empties the file
 
             var tl = new TaskList(Data.TestDataPath);
-            tl.Add(new TaskItem("A task"));
+            tl.Add(new Task("A task"));
 
             Assert.AreEqual(1,tl.Tasks.Count());
 
@@ -96,10 +96,10 @@ namespace ToDoTests
             var tl = new TaskList(Data.TestDataPath);
             var c = tl.Tasks.Count();
 
-            var task = new TaskItem("Add_Multiple task one");
+            var task = new Task("Add_Multiple task one");
             tl.Add(task);
 
-            var task2 = new TaskItem("Add_Multiple task two");
+            var task2 = new Task("Add_Multiple task two");
             tl.Add(task2);
 
             Assert.AreEqual(c + 2, tl.Tasks.Count());
@@ -108,11 +108,11 @@ namespace ToDoTests
         [Test]
         public void Delete_InCollection()
         {
-            var task = new TaskItem("(B) Delete_InCollection +test @task");
+            var task = new Task("(B) Delete_InCollection +test @task");
             var tl = new TaskList(Data.TestDataPath);
             tl.Add(task);
 
-            var tasks = new List<TaskItem>(tl.Tasks);
+            var tasks = new List<Task>(tl.Tasks);
             tasks.Remove(tasks.Where(x => x.Raw == task.Raw).First());
 
             
@@ -130,7 +130,7 @@ namespace ToDoTests
         public void Delete_InFile()
         {
             var fileContents = File.ReadAllLines(Data.TestDataPath).ToList();
-            var task = new TaskItem(fileContents.Last());
+            var task = new Task(fileContents.Last());
             fileContents.Remove(fileContents.Last());
 
             var tl = new TaskList(Data.TestDataPath);
@@ -143,12 +143,12 @@ namespace ToDoTests
         [Test]
         public void Update_InCollection()
         {
-            var task = new TaskItem("(B) Update_InCollection +test @task");
+            var task = new Task("(B) Update_InCollection +test @task");
 
             var tl = new TaskList(Data.TestDataPath);
             tl.Add(task);
 
-            var task2 = new TaskItem(task.Raw);
+            var task2 = new Task(task.Raw);
             task2.Completed = true;
 
             tl.Update(task, task2);
@@ -198,16 +198,16 @@ namespace ToDoTests
 
 		}
 
-        private List<TaskItem> getTestList()
+        private List<Task> getTestList()
         {
-            var tl = new List<TaskItem>();
-            tl.Add(new TaskItem("(c) 3test +test2 due:2000-01-03"));//0
-            tl.Add(new TaskItem("(d) 1test +test1 @test1 due:2000-01-01"));//1
-            tl.Add(new TaskItem("x test XXXXXX "));//2
-            tl.Add(new TaskItem("x test xxxxxx due:2000-01-01"));//3
-            tl.Add(new TaskItem("x test XXXXXX yyyyyy"));//4
-            tl.Add(new TaskItem("x (a) test YYYYYY"));//5
-            tl.Add(new TaskItem("(b) 2test +test1 @test2 "));//6
+            var tl = new List<Task>();
+            tl.Add(new Task("(c) 3test +test2 due:2000-01-03"));//0
+            tl.Add(new Task("(d) 1test +test1 @test1 due:2000-01-01"));//1
+            tl.Add(new Task("x test XXXXXX "));//2
+            tl.Add(new Task("x test xxxxxx due:2000-01-01"));//3
+            tl.Add(new Task("x test XXXXXX yyyyyy"));//4
+            tl.Add(new Task("x (a) test YYYYYY"));//5
+            tl.Add(new Task("(b) 2test +test1 @test2 "));//6
             return tl;
         }
 

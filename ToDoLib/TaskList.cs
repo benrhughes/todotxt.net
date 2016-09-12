@@ -23,7 +23,7 @@ namespace ToDoLib
 
         string _filePath = null;
 		string _preferredLineEnding = null;
-		public List<TaskItem> Tasks { get; private set; }
+		public List<Task> Tasks { get; private set; }
 
         // Task List MetaData
         public List<string> Projects { get; private set; }
@@ -57,7 +57,7 @@ namespace ToDoLib
             var UniqueContexts = new SortedSet<string>();
             var UniquePriorities = new SortedSet<string>();
 
-            foreach (TaskItem t in Tasks)
+            foreach (Task t in Tasks)
             {
                 foreach (string p in t.Projects)
                 {
@@ -83,7 +83,7 @@ namespace ToDoLib
 
 			try
 			{
-				Tasks = new List<TaskItem>();
+				Tasks = new List<Task>();
 
 				var file = File.OpenRead(_filePath);
 				using (var reader = new StreamReader(file))
@@ -93,7 +93,7 @@ namespace ToDoLib
 					{
 						if (!raw.IsNullOrEmpty() || PreserveWhiteSpace)
                         {
-                            Tasks.Add(new TaskItem(raw));
+                            Tasks.Add(new Task(raw));
                         }                            
 					}
 				}
@@ -120,7 +120,7 @@ namespace ToDoLib
             }
 		}
 
-		public void Add(TaskItem task)
+		public void Add(Task task)
 		{
 			try
 			{
@@ -166,7 +166,7 @@ namespace ToDoLib
             }
         }
 
-        public void Delete(TaskItem task)
+        public void Delete(Task task)
 		{
 			try
 			{
@@ -205,7 +205,7 @@ namespace ToDoLib
         /// <param name="reloadTasksPriorToUpdate">Optionally reload task file prior to the update. Default is TRUE.</param>
         /// <param name="writeTasks">Optionally write task file after the update. Default is TRUE.</param>
         /// <param name="reloadTasksAfterUpdate">Optionally reload task file after the update. Default is TRUE.</param>
-        public void Update(TaskItem currentTask, TaskItem newTask, bool writeTasks = true)
+        public void Update(Task currentTask, Task newTask, bool writeTasks = true)
 		{
             Log.Debug("Updating task '{0}' to '{1}'", currentTask.ToString(), newTask.ToString());
 
@@ -293,7 +293,7 @@ namespace ToDoLib
 				using (StreamWriter writer = new StreamWriter(_filePath))
 				{
 					writer.NewLine = _preferredLineEnding;
-					Tasks.ForEach((TaskItem t) => { writer.WriteLine(t.ToString()); });
+					Tasks.ForEach((Task t) => { writer.WriteLine(t.ToString()); });
 					writer.Close();
 				}
 			}
