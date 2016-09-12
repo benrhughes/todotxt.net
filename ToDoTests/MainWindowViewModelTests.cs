@@ -15,7 +15,7 @@ namespace ToDoTests
         {
                 
         }
-        public void UpdateSummaryTester(List<Task> selectedTasks)
+        public void UpdateSummaryTester(List<TaskItem> selectedTasks)
         {
             base.UpdateSummary(selectedTasks);
         }
@@ -203,9 +203,9 @@ namespace ToDoTests
             var viewModel = new MainWindowViewModelTester();
             var taskList = GenerateTaskList(); 
             //Add an incomplete task due yesterday
-            taskList.Add(new Task("C", new List<String>(), new List<string>(), "Overdue incomplete task", CreateDueDate(-2), false));
+            taskList.Add(new TaskItem("C", new List<String>(), new List<string>(), "Overdue incomplete task", CreateDueDate(-2), false));
             //Add a complete task due yesterday
-            taskList.Add(new Task("C", new List<String>(), new List<string>(), "Overdue incomplete task", CreateDueDate(-2), true));
+            taskList.Add(new TaskItem("C", new List<String>(), new List<string>(), "Overdue incomplete task", CreateDueDate(-2), true));
 
             viewModel.UpdateSummaryTester(taskList);
             Assert.AreEqual(1, viewModel.TasksOverdue);
@@ -217,15 +217,15 @@ namespace ToDoTests
 
         }
 
-        private static List<Task> GenerateTaskList()
+        private static List<TaskItem> GenerateTaskList()
         {
             String today = DateTime.Today.ToString("yyyy-MM-dd");
             Console.WriteLine(today);
-            return new List<Task>
+            return new List<TaskItem>
             {
-                new Task("A", new List<String>(), new List<string>(), "Incomplete Task", today), // Incomplete task, due today
-                new Task("A", new List<String>(), new List<string>(), "Incomplete Task2"), // Incomplete task2
-                new Task("A", new List<String>(), new List<string>(), "Complete Task", today, true), // Complete task that was due today
+                new TaskItem("A", new List<String>(), new List<string>(), "Incomplete Task", today), // Incomplete task, due today
+                new TaskItem("A", new List<String>(), new List<string>(), "Incomplete Task2"), // Incomplete task2
+                new TaskItem("A", new List<String>(), new List<string>(), "Complete Task", today, true), // Complete task that was due today
 
             };
         }

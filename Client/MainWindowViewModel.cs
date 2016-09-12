@@ -17,6 +17,9 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Threading.Tasks;
+using System.Media;
+using System.Windows.Media;
 
 namespace Client
 {
@@ -27,11 +30,11 @@ namespace Client
         private FileChangeObserver _changefile;
         private SortType _sortType;
         private MainWindow _window;
-        private Task _updating;
+        private TaskItem _updating;
         private int _numberOfItemsInCurrentGroup;
         private List<CollectionViewGroup> _viewGroups;
         private int _nextGroupAtTaskNumber;
-        private List<Task> _selectedTasks;
+        private List<TaskItem> _selectedTasks;
 
         public TaskList TaskList { get; set; }
         public Help HelpPage { get; private set; }
@@ -92,23 +95,7 @@ namespace Client
             }
         }
 
-        private int filteredTasks = 0;
-        public int FilteredTasks
-        {
-            get
-            {
-                return filteredTasks;
-            }
-
-            set
-            {
-                if (filteredTasks != value)
-                {
-                    filteredTasks = value;
-                    RaiseProperyChanged(nameof(FilteredTasks));
-                }
-            }
-        }
+        private SoundPlayer _stopSound;
 
         private int incompleteTasks = 0;
         public int IncompleteTasks
@@ -165,16 +152,13 @@ namespace Client
         }
 
         private int tasksOverdue = 0;
-
-
-
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         public MainWindowViewModel(MainWindow window)
         {
             _window = window;
-            _selectedTasks = new List<Task>();
+            _selectedTasks = new List<TaskItem>();
+            _stopSound = new SoundPlayer (AppDomain.CurrentDomain.BaseDirectory + @"\Resources\ding.wav");
 
             Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
@@ -234,7 +218,7 @@ namespace Client
             _selectedTasks.Clear();
             foreach (var task in _window.lbTasks.SelectedItems)
             {
-                _selectedTasks.Add((Task)task);
+                _selectedTasks.Add((TaskItem)task);
             }
         }
 
@@ -256,11 +240,11 @@ namespace Client
             // Loop through the listbox tasks, then loop through the items that should be selected. If the items match, select them in the list box.
             for (int i = 0; i < _window.lbTasks.Items.Count; i++)
             {
-                Task listBoxItemTask = _window.lbTasks.Items[i] as Task;
+                TaskItem listBoxItemTask = _window.lbTasks.Items[i] as TaskItem;
                 int j = 0;
                 while (j < _selectedTasks.Count)
                 {
-                    Task task = _selectedTasks[j];
+                    TaskItem task = _selectedTasks[j];
                     if (listBoxItemTask.Raw.Equals(task.Raw))
                     {
                         _window.lbTasks.SelectedItems.Add(_window.lbTasks.Items[i]);
@@ -419,12 +403,12 @@ namespace Client
             _window.filterMenu.FontWeight = User.Default.FilterText.Length == 0 ? FontWeights.Normal : FontWeights.Bold;
         }
 
-        protected void UpdateSummary(List<Task> selectedTasksList)
+        protected void UpdateSummary(List<TaskItem> selectedTasksList)
         {
             FilteredTasks = selectedTasksList.Count;
 
             int fTask = 0, incompTask = 0, dueTodayTask = 0, overdueTask = 0;
-            foreach (Task t in selectedTasksList)
+            foreach (TaskItem t in selectedTasksList)
             {
                 if (!t.Completed)
                 {
@@ -481,6 +465,29 @@ namespace Client
         /// <returns>true if the task should be added to the list, false otherwise.</returns>
         private bool ShouldAddTask(KeyEventArgs e)
         {
+            if (_updating != null) return false;
+
+            const Key NewTaskKey = Key.Enter;
+
+            if (e.Key == NewTaskKey && e.KeyboardDevice.Modifiers != ModifierKeys.Shift)
+            {
+                if (User.Default.RequireCtrlEnter)
+                {
+                    if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+                        return true;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        private bool ShouldUpdateTask(KeyEventArgs e)
+        {
+            if (_updating == null) return false;
+
             const Key NewTaskKey = Key.Enter;
 
             if (e.Key == NewTaskKey)
@@ -497,6 +504,19 @@ namespace Client
             }
 
             return false;
+        }
+        private bool ShouldAddRecord(KeyEventArgs e)
+        {
+            // const Key NewTaskKey = Key.Enter;
+
+            if (_updating == null && e.Key == Key.Enter && e.KeyboardDevice.Modifiers == ModifierKeys.Shift)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         #endregion
@@ -572,7 +592,7 @@ namespace Client
             }
         }
 
-        public static IEnumerable<Task> FilterList(IEnumerable<Task> tasks)
+        public static IEnumerable<TaskItem> FilterList(IEnumerable<TaskItem> tasks)
         {
             var filters = User.Default.FilterText;
             var comparer = User.Default.FilterCaseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
@@ -580,7 +600,7 @@ namespace Client
             if (String.IsNullOrEmpty(filters))
                 return tasks;
 
-            var filteredTasks = new List<Task>();
+            var filteredTasks = new List<TaskItem>();
 
             foreach (var task in tasks)
             {
@@ -761,7 +781,7 @@ namespace Client
             SetSelectedTasks();
         }
 
-        public IEnumerable<Task> SortList(IEnumerable<Task> tasks)
+        public IEnumerable<TaskItem> SortList(IEnumerable<TaskItem> tasks)
         {
             Log.Debug("Sorting {0} tasks by {1}.", tasks.Count().ToString(), SortType.ToString());
 
@@ -849,7 +869,7 @@ namespace Client
                 return;
             }
 
-            var currentTask = _window.lbTasks.SelectedItem as Task;
+            var currentTask = _window.lbTasks.SelectedItem as TaskItem;
             if (currentTask != null)
             {
                 _window.taskText.Text = currentTask.Raw;
@@ -875,7 +895,7 @@ namespace Client
             // Add each line from the clipboard to the task list.
             foreach (string clipboardLine in clipboardLines)
             {
-                TaskList.Add(new Task(clipboardLine));
+                TaskList.Add(new TaskItem(clipboardLine));
             }
             
             UpdateDisplayedTasks();
@@ -894,7 +914,7 @@ namespace Client
         /// </summary>
         /// <param name="modificationFunction">A function that returns a Task object and takes as parameters a Task object and a dynamic variable.</param>
         /// <param name="parameter">The parameter (or null) to pass to modificationFunction.</param>
-        public void ModifySelectedTasks(Func<Task, dynamic, Task> modificationFunction, dynamic parameter = null)
+        public void ModifySelectedTasks(Func<TaskItem, dynamic, TaskItem> modificationFunction, dynamic parameter = null)
         {
             // Abort if no tasks are selected.
             if (!AreTasksSelected()) { 
@@ -912,7 +932,7 @@ namespace Client
             // For each selected task, perform the modification, update the task list, and update the copy of the task in _selectedTasks.
             foreach (var task in _selectedTasks)
         	{
-                Task newTask = modificationFunction(task, parameter);
+                TaskItem newTask = modificationFunction(task, parameter);
                 TaskList.Update(task, newTask);
                 task.Raw = newTask.Raw;
 	        }
@@ -955,7 +975,7 @@ namespace Client
             {
                 return;
             }
-            _updating = (Task)_window.lbTasks.SelectedItem;
+            _updating = (TaskItem)_window.lbTasks.SelectedItem;
             _window.taskText.Text = _updating.ToString();
             _window.taskText.Select(_window.taskText.Text.Length, 0); // puts cursor at the end
             _window.taskText.Focus();
@@ -992,7 +1012,7 @@ namespace Client
 
                 foreach (var task in _window.lbTasks.SelectedItems)
                 {
-                    TaskList.Delete((Task)task);
+                    TaskList.Delete((TaskItem)task);
                 }
             }
             catch (Exception ex)
@@ -1033,9 +1053,9 @@ namespace Client
             ModifySelectedTasks(AppendTaskText, textToAppend);
         }
 
-        private Task AppendTaskText(Task task, dynamic text = null)
+        private TaskItem AppendTaskText(TaskItem task, dynamic text = null)
         {
-            Task newTask = new Task(string.Concat(task.Raw, " ", text));
+            TaskItem newTask = new TaskItem(string.Concat(task.Raw, " ", text));
             return newTask;
         }
 
@@ -1065,10 +1085,10 @@ namespace Client
             }
         }
 
-        private Task SetTaskCompletion(Task task, dynamic parameter = null)
+        private TaskItem SetTaskCompletion(TaskItem task, dynamic parameter = null)
         {
             task.Completed = !task.Completed;
-            var newTask = new Task(task.ToString());
+            var newTask = new TaskItem(task.ToString());
             return newTask;
         }
 
@@ -1082,7 +1102,7 @@ namespace Client
             ModifySelectedTasks(SetTaskPriority, newPriority);
         }
 
-        private Task SetTaskPriority(Task task, dynamic newPriority)
+        private TaskItem SetTaskPriority(TaskItem task, dynamic newPriority)
         {
             Regex rgx = new Regex(@"^\((?<priority>[A-Z])\)\s"); // matches priority strings such as "(A) " (including trailing space)
 
@@ -1095,7 +1115,7 @@ namespace Client
                 newPriorityRaw + oldTaskRawText :            // prepend new priority
                 rgx.Replace(oldTaskRawText, newPriorityRaw); // replace old priority (regex) with new priority (formatted)
 
-            return new Task(newTaskRawText);
+            return new TaskItem(newTaskRawText);
         }
 
         private string ShowPriorityDialog()
@@ -1106,7 +1126,7 @@ namespace Client
             }
 
             // Get the default priority from the selected task to load into the Set Priority dialog
-            Task selectedTask = (Task)_window.lbTasks.SelectedItem;
+            TaskItem selectedTask = (TaskItem)_window.lbTasks.SelectedItem;
             string selectedTaskRawText = selectedTask.ToString();
             Regex rgx = new Regex(@"^\((?<priority>[A-Z])\)\s"); // matches priority strings such as "(A) " (including trailing space)
             string selectedPriorityRaw = rgx.Match(selectedTaskRawText).ToString(); // Priority letter plus parentheses and trailing space
@@ -1128,9 +1148,9 @@ namespace Client
             ModifySelectedTasks(IncreaseTaskPriority, null);
         }
 
-        private Task IncreaseTaskPriority(Task task, dynamic newPriority = null)
+        private TaskItem IncreaseTaskPriority(TaskItem task, dynamic newPriority = null)
         {
-            Task newTask = new Task(task.Raw);
+            TaskItem newTask = new TaskItem(task.Raw);
             newTask.IncPriority();
             return newTask;
         }
@@ -1140,9 +1160,9 @@ namespace Client
             ModifySelectedTasks(DecreaseTaskPriority, null);
         }
 
-        private Task DecreaseTaskPriority(Task task, dynamic newPriority = null)
+        private TaskItem DecreaseTaskPriority(TaskItem task, dynamic newPriority = null)
         {
-            Task newTask = new Task(task.Raw);
+            TaskItem newTask = new TaskItem(task.Raw);
             newTask.DecPriority();
             return newTask;
         }
@@ -1152,9 +1172,9 @@ namespace Client
             ModifySelectedTasks(RemoveTaskPriority, null);
         }
 
-        private Task RemoveTaskPriority(Task task, dynamic newPriority = null)
+        private TaskItem RemoveTaskPriority(TaskItem task, dynamic newPriority = null)
         {
-            Task newTask = new Task(task.Raw);
+            TaskItem newTask = new TaskItem(task.Raw);
             newTask.SetPriority(' ');
             return newTask;
         }
@@ -1164,7 +1184,7 @@ namespace Client
             ModifySelectedTasks(IncrementTaskDueDate, null);
         }
 
-        private Task IncrementTaskDueDate(Task task, dynamic newDueDate = null)
+        private TaskItem IncrementTaskDueDate(TaskItem task, dynamic newDueDate = null)
         {
             return PostponeTask(task, 1);
         }
@@ -1174,7 +1194,7 @@ namespace Client
             ModifySelectedTasks(DecrementTaskDueDate, null);
         }
 
-        private Task DecrementTaskDueDate(Task task, dynamic newDueDate = null)
+        private TaskItem DecrementTaskDueDate(TaskItem task, dynamic newDueDate = null)
         {
             return PostponeTask(task, -1);
         }
@@ -1184,10 +1204,10 @@ namespace Client
             ModifySelectedTasks(RemoveTaskDueDate, null);
         }
 
-        private Task RemoveTaskDueDate(Task task, dynamic newDueDate = null)
+        private TaskItem RemoveTaskDueDate(TaskItem task, dynamic newDueDate = null)
         {
             Regex rgx = new Regex(@"(?i:(^|\s)due:(\d{4})-(\d{2})-(\d{2}))*");
-            Task newTask = new Task(rgx.Replace(task.Raw, "").TrimStart(' '));
+            TaskItem newTask = new TaskItem(rgx.Replace(task.Raw, "").TrimStart(' '));
             return newTask;
         }
 
@@ -1209,7 +1229,7 @@ namespace Client
             }
 
             // Get the default due date to show in the Set Due Date dialog.
-            Task lastSelectedTask = (Task)_window.lbTasks.SelectedItem;
+            TaskItem lastSelectedTask = (TaskItem)_window.lbTasks.SelectedItem;
             string oldTaskRawText = lastSelectedTask.ToString();
             Regex rgx = new Regex(@"(?<=\sdue:)(?<date>(\d{4})-(\d{2})-(\d{2}))");
             string oldDueDateText = rgx.Match(oldTaskRawText).Groups["date"].Value.Trim();
@@ -1225,7 +1245,7 @@ namespace Client
             return null;
         }
 
-        private Task SetTaskDueDate(Task task, dynamic newDueDate)
+        private TaskItem SetTaskDueDate(TaskItem task, dynamic newDueDate)
         {
             Regex rgx = new Regex(@"(?<=(^|\s)due:)(?<date>(\d{4})-(\d{2})-(\d{2}))");
             string oldDueDateText = rgx.Match(task.Raw).Groups["date"].Value.Trim();
@@ -1236,7 +1256,7 @@ namespace Client
                 oldTaskRawText + " due:" + ((DateTime)newDueDate).ToString("yyyy-MM-dd") :
                 rgx.Replace(oldTaskRawText, ((DateTime)newDueDate).ToString("yyyy-MM-dd"));
 
-            return new Task(newTaskRawText);
+            return new TaskItem(newTaskRawText);
         }
 
         public void Postpone()
@@ -1249,7 +1269,7 @@ namespace Client
             ModifySelectedTasks(PostponeTask, daysToPostpone);
         }
 
-        private Task PostponeTask(Task task, dynamic daysToPostpone)
+        private TaskItem PostponeTask(TaskItem task, dynamic daysToPostpone)
         {
             if (daysToPostpone == 0) // if user entered 0 or junk
             {
@@ -1271,7 +1291,7 @@ namespace Client
                 task.Raw.Replace("due:" + task.DueDate, "due:" + newDueDate.ToString("yyyy-MM-dd")) :
                 task.Raw.ToString() + " due:" + newDueDate.ToString("yyyy-MM-dd");
 
-            return new Task(updatedRaw);
+            return new TaskItem(updatedRaw);
         }
 
         private int ShowPostponeDialog()
@@ -1583,7 +1603,7 @@ namespace Client
 
             if (User.Default.AddCreationDate)
             {
-                var tmpTask = new Task(taskDetail);
+                var tmpTask = new TaskItem(taskDetail);
                 var today = DateTime.Today.ToString("yyyy-MM-dd");
 
                 if (string.IsNullOrEmpty(tmpTask.CreationDate))
@@ -1597,7 +1617,7 @@ namespace Client
 
             try
             {
-                Task newTask = new Task(taskDetail);
+                TaskItem newTask = new TaskItem(taskDetail);
                 TaskList.Add(newTask);
 
                 if (User.Default.MoveFocusToTaskListAfterAddingNewTask)
@@ -1635,7 +1655,7 @@ namespace Client
                 taskString = _window.taskText.Text.Trim();
             }
 
-            Task newTask = new Task(taskString);
+            TaskItem newTask = new TaskItem(taskString);
 
             _selectedTasks.Clear();
             _selectedTasks.Add(newTask);
@@ -1739,7 +1759,7 @@ namespace Client
             int currentTaskNumber = 0;
             _nextGroupAtTaskNumber = 0;
 
-            foreach (Task task in _window.lbTasks.Items)
+            foreach (TaskItem task in _window.lbTasks.Items)
             {
                 if (User.Default.AllowGrouping)
                 {
