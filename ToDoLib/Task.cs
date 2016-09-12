@@ -16,7 +16,7 @@ namespace ToDoLib
 
     public class TaskItem : IComparable
     {
-        private const string CompletedPattern = @"^X\s((\d{4})-(\d{2})-(\d{2}))?";
+        private const string CompletedPattern = @"^X\s(\d{2}\:\d{2}\s(\d{4})-(\d{2})-(\d{2}))?";
         private const string PriorityPattern = @"^(?<priority>\([A-Z]\)\s)";
         private const string CreatedDatePattern = @"(?<date>(\d{4})-(\d{2})-(\d{2}))";
 
@@ -49,7 +49,7 @@ namespace ToDoLib
                 _completed = value;
                 if(_completed)
                 {
-                    CompletedDate = DateTime.Now.ToString("yyyy-MM-dd");
+                    CompletedDate = DateTime.Now.ToString("mm\\:ss yyyy-MM-dd");
                     Priority = "";
                 }
                 else
