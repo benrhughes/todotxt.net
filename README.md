@@ -1,4 +1,4 @@
-### todotxt.net
+### todotxt.net with pomodoro timer 
 
 This is an implemention of [todo.txt](http://todotxt.com/) using the .NET framework. As far as I am aware, it is fully compliant with [Gina's spec](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format). 
 
@@ -54,6 +54,6 @@ Please send your pull requests to the 'dev' branch. If you forget it's not a maj
 	- Ctrl+C: copy task to clipboard
 	- Ctrl+Shift+C: copy task to edit field
 	- Win+W: hide/unhide windows
-    - R: add a record for current task
-    - Y: start/stop the pomodoro timer for current task (25min work / 5 min rest)
-    - N / Shift Enter: add a time record for current task
+    - Y: start pomodoro timer for current task
+    - R: build a record for current task
+    - N / shift-enter: add a time record
