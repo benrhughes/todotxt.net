@@ -1389,6 +1389,9 @@ namespace Client
             Clipboard.SetDataObject(clipboardText.ToString());
         }
 
+        #endregion
+
+        #region Record
         private string _prefixInfoTaskRecord
         {
             get

@@ -49,7 +49,7 @@ namespace ToDoLib
                 _completed = value;
                 if(_completed)
                 {
-                    CompletedDate = DateTime.Now.ToString("mm\\:ss yyyy-MM-dd");
+                    CompletedDate = DateTime.Now.ToString("HH\\:mm yyyy-MM-dd");
                     Priority = "";
                 }
                 else
