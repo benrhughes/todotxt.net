@@ -53,4 +53,7 @@ Please send your pull requests to the 'dev' branch. If you forget it's not a maj
     - Ctrl+Alt+Left/Right: remove due date 
 	- Ctrl+C: copy task to clipboard
 	- Ctrl+Shift+C: copy task to edit field
-	- Win+Alt+T: hide/unhide windows
+	- Win+W: hide/unhide windows
+    - R: add a record for current task
+    - Y: start/stop the pomodoro timer for current task (25min work / 5 min rest)
+    - N / Shift Enter: add a time record for current task
