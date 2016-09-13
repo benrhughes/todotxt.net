@@ -1449,6 +1449,7 @@ namespace Client
                 _window.Dispatcher.Invoke(() =>
                 {
                     _window.lbTasks.IsHitTestVisible = false;
+                    _window.taskText.FontWeight = FontWeights.Bold;
                 });
 
                 while (!exitPomodoroTimer)
@@ -1463,6 +1464,7 @@ namespace Client
                     _window.taskText.Background = Brushes.Transparent;
                     _window.taskText.Text = "";
                     _window.lbTasks.IsHitTestVisible = true;
+                    _window.taskText.FontWeight = FontWeights.Regular;
                 });
             });
         }

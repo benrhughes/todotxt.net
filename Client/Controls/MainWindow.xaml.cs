@@ -186,9 +186,16 @@ namespace Client
             e.Handled = true;
         }
 
+        bool isLongTimeTaskRunning
+        {
+            get
+            {
+                return ViewModel.isLongTimeTaskRunning;
+            }
+        }
         private void WhenTasksLoadedCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = (lbTasks.Items.Count > 0);
+            e.CanExecute = (lbTasks.Items.Count > 0) && (!isLongTimeTaskRunning);
             e.Handled = true;
         }
 
