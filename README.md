@@ -60,6 +60,6 @@ Please send your pull requests to the 'dev' branch. If you forget it's not a maj
 
 ### Example:
 
-	<img src="https://raw.github.com/jglwiz/todotxt.net/master/screenshot.png">
+	![chassis](https://raw.github.com/jglwiz/todotxt.net/master/screenshot.png)
 
 	[Download link](https://github.com/jglwiz/todotxt.net/releases/tag/v1.0)
