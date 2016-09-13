@@ -57,3 +57,5 @@ Please send your pull requests to the 'dev' branch. If you forget it's not a maj
     - Y: start pomodoro timer for current task
     - R: build a record for current task
     - N / shift-enter: add a time record
+
+	[Download link](https://github.com/jglwiz/todotxt.net/releases/tag/v1.0)
