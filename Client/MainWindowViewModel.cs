@@ -17,6 +17,9 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Media;
 
 namespace Client
 {
@@ -172,6 +175,8 @@ namespace Client
         {
             _window = window;
             _selectedTasks = new List<TaskItem>();
+            _stopSound = new SoundPlayer(AppDomain.CurrentDomain.BaseDirectory + @"\Resources\ding.wav");
+
 
             Log.LogLevel = User.Default.DebugLoggingOn ? LogLevel.Debug : LogLevel.Error;
 
@@ -1418,6 +1423,154 @@ namespace Client
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        public bool isLongTimeTaskRunning = false; // state
+        bool exitPomodoroTimer = false; // switch
+        public void StartPomodoroTimer()
+        {
+            if (isLongTimeTaskRunning)
+            {
+                exitPomodoroTimer = true;
+                return;
+            }
+
+            // Abort if no task, or more than one task, is selected.
+            if (!IsTaskSelected())
+            {
+                return;
+            }
+
+            exitPomodoroTimer = false;
+            
+            Task.Factory.StartNew(() =>
+            {
+
+                _window.Dispatcher.Invoke(() =>
+                {
+                    _window.lbTasks.IsHitTestVisible = false;
+                });
+
+                while (!exitPomodoroTimer)
+                {
+                    StartToWork();
+                    StartToRest();
+                }
+
+                _window.Dispatcher.Invoke(() =>
+                {
+                    _updating = null;
+                    _window.taskText.Background = Brushes.Transparent;
+                    _window.taskText.Text = "";
+                    _window.lbTasks.IsHitTestVisible = true;
+                });
+            });
+        }
+
+        private SoundPlayer _stopSound;
+
+        void StartToWork ()
+        {
+            _stopSound.Play();
+            _window.Dispatcher.Invoke(() =>
+            {
+                _updating = (TaskItem)_window.lbTasks.SelectedItem;
+                _window.taskText.Background = Brushes.Orange;
+            });
+
+            isLongTimeTaskRunning = true;
+
+            Stopwatch pomodoroTimer = new Stopwatch();
+            pomodoroTimer.Restart();
+            while (!exitPomodoroTimer)
+            {
+                _window.Dispatcher.Invoke(() =>
+                {
+                    _window.taskText.Text
+                        = _updating.ToString() + pomodoroTimer.Elapsed.ToString("\\ \\[\\w\\o\\r\\k\\:\\ mm\\:ss\\]");
+                });
+
+                Task.Delay(50).Wait();
+
+                if (pomodoroTimer.Elapsed.Minutes >= 25)
+                {
+                    pomodoroTimer.Stop();
+                    break;
+                }
+            }
+
+            pomodoroTimer.Stop();
+            _stopSound.Play();
+
+            var taskRecord = new Task(() =>
+            {
+                Regex rgxCountPomodoro = new Regex(@"\s\[(?<count>\d+) pomo\]");
+
+                string taskItemStr = _updating.ToString();
+
+                int newPomodoro = (int)Math.Round((float)pomodoroTimer.ElapsedMilliseconds / 1000.0f / 60.0f / 25.0f);
+
+                int countPomodoro = 0;
+                if (rgxCountPomodoro.IsMatch(taskItemStr))
+                {
+                    countPomodoro = int.Parse(rgxCountPomodoro.Match(taskItemStr).Groups["count"].Value.Trim());
+                    countPomodoro += newPomodoro;
+                    string newCountInfo = string.Format(" [{0} pomo]", countPomodoro);
+                    taskItemStr = rgxCountPomodoro.Replace(taskItemStr, newCountInfo);
+                }
+                else
+                {
+                    countPomodoro = newPomodoro;
+                    if (countPomodoro != 0)
+                    {
+                        string newCountInfo = string.Format(" [{0} pomo]", countPomodoro);
+                        taskItemStr += newCountInfo;
+                    }
+                }
+
+                _window.Dispatcher.Invoke(() =>
+                {
+                    ModifySelectedTasks((TaskItem taskItem, dynamic _) => new TaskItem(taskItemStr), null);
+                });
+            });
+            taskRecord.RunSynchronously();
+            isLongTimeTaskRunning = false;
+        }
+
+        void StartToRest()
+        {
+            _stopSound.Play();
+            _window.Dispatcher.Invoke(() =>
+            {
+                _updating = (TaskItem)_window.lbTasks.SelectedItem;
+                _window.taskText.Background = Brushes.LightSeaGreen;
+            });
+
+            isLongTimeTaskRunning = true;
+
+            Stopwatch pomodoroTimer = new Stopwatch();
+            pomodoroTimer.Restart();
+            while (!exitPomodoroTimer)
+            {
+                _window.Dispatcher.Invoke(() =>
+                {
+                    _window.taskText.Text
+                        = _updating.ToString() + " [rest: " + pomodoroTimer.Elapsed.ToString("mm\\:ss\\]");
+                });
+
+                Task.Delay(50).Wait();
+
+                // TODO
+                // if (pomodoroTimer.ElapsedMilliseconds >= 2000)
+                if (pomodoroTimer.Elapsed.Minutes >= 5)
+                {
+                    pomodoroTimer.Stop();
+                    break;
+                }
+            }
+
+            _stopSound.Play();
+            isLongTimeTaskRunning = false;
         }
         #endregion
 

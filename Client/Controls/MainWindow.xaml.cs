@@ -598,7 +598,7 @@ namespace Client
 
         public void StartPomodoroTimerExecuted (object sender, ExecutedRoutedEventArgs e)
         {
-            // ViewModel.Start();
+            ViewModel.StartPomodoroTimer();
         }
         #endregion
     }

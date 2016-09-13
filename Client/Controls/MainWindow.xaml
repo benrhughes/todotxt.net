@@ -274,6 +274,13 @@
                 <MenuItem Header="Apply Preset Filter _8" Command="{StaticResource ApplyFilterPreset8}" InputGestureText="8" IsCheckable="True" Tag="Preset8" FontWeight="Normal" />
                 <MenuItem Header="Apply Preset Filter _9" Command="{StaticResource ApplyFilterPreset9}" InputGestureText="9" IsCheckable="True" Tag="Preset9" FontWeight="Normal" />
             </MenuItem>
+
+            <MenuItem Header="Record" Name="recordMenu">
+                <MenuItem Header="Add _New Time Record" Command="{StaticResource NewTask}" InputGestureText="N"/>
+                <MenuItem Header="Add _Record For Current Task" Command="{StaticResource AddTaskRecord}" InputGestureText="R"/>
+                <MenuItem Header="Start Pomodoro Timer" Command="{StaticResource StartPomodoroTimer}" InputGestureText="Y"/>
+            </MenuItem>
+
             <MenuItem Header="_Help">
                 <MenuItem Header="_About" Command="{StaticResource HelpAbout}" InputGestureText="?" />
                 <MenuItem Header="_View Error Log" Command="{StaticResource ViewLog}" />
@@ -281,6 +288,7 @@
                 <MenuItem Header="_Show Calendar" Command="{StaticResource ShowCalendar}" InputGestureText="Right Shift" />
             </MenuItem>
             <MenuItem Name="UpdateMenu" Header="*Update available*" Visibility="Hidden" Click="GetUpdate" />
+
             <Menu.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#f8f8f8" Offset="0" />
