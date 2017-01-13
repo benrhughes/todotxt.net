@@ -257,7 +257,7 @@ namespace Client
             ViewModel.ShowOptionsDialog();
         }
 
-        private void ExitApplicationExecuted(object sender, RoutedEventArgs e)
+        public void ExitApplicationExecuted(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
