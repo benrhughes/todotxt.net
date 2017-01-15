@@ -54,11 +54,9 @@ namespace Client
         private void ExitClick(object sender, EventArgs args)
         {
             // Close the application by triggering the File-Exit menu item click handler.
-            System.Windows.Controls.MenuItem exitMenuItem = (System.Windows.Controls.MenuItem)_window.FindName("menuFileExit");
-            if (exitMenuItem != null)
-            {
-                exitMenuItem.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.MenuItem.ClickEvent, exitMenuItem));
-            }
+            var mainWindow = _window as MainWindow;
+            mainWindow?.ExitApplicationExecuted(null, null);
+
         }
 
         public void Dispose()
