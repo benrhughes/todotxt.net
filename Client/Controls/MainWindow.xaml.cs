@@ -41,20 +41,21 @@ namespace Client
 			lbTasks.Focus();
 		}
 
-		public MainWindowViewModel ViewModel { get; set; }
+        public MainWindowViewModel ViewModel { get; set; }
 
-		private void CheckForUpdates()
-                {
-			var updateChecker = new UpdateChecker(this);
-			updateChecker.BeginCheck();
-                }
+        private void CheckForUpdates ()
+        {
+            var updateChecker = new UpdateChecker(this);
+            updateChecker.BeginCheck();
+        }
 
-		private void SetupTrayIcon()
-		{
-			if (User.Default.MinimiseToSystemTray)
+        private void SetupTrayIcon ()
+        {
+            if (User.Default.MinimiseToSystemTray)
 			{
 				_tray = new TrayMainWindows(this);
-				_hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
+				// _hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
+				_hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows, System.Windows.Forms.Keys.W);
 			}
 		}
 
@@ -185,9 +186,16 @@ namespace Client
             e.Handled = true;
         }
 
+        bool isLongTimeTaskRunning
+        {
+            get
+            {
+                return ViewModel.isLongTimeTaskRunning;
+            }
+        }
         private void WhenTasksLoadedCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = (lbTasks.Items.Count > 0);
+            e.CanExecute = (lbTasks.Items.Count > 0) && (!isLongTimeTaskRunning);
             e.Handled = true;
         }
 
@@ -587,6 +595,18 @@ namespace Client
             ViewModel.TaskTextPreviewKeyUp(e);
         }
 
+        #endregion
+
+        #region record
+        public void AddTaskRecordExecuted (object sender, ExecutedRoutedEventArgs e)
+        {
+            ViewModel.AddTaskRecord();
+        }
+
+        public void StartPomodoroTimerExecuted (object sender, ExecutedRoutedEventArgs e)
+        {
+            ViewModel.StartPomodoroTimer();
+        }
         #endregion
     }
 }

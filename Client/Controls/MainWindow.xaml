@@ -1,103 +1,178 @@
 <Window x:Class="Client.MainWindow"
-		Name="ToDoMainWindow"
+        Name="ToDoMainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Client"
         xmlns:convertors="clr-namespace:Client.Converters"
-		Loaded="Window_Loaded"
-        Title="todotxt.net" 
-        mc:Ignorable="d" 
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        Height="384" 
-        Width="562" 
-        SizeChanged="Window_SizeChanged" 
-        LocationChanged="Window_LocationChanged" 
-        DataContext="{Binding}" 
+        Loaded="Window_Loaded"
+        Title="todotxt.net"
+        mc:Ignorable="d"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Height="384"
+        Width="562"
+        SizeChanged="Window_SizeChanged"
+        LocationChanged="Window_LocationChanged"
+        DataContext="{Binding}"
         StateChanged="Window_StateChanged">
     <Window.Resources>
         <!-- File menu commands -->
-        <RoutedUICommand x:Key="OpenFile" Text="Open File" />
-        <RoutedUICommand x:Key="NewFile" Text="New File" />
-        <RoutedUICommand x:Key="PrintFile" Text="Print" />
-        <RoutedUICommand x:Key="PrintPreviewFile" Text="Print Preview" />
-        <RoutedUICommand x:Key="ArchiveCompletedTasks" Text="Archive Completed Tasks" />
-        <RoutedUICommand x:Key="ReloadFile" Text="Reload File" />
-        <RoutedUICommand x:Key="Options" Text="Options" />
-        <RoutedUICommand x:Key="ExitApplication" Text="Exit" />
+        <RoutedUICommand x:Key="OpenFile"
+                         Text="Open File" />
+        <RoutedUICommand x:Key="NewFile"
+                         Text="New File" />
+        <RoutedUICommand x:Key="PrintFile"
+                         Text="Print" />
+        <RoutedUICommand x:Key="PrintPreviewFile"
+                         Text="Print Preview" />
+        <RoutedUICommand x:Key="ArchiveCompletedTasks"
+                         Text="Archive Completed Tasks" />
+        <RoutedUICommand x:Key="ReloadFile"
+                         Text="Reload File" />
+        <RoutedUICommand x:Key="Options"
+                         Text="Options" />
+        <RoutedUICommand x:Key="ExitApplication"
+                         Text="Exit" />
         <!-- Edit Menu commands -->
-        <RoutedUICommand x:Key="CopySelectedTaskToNewTask" Text="New Task from Selected Task" />
-        <RoutedUICommand x:Key="EmulateUpArrow" Text="Up" />
-        <RoutedUICommand x:Key="EmulateDownArrow" Text="Down" />
+        <RoutedUICommand x:Key="CopySelectedTaskToNewTask"
+                         Text="New Task from Selected Task" />
+        <RoutedUICommand x:Key="EmulateUpArrow"
+                         Text="Up" />
+        <RoutedUICommand x:Key="EmulateDownArrow"
+                         Text="Down" />
         <!-- Task menu commands -->
-        <RoutedUICommand x:Key="NewTask" Text="New Task" />
-        <RoutedUICommand x:Key="UpdateTask" Text="Update Task" />
-        <RoutedUICommand x:Key="DeleteTask" Text="Delete Task" />
-        <RoutedUICommand x:Key="AppendText" Text="Append Text" />
-        <RoutedUICommand x:Key="ToggleCompletion" Text="Toggle Completion" />
-        <RoutedUICommand x:Key="SetPriority" Text="Set Priority" />
-        <RoutedUICommand x:Key="IncreasePriority" Text="Increase Priority" />
-        <RoutedUICommand x:Key="DecreasePriority" Text="Decrease Priority" />
-        <RoutedUICommand x:Key="RemovePriority" Text="Remove Priority" />
-        <RoutedUICommand x:Key="SetDueDate" Text="Set Due Date" />
-        <RoutedUICommand x:Key="PostponeTask" Text="Postpone Task" />
-        <RoutedUICommand x:Key="IncrementDueDate" Text="Increase Due Date By 1 Day" />
-        <RoutedUICommand x:Key="DecrementDueDate" Text="Decrease Due Date By 1 Day" />
-        <RoutedUICommand x:Key="RemoveDueDate" Text="Remove Due Date" />
+        <RoutedUICommand x:Key="NewTask"
+                         Text="New Task" />
+        <RoutedUICommand x:Key="UpdateTask"
+                         Text="Update Task" />
+        <RoutedUICommand x:Key="DeleteTask"
+                         Text="Delete Task" />
+        <RoutedUICommand x:Key="AppendText"
+                         Text="Append Text" />
+        <RoutedUICommand x:Key="ToggleCompletion"
+                         Text="Toggle Completion" />
+        <RoutedUICommand x:Key="SetPriority"
+                         Text="Set Priority" />
+        <RoutedUICommand x:Key="IncreasePriority"
+                         Text="Increase Priority" />
+        <RoutedUICommand x:Key="DecreasePriority"
+                         Text="Decrease Priority" />
+        <RoutedUICommand x:Key="RemovePriority"
+                         Text="Remove Priority" />
+        <RoutedUICommand x:Key="SetDueDate"
+                         Text="Set Due Date" />
+        <RoutedUICommand x:Key="PostponeTask"
+                         Text="Postpone Task" />
+        <RoutedUICommand x:Key="IncrementDueDate"
+                         Text="Increase Due Date By 1 Day" />
+        <RoutedUICommand x:Key="DecrementDueDate"
+                         Text="Decrease Due Date By 1 Day" />
+        <RoutedUICommand x:Key="RemoveDueDate"
+                         Text="Remove Due Date" />
+
         <!-- Sort menu commands -->
-        <RoutedUICommand x:Key="SortByAlphabetical" Text="Sort By Alphabetical" />
-        <RoutedUICommand x:Key="SortByCompleted" Text="Sort By Completed" />
-        <RoutedUICommand x:Key="SortByContext" Text="Sort By Context" />
-        <RoutedUICommand x:Key="SortByDueDate" Text="Sort By Due Date" />
-        <RoutedUICommand x:Key="SortByCreatedDate" Text="Sort By Created Date" />
-        <RoutedUICommand x:Key="SortByPriority" Text="Sort By Priority" />
-        <RoutedUICommand x:Key="SortByProject" Text="Sort By Priority" />
-        <RoutedUICommand x:Key="SortByFileOrder" Text="Sort By File Order" />
+        <RoutedUICommand x:Key="SortByAlphabetical"
+                         Text="Sort By Alphabetical" />
+        <RoutedUICommand x:Key="SortByCompleted"
+                         Text="Sort By Completed" />
+        <RoutedUICommand x:Key="SortByContext"
+                         Text="Sort By Context" />
+        <RoutedUICommand x:Key="SortByDueDate"
+                         Text="Sort By Due Date" />
+        <RoutedUICommand x:Key="SortByCreatedDate"
+                         Text="Sort By Created Date" />
+        <RoutedUICommand x:Key="SortByPriority"
+                         Text="Sort By Priority" />
+        <RoutedUICommand x:Key="SortByProject"
+                         Text="Sort By Priority" />
+        <RoutedUICommand x:Key="SortByFileOrder"
+                         Text="Sort By File Order" />
+
         <!-- Filter menu commands -->
-        <RoutedUICommand x:Key="DefineFilters" Text="Define Filters" />
-        <RoutedUICommand x:Key="RemoveFilter" Text="Remove Filter" />
-        <RoutedUICommand x:Key="ApplyFilterPreset1" Text="Apply Preset Filter 1" />
-        <RoutedUICommand x:Key="ApplyFilterPreset2" Text="Apply Preset Filter 2" />
-        <RoutedUICommand x:Key="ApplyFilterPreset3" Text="Apply Preset Filter 3" />
-        <RoutedUICommand x:Key="ApplyFilterPreset4" Text="Apply Preset Filter 4" />
-        <RoutedUICommand x:Key="ApplyFilterPreset5" Text="Apply Preset Filter 5" />
-        <RoutedUICommand x:Key="ApplyFilterPreset6" Text="Apply Preset Filter 6" />
-        <RoutedUICommand x:Key="ApplyFilterPreset7" Text="Apply Preset Filter 7" />
-        <RoutedUICommand x:Key="ApplyFilterPreset8" Text="Apply Preset Filter 8" />
-        <RoutedUICommand x:Key="ApplyFilterPreset9" Text="Apply Preset Filter 9" />
+        <RoutedUICommand x:Key="DefineFilters"
+                         Text="Define Filters" />
+        <RoutedUICommand x:Key="RemoveFilter"
+                         Text="Remove Filter" />
+        <RoutedUICommand x:Key="ApplyFilterPreset1"
+                         Text="Apply Preset Filter 1" />
+        <RoutedUICommand x:Key="ApplyFilterPreset2"
+                         Text="Apply Preset Filter 2" />
+        <RoutedUICommand x:Key="ApplyFilterPreset3"
+                         Text="Apply Preset Filter 3" />
+        <RoutedUICommand x:Key="ApplyFilterPreset4"
+                         Text="Apply Preset Filter 4" />
+        <RoutedUICommand x:Key="ApplyFilterPreset5"
+                         Text="Apply Preset Filter 5" />
+        <RoutedUICommand x:Key="ApplyFilterPreset6"
+                         Text="Apply Preset Filter 6" />
+        <RoutedUICommand x:Key="ApplyFilterPreset7"
+                         Text="Apply Preset Filter 7" />
+        <RoutedUICommand x:Key="ApplyFilterPreset8"
+                         Text="Apply Preset Filter 8" />
+        <RoutedUICommand x:Key="ApplyFilterPreset9"
+                         Text="Apply Preset Filter 9" />
+
         <!-- Help menu commands -->
-        <RoutedUICommand x:Key="HelpAbout" Text="About" />
-        <RoutedUICommand x:Key="ViewLog" Text="View Log" />
-        <RoutedUICommand x:Key="Donate" Text="Donate" />
-        <RoutedUICommand x:Key="ShowCalendar" Text="Show Calendar" />
+        <RoutedUICommand x:Key="HelpAbout"
+                         Text="About" />
+        <RoutedUICommand x:Key="ViewLog"
+                         Text="View Log" />
+        <RoutedUICommand x:Key="Donate"
+                         Text="Donate" />
+        <RoutedUICommand x:Key="ShowCalendar"
+                         Text="Show Calendar" />
+
+        <!-- Record -->
+        <RoutedUICommand x:Key="AddTaskRecord"
+                         Text="Add Task Record" />
+        <RoutedUICommand x:Key="StartPomodoroTimer"
+                         Text="Start pomodoro timer" />
+
         <!-- Control style templates -->
-        <Style x:Key="WordWrapEnabledListBox" TargetType="ListBox">
-            <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
+        <Style x:Key="WordWrapEnabledListBox"
+               TargetType="ListBox">
+            <Setter Property="ScrollViewer.CanContentScroll"
+                    Value="False" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="True">
-                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}"
+                             Value="True">
+                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
+                            Value="Disabled" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="False">
-                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+                <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}"
+                             Value="False">
+                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
+                            Value="Auto" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="WordWrapEnabledTextBlock" TargetType="TextBlock">
+        <Style x:Key="WordWrapEnabledTextBlock"
+               TargetType="TextBlock">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="True">
-                    <Setter Property="TextWrapping" Value="Wrap" />
+                <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}"
+                             Value="True">
+                    <Setter Property="TextWrapping"
+                            Value="Wrap" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="False">
-                    <Setter Property="TextWrapping" Value="NoWrap" />
+                <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}"
+                             Value="False">
+                    <Setter Property="TextWrapping"
+                            Value="NoWrap" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding ElementName=lbTasks, Path=IsGrouping}" Value="True">
-                    <Setter Property="Padding" Value="5,0,0,0" />
+                <DataTrigger Binding="{Binding ElementName=lbTasks, Path=IsGrouping}"
+                             Value="True">
+                    <Setter Property="Padding"
+                            Value="5,0,0,0" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding ElementName=lbTasks, Path=IsGrouping}" Value="False">
-                    <Setter Property="Padding" Value="0,0,0,0" />
+                <DataTrigger Binding="{Binding ElementName=lbTasks, Path=IsGrouping}"
+                             Value="False">
+                    <Setter Property="Padding"
+                            Value="0,0,0,0" />
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Path=Completed}" Value="True">
-                    <Setter Property="TextDecorations" Value="Strikethrough" />
+                <DataTrigger Binding="{Binding Path=Completed}"
+                             Value="True">
+                    <Setter Property="TextDecorations"
+                            Value="Strikethrough" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -106,249 +181,663 @@
     </Window.Resources>
     <Window.CommandBindings>
         <!-- File menu commands -->
-        <CommandBinding Command="{StaticResource OpenFile}" CanExecute="AlwaysCanExecute" Executed="OpenFileExecuted"/>
-        <CommandBinding Command="{StaticResource NewFile}" CanExecute="AlwaysCanExecute" Executed="NewFileExecuted"/>
-        <CommandBinding Command="{StaticResource PrintFile}" CanExecute="WhenTasksLoadedCanExecute" Executed="PrintFileExecuted"/>
-        <CommandBinding Command="{StaticResource PrintPreviewFile}" CanExecute="WhenTasksLoadedCanExecute" Executed="PrintPreviewFileExecuted"/>
-        <CommandBinding Command="{StaticResource ArchiveCompletedTasks}" CanExecute="WhenTasksLoadedCanExecute" Executed="ArchiveCompletedTasksExecuted"/>
-        <CommandBinding Command="{StaticResource ReloadFile}" CanExecute="WhenTasksLoadedCanExecute" Executed="ReloadFileExecuted"/>
-        <CommandBinding Command="{StaticResource Options}" CanExecute="AlwaysCanExecute" Executed="OptionsExecuted"/>
-        <CommandBinding Command="{StaticResource ExitApplication}" CanExecute="AlwaysCanExecute" Executed="ExitApplicationExecuted"/>
+        <CommandBinding Command="{StaticResource OpenFile}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="OpenFileExecuted" />
+        <CommandBinding Command="{StaticResource NewFile}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="NewFileExecuted" />
+        <CommandBinding Command="{StaticResource PrintFile}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="PrintFileExecuted" />
+        <CommandBinding Command="{StaticResource PrintPreviewFile}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="PrintPreviewFileExecuted" />
+        <CommandBinding Command="{StaticResource ArchiveCompletedTasks}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="ArchiveCompletedTasksExecuted" />
+        <CommandBinding Command="{StaticResource ReloadFile}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="ReloadFileExecuted" />
+        <CommandBinding Command="{StaticResource Options}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="OptionsExecuted" />
+        <CommandBinding Command="{StaticResource ExitApplication}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="ExitApplicationExecuted" />
         <!-- Edit Menu commands -->
-        <CommandBinding Command="{StaticResource CopySelectedTaskToNewTask}" CanExecute="WhenSingleTaskSelectedCanExecute" Executed="CopySelectedTaskToNewTaskExecuted"/>
+        <CommandBinding Command="{StaticResource CopySelectedTaskToNewTask}"
+                        CanExecute="WhenSingleTaskSelectedCanExecute"
+                        Executed="CopySelectedTaskToNewTaskExecuted" />
         <!-- Task menu commands -->
-        <CommandBinding Command="{StaticResource NewTask}" CanExecute="AlwaysCanExecute" Executed="NewTaskExecuted"/>
-        <CommandBinding Command="{StaticResource UpdateTask}" CanExecute="WhenSingleTaskSelectedCanExecute" Executed="UpdateTaskExecuted"/>
-        <CommandBinding Command="{StaticResource AppendText}" CanExecute="WhenTasksSelectedCanExecute" Executed="AppendTextExecuted"/>
-        <CommandBinding Command="{StaticResource DeleteTask}" CanExecute="WhenTasksSelectedCanExecute" Executed="DeleteTaskExecuted"/>
-        <CommandBinding Command="{StaticResource ToggleCompletion}" CanExecute="WhenTasksSelectedCanExecute" Executed="ToggleCompletionExecuted"/>
-        <CommandBinding Command="{StaticResource SetDueDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="SetDueDateExecuted"/>
-        <CommandBinding Command="{StaticResource PostponeTask}" CanExecute="WhenTasksSelectedCanExecute" Executed="PostponeTaskExecuted"/>
-        <CommandBinding Command="{StaticResource SetPriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="SetPriorityExecuted"/>
-        <CommandBinding Command="{StaticResource IncreasePriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="IncreasePriorityExecuted"/>
-        <CommandBinding Command="{StaticResource DecreasePriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="DecreasePriorityExecuted"/>
-        <CommandBinding Command="{StaticResource RemovePriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="RemovePriorityExecuted"/>
-        <CommandBinding Command="{StaticResource IncrementDueDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="IncrementDueDateExecuted"/>
-        <CommandBinding Command="{StaticResource DecrementDueDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="DecrementDueDateExecuted"/>
-        <CommandBinding Command="{StaticResource RemoveDueDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="RemoveDueDateExecuted"/>
+        <CommandBinding Command="{StaticResource NewTask}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="NewTaskExecuted" />
+        <CommandBinding Command="{StaticResource UpdateTask}"
+                        CanExecute="WhenSingleTaskSelectedCanExecute"
+                        Executed="UpdateTaskExecuted" />
+        <CommandBinding Command="{StaticResource AppendText}"
+                        CanExecute="WhenTasksSelectedCanExecute"
+                        Executed="AppendTextExecuted" />
+        <CommandBinding Command="{StaticResource DeleteTask}"
+                        CanExecute="WhenTasksSelectedCanExecute"
+                        Executed="DeleteTaskExecuted" />
+        <CommandBinding Command="{StaticResource ToggleCompletion}"
+                        CanExecute="WhenTasksSelectedCanExecute"
+                        Executed="ToggleCompletionExecuted" />
+        <CommandBinding Command="{StaticResource SetDueDate}"
+                        CanExecute="WhenTasksSelectedCanExecute"
+                        Executed="SetDueDateExecuted" />
+        <CommandBinding Command="{StaticResource PostponeTask}"
+                        CanExecute="WhenTasksSelectedCanExecute"
+                        Executed="PostponeTaskExecuted" />
+        <CommandBinding Command="{StaticResource SetPriority}"
+                        CanExecute="WhenTasksSelectedCanExecute"
+                        Executed="SetPriorityExecuted" />
+        <CommandBinding Command="{StaticResource IncreasePriority}"
+                        CanExecute="WhenTasksSelectedCanExecute"
+                        Executed="IncreasePriorityExecuted" />
+        <CommandBinding Command="{StaticResource DecreasePriority}"
+                        CanExecute="WhenTasksSelectedCanExecute"
+                        Executed="DecreasePriorityExecuted" />
+        <CommandBinding Command="{StaticResource RemovePriority}"
+                        CanExecute="WhenTasksSelectedCanExecute"
+                        Executed="RemovePriorityExecuted" />
+        <CommandBinding Command="{StaticResource IncrementDueDate}"
+                        CanExecute="WhenTasksSelectedCanExecute"
+                        Executed="IncrementDueDateExecuted" />
+        <CommandBinding Command="{StaticResource DecrementDueDate}"
+                        CanExecute="WhenTasksSelectedCanExecute"
+                        Executed="DecrementDueDateExecuted" />
+        <CommandBinding Command="{StaticResource RemoveDueDate}"
+                        CanExecute="WhenTasksSelectedCanExecute"
+                        Executed="RemoveDueDateExecuted" />
         <!-- Sort menu commands -->
-        <CommandBinding Command="{StaticResource SortByAlphabetical}" CanExecute="WhenTasksLoadedCanExecute" Executed="SortByAlphabeticalExecuted"/>
-        <CommandBinding Command="{StaticResource SortByCompleted}" CanExecute="WhenTasksLoadedCanExecute" Executed="SortByCompletedExecuted"/>
-        <CommandBinding Command="{StaticResource SortByContext}" CanExecute="WhenTasksLoadedCanExecute" Executed="SortByContextExecuted"/>
-        <CommandBinding Command="{StaticResource SortByDueDate}" CanExecute="WhenTasksLoadedCanExecute" Executed="SortByDueDateExecuted"/>
-        <CommandBinding Command="{StaticResource SortByCreatedDate}" CanExecute="WhenTasksLoadedCanExecute" Executed="SortByCreatedDateExecuted"/>
-        <CommandBinding Command="{StaticResource SortByPriority}" CanExecute="WhenTasksLoadedCanExecute" Executed="SortByPriorityExecuted"/>
-        <CommandBinding Command="{StaticResource SortByProject}" CanExecute="WhenTasksLoadedCanExecute" Executed="SortByProjectExecuted"/>
-        <CommandBinding Command="{StaticResource SortByFileOrder}" CanExecute="WhenTasksLoadedCanExecute" Executed="SortByFileOrderExecuted"/>
+        <CommandBinding Command="{StaticResource SortByAlphabetical}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="SortByAlphabeticalExecuted" />
+        <CommandBinding Command="{StaticResource SortByCompleted}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="SortByCompletedExecuted" />
+        <CommandBinding Command="{StaticResource SortByContext}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="SortByContextExecuted" />
+        <CommandBinding Command="{StaticResource SortByDueDate}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="SortByDueDateExecuted" />
+        <CommandBinding Command="{StaticResource SortByCreatedDate}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="SortByCreatedDateExecuted" />
+        <CommandBinding Command="{StaticResource SortByPriority}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="SortByPriorityExecuted" />
+        <CommandBinding Command="{StaticResource SortByProject}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="SortByProjectExecuted" />
+        <CommandBinding Command="{StaticResource SortByFileOrder}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="SortByFileOrderExecuted" />
         <!-- Filter menu commands -->
-        <CommandBinding Command="{StaticResource DefineFilters}" CanExecute="AlwaysCanExecute" Executed="DefineFiltersExecuted"/>
-        <CommandBinding Command="{StaticResource RemoveFilter}" CanExecute="AlwaysCanExecute" Executed="RemoveFilterExecuted"/>
-        <CommandBinding Command="{StaticResource ApplyFilterPreset1}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset1Executed"/>
-        <CommandBinding Command="{StaticResource ApplyFilterPreset2}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset2Executed"/>
-        <CommandBinding Command="{StaticResource ApplyFilterPreset3}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset3Executed"/>
-        <CommandBinding Command="{StaticResource ApplyFilterPreset4}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset4Executed"/>
-        <CommandBinding Command="{StaticResource ApplyFilterPreset5}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset5Executed"/>
-        <CommandBinding Command="{StaticResource ApplyFilterPreset6}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset6Executed"/>
-        <CommandBinding Command="{StaticResource ApplyFilterPreset7}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset7Executed"/>
-        <CommandBinding Command="{StaticResource ApplyFilterPreset8}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset8Executed"/>
-        <CommandBinding Command="{StaticResource ApplyFilterPreset9}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset9Executed"/>
+        <CommandBinding Command="{StaticResource DefineFilters}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="DefineFiltersExecuted" />
+        <CommandBinding Command="{StaticResource RemoveFilter}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="RemoveFilterExecuted" />
+        <CommandBinding Command="{StaticResource ApplyFilterPreset1}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="ApplyFilterPreset1Executed" />
+        <CommandBinding Command="{StaticResource ApplyFilterPreset2}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="ApplyFilterPreset2Executed" />
+        <CommandBinding Command="{StaticResource ApplyFilterPreset3}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="ApplyFilterPreset3Executed" />
+        <CommandBinding Command="{StaticResource ApplyFilterPreset4}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="ApplyFilterPreset4Executed" />
+        <CommandBinding Command="{StaticResource ApplyFilterPreset5}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="ApplyFilterPreset5Executed" />
+        <CommandBinding Command="{StaticResource ApplyFilterPreset6}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="ApplyFilterPreset6Executed" />
+        <CommandBinding Command="{StaticResource ApplyFilterPreset7}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="ApplyFilterPreset7Executed" />
+        <CommandBinding Command="{StaticResource ApplyFilterPreset8}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="ApplyFilterPreset8Executed" />
+        <CommandBinding Command="{StaticResource ApplyFilterPreset9}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="ApplyFilterPreset9Executed" />
         <!-- Help menu commands -->
-        <CommandBinding Command="{StaticResource HelpAbout}" CanExecute="AlwaysCanExecute" Executed="HelpAboutExecuted"/>
-        <CommandBinding Command="{StaticResource ViewLog}" CanExecute="AlwaysCanExecute" Executed="ViewLogExecuted"/>
-        <CommandBinding Command="{StaticResource Donate}" CanExecute="AlwaysCanExecute" Executed="DonateExecuted"/>
-        <CommandBinding Command="{StaticResource ShowCalendar}" CanExecute="AlwaysCanExecute" Executed="ShowCalendarExecuted"/>
+        <CommandBinding Command="{StaticResource HelpAbout}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="HelpAboutExecuted" />
+        <CommandBinding Command="{StaticResource ViewLog}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="ViewLogExecuted" />
+        <CommandBinding Command="{StaticResource Donate}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="DonateExecuted" />
+        <CommandBinding Command="{StaticResource ShowCalendar}"
+                        CanExecute="AlwaysCanExecute"
+                        Executed="ShowCalendarExecuted" />
         <!-- Task List commands -->
-        <CommandBinding Command="{StaticResource EmulateUpArrow}" CanExecute="WhenTasksLoadedCanExecute" Executed="EmulateUpArrowExecuted"/>
-        <CommandBinding Command="{StaticResource EmulateDownArrow}" CanExecute="WhenTasksLoadedCanExecute" Executed="EmulateDownArrowExecuted"/>
+        <CommandBinding Command="{StaticResource EmulateUpArrow}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="EmulateUpArrowExecuted" />
+        <CommandBinding Command="{StaticResource EmulateDownArrow}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="EmulateDownArrowExecuted" />
+        <!--Record commands-->
+        <CommandBinding Command="{StaticResource AddTaskRecord}"
+                        CanExecute="WhenTasksLoadedCanExecute"
+                        Executed="AddTaskRecordExecuted" />
+        <CommandBinding Command="{StaticResource StartPomodoroTimer}"
+                        CanExecute="WhenSingleTaskSelectedCanExecute"
+                        Executed="StartPomodoroTimerExecuted" />
     </Window.CommandBindings>
+
     <Window.InputBindings>
         <!-- File menu commands -->
-        <KeyBinding Command="{StaticResource OpenFile}" Key="O" Modifiers="Control" />
-        <KeyBinding Command="{StaticResource NewFile}" Key="N" Modifiers="Control" />
-        <KeyBinding Command="{StaticResource PrintFile}" Key="P" Modifiers="Control" />
-        <KeyBinding Command="{StaticResource PrintPreviewFile}" Key="P" Modifiers="Control+Shift" />
-        <KeyBinding Command="{StaticResource ReloadFile}" Key="F5" />
-        <KeyBinding Command="{StaticResource Options}" Key="F10" />
-        <KeyBinding Command="{StaticResource ExitApplication}" Key="F4" Modifiers="Alt" />
+        <KeyBinding Command="{StaticResource OpenFile}"
+                    Key="O"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource NewFile}"
+                    Key="N"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource PrintFile}"
+                    Key="P"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource PrintPreviewFile}"
+                    Key="P"
+                    Modifiers="Control+Shift" />
+        <KeyBinding Command="{StaticResource ReloadFile}"
+                    Key="F5" />
+        <KeyBinding Command="{StaticResource Options}"
+                    Key="F10" />
+        <KeyBinding Command="{StaticResource ExitApplication}"
+                    Key="F4"
+                    Modifiers="Alt" />
         <!-- Edit Menu commands -->
-        <KeyBinding Command="{StaticResource CopySelectedTaskToNewTask}" Key="C" Modifiers="Control+Shift" />
+        <KeyBinding Command="{StaticResource CopySelectedTaskToNewTask}"
+                    Key="C"
+                    Modifiers="Control+Shift" />
         <!-- Sort menu commands -->
-        <KeyBinding Command="{StaticResource SortByAlphabetical}" Key="D1" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByAlphabetical}" Key="NumPad1" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByCompleted}" Key="D2" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByCompleted}" Key="NumPad2" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByContext}" Key="D3" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByContext}" Key="NumPad3" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByDueDate}" Key="D4" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByDueDate}" Key="NumPad4" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByCreatedDate}" Key="D5" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByCreatedDate}" Key="NumPad5" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByPriority}" Key="D6" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByPriority}" Key="NumPad6" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByProject}" Key="D7" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByProject}" Key="NumPad7" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByFileOrder}" Key="D0" Modifiers="Control"/>
-        <KeyBinding Command="{StaticResource SortByFileOrder}" Key="NumPad0" Modifiers="Control"/>
+        <KeyBinding Command="{StaticResource SortByAlphabetical}"
+                    Key="D1"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByAlphabetical}"
+                    Key="NumPad1"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByCompleted}"
+                    Key="D2"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByCompleted}"
+                    Key="NumPad2"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByContext}"
+                    Key="D3"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByContext}"
+                    Key="NumPad3"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByDueDate}"
+                    Key="D4"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByDueDate}"
+                    Key="NumPad4"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByCreatedDate}"
+                    Key="D5"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByCreatedDate}"
+                    Key="NumPad5"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByPriority}"
+                    Key="D6"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByPriority}"
+                    Key="NumPad6"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByProject}"
+                    Key="D7"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByProject}"
+                    Key="NumPad7"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByFileOrder}"
+                    Key="D0"
+                    Modifiers="Control" />
+        <KeyBinding Command="{StaticResource SortByFileOrder}"
+                    Key="NumPad0"
+                    Modifiers="Control" />
     </Window.InputBindings>
-    <Grid Name="stackPanel1" Margin="0,0,0,0" ShowGridLines="False" >
+    <Grid Name="stackPanel1"
+          Margin="0,0,0,0"
+          ShowGridLines="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="25"></RowDefinition>
-            <RowDefinition Height="25"></RowDefinition>
-            <RowDefinition Height="*" ></RowDefinition>
+            <RowDefinition Height="28"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="23"></RowDefinition>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0" Height="23" Name="menu1" VerticalAlignment="Top" IsMainMenu="True" KeyboardNavigation.TabNavigation="None">
+        <Menu Grid.Row="0"
+              Height="23"
+              Name="menu1"
+              VerticalAlignment="Top"
+              IsMainMenu="True"
+              KeyboardNavigation.TabNavigation="None">
             <MenuItem Header="_File">
-                <MenuItem Header="_New" Command="{StaticResource NewFile}" InputGestureText="Ctrl+N"/>
-                <MenuItem Header="_Open" Command="{StaticResource OpenFile}" InputGestureText="Ctrl+O"/>
-                <MenuItem Header="_Print" Command="{StaticResource PrintFile}" InputGestureText="Ctrl+P"/>
-                <MenuItem Header="Print Pre_view" Command="{StaticResource PrintPreviewFile}" InputGestureText="Ctrl+Shift+P"/>
+                <MenuItem Header="_New"
+                          Command="{StaticResource NewFile}"
+                          InputGestureText="Ctrl+N" />
+                <MenuItem Header="_Open"
+                          Command="{StaticResource OpenFile}"
+                          InputGestureText="Ctrl+O" />
+                <MenuItem Header="_Print"
+                          Command="{StaticResource PrintFile}"
+                          InputGestureText="Ctrl+P" />
+                <MenuItem Header="Print Pre_view"
+                          Command="{StaticResource PrintPreviewFile}"
+                          InputGestureText="Ctrl+Shift+P" />
                 <Separator />
-                <MenuItem Header="_Archive Completed Tasks" Command="{StaticResource ArchiveCompletedTasks}" InputGestureText="A"/>
-                <MenuItem Header="_Reload File" Command="{StaticResource ReloadFile}" InputGestureText="."/>
+                <MenuItem Header="_Archive Completed Tasks"
+                          Command="{StaticResource ArchiveCompletedTasks}"
+                          InputGestureText="A" />
+                <MenuItem Header="_Reload File"
+                          Command="{StaticResource ReloadFile}"
+                          InputGestureText="." />
                 <Separator />
-                <MenuItem Header="Op_tions..." Command="{StaticResource Options}" InputGestureText="F10"/>
+                <MenuItem Header="Op_tions..."
+                          Command="{StaticResource Options}"
+                          InputGestureText="F10" />
                 <Separator />
-                <MenuItem Header="E_xit" Command="{StaticResource ExitApplication}" InputGestureText="Alt+F4"/>
+                <MenuItem Header="E_xit"
+                          Command="{StaticResource ExitApplication}"
+                          InputGestureText="Alt+F4" />
             </MenuItem>
             <MenuItem Header="_Edit">
-                <MenuItem Header="Cut" Command="Cut" InputGestureText="Ctrl+X"/>
-                <MenuItem Header="Copy" Command="Copy" InputGestureText="Ctrl+C"/>
-                <MenuItem Header="Copy Task to New Task" Command="{StaticResource CopySelectedTaskToNewTask}" InputGestureText="Shift+Ctrl+C"/>
-                <MenuItem Header="Paste" Command="Paste" InputGestureText="Ctrl+V"/>
+                <MenuItem Header="Cut"
+                          Command="Cut"
+                          InputGestureText="Ctrl+X" />
+                <MenuItem Header="Copy"
+                          Command="Copy"
+                          InputGestureText="Ctrl+C" />
+                <MenuItem Header="Copy Task to New Task"
+                          Command="{StaticResource CopySelectedTaskToNewTask}"
+                          InputGestureText="Shift+Ctrl+C" />
+                <MenuItem Header="Paste"
+                          Command="Paste"
+                          InputGestureText="Ctrl+V" />
             </MenuItem>
             <MenuItem Header="_Task">
-                <MenuItem Header="Add _New Task" Command="{StaticResource NewTask}" InputGestureText="N"/>
-                <MenuItem Header="_Update Task" Command="{StaticResource UpdateTask}" InputGestureText="U"/>
-                <MenuItem Header="Append _Text" Command="{StaticResource AppendText}" InputGestureText="T"/>
-                <MenuItem Header="_Delete Task" Command="{StaticResource DeleteTask}" InputGestureText="D"/>
+                <MenuItem Header="Add _New Task"
+                          Command="{StaticResource NewTask}"
+                          InputGestureText="N" />
+                <MenuItem Header="_Update Task"
+                          Command="{StaticResource UpdateTask}"
+                          InputGestureText="U" />
+                <MenuItem Header="Append _Text"
+                          Command="{StaticResource AppendText}"
+                          InputGestureText="T" />
+                <MenuItem Header="_Delete Task"
+                          Command="{StaticResource DeleteTask}"
+                          InputGestureText="D" />
                 <Separator />
-                <MenuItem Header="Toggle _Completion" Command="{StaticResource ToggleCompletion}" InputGestureText="X"/>
+                <MenuItem Header="Toggle _Completion"
+                          Command="{StaticResource ToggleCompletion}"
+                          InputGestureText="X" />
                 <Separator />
-                <MenuItem Header="Set Pr_iority" Command="{StaticResource SetPriority}" InputGestureText="I"/>
-                <MenuItem Header="_Increase Priority" Command="{StaticResource IncreasePriority}" InputGestureText="Alt+Up"/>
-                <MenuItem Header="_Decrease Priority" Command="{StaticResource DecreasePriority}" InputGestureText="Alt+Down"/>
-                <MenuItem Header="_Remove Priority" Command="{StaticResource RemovePriority}" InputGestureText="Alt+Left/Right"/>
+                <MenuItem Header="Set Pr_iority"
+                          Command="{StaticResource SetPriority}"
+                          InputGestureText="I" />
+                <MenuItem Header="_Increase Priority"
+                          Command="{StaticResource IncreasePriority}"
+                          InputGestureText="Alt+Up" />
+                <MenuItem Header="_Decrease Priority"
+                          Command="{StaticResource DecreasePriority}"
+                          InputGestureText="Alt+Down" />
+                <MenuItem Header="_Remove Priority"
+                          Command="{StaticResource RemovePriority}"
+                          InputGestureText="Alt+Left/Right" />
                 <Separator />
-                <MenuItem Header="_Set Due Date" Command="{StaticResource SetDueDate}" InputGestureText="S"/>
-                <MenuItem Header="Postpone" Command="{StaticResource PostponeTask}" InputGestureText="P"/>
-                <MenuItem Header="Increase Due Date By 1 Day" Command="{StaticResource IncrementDueDate}" InputGestureText="Ctrl+Alt+Up"/>
-                <MenuItem Header="Decrease Due Date By 1 Day" Command="{StaticResource DecrementDueDate}" InputGestureText="Ctrl+Alt+Down"/>
-                <MenuItem Header="Remove Due Date" Command="{StaticResource RemoveDueDate}" InputGestureText="Ctrl+Alt+Left/Right"/>
+                <MenuItem Header="_Set Due Date"
+                          Command="{StaticResource SetDueDate}"
+                          InputGestureText="S" />
+                <MenuItem Header="Postpone"
+                          Command="{StaticResource PostponeTask}"
+                          InputGestureText="P" />
+                <MenuItem Header="Increase Due Date By 1 Day"
+                          Command="{StaticResource IncrementDueDate}"
+                          InputGestureText="Ctrl+Alt+Up" />
+                <MenuItem Header="Decrease Due Date By 1 Day"
+                          Command="{StaticResource DecrementDueDate}"
+                          InputGestureText="Ctrl+Alt+Down" />
+                <MenuItem Header="Remove Due Date"
+                          Command="{StaticResource RemoveDueDate}"
+                          InputGestureText="Ctrl+Alt+Left/Right" />
             </MenuItem>
-            <MenuItem Header="_Sort" Name="sortMenu">
-                <MenuItem Header="_Order in file" IsCheckable="True" Command="{StaticResource SortByFileOrder}" InputGestureText="Ctrl+0" Tag="File"/>
-                <MenuItem Header="_Alphabetical" IsCheckable="True" Command="{StaticResource SortByAlphabetical}" InputGestureText="Ctrl+1" Tag="Alphabetical"/>
-                <MenuItem Header="_Completed" IsCheckable="True" Command="{StaticResource SortByCompleted}" InputGestureText="Ctrl+2" Tag="Completed"/>
-                <MenuItem Header="Con_text" IsCheckable="True" Command="{StaticResource SortByContext}" InputGestureText="Ctrl+3" Tag="Context"/>
-                <MenuItem Header="_Due Date" IsCheckable="True" Command="{StaticResource SortByDueDate}" InputGestureText="Ctrl+4" Tag="DueDate"/>
-                <MenuItem Header="C_reation Date" IsCheckable="True" Command="{StaticResource SortByCreatedDate}" InputGestureText="Ctrl+5" Tag="CreatedDate"/>
-                <MenuItem Header="_Priority" IsCheckable="True" Command="{StaticResource SortByPriority}" InputGestureText="Ctrl+6" Tag="Priority"/>
-                <MenuItem Header="Pro_ject" IsCheckable="True" Command="{StaticResource SortByProject}" InputGestureText="Ctrl+7" Tag="Project"/>
+            <MenuItem Header="_Sort"
+                      Name="sortMenu">
+                <MenuItem Header="_Order in file"
+                          IsCheckable="True"
+                          Command="{StaticResource SortByFileOrder}"
+                          InputGestureText="Ctrl+0"
+                          Tag="File" />
+                <MenuItem Header="_Alphabetical"
+                          IsCheckable="True"
+                          Command="{StaticResource SortByAlphabetical}"
+                          InputGestureText="Ctrl+1"
+                          Tag="Alphabetical" />
+                <MenuItem Header="_Completed"
+                          IsCheckable="True"
+                          Command="{StaticResource SortByCompleted}"
+                          InputGestureText="Ctrl+2"
+                          Tag="Completed" />
+                <MenuItem Header="Con_text"
+                          IsCheckable="True"
+                          Command="{StaticResource SortByContext}"
+                          InputGestureText="Ctrl+3"
+                          Tag="Context" />
+                <MenuItem Header="_Due Date"
+                          IsCheckable="True"
+                          Command="{StaticResource SortByDueDate}"
+                          InputGestureText="Ctrl+4"
+                          Tag="DueDate" />
+                <MenuItem Header="C_reation Date"
+                          IsCheckable="True"
+                          Command="{StaticResource SortByCreatedDate}"
+                          InputGestureText="Ctrl+5"
+                          Tag="CreatedDate" />
+                <MenuItem Header="_Priority"
+                          IsCheckable="True"
+                          Command="{StaticResource SortByPriority}"
+                          InputGestureText="Ctrl+6"
+                          Tag="Priority" />
+                <MenuItem Header="Pro_ject"
+                          IsCheckable="True"
+                          Command="{StaticResource SortByProject}"
+                          InputGestureText="Ctrl+7"
+                          Tag="Project" />
             </MenuItem>
-            <MenuItem Header="Filter" Name="filterMenu">
-                <MenuItem Header="Define _Filters" Command="{StaticResource DefineFilters}" InputGestureText="F" IsCheckable="False" FontWeight="Normal" />
-                <Separator/>
-                <MenuItem Header="_Remove Filter" Command="{StaticResource RemoveFilter}" InputGestureText="0" IsCheckable="False" Tag="Preset0" FontWeight="Normal" />
-                <Separator/>
-                <MenuItem Header="Apply Preset Filter _1" Command="{StaticResource ApplyFilterPreset1}" InputGestureText="1" IsCheckable="True" Tag="Preset1" FontWeight="Normal" />
-                <MenuItem Header="Apply Preset Filter _2" Command="{StaticResource ApplyFilterPreset2}" InputGestureText="2" IsCheckable="True" Tag="Preset2" FontWeight="Normal" />
-                <MenuItem Header="Apply Preset Filter _3" Command="{StaticResource ApplyFilterPreset3}" InputGestureText="3" IsCheckable="True" Tag="Preset3" FontWeight="Normal" />
-                <MenuItem Header="Apply Preset Filter _4" Command="{StaticResource ApplyFilterPreset4}" InputGestureText="4" IsCheckable="True" Tag="Preset4" FontWeight="Normal" />
-                <MenuItem Header="Apply Preset Filter _5" Command="{StaticResource ApplyFilterPreset5}" InputGestureText="5" IsCheckable="True" Tag="Preset5" FontWeight="Normal" />
-                <MenuItem Header="Apply Preset Filter _6" Command="{StaticResource ApplyFilterPreset6}" InputGestureText="6" IsCheckable="True" Tag="Preset6" FontWeight="Normal" />
-                <MenuItem Header="Apply Preset Filter _7" Command="{StaticResource ApplyFilterPreset7}" InputGestureText="7" IsCheckable="True" Tag="Preset7" FontWeight="Normal" />
-                <MenuItem Header="Apply Preset Filter _8" Command="{StaticResource ApplyFilterPreset8}" InputGestureText="8" IsCheckable="True" Tag="Preset8" FontWeight="Normal" />
-                <MenuItem Header="Apply Preset Filter _9" Command="{StaticResource ApplyFilterPreset9}" InputGestureText="9" IsCheckable="True" Tag="Preset9" FontWeight="Normal" />
+            <MenuItem Header="Filter"
+                      Name="filterMenu">
+                <MenuItem Header="Define _Filters"
+                          Command="{StaticResource DefineFilters}"
+                          InputGestureText="F"
+                          IsCheckable="False"
+                          FontWeight="Normal" />
+                <Separator />
+                <MenuItem Header="_Remove Filter"
+                          Command="{StaticResource RemoveFilter}"
+                          InputGestureText="0"
+                          IsCheckable="False"
+                          Tag="Preset0"
+                          FontWeight="Normal" />
+                <Separator />
+                <MenuItem Header="Apply Preset Filter _1"
+                          Command="{StaticResource ApplyFilterPreset1}"
+                          InputGestureText="1"
+                          IsCheckable="True"
+                          Tag="Preset1"
+                          FontWeight="Normal" />
+                <MenuItem Header="Apply Preset Filter _2"
+                          Command="{StaticResource ApplyFilterPreset2}"
+                          InputGestureText="2"
+                          IsCheckable="True"
+                          Tag="Preset2"
+                          FontWeight="Normal" />
+                <MenuItem Header="Apply Preset Filter _3"
+                          Command="{StaticResource ApplyFilterPreset3}"
+                          InputGestureText="3"
+                          IsCheckable="True"
+                          Tag="Preset3"
+                          FontWeight="Normal" />
+                <MenuItem Header="Apply Preset Filter _4"
+                          Command="{StaticResource ApplyFilterPreset4}"
+                          InputGestureText="4"
+                          IsCheckable="True"
+                          Tag="Preset4"
+                          FontWeight="Normal" />
+                <MenuItem Header="Apply Preset Filter _5"
+                          Command="{StaticResource ApplyFilterPreset5}"
+                          InputGestureText="5"
+                          IsCheckable="True"
+                          Tag="Preset5"
+                          FontWeight="Normal" />
+                <MenuItem Header="Apply Preset Filter _6"
+                          Command="{StaticResource ApplyFilterPreset6}"
+                          InputGestureText="6"
+                          IsCheckable="True"
+                          Tag="Preset6"
+                          FontWeight="Normal" />
+                <MenuItem Header="Apply Preset Filter _7"
+                          Command="{StaticResource ApplyFilterPreset7}"
+                          InputGestureText="7"
+                          IsCheckable="True"
+                          Tag="Preset7"
+                          FontWeight="Normal" />
+                <MenuItem Header="Apply Preset Filter _8"
+                          Command="{StaticResource ApplyFilterPreset8}"
+                          InputGestureText="8"
+                          IsCheckable="True"
+                          Tag="Preset8"
+                          FontWeight="Normal" />
+                <MenuItem Header="Apply Preset Filter _9"
+                          Command="{StaticResource ApplyFilterPreset9}"
+                          InputGestureText="9"
+                          IsCheckable="True"
+                          Tag="Preset9"
+                          FontWeight="Normal" />
             </MenuItem>
+
+            <MenuItem Header="Record"
+                      Name="recordMenu">
+                <MenuItem Header="Add _New Time Record"
+                          Command="{StaticResource NewTask}"
+                          InputGestureText="N" />
+                <MenuItem Header="Add _Record For Current Task"
+                          Command="{StaticResource AddTaskRecord}"
+                          InputGestureText="R" />
+                <MenuItem Header="Start Pomodoro Timer"
+                          Command="{StaticResource StartPomodoroTimer}"
+                          InputGestureText="Y" />
+            </MenuItem>
+
             <MenuItem Header="_Help">
-                <MenuItem Header="_About" Command="{StaticResource HelpAbout}" InputGestureText="?" />
-                <MenuItem Header="_View Error Log" Command="{StaticResource ViewLog}" />
-                <MenuItem Header="_Donate" Command="{StaticResource Donate}" />
-                <MenuItem Header="_Show Calendar" Command="{StaticResource ShowCalendar}" InputGestureText="Right Shift" />
+                <MenuItem Header="_About"
+                          Command="{StaticResource HelpAbout}"
+                          InputGestureText="?" />
+                <MenuItem Header="_View Error Log"
+                          Command="{StaticResource ViewLog}" />
+                <MenuItem Header="_Donate"
+                          Command="{StaticResource Donate}" />
+                <MenuItem Header="_Show Calendar"
+                          Command="{StaticResource ShowCalendar}"
+                          InputGestureText="Right Shift" />
             </MenuItem>
-            <MenuItem Name="UpdateMenu" Header="*Update available*" Visibility="Hidden" Click="GetUpdate" />
+            <MenuItem Name="UpdateMenu"
+                      Header="*Update available*"
+                      Visibility="Hidden"
+                      Click="GetUpdate" />
+
             <Menu.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#f8f8f8" Offset="0" />
-                    <GradientStop Color="#f0f0f0" Offset="1" />
+                <LinearGradientBrush EndPoint="0.5,1"
+                                     StartPoint="0.5,0">
+                    <GradientStop Color="#f8f8f8"
+                                  Offset="0" />
+                    <GradientStop Color="#f0f0f0"
+                                  Offset="1" />
                 </LinearGradientBrush>
             </Menu.Background>
         </Menu>
-        <local:IntellisenseTextBox Grid.Row="1" Height="23" Margin="0,0,0,0" x:Name="taskText" AcceptsReturn="False" Cursor="IBeam" VerticalAlignment="Top"
-                                   KeyUp="taskText_PreviewKeyUp" 
+        <local:IntellisenseTextBox Grid.Row="1"
+                                   Height="26"
+                                   Margin="0,0,0,0"
+                                   x:Name="taskText"
+                                   AcceptsReturn="False"
+                                   Cursor="IBeam"
+                                   VerticalAlignment="Top"
+                                   KeyUp="taskText_PreviewKeyUp"
                                    TaskList="{Binding TaskList}"
+                                   FontSize="15"
                                    CaseSensitive="{Binding Source={x:Static local:User.Default}, Path=IntellisenseCaseSensitive}" />
-        <ListBox Grid.Row="2" ItemsSource="{Binding Tasks}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedItem}" Name="lbTasks" Margin="0,10,0,0" SelectedIndex="0" IsTextSearchEnabled="False" AlternationCount="2" BorderBrush="{x:Null}" SelectionMode="Extended" Style="{StaticResource WordWrapEnabledListBox}">
+        <ListBox Grid.Row="2"
+                 ItemsSource="{Binding Tasks}"
+                 IsSynchronizedWithCurrentItem="True"
+                 SelectedItem="{Binding SelectedItem}"
+                 Name="lbTasks"
+                 Margin="0,10,0,0"
+                 SelectedIndex="0"
+                 IsTextSearchEnabled="False"
+                 AlternationCount="2"
+                 BorderBrush="{x:Null}"
+                 SelectionMode="Extended"
+                 Style="{StaticResource WordWrapEnabledListBox}">
             <ListBox.CommandBindings>
-                <CommandBinding Command="ApplicationCommands.Copy" CanExecute="WhenTasksSelectedCanExecute" Executed="CopyTasksExecuted" />
-                <CommandBinding Command="ApplicationCommands.Paste" CanExecute="PasteTasksIntoTaskListCanExecute" Executed="PasteTasksIntoTaskListExecuted" />
+                <CommandBinding Command="ApplicationCommands.Copy"
+                                CanExecute="WhenTasksSelectedCanExecute"
+                                Executed="CopyTasksExecuted" />
+                <CommandBinding Command="ApplicationCommands.Paste"
+                                CanExecute="PasteTasksIntoTaskListCanExecute"
+                                Executed="PasteTasksIntoTaskListExecuted" />
             </ListBox.CommandBindings>
             <ListBox.InputBindings>
                 <!-- These key bindings need to be here to override default key handling in the list box. -->
                 <!-- File menu commands -->
-                <KeyBinding Command="{StaticResource OpenFile}" Key="O" />
-                <KeyBinding Command="{StaticResource NewFile}" Key="C" />
-                <KeyBinding Command="{StaticResource ArchiveCompletedTasks}" Key="A" />
-                <KeyBinding Command="{StaticResource ReloadFile}" Key="OemPeriod" />
+                <KeyBinding Command="{StaticResource OpenFile}"
+                            Key="O" />
+                <KeyBinding Command="{StaticResource NewFile}"
+                            Key="C" />
+                <KeyBinding Command="{StaticResource ArchiveCompletedTasks}"
+                            Key="A" />
+                <KeyBinding Command="{StaticResource ReloadFile}"
+                            Key="OemPeriod" />
                 <!-- Up/down commands -->
                 <!--<KeyBinding Command="{StaticResource EmulateUpArrow}" Key="Up" />-->
-                <KeyBinding Command="{StaticResource EmulateUpArrow}" Key="K" />
+                <KeyBinding Command="{StaticResource EmulateUpArrow}"
+                            Key="K" />
                 <!--<KeyBinding Command="{StaticResource EmulateDownArrow}" Key="Down" />-->
-                <KeyBinding Command="{StaticResource EmulateDownArrow}" Key="J" />
+                <KeyBinding Command="{StaticResource EmulateDownArrow}"
+                            Key="J" />
                 <!-- Task menu commands -->
-                <KeyBinding Command="{StaticResource NewTask}" Key="N" />
-                <KeyBinding Command="{StaticResource PrintFile}" Key="P" />
-                <KeyBinding Command="{StaticResource UpdateTask}" Key="U" />
-                <KeyBinding Command="{StaticResource UpdateTask}" Key="F2" />
-                <KeyBinding Command="{StaticResource AppendText}" Key="T" />
-                <KeyBinding Command="{StaticResource DeleteTask}" Key="D" />
-                <KeyBinding Command="{StaticResource DeleteTask}" Key="Delete" />
-                <KeyBinding Command="{StaticResource DeleteTask}" Key="Back" />
-                <KeyBinding Command="{StaticResource ToggleCompletion}" Key="X" />
-                <KeyBinding Command="{StaticResource SetDueDate}" Key="S" />
-                <KeyBinding Command="{StaticResource PostponeTask}" Key="P" />
-                <KeyBinding Command="{StaticResource IncrementDueDate}" Key="Up" Modifiers="Control+Alt"/>
-                <KeyBinding Command="{StaticResource DecrementDueDate}" Key="Down" Modifiers="Control+Alt"/>
-                <KeyBinding Command="{StaticResource RemoveDueDate}" Key="Left" Modifiers="Control+Alt"/>
-                <KeyBinding Command="{StaticResource RemoveDueDate}" Key="Right" Modifiers="Control+Alt"/>
-                <KeyBinding Command="{StaticResource SetPriority}" Key="I" />
-                <KeyBinding Command="{StaticResource IncreasePriority}" Key="Up" Modifiers="Alt"/>
-                <KeyBinding Command="{StaticResource DecreasePriority}" Key="Down" Modifiers="Alt"/>
-                <KeyBinding Command="{StaticResource RemovePriority}" Key="Left" Modifiers="Alt"/>
-                <KeyBinding Command="{StaticResource RemovePriority}" Key="Right" Modifiers="Alt"/>
+                <KeyBinding Command="{StaticResource NewTask}"
+                            Key="N" />
+                <KeyBinding Command="{StaticResource PrintFile}"
+                            Key="P" />
+                <KeyBinding Command="{StaticResource UpdateTask}"
+                            Key="U" />
+                <KeyBinding Command="{StaticResource UpdateTask}"
+                            Key="F2" />
+                <KeyBinding Command="{StaticResource AppendText}"
+                            Key="T" />
+                <KeyBinding Command="{StaticResource DeleteTask}"
+                            Key="D" />
+                <KeyBinding Command="{StaticResource DeleteTask}"
+                            Key="Delete" />
+                <KeyBinding Command="{StaticResource DeleteTask}"
+                            Key="Back" />
+                <KeyBinding Command="{StaticResource ToggleCompletion}"
+                            Key="X" />
+                <KeyBinding Command="{StaticResource SetDueDate}"
+                            Key="S" />
+                <KeyBinding Command="{StaticResource PostponeTask}"
+                            Key="P" />
+                <KeyBinding Command="{StaticResource IncrementDueDate}"
+                            Key="Up"
+                            Modifiers="Control+Alt" />
+                <KeyBinding Command="{StaticResource DecrementDueDate}"
+                            Key="Down"
+                            Modifiers="Control+Alt" />
+                <KeyBinding Command="{StaticResource RemoveDueDate}"
+                            Key="Left"
+                            Modifiers="Control+Alt" />
+                <KeyBinding Command="{StaticResource RemoveDueDate}"
+                            Key="Right"
+                            Modifiers="Control+Alt" />
+                <KeyBinding Command="{StaticResource SetPriority}"
+                            Key="I" />
+                <KeyBinding Command="{StaticResource IncreasePriority}"
+                            Key="Up"
+                            Modifiers="Alt" />
+                <KeyBinding Command="{StaticResource DecreasePriority}"
+                            Key="Down"
+                            Modifiers="Alt" />
+                <KeyBinding Command="{StaticResource RemovePriority}"
+                            Key="Left"
+                            Modifiers="Alt" />
+                <KeyBinding Command="{StaticResource RemovePriority}"
+                            Key="Right"
+                            Modifiers="Alt" />
                 <!-- Filter menu commands -->
-                <KeyBinding Command="{StaticResource DefineFilters}" Key="F"/>
-                <KeyBinding Command="{StaticResource RemoveFilter}" Key="NumPad0"/>
-                <KeyBinding Command="{StaticResource RemoveFilter}" Key="D0"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset1}" Key="NumPad1"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset1}" Key="D1"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset2}" Key="NumPad2"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset2}" Key="D2"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset3}" Key="NumPad3"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset3}" Key="D3"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset4}" Key="NumPad4"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset4}" Key="D4"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset5}" Key="NumPad5"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset5}" Key="D5"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset6}" Key="NumPad6"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset6}" Key="D6"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset7}" Key="NumPad7"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset7}" Key="D7"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset8}" Key="NumPad8"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset8}" Key="D8"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset9}" Key="NumPad9"/>
-                <KeyBinding Command="{StaticResource ApplyFilterPreset9}" Key="D9"/>
+                <KeyBinding Command="{StaticResource DefineFilters}"
+                            Key="F" />
+                <KeyBinding Command="{StaticResource RemoveFilter}"
+                            Key="NumPad0" />
+                <KeyBinding Command="{StaticResource RemoveFilter}"
+                            Key="D0" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset1}"
+                            Key="NumPad1" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset1}"
+                            Key="D1" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset2}"
+                            Key="NumPad2" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset2}"
+                            Key="D2" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset3}"
+                            Key="NumPad3" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset3}"
+                            Key="D3" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset4}"
+                            Key="NumPad4" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset4}"
+                            Key="D4" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset5}"
+                            Key="NumPad5" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset5}"
+                            Key="D5" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset6}"
+                            Key="NumPad6" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset6}"
+                            Key="D6" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset7}"
+                            Key="NumPad7" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset7}"
+                            Key="D7" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset8}"
+                            Key="NumPad8" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset8}"
+                            Key="D8" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset9}"
+                            Key="NumPad9" />
+                <KeyBinding Command="{StaticResource ApplyFilterPreset9}"
+                            Key="D9" />
                 <!-- Help menu commands -->
-                <KeyBinding Command="{StaticResource HelpAbout}" Key="OemQuestion" Modifiers="Shift"/>
-                <KeyBinding Command="{StaticResource ShowCalendar}" Key="RightShift" Modifiers="Shift"/>
+                <KeyBinding Command="{StaticResource HelpAbout}"
+                            Key="OemQuestion"
+                            Modifiers="Shift" />
+                <KeyBinding Command="{StaticResource ShowCalendar}"
+                            Key="RightShift"
+                            Modifiers="Shift" />
+
+                <!--Record-->
+                <KeyBinding Command="{StaticResource AddTaskRecord}"
+                            Key="R" />
+                <KeyBinding Command="{StaticResource StartPomodoroTimer}"
+                            Key="Y" />
+
             </ListBox.InputBindings>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock local:UrlService.Text="{Binding Raw}" Style="{StaticResource WordWrapEnabledTextBlock}">
+                        <TextBlock local:UrlService.Text="{Binding Raw}"
+                                   Style="{StaticResource WordWrapEnabledTextBlock}">
                             <TextBlock.InputBindings>
-                                <MouseBinding Gesture="LeftDoubleClick" Command="{StaticResource UpdateTask}" />
+                                <MouseBinding Gesture="LeftDoubleClick"
+                                              Command="{StaticResource UpdateTask}" />
                             </TextBlock.InputBindings>
                         </TextBlock>
                     </StackPanel>
@@ -363,13 +852,16 @@
                                     <ControlTemplate TargetType="GroupItem">
                                         <Grid>
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" local:UrlService.Text="{Binding Name}" Margin="0,10,0,3" FontWeight="Bold"/>
-                                            <ItemsPresenter Grid.Row="1"/>
+                                            <TextBlock Grid.Row="0"
+                                                       local:UrlService.Text="{Binding Name}"
+                                                       Margin="0,10,0,3"
+                                                       FontWeight="Bold" />
+                                            <ItemsPresenter Grid.Row="1" />
                                         </Grid>
-                                        </ControlTemplate>
+                                    </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
                         </Style>
@@ -377,30 +869,61 @@
                 </GroupStyle>
             </ListBox.GroupStyle>
         </ListBox>
-        
-        <WebBrowser Grid.Row="2" Height="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,0" Name="webBrowser1" VerticalAlignment="Stretch" Width="Auto" Visibility="Hidden" Grid.ColumnSpan="2" />
-        <Button Grid.Row="0" Grid.RowSpan="2" Content="Print" Height="23" HorizontalAlignment="Left" Margin="0,23,207,0" Name="btnPrint" VerticalAlignment="Top" Width="92" Visibility="Hidden" Click="btnPrint_Click" />
-        <Button Grid.Row="0" Grid.RowSpan="2"  Content="Cancel" Height="23" HorizontalAlignment="Left" Margin="97,23,0,0" Name="btnCancelPrint" VerticalAlignment="Top" Width="92" Visibility="Hidden" Click="btnCancelPrint_Click" />
+
+        <WebBrowser Grid.Row="2"
+                    Height="Auto"
+                    HorizontalAlignment="Stretch"
+                    Margin="0,0,0,0"
+                    Name="webBrowser1"
+                    VerticalAlignment="Stretch"
+                    Width="Auto"
+                    Visibility="Hidden"
+                    Grid.ColumnSpan="2" />
+        <Button Grid.Row="0"
+                Grid.RowSpan="2"
+                Content="Print"
+                Height="23"
+                HorizontalAlignment="Left"
+                Margin="0,23,207,0"
+                Name="btnPrint"
+                VerticalAlignment="Top"
+                Width="92"
+                Visibility="Hidden"
+                Click="btnPrint_Click" />
+        <Button Grid.Row="0"
+                Grid.RowSpan="2"
+                Content="Cancel"
+                Height="23"
+                HorizontalAlignment="Left"
+                Margin="97,23,0,0"
+                Name="btnCancelPrint"
+                VerticalAlignment="Top"
+                Width="92"
+                Visibility="Hidden"
+                Click="btnCancelPrint_Click" />
         <!-- Status bar inspired by TodoTxtMac  -->
-        <StatusBar Grid.Row="3" Name="sbTaskSummary">
-            <TextBlock Name="lblFilterStatus" Text="{Binding ActiveFilterNumber, Mode=OneWay, Converter= {StaticResource filterToStatusConv}}" VerticalAlignment="Bottom"></TextBlock>
+        <StatusBar Grid.Row="3"
+                   Name="sbTaskSummary">
+            <TextBlock Name="lblFilterStatus"
+                       Text="{Binding ActiveFilterNumber, Mode=OneWay, Converter= {StaticResource filterToStatusConv}}"
+                       VerticalAlignment="Bottom"></TextBlock>
             <Separator></Separator>
-            <TextBlock Text="Sort:"/>
-            <TextBlock Text="{Binding SortType, Mode=OneWay, Converter={StaticResource sortTypeToDescConv}}"/>
+            <TextBlock Text="Sort:" />
+            <TextBlock Text="{Binding SortType, Mode=OneWay, Converter={StaticResource sortTypeToDescConv}}" />
             <Separator></Separator>
-            <TextBlock Text="Tasks:"/>
-            <TextBlock Text="{Binding FilteredTasks, Mode=OneWay}"/>
-            <TextBlock Text="of"/>
-            <TextBlock Text="{Binding TotalTasks, Mode=OneWay}"/>
+            <TextBlock Text="Tasks:" />
+            <TextBlock Text="{Binding FilteredTasks, Mode=OneWay}" />
+            <TextBlock Text="of" />
+            <TextBlock Text="{Binding TotalTasks, Mode=OneWay}" />
             <Separator></Separator>
-            <TextBlock Text="Incomplete:"/>
-            <TextBlock Text="{Binding IncompleteTasks, Mode=OneWay}"/>
+            <TextBlock Text="Incomplete:" />
+            <TextBlock Text="{Binding IncompleteTasks, Mode=OneWay}" />
             <Separator></Separator>
-            <TextBlock Text="Due Today:"/>
-            <TextBlock Text="{Binding TasksDueToday, Mode=OneWay}"/>
+            <TextBlock Text="Due Today:" />
+            <TextBlock Text="{Binding TasksDueToday, Mode=OneWay}" />
             <Separator></Separator>
-            <TextBlock Text="Overdue:"/>
-            <TextBlock Text="{Binding TasksOverdue, Mode=OneWay}"/>
+            <TextBlock Text="Overdue:" />
+            <TextBlock Text="{Binding TasksOverdue, Mode=OneWay}" />
 
         </StatusBar>
 

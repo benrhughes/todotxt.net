@@ -14,9 +14,9 @@ namespace ToDoLib
         Overdue
     }
 
-    public class Task : IComparable
+    public class TaskItem : IComparable
     {
-        private const string CompletedPattern = @"^X\s((\d{4})-(\d{2})-(\d{2}))?";
+        private const string CompletedPattern = @"^X\s(\d{2}\:\d{2}\s(\d{4})-(\d{2})-(\d{2}))?";
         private const string PriorityPattern = @"^(?<priority>\([A-Z]\)\s)";
         private const string CreatedDatePattern = @"(?<date>(\d{4})-(\d{2})-(\d{2}))";
 
@@ -49,7 +49,7 @@ namespace ToDoLib
                 _completed = value;
                 if(_completed)
                 {
-                    CompletedDate = DateTime.Now.ToString("yyyy-MM-dd");
+                    CompletedDate = DateTime.Now.ToString("HH\\:mm yyyy-MM-dd");
                     Priority = "";
                 }
                 else
@@ -84,7 +84,7 @@ namespace ToDoLib
         // Parsing needs to comply with these rules: https://github.com/ginatrapani/todo.txt-touch/wiki/Todo.txt-File-Format
 
         //TODO priority regex need to only recognice upper case single chars
-        public Task(string raw)
+        public TaskItem(string raw)
         {
             raw = raw.Replace(Environment.NewLine, ""); //make sure it's just on one line
 
@@ -213,7 +213,7 @@ namespace ToDoLib
             Body = raw.Trim();
         }
 
-        public Task(string priority, List<string> projects, List<string> contexts, string body, string dueDate = "",
+        public TaskItem(string priority, List<string> projects, List<string> contexts, string body, string dueDate = "",
                     bool completed = false)
         {
             Priority = priority;
@@ -264,7 +264,7 @@ namespace ToDoLib
 
         public int CompareTo(object obj)
         {
-            var other = (Task)obj;
+            var other = (TaskItem)obj;
 
             return string.Compare(Raw, other.Raw);
         }

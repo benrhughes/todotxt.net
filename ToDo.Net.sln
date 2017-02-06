@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoLib", "ToDoLib\ToDoLib.csproj", "{07AA9CEA-4EF0-4B47-AFBD-6F74AD9C4653}"
 EndProject
@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D319B4BA-4A63-44EE-8B73-1CE76F48A108}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		screenshot.png = screenshot.png
 		Updates.xml = Updates.xml
 	EndProjectSection
 EndProject

@@ -1,4 +1,4 @@
-### todotxt.net
+### todotxt.net with pomodoro timer 
 
 This is an implemention of [todo.txt](http://todotxt.com/) using the .NET framework. As far as I am aware, it is fully compliant with [Gina's spec](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format). 
 
@@ -53,4 +53,13 @@ Please send your pull requests to the 'dev' branch. If you forget it's not a maj
     - Ctrl+Alt+Left/Right: remove due date 
 	- Ctrl+C: copy task to clipboard
 	- Ctrl+Shift+C: copy task to edit field
-	- Win+Alt+T: hide/unhide windows
+	- Win+W: hide/unhide windows
+    - Y: start pomodoro timer for current task
+    - R: build a record for current task
+    - N / shift-enter: add a time record
+
+### Example:
+
+![chassis](https://raw.github.com/jglwiz/todotxt.net/master/screenshot.png)
+
+[Download link](https://github.com/jglwiz/todotxt.net/releases/tag/v1.0)
