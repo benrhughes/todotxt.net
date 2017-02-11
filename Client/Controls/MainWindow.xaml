@@ -65,6 +65,7 @@
         <RoutedUICommand x:Key="ApplyFilterPreset7" Text="Apply Preset Filter 7" />
         <RoutedUICommand x:Key="ApplyFilterPreset8" Text="Apply Preset Filter 8" />
         <RoutedUICommand x:Key="ApplyFilterPreset9" Text="Apply Preset Filter 9" />
+        <RoutedUICommand x:Key="ApplyShowHiddenTasks" Text="Show hidden tasks" />
         <!-- Help menu commands -->
         <RoutedUICommand x:Key="HelpAbout" Text="About" />
         <RoutedUICommand x:Key="ViewLog" Text="View Log" />
@@ -142,6 +143,7 @@
         <CommandBinding Command="{StaticResource SortByFileOrder}" CanExecute="WhenTasksLoadedCanExecute" Executed="SortByFileOrderExecuted"/>
         <!-- Filter menu commands -->
         <CommandBinding Command="{StaticResource DefineFilters}" CanExecute="AlwaysCanExecute" Executed="DefineFiltersExecuted"/>
+        <CommandBinding Command="{StaticResource ApplyShowHiddenTasks}" CanExecute="AlwaysCanExecute" Executed="ApplyShowHiddenTasksExecuted"/>
         <CommandBinding Command="{StaticResource RemoveFilter}" CanExecute="AlwaysCanExecute" Executed="RemoveFilterExecuted"/>
         <CommandBinding Command="{StaticResource ApplyFilterPreset1}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset1Executed"/>
         <CommandBinding Command="{StaticResource ApplyFilterPreset2}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset2Executed"/>
@@ -247,6 +249,8 @@
                 <MenuItem Header="Pro_ject" IsCheckable="True" Command="{StaticResource SortByProject}" InputGestureText="Ctrl+7" Tag="Project"/>
             </MenuItem>
             <MenuItem Header="Filter" Name="filterMenu">
+                <MenuItem Header="Show hidden tasks" Command="{StaticResource ApplyShowHiddenTasks}" InputGestureText="Ctrl+H" IsCheckable="True" Tag="HiddenTasks" FontWeight="Normal" />
+                <Separator/>
                 <MenuItem Header="Define _Filters" Command="{StaticResource DefineFilters}" InputGestureText="F" IsCheckable="False" FontWeight="Normal" />
                 <Separator/>
                 <MenuItem Header="_Remove Filter" Command="{StaticResource RemoveFilter}" InputGestureText="0" IsCheckable="False" Tag="Preset0" FontWeight="Normal" />
@@ -318,6 +322,7 @@
                 <KeyBinding Command="{StaticResource RemovePriority}" Key="Left" Modifiers="Alt"/>
                 <KeyBinding Command="{StaticResource RemovePriority}" Key="Right" Modifiers="Alt"/>
                 <!-- Filter menu commands -->
+                <KeyBinding Command="{StaticResource ApplyShowHiddenTasks}" Key="H" Modifiers="Control"/>
                 <KeyBinding Command="{StaticResource DefineFilters}" Key="F"/>
                 <KeyBinding Command="{StaticResource RemoveFilter}" Key="NumPad0"/>
                 <KeyBinding Command="{StaticResource RemoveFilter}" Key="D0"/>

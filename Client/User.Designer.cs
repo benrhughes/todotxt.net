@@ -478,5 +478,17 @@ namespace Client {
                 this["DisplayStatusBar"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowHidenTasks {
+            get {
+                return ((bool)(this["ShowHidenTasks"]));
+            }
+            set {
+                this["ShowHidenTasks"] = value;
+            }
+        }
     }
 }
