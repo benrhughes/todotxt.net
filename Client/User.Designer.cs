@@ -478,5 +478,17 @@ namespace Client {
                 this["DisplayStatusBar"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FilterFutureTasks {
+            get {
+                return ((bool)(this["FilterFutureTasks"]));
+            }
+            set {
+                this["FilterFutureTasks"] = value;
+            }
+        }
     }
 }

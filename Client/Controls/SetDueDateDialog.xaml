@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Client.SetDueDateDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Set due date" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight">
+        Title="Set date" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <Style TargetType="DatePicker">
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -23,7 +23,7 @@
         <CommandBinding Command="{StaticResource Cancel}" Executed="Cancel_Click"/>
     </Window.CommandBindings>
     <StackPanel Orientation="Horizontal" Margin="12">
-        <Label Content="Set due date to:" Padding="0,2,5,2" VerticalContentAlignment="Center" Height="{Binding ElementName=DueDatePicker, Path=ActualHeight}" />
+        <Label Content="Set date to:" Padding="0,2,5,2" VerticalContentAlignment="Center" Height="{Binding ElementName=DueDatePicker, Path=ActualHeight}" />
         <DatePicker Name="DueDatePicker" KeyDown="DueDatePicker_Keydown" />
         <Button Content="OK" Name="OK" IsDefault="True" Command="{StaticResource OK}" />
         <Button Content="Cancel" Name="Cancel" Command="{StaticResource Cancel}" />
