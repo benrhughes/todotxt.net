@@ -1565,7 +1565,7 @@ namespace Client
         /// If "Move focus to task list after adding new task" option is off, ensures that tasks selected prior to adding the
         /// new one are still selected after the new one is added.
         /// </summary>
-        private void AddTaskFromTextbox()
+        private Task AddTaskFromTextbox()
         {
             string taskString = _window.taskText.Text;
 
@@ -1578,7 +1578,7 @@ namespace Client
                 
             if (!(taskDetail.Length > 0))
             {
-                return;
+                return null;
             }
 
             if (User.Default.AddCreationDate)
@@ -1615,11 +1615,13 @@ namespace Client
                     SetSelectedTasks();
                     _window.taskText.Focus();
                 }
+                return newTask;
             }
             catch (TaskException ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            return null;
         }
 
         /// <summary>
@@ -1658,16 +1660,36 @@ namespace Client
 
             if (ShouldAddTask(e))
             {
+                Task addedTask = null;
                 if (_updating == null) // Adding new tasks
                 {
-                    AddTaskFromTextbox();
+                    addedTask = AddTaskFromTextbox();
                 }
                 else // Updating existing tasks
                 {
                     UpdateTaskFromTextbox();
                 }
 
-                _window.taskText.Text = "";
+                //If holding shift keep the PrimaryContext and PrimaryProject in the Input box for quick data entry.
+                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) && addedTask != null)
+                {
+                    var text = "";
+                    if (!string.IsNullOrWhiteSpace(addedTask.PrimaryContext))
+                    {
+                        text = addedTask.PrimaryContext + " ";
+                    }
+                    if (!string.IsNullOrWhiteSpace(addedTask.PrimaryProject))
+                    {
+                        text += addedTask.PrimaryProject + " ";
+                    }
+                    _window.taskText.Text = text;
+                    _window.taskText.CaretIndex = text.Length == 0 ? 0 : text.Length; //Set the cursor position to the end 
+                }
+                else
+                {
+                    _window.taskText.Text = "";
+                }
+
                 return;
             }
 
