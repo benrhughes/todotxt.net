@@ -250,11 +250,11 @@
                 <MenuItem Header="Decrease Due Date By 1 Day" Command="{StaticResource DecrementDueDate}" InputGestureText="Ctrl+Alt+Down"/>
                 <MenuItem Header="Remove Due Date" Command="{StaticResource RemoveDueDate}" InputGestureText="Ctrl+Alt+Left/Right"/>
                 <Separator />
-                <MenuItem Header="_Set Threshold Date" Command="{StaticResource SetThresholdDate}" InputGestureText="Super+S"/>
-                <MenuItem Header="Threshold" Command="{StaticResource ThresholdTask}" InputGestureText="Super+P"/>
-                <MenuItem Header="Increase Threshold Date By 1 Day" Command="{StaticResource IncrementThresholdDate}" InputGestureText="Ctrl+Super+Up"/>
-                <MenuItem Header="Decrease Threshold Date By 1 Day" Command="{StaticResource DecrementThresholdDate}" InputGestureText="Ctrl+Super+Down"/>
-                <MenuItem Header="Remove Threshold Date" Command="{StaticResource RemoveThresholdDate}" InputGestureText="Ctrl+Super+Left/Right"/>
+                <MenuItem Header="_Set Threshold Date" Command="{StaticResource SetThresholdDate}" InputGestureText="Ctrl+S"/>
+                <MenuItem Header="Threshold" Command="{StaticResource ThresholdTask}" InputGestureText="Ctrl+Alt+P"/>
+                <MenuItem Header="Increase Threshold Date By 1 Day" Command="{StaticResource IncrementThresholdDate}" InputGestureText="Ctrl+Up"/>
+                <MenuItem Header="Decrease Threshold Date By 1 Day" Command="{StaticResource DecrementThresholdDate}" InputGestureText="Ctrl+Down"/>
+                <MenuItem Header="Remove Threshold Date" Command="{StaticResource RemoveThresholdDate}" InputGestureText="Ctrl+Left/Right"/>
             </MenuItem>
             <MenuItem Header="_Sort" Name="sortMenu">
                 <MenuItem Header="_Order in file" IsCheckable="True" Command="{StaticResource SortByFileOrder}" InputGestureText="Ctrl+0" Tag="File"/>
@@ -335,12 +335,12 @@
                 <KeyBinding Command="{StaticResource DecrementDueDate}" Key="Down" Modifiers="Control+Alt"/>
                 <KeyBinding Command="{StaticResource RemoveDueDate}" Key="Left" Modifiers="Control+Alt"/>
                 <KeyBinding Command="{StaticResource RemoveDueDate}" Key="Right" Modifiers="Control+Alt"/>
-                <KeyBinding Command="{StaticResource SetThresholdDate}" Key="S" Modifiers="Control+Alt+Shift" />
-                <KeyBinding Command="{StaticResource ThresholdTask}" Key="P" Modifiers="Control+Alt+Shift"/>
-                <KeyBinding Command="{StaticResource IncrementThresholdDate}" Key="Up" Modifiers="Control+Alt+Shift"/>
-                <KeyBinding Command="{StaticResource DecrementThresholdDate}" Key="Down" Modifiers="Control+Alt+Shift"/>
-                <KeyBinding Command="{StaticResource RemoveThresholdDate}" Key="Left" Modifiers="Control+Alt+Shift"/>
-                <KeyBinding Command="{StaticResource RemoveThresholdDate}" Key="Right" Modifiers="Control+Alt+Shift"/>
+                <KeyBinding Command="{StaticResource SetThresholdDate}" Key="S" Modifiers="Control" />
+                <KeyBinding Command="{StaticResource ThresholdTask}" Key="P" Modifiers="Control+Alt"/>
+                <KeyBinding Command="{StaticResource IncrementThresholdDate}" Key="Up" Modifiers="Control"/>
+                <KeyBinding Command="{StaticResource DecrementThresholdDate}" Key="Down" Modifiers="Control"/>
+                <KeyBinding Command="{StaticResource RemoveThresholdDate}" Key="Left" Modifiers="Control"/>
+                <KeyBinding Command="{StaticResource RemoveThresholdDate}" Key="Right" Modifiers="Control"/>
                 <KeyBinding Command="{StaticResource SetPriority}" Key="I" />
                 <KeyBinding Command="{StaticResource IncreasePriority}" Key="Up" Modifiers="Alt"/>
                 <KeyBinding Command="{StaticResource DecreasePriority}" Key="Down" Modifiers="Alt"/>
