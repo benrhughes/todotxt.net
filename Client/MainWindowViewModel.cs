@@ -328,6 +328,7 @@ namespace Client
                 EnableFileChangeObserver();
 				UpdateDisplayedTasks();
                 _window.SetSelectionOfMenuItem("FutureTasks", User.Default.FilterFutureTasks);
+                _window.SetSelectionOfMenuItem("HiddenTasks", User.Default.ShowHidenTasks);
             }
             catch (Exception ex)
             {
@@ -587,10 +588,13 @@ namespace Client
             foreach (var task in tasks)
             {
                 bool include = true;
-                if (User.Default.FilterFutureTasks)
-                {
-                    include = String.IsNullOrEmpty(task.ThresholdDate) || task.ThresholdDate.IsDateLessThan(DateTime.Now.AddDays(1));
-                }
+                if (!User.Default.ShowHidenTasks)
+                    include = !task.Raw.Contains("h:1");
+
+                if (include)
+                    if (User.Default.FilterFutureTasks)
+                        include = String.IsNullOrEmpty(task.ThresholdDate) || task.ThresholdDate.IsDateLessThan(DateTime.Now.AddDays(1));
+
                 if (include)
                 {
                     foreach (
@@ -717,6 +721,15 @@ namespace Client
         public void ApplyHideFutureTasks()
         {
             User.Default.FilterFutureTasks = !User.Default.FilterFutureTasks;
+            UpdateDisplayedTasks();
+            SetSelectedTasks();
+
+            User.Default.Save();
+        }
+
+        public void ApplyShowHiddenTasks()
+        {
+            User.Default.ShowHidenTasks = !User.Default.ShowHidenTasks;
 
             GetSelectedTasks();
             UpdateDisplayedTasks();
@@ -724,6 +737,7 @@ namespace Client
 
             User.Default.Save();
         }
+
 
         private void ApplyFilterPreset(int filterPresetNumber)
         {

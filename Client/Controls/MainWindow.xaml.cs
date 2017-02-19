@@ -526,11 +526,17 @@ namespace Client
             SetSelectedMenuItem(filterMenu, "Preset9");
         }
 
-        #endregion
+        private void ApplyShowHiddenTasksExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ApplyShowHiddenTasks();
+            SetSelectionOfMenuItem("HiddenTasks", User.Default.ShowHidenTasks);
+        }
 
-        #region help menu
+    #endregion
 
-        private void HelpAboutExecuted(object sender, RoutedEventArgs e)
+    #region help menu
+
+    private void HelpAboutExecuted(object sender, RoutedEventArgs e)
         {
             ViewModel.ShowHelpDialog();
         }

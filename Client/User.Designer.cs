@@ -5,6 +5,7 @@
 //
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
+
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -488,6 +489,18 @@ namespace Client {
             }
             set {
                 this["FilterFutureTasks"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowHidenTasks {
+            get {
+                return ((bool)(this["ShowHidenTasks"]));
+            }
+            set {
+                this["ShowHidenTasks"] = value;
             }
         }
     }
