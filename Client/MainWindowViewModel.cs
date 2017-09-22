@@ -1293,6 +1293,9 @@ namespace Client
 
         private int ShowPostponeDialog()
         {
+            const string relativePattern =
+                @"^(?<dateRelative>today|tomorrow|(?<weekday>mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?))$";
+
             if (!AreTasksSelected())
             {
                 return 0;
@@ -1309,12 +1312,12 @@ namespace Client
 
                 // Lower case for the comparison
                 sPostpone = sPostpone.ToLower();
-                            
+
+                var reg = new Regex(relativePattern, RegexOptions.IgnoreCase);
+                var regMatch = reg.Match(sPostpone);
 
                 // Postpone to a day, not a number of days from now
-                if (sPostpone == "monday" | sPostpone == "tuesday" | sPostpone == "wednesday" |
-                        sPostpone == "thursday" | sPostpone == "friday" | sPostpone == "saturday" |
-                        sPostpone == "sunday")
+                if (regMatch.Success)
                 {
                     DateTime due = DateTime.Now;
                     var count = 0;
@@ -1322,15 +1325,24 @@ namespace Client
 
                     // Set the current due date as today, otherwise if the task is overdue or in the future, the following count won't work correctly
                     ModifySelectedTasks(SetTaskDueDate, DateTime.Today);
-                                        
+                    
                     //if day of week, add days to today until weekday matches input
+                    if (sPostpone == "today")
+                    {
+                        return 0;
+                    }
+                    else if (sPostpone == "tomorrow")
+                    {
+                        return 1;
+                    }
                     //if today is the specified weekday, due date will be in one week
+                    var lookingForShortDay = sPostpone.Substring(0, 3);
                     do
                     {
                         count++;
                         due = due.AddDays(1);
-                        isValid = string.Equals(due.ToString("dddd", new CultureInfo("en-US")),
-                                                sPostpone,
+                        isValid = string.Equals(due.ToString("ddd", new CultureInfo("en-US")),
+                                                lookingForShortDay,
                                                 StringComparison.CurrentCultureIgnoreCase);
                     } while (!isValid && (count < 7));
                     // The count check is to prevent an endless loop in case of other culture.
