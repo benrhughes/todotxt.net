@@ -20,8 +20,9 @@ namespace ToDoLib
         private const string PriorityPattern = @"^(?<priority>\([A-Z]\)\s)";
         private const string CreatedDatePattern = @"(?<date>(\d{4})-(\d{2})-(\d{2}))";
 
-        private const string DueRelativePattern =
-            @"due:(?<dateRelative>today|tomorrow|monday|tuesday|wednesday|thursday|friday|saturday|sunday)";
+        private const string RelativeDatePatternBare =
+            @"(?<dateRelative>today|tomorrow|(?<weekday>mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?))";
+        private const string DueRelativePattern = @"\bdue:" + RelativeDatePatternBare + @"\b";
 
         private const string DueDatePattern = @"due:(?<date>(\d{4})-(\d{2})-(\d{2}))";
         private const string ProjectPattern = @"(?<proj>(?<=^|\s)\+[^\s]+)";
@@ -89,33 +90,32 @@ namespace ToDoLib
             raw = raw.Replace(Environment.NewLine, ""); //make sure it's just on one line
 
             //Replace relative days with hard date
-            //Supports english: 'today', 'tomorrow', and full weekdays ('monday', 'tuesday', etc)
-            //If today is the specified weekday, due date will be in one week
-            //TODO implement short weekdays ('mon', 'tue', etc) and other languages
+            //Supports english: 'today', 'tomorrow', short and full english weekdays ('monday', 'tuesday', 'mon', 'tue', etc)
+            //If today is the specified weekday, due date will be the following week
+            //TODO implement other languages
             var reg = new Regex(DueRelativePattern, RegexOptions.IgnoreCase);
-            var dueDateRelative = reg.Match(raw).Groups["dateRelative"].Value.Trim();
-            if(!dueDateRelative.IsNullOrEmpty())
+            var regMatch = reg.Match(raw);
+            var dueDateRelative = regMatch.Groups["dateRelative"].Value.Trim();
+            if(regMatch.Success && !dueDateRelative.IsNullOrEmpty())
             {
                 var isValid = false;
 
-                var due = new DateTime();
+                var due = DateTime.Now;
+
                 dueDateRelative = dueDateRelative.ToLower();
                 if(dueDateRelative == "today")
                 {
-                    due = DateTime.Now;
                     isValid = true;
                 }
                 else if(dueDateRelative == "tomorrow")
                 {
-                    due = DateTime.Now.AddDays(1);
+                    due = due.AddDays(1);
                     isValid = true;
                 }
-                else if(dueDateRelative == "monday" | dueDateRelative == "tuesday" | dueDateRelative == "wednesday" |
-                        dueDateRelative == "thursday" | dueDateRelative == "friday" | dueDateRelative == "saturday" |
-                        dueDateRelative == "sunday")
+                else if (regMatch.Groups["weekday"].Success)
                 {
-                    due = DateTime.Now;
                     var count = 0;
+                    var lookingForShortDay = dueDateRelative.Substring(0, 3);
 
                     //if day of week, add days to today until weekday matches input
                     //if today is the specified weekday, due date will be in one week
@@ -123,8 +123,8 @@ namespace ToDoLib
                     {
                         count++;
                         due = due.AddDays(1);
-                        isValid = string.Equals(due.ToString("dddd", new CultureInfo("en-US")),
-                                                dueDateRelative,
+                        isValid = string.Equals(due.ToString("ddd", new CultureInfo("en-US")),
+                                                lookingForShortDay,
                                                 StringComparison.CurrentCultureIgnoreCase);
                     } while(!isValid && (count < 7));
                     // The count check is to prevent an endless loop in case of other culture.

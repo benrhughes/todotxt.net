@@ -159,6 +159,51 @@ namespace ToDoTests
         }
 
         [Test]
+        public void Create_DueDayOfWeekToday()
+        {
+            var dow = DateTime.Today.ToString("ddd");
+            var task = new Task(string.Format("(A) due:{0} @work @home +test This is a test task", dow));
+
+            var dueDate = DateTime.Now.AddDays(7);
+            string due = dueDate.ToString("yyyy-MM-dd");
+
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", due, false);
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_DueDayOfWeekInvalid1()
+        {
+            var task = new Task("(A) due:thUrsdays @work @home +test This is a test task");
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "due:thUrsdays  This is a test task", "", false);
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_DueDayOfWeekInvalid2()
+        {
+            var task = new Task("(A) overdue:thUrsday @work @home +test This is a test task");
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "overdue:thUrsday  This is a test task", "", false);
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_DueDayOfWeekShort()
+        {
+            var task = new Task("(A) due:wEd @work @home +test This is a test task");
+
+            var dueDate = DateTime.Now;
+            do
+            {
+                dueDate = dueDate.AddDays(1);
+            } while (!string.Equals(dueDate.ToString("dddd"), "wednesday", StringComparison.CurrentCultureIgnoreCase));
+            string due = dueDate.ToString("yyyy-MM-dd");
+
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", due, false);
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
         public void Create_CreationDate()
         {
             var task = new Task("(A) 2011-05-07 due:2011-05-08 @work @home +test This is a test task");
