@@ -54,7 +54,7 @@ namespace Client
 			if (User.Default.MinimiseToSystemTray)
 			{
 				_tray = new TrayMainWindows(this);
-				_hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
+				_hotkey = new HotKeyMainWindows(this, ModifierKeys.Control | ModifierKeys.Alt, System.Windows.Forms.Keys.M);
 			}
 		}
 

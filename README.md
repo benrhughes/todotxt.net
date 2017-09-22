@@ -53,4 +53,4 @@ Please send your pull requests to the 'dev' branch. If you forget it's not a maj
     - Ctrl+Alt+Left/Right: remove due date 
 	- Ctrl+C: copy task to clipboard
 	- Ctrl+Shift+C: copy task to edit field
-	- Win+Alt+T: hide/unhide windows
+	- Ctrl+Alt+M: hide/unhide windows
