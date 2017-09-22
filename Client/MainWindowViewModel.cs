@@ -1494,6 +1494,7 @@ namespace Client
             User.Default.TaskListFontBrushColor = o.TaskListFont.BrushColor.ToString();
 
             User.Default.DisplayStatusBar = o.cbDisplayStatusBar.IsChecked.Value;
+            User.Default.CheckForUpdates = o.cbCheckForUpdates.IsChecked.Value;
 
             User.Default.Save();
 

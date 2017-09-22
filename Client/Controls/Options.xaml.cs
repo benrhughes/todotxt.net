@@ -40,6 +40,7 @@ namespace Client
             cbWordWrap.IsChecked = User.Default.WordWrap;
             this.TaskListFont = taskFont;
             this.cbDisplayStatusBar.IsChecked = User.Default.DisplayStatusBar;
+            this.cbCheckForUpdates.IsChecked = User.Default.CheckForUpdates;
         }
 
         private FontInfo taskListFont;

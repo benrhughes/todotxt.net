@@ -30,7 +30,7 @@ namespace Client
 
 			SetupTrayIcon();
 
-			CheckForUpdates();
+			if (User.Default.CheckForUpdates) CheckForUpdates();
 
 			webBrowser1.Navigate("about:blank");
 
@@ -122,7 +122,7 @@ namespace Client
 		public void ToggleUpdateMenu(string version)
         {
             var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            if (version != assemblyVersion)
+            if (!string.IsNullOrEmpty(version) && version != assemblyVersion)
             {
 				UpdateMenu.Header = "New version: " + version;
 				UpdateMenu.Visibility = Visibility.Visible;
