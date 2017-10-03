@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using mshtml;
 
 namespace Client
 {
@@ -29,7 +30,7 @@ namespace Client
 
 			SetupTrayIcon();
 
-			CheckForUpdates();
+			if (User.Default.CheckForUpdates) CheckForUpdates();
 
 			webBrowser1.Navigate("about:blank");
 
@@ -53,7 +54,7 @@ namespace Client
 			if (User.Default.MinimiseToSystemTray)
 			{
 				_tray = new TrayMainWindows(this);
-				_hotkey = new HotKeyMainWindows(this, ModifierKeys.Windows | ModifierKeys.Alt, System.Windows.Forms.Keys.T);
+				_hotkey = new HotKeyMainWindows(this, ModifierKeys.Control | ModifierKeys.Alt, System.Windows.Forms.Keys.M);
 			}
 		}
 
@@ -121,7 +122,7 @@ namespace Client
 		public void ToggleUpdateMenu(string version)
         {
             var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            if (version != assemblyVersion)
+            if (!string.IsNullOrEmpty(version) && version != assemblyVersion)
             {
 				UpdateMenu.Header = "New version: " + version;
 				UpdateMenu.Visibility = Visibility.Visible;

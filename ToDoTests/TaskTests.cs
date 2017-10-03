@@ -157,15 +157,60 @@ namespace ToDoTests
 
             var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", due, false);
             AssertEquivalence(expectedTask, task);
+        }     
+
+        [Test]
+        public void Create_DueDayOfWeekToday()
+        {
+            var dow = DateTime.Today.ToString("ddd", new CultureInfo("en-US"));
+            var task = new Task(string.Format("(A) due:{0} @work @home +test This is a test task", dow));
+
+            var dueDate = DateTime.Now.AddDays(7);
+            string due = dueDate.ToString("yyyy-MM-dd");
+
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", due, false);
+
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_DueDayOfWeekInvalid1()
+        {
+            var task = new Task("(A) due:thUrsdays @work @home +test This is a test task");
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "due:thUrsdays  This is a test task", "", false);
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_DueDayOfWeekInvalid2()
+        {
+            var task = new Task("(A) overdue:thUrsday @work @home +test This is a test task");
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "overdue:thUrsday  This is a test task", "", false);
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_DueDayOfWeekShort()
+        {
+            var task = new Task("(A) due:wEd @work @home +test This is a test task");
+
+            var dueDate = DateTime.Now;
+            do
+            {
+                dueDate = dueDate.AddDays(1);
+            } while (!string.Equals(dueDate.ToString("dddd", new CultureInfo("en-US")), "wednesday", StringComparison.CurrentCultureIgnoreCase));
+            string due = dueDate.ToString("yyyy-MM-dd");
+
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", due, false);
+            AssertEquivalence(expectedTask, task);
         }
 
         [Test]
         public void Create_ThresholdDate()
         {
             var task = new Task("(A) t:2011-05-08 @work @home +test This is a test task");
-
-            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", thresholdDate:"2011-05-08");
-
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task",
+                thresholdDate: "2011-05-08");
             AssertEquivalence(expectedTask, task);
         }
 
@@ -176,7 +221,9 @@ namespace ToDoTests
 
             string threshold = DateTime.Now.ToString("yyyy-MM-dd");
 
-            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", thresholdDate: threshold);
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task",
+                thresholdDate: threshold);
+
             AssertEquivalence(expectedTask, task);
         }
 
@@ -187,8 +234,11 @@ namespace ToDoTests
 
             string threshold = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
 
-            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", thresholdDate: threshold);
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task",
+                thresholdDate: threshold);
+
             AssertEquivalence(expectedTask, task);
+
         }
 
         [Test]
@@ -212,8 +262,8 @@ namespace ToDoTests
         {
             var task = new Task("(A) t:2011-05-08 due:2017-11-02 @work @home +test This is a test task");
 
-            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", "2017-11-02", thresholdDate: "2011-05-08");
-
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task",
+                "2017-11-02", thresholdDate: "2011-05-08");
             AssertEquivalence(expectedTask, task);
         }
 

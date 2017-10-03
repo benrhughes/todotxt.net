@@ -1390,6 +1390,9 @@ namespace Client
 
         private int ShowPostponeDialog()
         {
+            const string relativePattern =
+                @"^(?<dateRelative>today|tomorrow|(?<weekday>mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?))$";
+
             if (!AreTasksSelected())
             {
                 return 0;
@@ -1406,12 +1409,12 @@ namespace Client
 
                 // Lower case for the comparison
                 sPostpone = sPostpone.ToLower();
-                            
+
+                var reg = new Regex(relativePattern, RegexOptions.IgnoreCase);
+                var regMatch = reg.Match(sPostpone);
 
                 // Postpone to a day, not a number of days from now
-                if (sPostpone == "monday" | sPostpone == "tuesday" | sPostpone == "wednesday" |
-                        sPostpone == "thursday" | sPostpone == "friday" | sPostpone == "saturday" |
-                        sPostpone == "sunday")
+                if (regMatch.Success)
                 {
                     DateTime due = DateTime.Now;
                     var count = 0;
@@ -1419,15 +1422,24 @@ namespace Client
 
                     // Set the current due date as today, otherwise if the task is overdue or in the future, the following count won't work correctly
                     ModifySelectedTasks(SetTaskDueDate, DateTime.Today);
-                                        
+                    
                     //if day of week, add days to today until weekday matches input
+                    if (sPostpone == "today")
+                    {
+                        return 0;
+                    }
+                    else if (sPostpone == "tomorrow")
+                    {
+                        return 1;
+                    }
                     //if today is the specified weekday, due date will be in one week
+                    var lookingForShortDay = sPostpone.Substring(0, 3);
                     do
                     {
                         count++;
                         due = due.AddDays(1);
-                        isValid = string.Equals(due.ToString("dddd", new CultureInfo("en-US")),
-                                                sPostpone,
+                        isValid = string.Equals(due.ToString("ddd", new CultureInfo("en-US")),
+                                                lookingForShortDay,
                                                 StringComparison.CurrentCultureIgnoreCase);
                     } while (!isValid && (count < 7));
                     // The count check is to prevent an endless loop in case of other culture.
@@ -1591,6 +1603,7 @@ namespace Client
             User.Default.TaskListFontBrushColor = o.TaskListFont.BrushColor.ToString();
 
             User.Default.DisplayStatusBar = o.cbDisplayStatusBar.IsChecked.Value;
+            User.Default.CheckForUpdates = o.cbCheckForUpdates.IsChecked.Value;
 
             User.Default.Save();
 
@@ -1679,7 +1692,7 @@ namespace Client
         /// If "Move focus to task list after adding new task" option is off, ensures that tasks selected prior to adding the
         /// new one are still selected after the new one is added.
         /// </summary>
-        private void AddTaskFromTextbox()
+        private Task AddTaskFromTextbox()
         {
             string taskString = _window.taskText.Text;
 
@@ -1692,7 +1705,7 @@ namespace Client
                 
             if (!(taskDetail.Length > 0))
             {
-                return;
+                return null;
             }
 
             if (User.Default.AddCreationDate)
@@ -1729,11 +1742,13 @@ namespace Client
                     SetSelectedTasks();
                     _window.taskText.Focus();
                 }
+                return newTask;
             }
             catch (TaskException ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            return null;
         }
 
         /// <summary>
@@ -1772,16 +1787,36 @@ namespace Client
 
             if (ShouldAddTask(e))
             {
+                Task addedTask = null;
                 if (_updating == null) // Adding new tasks
                 {
-                    AddTaskFromTextbox();
+                    addedTask = AddTaskFromTextbox();
                 }
                 else // Updating existing tasks
                 {
                     UpdateTaskFromTextbox();
                 }
 
-                _window.taskText.Text = "";
+                //If holding shift keep the PrimaryContext and PrimaryProject in the Input box for quick data entry.
+                if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) && addedTask != null)
+                {
+                    var text = "";
+                    if (!string.IsNullOrWhiteSpace(addedTask.PrimaryContext))
+                    {
+                        text = addedTask.PrimaryContext + " ";
+                    }
+                    if (!string.IsNullOrWhiteSpace(addedTask.PrimaryProject))
+                    {
+                        text += addedTask.PrimaryProject + " ";
+                    }
+                    _window.taskText.Text = text;
+                    _window.taskText.CaretIndex = text.Length == 0 ? 0 : text.Length; //Set the cursor position to the end 
+                }
+                else
+                {
+                    _window.taskText.Text = "";
+                }
+
                 return;
             }
 
