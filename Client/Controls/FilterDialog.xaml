@@ -66,8 +66,8 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Row="0" Grid.Column="0" Content="_Clear Active" HorizontalAlignment="Left" Name="Clear" Click="Clear_Click" />
             <Button Grid.Row="0" Grid.Column="1" Content="Clear _All" HorizontalAlignment="Left" Name="Clear_All" Click="Clear_All_Click" />
-            <Button Grid.Row="0" Grid.Column="3" Content="Cancel" HorizontalAlignment="Right" Name="Cancel" Click="Cancel_Click" />
-            <Button Grid.Row="0" Grid.Column="4" Content="_OK" HorizontalAlignment="Right" Name="OK" IsDefault="True" Click="OK_Click"  />
+            <Button Grid.Row="0" Grid.Column="3" Content="_OK" HorizontalAlignment="Right" Name="OK" IsDefault="True" Click="OK_Click"  />
+            <Button Grid.Row="0" Grid.Column="4" Content="Cancel" HorizontalAlignment="Right" Name="Cancel" Click="Cancel_Click" />
         </Grid>
     </StackPanel>    
 </Window>

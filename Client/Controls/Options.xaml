@@ -55,8 +55,8 @@
             <CheckBox Content="Check for updates on startup" x:Name="cbCheckForUpdates" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Cancel" Name="Cancel" Click="Cancel_Click" IsCancel="True" Margin="0,0,7,0"/>
-            <Button Content="OK" Name="OK" VerticalAlignment="Bottom" IsDefault="True" Click="OK_Click" />
+            <Button Content="OK" Name="OK" IsDefault="True" Click="OK_Click" Margin="0,0,7,0" />
+            <Button Content="Cancel" Name="Cancel" IsCancel="True" Click="Cancel_Click" />
         </StackPanel>
     </StackPanel>
 </Window>
