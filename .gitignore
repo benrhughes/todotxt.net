@@ -35,6 +35,7 @@ packages/
 *.iml
 .vs
 _ReSharper*
+*.sln.Dotsettings
 
 # linux
 *~
