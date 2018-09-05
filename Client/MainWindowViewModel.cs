@@ -1493,6 +1493,7 @@ namespace Client
             User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
             User.Default.DebugLoggingOn = o.cbDebugOn.IsChecked.Value;
             User.Default.MinimiseToSystemTray = o.cbMinToSysTray.IsChecked.Value;
+            User.Default.MinimiseOnClose = o.cbMinOnClose.IsChecked.Value;
             User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
             User.Default.AllowGrouping = o.cbAllowGrouping.IsChecked.Value;
             User.Default.PreserveWhiteSpace = o.cbPreserveWhiteSpace.IsChecked.Value;
