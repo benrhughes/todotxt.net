@@ -84,25 +84,6 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="WordWrapEnabledTextBlock" TargetType="TextBlock">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="True">
-                    <Setter Property="TextWrapping" Value="Wrap" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="False">
-                    <Setter Property="TextWrapping" Value="NoWrap" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding ElementName=lbTasks, Path=IsGrouping}" Value="True">
-                    <Setter Property="Padding" Value="5,0,0,0" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding ElementName=lbTasks, Path=IsGrouping}" Value="False">
-                    <Setter Property="Padding" Value="0,0,0,0" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Path=Completed}" Value="True">
-                    <Setter Property="TextDecorations" Value="Strikethrough" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
         <convertors:ActiveFilterToStatusConvertor x:Key="filterToStatusConv"></convertors:ActiveFilterToStatusConvertor>
         <convertors:SortTypeToDescriptionConvertor x:Key="sortTypeToDescConv"></convertors:SortTypeToDescriptionConvertor>
         <convertors:ColoredItemConverter x:Key="coloredItemConverter"></convertors:ColoredItemConverter>
@@ -354,16 +335,32 @@
                 <DataTemplate>
                     <StackPanel>
                         <ContentControl>
-                            <Binding Converter="{StaticResource coloredItemConverter}" />
+                            <ContentControl.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="True">
+                                            <Setter Property="TextWrapping" Value="Wrap" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Source={x:Static local:User.Default}, Path=WordWrap}" Value="False">
+                                            <Setter Property="TextWrapping" Value="NoWrap" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=lbTasks, Path=IsGrouping}" Value="True">
+                                            <Setter Property="Padding" Value="5,0,0,0" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=lbTasks, Path=IsGrouping}" Value="False">
+                                            <Setter Property="Padding" Value="0,0,0,0" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Completed}" Value="True">
+                                            <Setter Property="TextDecorations" Value="Strikethrough" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Resources>
+                            <Binding Converter="{StaticResource coloredItemConverter}"/>
                             <ContentControl.InputBindings>
                                 <MouseBinding Gesture="LeftDoubleClick" Command="{StaticResource UpdateTask}" />
                             </ContentControl.InputBindings>
                         </ContentControl>
-                        <!--<TextBlock local:UrlService.Text="{Binding Converter={StaticResource coloredItemConverter}}" Style="{StaticResource WordWrapEnabledTextBlock}" >
-                            <TextBlock.InputBindings>
-                                <MouseBinding Gesture="LeftDoubleClick" Command="{StaticResource UpdateTask}" />
-                            </TextBlock.InputBindings>
-                        </TextBlock>-->
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
