@@ -94,6 +94,7 @@
       <DependentUpon>SetDueDateDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\ActiveFilterToStatusConvertor.cs" />
+    <Compile Include="Converters\ColoredItemConverter.cs" />
     <Compile Include="Converters\SortTypeToDescriptionConvertor.cs" />
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="GroupConverter.cs" />

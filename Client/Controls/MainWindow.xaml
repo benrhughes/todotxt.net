@@ -105,6 +105,7 @@
         </Style>
         <convertors:ActiveFilterToStatusConvertor x:Key="filterToStatusConv"></convertors:ActiveFilterToStatusConvertor>
         <convertors:SortTypeToDescriptionConvertor x:Key="sortTypeToDescConv"></convertors:SortTypeToDescriptionConvertor>
+        <convertors:ColoredItemConverter x:Key="coloredItemConverter"></convertors:ColoredItemConverter>
     </Window.Resources>
     <Window.CommandBindings>
         <!-- File menu commands -->
@@ -352,11 +353,17 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock local:UrlService.Text="{Binding Raw}" Style="{StaticResource WordWrapEnabledTextBlock}">
+                        <ContentControl>
+                            <Binding Converter="{StaticResource coloredItemConverter}" />
+                            <ContentControl.InputBindings>
+                                <MouseBinding Gesture="LeftDoubleClick" Command="{StaticResource UpdateTask}" />
+                            </ContentControl.InputBindings>
+                        </ContentControl>
+                        <!--<TextBlock local:UrlService.Text="{Binding Converter={StaticResource coloredItemConverter}}" Style="{StaticResource WordWrapEnabledTextBlock}" >
                             <TextBlock.InputBindings>
                                 <MouseBinding Gesture="LeftDoubleClick" Command="{StaticResource UpdateTask}" />
                             </TextBlock.InputBindings>
-                        </TextBlock>
+                        </TextBlock>-->
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
