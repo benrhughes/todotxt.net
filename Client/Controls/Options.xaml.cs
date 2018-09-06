@@ -42,6 +42,16 @@ namespace Client
             this.TaskListFont = taskFont;
             this.cbDisplayStatusBar.IsChecked = User.Default.DisplayStatusBar;
             this.cbCheckForUpdates.IsChecked = User.Default.CheckForUpdates;
+
+            var colors = new AvailableColors();
+            cpProject.SelectedColor = colors.GetFontColorByName(User.Default.ProjectColor);
+            cpProject.SelectedColor = colors.GetFontColorByName(User.Default.ProjectColor);
+            cpContext.SelectedColor = colors.GetFontColorByName(User.Default.ContextColor);
+            cpKeyValue.SelectedColor = colors.GetFontColorByName(User.Default.KeyValueColor);
+            cpPriorityA.SelectedColor = colors.GetFontColorByName(User.Default.PriorityAColor);
+            cpPriorityB.SelectedColor = colors.GetFontColorByName(User.Default.PriorityBColor);
+            cpPriorityC.SelectedColor = colors.GetFontColorByName(User.Default.PriorityCColor);
+            
         }
 
         private FontInfo taskListFont;

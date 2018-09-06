@@ -337,6 +337,78 @@ namespace Client {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public string ProjectColor {
+            get {
+                return ((string)(this["ProjectColor"]));
+            }
+            set {
+                this["ProjectColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public string ContextColor {
+            get {
+                return ((string)(this["ContextColor"]));
+            }
+            set {
+                this["ContextColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public string KeyValueColor {
+            get {
+                return ((string)(this["KeyValueColor"]));
+            }
+            set {
+                this["KeyValueColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public string PriorityAColor {
+            get {
+                return ((string)(this["PriorityAColor"]));
+            }
+            set {
+                this["PriorityAColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public string PriorityBColor {
+            get {
+                return ((string)(this["PriorityBColor"]));
+            }
+            set {
+                this["PriorityBColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public string PriorityCColor {
+            get {
+                return ((string)(this["PriorityCColor"]));
+            }
+            set {
+                this["PriorityCColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool AllowGrouping {
             get {
