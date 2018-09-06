@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
@@ -134,6 +135,20 @@ namespace Client
         {
 			ViewModel = new MainWindowViewModel(this);
 			DataContext = ViewModel;
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (Application.Current.ShutdownMode == ShutdownMode.OnExplicitShutdown)
+            {
+                return;
+            }
+
+            if (User.Default.MinimiseToSystemTray && User.Default.MinimiseOnClose)
+            {
+                e.Cancel = true;
+                WindowState = WindowState.Minimized;
+            }
         }
 
 		#region window location handlers

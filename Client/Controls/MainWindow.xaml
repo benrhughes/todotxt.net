@@ -5,6 +5,7 @@
         xmlns:local="clr-namespace:Client"
         xmlns:convertors="clr-namespace:Client.Converters"
 		Loaded="Window_Loaded"
+        Closing="Window_Closing"
         Title="todotxt.net" 
         mc:Ignorable="d" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 

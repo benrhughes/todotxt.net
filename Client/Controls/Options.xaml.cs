@@ -33,6 +33,7 @@ namespace Client
             cbAddCreationDate.IsChecked = User.Default.AddCreationDate;
             cbDebugOn.IsChecked = User.Default.DebugLoggingOn;
             cbMinToSysTray.IsChecked = User.Default.MinimiseToSystemTray;
+            cbMinOnClose.IsChecked = User.Default.MinimiseOnClose;
             cbRequireCtrlEnter.IsChecked = User.Default.RequireCtrlEnter;
             cbAllowGrouping.IsChecked = User.Default.AllowGrouping;
             cbMoveFocusToTaskListAfterAddingNewTask.IsChecked = User.Default.MoveFocusToTaskListAfterAddingNewTask;
