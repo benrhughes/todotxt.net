@@ -1,88 +1,61 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using ToDoLib;
+using Client.Utilities;
 
 namespace Client.Converters
 {
     public class ColoredItemConverter : IValueConverter
     {
+        private static readonly Dictionary<TaskTokenKind, SolidColorBrush> ColorTheme = new Dictionary<TaskTokenKind, SolidColorBrush>
+        {
+            { TaskTokenKind.Context, new SolidColorBrush(Colors.DarkGreen)},
+            { TaskTokenKind.KeyValue, new SolidColorBrush(Colors.Chocolate)},
+            { TaskTokenKind.PriorityA, new SolidColorBrush(Colors.Red)},
+            { TaskTokenKind.PriorityB, new SolidColorBrush(Colors.Chocolate)},
+            { TaskTokenKind.PriorityC, new SolidColorBrush(Colors.DodgerBlue)},
+            { TaskTokenKind.Project, new SolidColorBrush(Colors.Brown)}
+        };
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var textBlock = new TextBlock();
 
-            if (!(value is Task task) || task.Completed)
+            var raw = value.ToString();
+
+            if (raw.StartsWith("x "))
             {
-                if (value != null) textBlock.Text = value.ToString();
+                textBlock.Text = raw;
                 return textBlock;
             }
 
-            if (!string.IsNullOrWhiteSpace(task.Priority))
+            var isNotFirst = false;
+            foreach (var token in TaskParser.ParseIncompleteTask(raw))
             {
-                if (task.Priority.Equals("(A)", StringComparison.CurrentCultureIgnoreCase))
+                var tokenTextBlock = new TextBlock
                 {
-                    textBlock.Inlines.Add(CreateColoredTextBlock(task.Priority, Colors.Red));
-                }
-                else if (task.Priority.Equals("(B)", StringComparison.CurrentCultureIgnoreCase))
+                    Text = token.Value
+                };
+                if (ColorTheme.ContainsKey(token.Kind))
                 {
-                    textBlock.Inlines.Add(CreateColoredTextBlock(task.Priority, Colors.Chocolate));
+                    tokenTextBlock.Foreground = ColorTheme[token.Kind];
                 }
-                else if (task.Priority.Equals("(C)", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    textBlock.Inlines.Add(CreateColoredTextBlock(task.Priority, Colors.DodgerBlue));
-                }
-                else
-                {
-                    textBlock.Inlines.Add(task.Priority);
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(task.CreationDate))
-            {
-                if (textBlock.Inlines.Any())
+                if (isNotFirst)
                 {
                     textBlock.Inlines.Add(" ");
                 }
-                textBlock.Inlines.Add(task.CreationDate);
-            }
+                else
+                {
+                    isNotFirst = true;
+                }
 
-            if (textBlock.Inlines.Any())
-            {
-                textBlock.Inlines.Add(" ");
-            }
-            textBlock.Inlines.Add(task.Body);
-
-            if (!string.IsNullOrWhiteSpace(task.DueDate))
-            {
-                textBlock.Inlines.Add(CreateColoredTextBlock($" due:{task.DueDate}", Colors.Chocolate));
-            }
-
-            if (task.Projects.Any())
-            {
-                textBlock.Inlines.Add(" ");
-                textBlock.Inlines.Add(CreateColoredTextBlock(string.Join(" ",task.Projects), Colors.Brown));
-            }
-
-            if (task.Contexts.Any())
-            {
-                textBlock.Inlines.Add(" ");
-                textBlock.Inlines.Add(CreateColoredTextBlock(string.Join(" ",task.Contexts), Colors.Green));
+                textBlock.Inlines.Add(tokenTextBlock);
             }
 
             return textBlock;
-        }
-
-        private static TextBlock CreateColoredTextBlock(string text, Color color)
-        {
-            var wordTextBlock = new TextBlock
-            {
-                Text = text,
-                Foreground = new SolidColorBrush(color)
-            };
-            return wordTextBlock;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
