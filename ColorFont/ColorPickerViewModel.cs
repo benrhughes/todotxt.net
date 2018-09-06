@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Media;
 
 namespace ColorFont
@@ -31,7 +32,7 @@ namespace ColorFont
             {
                 if (this.selectedFontColor == value) return;
 
-                this.selectedFontColor = value;
+                this.selectedFontColor = roFontColors.FirstOrDefault(c => c.Name == value.Name) ?? AvailableColors.GetFontColor(Colors.Black);
                 OnPropertyChanged("SelectedFontColor");
             }
         }

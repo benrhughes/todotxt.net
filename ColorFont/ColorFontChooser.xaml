@@ -33,7 +33,8 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="25" />
                 <RowDefinition/>
-                <RowDefinition  Height="70" />
+                <RowDefinition  Height="40" />
+                <RowDefinition  Height="35" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="180"/>
@@ -43,7 +44,7 @@
 
             <!-- Families -->
             <TextBlock Grid.Row="0" Grid.Column="0" Padding="5" Margin="1,7,199,209" Foreground="Black" FontStyle="Italic" Grid.RowSpan="2" Grid.ColumnSpan="2"><Run Text="Font Family"/></TextBlock>
-            <ListBox x:Name="lstFamily" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" 
+            <ListBox x:Name="lstFamily" Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" 
                      ItemsSource="{Binding}" ItemTemplate="{StaticResource fontFamilyData}" 
                      Margin="5">
                     <ListBox.Resources>
@@ -79,26 +80,14 @@
             			Value="{Binding Text, ElementName=fontSizeTextBox, Mode=TwoWay, ValidatesOnExceptions=true}"/>
             </Grid>
             <!-- Color Picker -->
-            <Grid Grid.Column="1" Grid.Row="2" Margin="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="24" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Margin="0,8,0,0" Text="Font Color:" FontStyle="Italic" Grid.RowSpan="2" />
-                <local:ColorPicker Grid.Row="1" Height="32" x:Name="colorPicker" ColorChanged="colorPicker_ColorChanged" Margin="0,2"  />
-            </Grid>
+            <TextBlock Grid.Row="2" Grid.Column="1" Margin="5" Text="Font Color:" FontStyle="Italic" />
+            <local:ColorPicker Grid.Row="3" Grid.Column="1" Margin="5" Height="25" x:Name="colorPicker" ColorChanged="colorPicker_ColorChanged" />
         	
-        	<!-- Font Size -->
-            <Grid Grid.Column="2" Grid.Row="2" Margin="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="24" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Margin="0,8,0,0" Text="Font Size:" FontStyle="Italic" Grid.RowSpan="2" />
-                <TextBox Name="fontSizeTextBox" 
-                         Text="{Binding Value, ElementName=fontSizeSlider, Mode=TwoWay, ValidatesOnExceptions=true, FallbackValue=10.0}" 
-                         Grid.Row="1" Height="32" Margin="0,2" />
-            </Grid>
+            <TextBlock Grid.Row="2" Grid.Column="2"  Text="Font Size:" FontStyle="Italic" />
+            <TextBox Name="fontSizeTextBox" 
+                        Text="{Binding Value, ElementName=fontSizeSlider, Mode=TwoWay, ValidatesOnExceptions=true, FallbackValue=10.0}" 
+                        Grid.Row="3" Grid.Column ="2" Margin="5" />
+
         </Grid>
     </Grid>
 </UserControl>

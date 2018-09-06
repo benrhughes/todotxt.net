@@ -71,10 +71,10 @@ public partial class ColorFontDialog : Window
     private void SyncFontColor()
     {
         Log.Debug("In SyncFontColor");
-        int colorIdx = AvailableColors.GetFontColorIndex(this.Font.Color);
-        this.colorFontChooser.colorPicker.superCombo.SelectedIndex = colorIdx;
-        // The following does not work. Why???
-        // this.colorFontChooser.colorPicker.superCombo.SelectedValue = this.Font.Color;
+        //int colorIdx = AvailableColors.GetFontColorIndex(this.Font.Color);
+        //this.colorFontChooser.colorPicker.superCombo.SelectedIndex = colorIdx;
+        // The following does not work. Why??? Now it does
+        this.colorFontChooser.colorPicker.SelectedColor = this.Font.Color;
         this.colorFontChooser.colorPicker.superCombo.BringIntoView();
     }
 

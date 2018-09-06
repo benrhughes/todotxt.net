@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace ColorFont
 {
-    class AvailableColors : List<FontColor>
+    public class AvailableColors : List<FontColor>
     {
         #region Conversion Utils Static Methods
         public static FontColor GetFontColor(SolidColorBrush b)

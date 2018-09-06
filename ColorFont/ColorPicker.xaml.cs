@@ -46,7 +46,7 @@ namespace ColorFont
             set 
             {
                 this.viewModel.SelectedFontColor = value;
-                SetValue(SelectedColorProperty, value);
+                SetValue(SelectedColorProperty, this.viewModel.SelectedFontColor);
             }
         }
 
