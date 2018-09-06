@@ -5,20 +5,28 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using Client.Utilities;
+using ColorFont;
 
 namespace Client.Converters
 {
     public class ColoredItemConverter : IValueConverter
     {
-        private static readonly Dictionary<TaskTokenKind, SolidColorBrush> ColorTheme = new Dictionary<TaskTokenKind, SolidColorBrush>
+        private static readonly Dictionary<TaskTokenKind, SolidColorBrush> Theme = new Dictionary<TaskTokenKind, SolidColorBrush>();
+
+        public static void ReloadTheme()
         {
-            { TaskTokenKind.Context, new SolidColorBrush(Colors.DarkGreen)},
-            { TaskTokenKind.KeyValue, new SolidColorBrush(Colors.Chocolate)},
-            { TaskTokenKind.PriorityA, new SolidColorBrush(Colors.Red)},
-            { TaskTokenKind.PriorityB, new SolidColorBrush(Colors.Chocolate)},
-            { TaskTokenKind.PriorityC, new SolidColorBrush(Colors.DodgerBlue)},
-            { TaskTokenKind.Project, new SolidColorBrush(Colors.Brown)}
-        };
+            Theme.Clear();
+
+            var colors = new AvailableColors();
+
+            Theme.Add(TaskTokenKind.Project, colors.GetFontColorByName(User.Default.ProjectColor).Brush);
+            Theme.Add(TaskTokenKind.Context, colors.GetFontColorByName(User.Default.ContextColor).Brush);
+            Theme.Add(TaskTokenKind.KeyValue, colors.GetFontColorByName(User.Default.KeyValueColor).Brush);
+            Theme.Add(TaskTokenKind.PriorityA, colors.GetFontColorByName(User.Default.PriorityAColor).Brush);
+            Theme.Add(TaskTokenKind.PriorityB, colors.GetFontColorByName(User.Default.PriorityBColor).Brush);
+            Theme.Add(TaskTokenKind.PriorityC, colors.GetFontColorByName(User.Default.PriorityCColor).Brush);
+        }
+        
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -39,9 +47,9 @@ namespace Client.Converters
                 {
                     Text = token.Value
                 };
-                if (ColorTheme.ContainsKey(token.Kind))
+                if (Theme.ContainsKey(token.Kind))
                 {
-                    tokenTextBlock.Foreground = ColorTheme[token.Kind];
+                    tokenTextBlock.Foreground = Theme[token.Kind];
                 }
                 if (isNotFirst)
                 {

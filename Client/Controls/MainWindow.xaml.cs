@@ -36,6 +36,8 @@ namespace Client
 
 			webBrowser1.Navigate("about:blank");
 
+            Converters.ColoredItemConverter.ReloadTheme();
+
             SetFont();
 
 			SetWindowPosition();

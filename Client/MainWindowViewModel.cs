@@ -1542,6 +1542,7 @@ namespace Client
 
             if (updateTaskListRequired)
             {
+                Converters.ColoredItemConverter.ReloadTheme();
                 _window.SetFont();
                 GetSelectedTasks();
                 UpdateDisplayedTasks();
