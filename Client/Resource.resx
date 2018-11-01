@@ -196,6 +196,7 @@
     - O or Ctrl+O: open todo.txt file
     - C or Ctrl+N: new todo.txt file
     - N: new task
+    - ( or Shift+9: new task with priority
     - J: next task
     - K: prev task
     - X: toggle task completion

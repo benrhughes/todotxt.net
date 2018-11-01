@@ -17,6 +17,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Windows.Threading;
 
 namespace Client
 {
@@ -968,6 +969,14 @@ namespace Client
 
             _window.taskText.Text = filters;
             _window.taskText.Focus();
+        }
+
+        public void AddNewTaskWithPriority()
+        {
+            AddNewTask();
+            _window.taskText.Text = _window.taskText.Text.Length > 0 ? $"( {_window.taskText.Text}" : "(";
+            _window.taskText.CaretIndex = 1;
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>_window.taskText.CheckKeyAndShowPopup()));
         }
 
         public void UpdateTask()

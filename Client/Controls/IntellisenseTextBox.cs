@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -21,6 +22,9 @@ namespace Client
         private Popup IntellisensePopup { get; set; }
         private ListBox IntellisenseList { get; set; }
         private int IntelliPos { get; set; } // used to position the Intellisense popup
+
+        private readonly Regex StartDateWithPriorityRegex = new Regex(@"[0-9]{4}\-[0-9]{2}\-[0-9]{2}\s\(");
+        private readonly List<string> Priorities = Enumerable.Range('A', 26).Select(i => $"({Convert.ToChar(i)})").ToList();
 
         public TaskList TaskList
         {
@@ -249,7 +253,7 @@ namespace Client
         }
 
         /// <summary>
-        /// Triggers the Intellisense popup to appear when "+" or "@" is pressed in the text box.
+        /// Triggers the Intellisense popup to appear when "+", "@" or "(" is pressed in the text box.
         /// </summary>
         /// <param name="sender">Not used</param>
         /// <param name="e">Event arguments</param>
@@ -259,12 +263,17 @@ namespace Client
             {
                 return;
             }
-			
+
             if (this.TaskList == null)
             {
                 return;
             }
 
+            CheckKeyAndShowPopup();
+        }
+
+        public void CheckKeyAndShowPopup()
+        {
             var lastAddedCharacter = this.Text.Substring(this.CaretIndex - 1, 1);
             switch (lastAddedCharacter)
             {
@@ -276,6 +285,14 @@ namespace Client
                 case "@":
                     this.IntelliPos = this.CaretIndex - 1;
                     ShowIntellisensePopup(this.TaskList.Contexts, this.GetRectFromCharacterIndex(this.IntelliPos));
+                    break;
+                case "(":
+                    if (this.CaretIndex == 1 ||
+                        (this.CaretIndex == 12 && StartDateWithPriorityRegex.IsMatch(this.Text.Substring(0, 12))))
+                    {
+                        this.IntelliPos = this.CaretIndex - 1;
+                        ShowIntellisensePopup(Priorities, this.GetRectFromCharacterIndex(this.IntelliPos));
+                    }
                     break;
             }
         }

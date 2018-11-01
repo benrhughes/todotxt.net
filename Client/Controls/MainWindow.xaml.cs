@@ -306,6 +306,11 @@ namespace Client
             ViewModel.AddNewTask();
         }
 
+        private void NewTaskWithPriorityExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AddNewTaskWithPriority();
+        }
+
         private void UpdateTaskExecuted(object sender, RoutedEventArgs e)
         {
             ViewModel.UpdateTask();
