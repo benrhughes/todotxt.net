@@ -46,6 +46,7 @@
             <CheckBox Content="Filter text is case-sensitive" x:Name="cbCaseSensitiveFilter" />
             <CheckBox Content="Intellisense project and context suggestions are case-sensitive" x:Name="cbIntellisenseCaseSensitive" />
             <CheckBox Content="Minimise to system tray (requires restart)" x:Name="cbMinToSysTray"  />
+            <CheckBox Content="Minimise to system tray on close" x:Name="cbMinOnClose" IsEnabled="{Binding ElementName=cbMinToSysTray, Path=IsChecked}" />
             <CheckBox Content="Enable debug logging" x:Name="cbDebugOn" />
             <CheckBox Content="Use Ctrl-Enter to create new task" x:Name="cbRequireCtrlEnter" />
             <CheckBox Content="Allow grouping of tasks" x:Name="cbAllowGrouping" />

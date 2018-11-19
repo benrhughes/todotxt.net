@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
@@ -133,6 +135,20 @@ namespace Client
         {
 			ViewModel = new MainWindowViewModel(this);
 			DataContext = ViewModel;
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (Application.Current.ShutdownMode == ShutdownMode.OnExplicitShutdown)
+            {
+                return;
+            }
+
+            if (User.Default.MinimiseToSystemTray && User.Default.MinimiseOnClose)
+            {
+                e.Cancel = true;
+                WindowState = WindowState.Minimized;
+            }
         }
 
 		#region window location handlers
@@ -288,6 +304,11 @@ namespace Client
         private void NewTaskExecuted(object sender, RoutedEventArgs e)
         {
             ViewModel.AddNewTask();
+        }
+
+        private void NewTaskWithPriorityExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AddNewTaskWithPriority();
         }
 
         private void UpdateTaskExecuted(object sender, RoutedEventArgs e)

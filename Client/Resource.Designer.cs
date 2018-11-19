@@ -100,6 +100,7 @@ namespace Client {
         ///    - O or Ctrl+O: open todo.txt file
         ///    - C or Ctrl+N: new todo.txt file
         ///    - N: new task
+        ///    - ( or Shift+9: new task with priority
         ///    - J: next task
         ///    - K: prev task
         ///    - X: toggle task completion
@@ -109,7 +110,8 @@ namespace Client {
         ///    - T: append text to selected tasks
         ///    - P: Postpone task (enter days to postpone, or day of week to postpone to)
         ///    - F: filter tasks (free-text, one filter condition per line)
-        ///    - I: set priority        /// [rest of string was truncated]&quot;;.
+        ///    - I: set priority
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string HelpText {
             get {

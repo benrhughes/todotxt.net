@@ -5,6 +5,7 @@
         xmlns:local="clr-namespace:Client"
         xmlns:convertors="clr-namespace:Client.Converters"
 		Loaded="Window_Loaded"
+        Closing="Window_Closing"
         Title="todotxt.net" 
         mc:Ignorable="d" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
@@ -31,6 +32,7 @@
         <RoutedUICommand x:Key="EmulateDownArrow" Text="Down" />
         <!-- Task menu commands -->
         <RoutedUICommand x:Key="NewTask" Text="New Task" />
+        <RoutedUICommand x:Key="NewTaskWithPriority" Text="New Task with Priority" />
         <RoutedUICommand x:Key="UpdateTask" Text="Update Task" />
         <RoutedUICommand x:Key="DeleteTask" Text="Delete Task" />
         <RoutedUICommand x:Key="AppendText" Text="Append Text" />
@@ -125,6 +127,7 @@
         <CommandBinding Command="{StaticResource CopySelectedTaskToNewTask}" CanExecute="WhenSingleTaskSelectedCanExecute" Executed="CopySelectedTaskToNewTaskExecuted"/>
         <!-- Task menu commands -->
         <CommandBinding Command="{StaticResource NewTask}" CanExecute="AlwaysCanExecute" Executed="NewTaskExecuted"/>
+        <CommandBinding Command="{StaticResource NewTaskWithPriority}" CanExecute="AlwaysCanExecute" Executed="NewTaskWithPriorityExecuted"/>
         <CommandBinding Command="{StaticResource UpdateTask}" CanExecute="WhenSingleTaskSelectedCanExecute" Executed="UpdateTaskExecuted"/>
         <CommandBinding Command="{StaticResource AppendText}" CanExecute="WhenTasksSelectedCanExecute" Executed="AppendTextExecuted"/>
         <CommandBinding Command="{StaticResource DeleteTask}" CanExecute="WhenTasksSelectedCanExecute" Executed="DeleteTaskExecuted"/>
@@ -321,6 +324,7 @@
                 <KeyBinding Command="{StaticResource EmulateDownArrow}" Key="J" />
                 <!-- Task menu commands -->
                 <KeyBinding Command="{StaticResource NewTask}" Key="N" />
+                <KeyBinding Command="{StaticResource NewTaskWithPriority}" Key="D9" Modifiers="Shift" />
                 <KeyBinding Command="{StaticResource PrintFile}" Key="P" />
                 <KeyBinding Command="{StaticResource UpdateTask}" Key="U" />
                 <KeyBinding Command="{StaticResource UpdateTask}" Key="F2" />

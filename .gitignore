@@ -1,27 +1,16 @@
-# ReSharper meta directory
-_ReSharper*
-
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
 bin
 obj
 
 *.pdb
-*.exe
 *.dll
 
 # user settings
 *.user
 *.suo
 
-# if you have pictures, windows will likely create those annoying index files
-Thumbs.db
-
 # mstest test results
 TestResults
-
-# generated installer packages
-*.msi
-*.exe
 
 # finalbuilder log/tmp files
 *.fbl7
@@ -36,6 +25,65 @@ testtasks.txt
 
 # ignore installer output
 Installer/Output
+Installer/ProgramFiles
 
 # NuGet Packages Directory
 packages/
+
+# ides
+.idea
+*.iml
+.vs
+_ReSharper*
+*.sln.Dotsettings
+
+# linux
+*~
+.directory # KDE directory preferences
+.Trash-* # Linux trash folder which might appear on any partition or disk
+
+# macos
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon # Icon must end with two \r
+._* # Thumbnails
+.DocumentRevisions-V100 # Files that might appear in the root of a volume
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.AppleDB # Directories potentially created on remote AFP share
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab # Windows Installer files
+*.msi
+*.msm
+*.msp
+*.lnk # Windows shortcuts
+
+# idea
+.idea
+*.iml
+out
+gen
+
+# visual studio
+.vs
+
+# sqlite
+*.db
+*.sqlite3
+
+# ctag generated file
+tags
+.tags

@@ -22,7 +22,7 @@ namespace Client
             get
             {
                 return Path.Combine(Path.GetDirectoryName(Application.ExecutablePath),
-                   string.Format("{0}.settings", ApplicationName));
+                    string.Format("{0}.settings", ApplicationName));
             }
         }
 
@@ -43,15 +43,9 @@ namespace Client
             }
         }
 
-        private XmlNode _globalSettingsNode
-        {
-            get { return GetSettingsNode(_globalSettingsNodeName); }
-        }
+        private XmlNode _globalSettingsNode => GetSettingsNode(_globalSettingsNodeName);
 
-        private XmlNode _rootNode
-        {
-            get { return _rootDocument.SelectSingleNode(_rootNodeName); }
-        }
+        private XmlNode _rootNode => _rootDocument.SelectSingleNode(_rootNodeName);
 
         private XmlDocument _rootDocument
         {
@@ -132,9 +126,7 @@ namespace Client
 
         private void SetValue(SettingsPropertyValue propertyValue)
         {
-            XmlNode targetNode = IsGlobal(propertyValue.Property)
-               ? _globalSettingsNode
-               : _localSettingsNode;
+            XmlNode targetNode = _globalSettingsNode;
 
             XmlNode settingNode = targetNode.SelectSingleNode(string.Format("setting[@name='{0}']", propertyValue.Name));
 
@@ -156,7 +148,7 @@ namespace Client
 
         private string GetValue(SettingsProperty property)
         {
-            XmlNode targetNode = IsGlobal(property) ? _globalSettingsNode : _localSettingsNode;
+            XmlNode targetNode = _globalSettingsNode;
             XmlNode settingNode = targetNode.SelectSingleNode(string.Format("setting[@name='{0}']", property.Name));
 
             if (settingNode == null)
@@ -200,7 +192,6 @@ namespace Client
 
         public void Reset(SettingsContext context)
         {
-            _localSettingsNode.RemoveAll();
             _globalSettingsNode.RemoveAll();
 
             _xmlDocument.Save(_filePath);

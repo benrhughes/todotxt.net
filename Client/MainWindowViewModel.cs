@@ -16,6 +16,7 @@ using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using Microsoft.Win32;
+using System.Windows.Threading;
 
 namespace Client
 {
@@ -594,65 +595,70 @@ namespace Client
                 {
                     foreach (
                         var filter in
-                            filters.Split(new string[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries))
+                        filters.Split(new string[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries))
                     {
                         if (filter.Equals("due:today", StringComparison.OrdinalIgnoreCase)
                             && task.DueDate == DateTime.Now.ToString("yyyy-MM-dd"))
                             continue;
-                        else if (filter.Equals("due:future", StringComparison.OrdinalIgnoreCase)
-                                 && task.DueDate.IsDateGreaterThan(DateTime.Now))
+                        if (filter.Equals("due:future", StringComparison.OrdinalIgnoreCase)
+                            && task.DueDate.IsDateGreaterThan(DateTime.Now))
                             continue;
-                        else if (filter.Equals("due:past", StringComparison.OrdinalIgnoreCase)
-                                 && task.DueDate.IsDateLessThan(DateTime.Now))
+                        if (filter.Equals("due:past", StringComparison.OrdinalIgnoreCase)
+                            && task.DueDate.IsDateLessThan(DateTime.Now))
                             continue;
-                        else if (filter.Equals("due:active", StringComparison.OrdinalIgnoreCase)
-                                 && !task.DueDate.IsNullOrEmpty()
-                                 && !task.DueDate.IsDateGreaterThan(DateTime.Now))
+                        if (filter.Equals("due:active", StringComparison.OrdinalIgnoreCase)
+                            && !task.DueDate.IsNullOrEmpty()
+                            && !task.DueDate.IsDateGreaterThan(DateTime.Now))
                             continue;
-                        else if (filter.Equals("-due:today", StringComparison.OrdinalIgnoreCase)
-                                 && task.DueDate == DateTime.Now.ToString("yyyy-MM-dd"))
+                        if (filter.Equals("-due:today", StringComparison.OrdinalIgnoreCase)
+                            && task.DueDate == DateTime.Now.ToString("yyyy-MM-dd"))
                         {
                             include = false;
                             continue;
                         }
-                        else if (filter.Equals("-due:future", StringComparison.OrdinalIgnoreCase)
-                                 && task.DueDate.IsDateGreaterThan(DateTime.Now))
+                        if (filter.Equals("-due:future", StringComparison.OrdinalIgnoreCase)
+                            && task.DueDate.IsDateGreaterThan(DateTime.Now))
                         {
                             include = false;
                             continue;
                         }
-                        else if (filter.Equals("-due:past", StringComparison.OrdinalIgnoreCase)
-                                 && task.DueDate.IsDateLessThan(DateTime.Now))
+                        if (filter.Equals("-due:past", StringComparison.OrdinalIgnoreCase)
+                            && task.DueDate.IsDateLessThan(DateTime.Now))
                         {
                             include = false;
                             continue;
                         }
-                        else if (filter.Equals("-due:active", StringComparison.OrdinalIgnoreCase)
-                                 && !task.DueDate.IsNullOrEmpty()
-                                 && !task.DueDate.IsDateGreaterThan(DateTime.Now))
-                        {
-                            include = false;
-                            continue;
-                        }
-                        else if (filter.Equals("-DONE", StringComparison.Ordinal) && task.Completed)
-                        {
-                            include = false;
-                            continue;
-                        }
-                        else if (filter.Equals("DONE", StringComparison.Ordinal) && !task.Completed)
+                        if (filter.Equals("-due:active", StringComparison.OrdinalIgnoreCase)
+                            && !task.DueDate.IsNullOrEmpty()
+                            && !task.DueDate.IsDateGreaterThan(DateTime.Now))
                         {
                             include = false;
                             continue;
                         }
 
-                        if (filter.Substring(0, 1) == "-")
+                        // "DONE" filter is different from "due" filter in that
+                        // "due" is part of todotxt syntax and would very unlikely occur in task text
+                        // while the word "done" can occur in the text
+                        if (filter.Equals("-DONE", StringComparison.Ordinal))
                         {
-                            if (task.Raw.Contains(filter.Substring(1), comparer))
-                                include = false;
+                            if (task.Completed) include = false;
                         }
-                        else if (!task.Raw.Contains(filter, comparer))
+                        else if (filter.Equals("DONE", StringComparison.Ordinal))
                         {
-                            include = false;
+                            if (!task.Completed) include = false;
+                        }
+                        // so if the filter is "DONE" or "-DONE", pass the substring test
+                        else
+                        {
+                            if (filter.Substring(0, 1) == "-")
+                            {
+                                if (task.Raw.Contains(filter.Substring(1), comparer))
+                                    include = false;
+                            }
+                            else if (!task.Raw.Contains(filter, comparer))
+                            {
+                                include = false;
+                            }
                         }
                     }
                 }
@@ -977,6 +983,14 @@ namespace Client
 
             _window.taskText.Text = filters;
             _window.taskText.Focus();
+        }
+
+        public void AddNewTaskWithPriority()
+        {
+            AddNewTask();
+            _window.taskText.Text = _window.taskText.Text.Length > 0 ? $"( {_window.taskText.Text}" : "(";
+            _window.taskText.CaretIndex = 1;
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>_window.taskText.CheckKeyAndShowPopup()));
         }
 
         public void UpdateTask()
@@ -1585,6 +1599,7 @@ namespace Client
             User.Default.AddCreationDate = o.cbAddCreationDate.IsChecked.Value;
             User.Default.DebugLoggingOn = o.cbDebugOn.IsChecked.Value;
             User.Default.MinimiseToSystemTray = o.cbMinToSysTray.IsChecked.Value;
+            User.Default.MinimiseOnClose = o.cbMinOnClose.IsChecked.Value;
             User.Default.RequireCtrlEnter = o.cbRequireCtrlEnter.IsChecked.Value;
             User.Default.AllowGrouping = o.cbAllowGrouping.IsChecked.Value;
             User.Default.PreserveWhiteSpace = o.cbPreserveWhiteSpace.IsChecked.Value;

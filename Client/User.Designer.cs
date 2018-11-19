@@ -207,6 +207,18 @@ namespace Client {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MinimiseOnClose {
+            get {
+                return ((bool)(this["MinimiseOnClose"]));
+            }
+            set {
+                this["MinimiseOnClose"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool RequireCtrlEnter {
             get {
                 return ((bool)(this["RequireCtrlEnter"]));
@@ -503,6 +515,7 @@ namespace Client {
                 this["ShowHidenTasks"] = value;
             }
         }
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]

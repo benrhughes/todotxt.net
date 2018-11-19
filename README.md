@@ -12,7 +12,8 @@ Please send your pull requests to the 'dev' branch. If you forget it's not a maj
 
 #### Goals
 
- - minimalist, keyboard-driven UI
+ - menu driven interface for novices
+ - minimalist, keyboard-driven UI for expert users
  - vim/gmail/twitter-like keyboard nav (single key, easily accessible)
  - re-usable library that other projects can use as a todo.txt API
  - API (but not UI) runs under Mono
