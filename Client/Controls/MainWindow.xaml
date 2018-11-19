@@ -46,6 +46,11 @@
         <RoutedUICommand x:Key="IncrementDueDate" Text="Increase Due Date By 1 Day" />
         <RoutedUICommand x:Key="DecrementDueDate" Text="Decrease Due Date By 1 Day" />
         <RoutedUICommand x:Key="RemoveDueDate" Text="Remove Due Date" />
+        <RoutedUICommand x:Key="SetThresholdDate" Text="Set Threshold Date" />
+        <RoutedUICommand x:Key="ThresholdTask" Text="Postpone Task" />
+        <RoutedUICommand x:Key="IncrementThresholdDate" Text="Increase Threshold Date By 1 Day" />
+        <RoutedUICommand x:Key="DecrementThresholdDate" Text="Decrease Threshold Date By 1 Day" />
+        <RoutedUICommand x:Key="RemoveThresholdDate" Text="Remove Threshold Date" />
         <!-- Sort menu commands -->
         <RoutedUICommand x:Key="SortByAlphabetical" Text="Sort By Alphabetical" />
         <RoutedUICommand x:Key="SortByCompleted" Text="Sort By Completed" />
@@ -67,6 +72,7 @@
         <RoutedUICommand x:Key="ApplyFilterPreset7" Text="Apply Preset Filter 7" />
         <RoutedUICommand x:Key="ApplyFilterPreset8" Text="Apply Preset Filter 8" />
         <RoutedUICommand x:Key="ApplyFilterPreset9" Text="Apply Preset Filter 9" />
+        <RoutedUICommand x:Key="ApplyFilterFutureTasks" Text="Hide Future Tasks" />
         <RoutedUICommand x:Key="ApplyShowHiddenTasks" Text="Show hidden tasks" />
         <!-- Help menu commands -->
         <RoutedUICommand x:Key="HelpAbout" Text="About" />
@@ -128,6 +134,8 @@
         <CommandBinding Command="{StaticResource ToggleCompletion}" CanExecute="WhenTasksSelectedCanExecute" Executed="ToggleCompletionExecuted"/>
         <CommandBinding Command="{StaticResource SetDueDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="SetDueDateExecuted"/>
         <CommandBinding Command="{StaticResource PostponeTask}" CanExecute="WhenTasksSelectedCanExecute" Executed="PostponeTaskExecuted"/>
+        <CommandBinding Command="{StaticResource SetThresholdDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="SetThresholdDateExecuted"/>
+        <CommandBinding Command="{StaticResource ThresholdTask}" CanExecute="WhenTasksSelectedCanExecute" Executed="ThresholdTaskExecuted"/>
         <CommandBinding Command="{StaticResource SetPriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="SetPriorityExecuted"/>
         <CommandBinding Command="{StaticResource IncreasePriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="IncreasePriorityExecuted"/>
         <CommandBinding Command="{StaticResource DecreasePriority}" CanExecute="WhenTasksSelectedCanExecute" Executed="DecreasePriorityExecuted"/>
@@ -135,6 +143,9 @@
         <CommandBinding Command="{StaticResource IncrementDueDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="IncrementDueDateExecuted"/>
         <CommandBinding Command="{StaticResource DecrementDueDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="DecrementDueDateExecuted"/>
         <CommandBinding Command="{StaticResource RemoveDueDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="RemoveDueDateExecuted"/>
+        <CommandBinding Command="{StaticResource IncrementThresholdDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="IncrementThresholdDateExecuted"/>
+        <CommandBinding Command="{StaticResource DecrementThresholdDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="DecrementThresholdDateExecuted"/>
+        <CommandBinding Command="{StaticResource RemoveThresholdDate}" CanExecute="WhenTasksSelectedCanExecute" Executed="RemoveThresholdDateExecuted"/>
         <!-- Sort menu commands -->
         <CommandBinding Command="{StaticResource SortByAlphabetical}" CanExecute="WhenTasksLoadedCanExecute" Executed="SortByAlphabeticalExecuted"/>
         <CommandBinding Command="{StaticResource SortByCompleted}" CanExecute="WhenTasksLoadedCanExecute" Executed="SortByCompletedExecuted"/>
@@ -146,6 +157,7 @@
         <CommandBinding Command="{StaticResource SortByFileOrder}" CanExecute="WhenTasksLoadedCanExecute" Executed="SortByFileOrderExecuted"/>
         <!-- Filter menu commands -->
         <CommandBinding Command="{StaticResource DefineFilters}" CanExecute="AlwaysCanExecute" Executed="DefineFiltersExecuted"/>
+        <CommandBinding Command="{StaticResource ApplyFilterFutureTasks}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterFutureTasksExecuted"/>
         <CommandBinding Command="{StaticResource ApplyShowHiddenTasks}" CanExecute="AlwaysCanExecute" Executed="ApplyShowHiddenTasksExecuted"/>
         <CommandBinding Command="{StaticResource RemoveFilter}" CanExecute="AlwaysCanExecute" Executed="RemoveFilterExecuted"/>
         <CommandBinding Command="{StaticResource ApplyFilterPreset1}" CanExecute="AlwaysCanExecute" Executed="ApplyFilterPreset1Executed"/>
@@ -240,6 +252,12 @@
                 <MenuItem Header="Increase Due Date By 1 Day" Command="{StaticResource IncrementDueDate}" InputGestureText="Ctrl+Alt+Up"/>
                 <MenuItem Header="Decrease Due Date By 1 Day" Command="{StaticResource DecrementDueDate}" InputGestureText="Ctrl+Alt+Down"/>
                 <MenuItem Header="Remove Due Date" Command="{StaticResource RemoveDueDate}" InputGestureText="Ctrl+Alt+Left/Right"/>
+                <Separator />
+                <MenuItem Header="_Set Threshold Date" Command="{StaticResource SetThresholdDate}" InputGestureText="Ctrl+S"/>
+                <MenuItem Header="Threshold" Command="{StaticResource ThresholdTask}" InputGestureText="Ctrl+Alt+P"/>
+                <MenuItem Header="Increase Threshold Date By 1 Day" Command="{StaticResource IncrementThresholdDate}" InputGestureText="Ctrl+Up"/>
+                <MenuItem Header="Decrease Threshold Date By 1 Day" Command="{StaticResource DecrementThresholdDate}" InputGestureText="Ctrl+Down"/>
+                <MenuItem Header="Remove Threshold Date" Command="{StaticResource RemoveThresholdDate}" InputGestureText="Ctrl+Left/Right"/>
             </MenuItem>
             <MenuItem Header="_Sort" Name="sortMenu">
                 <MenuItem Header="_Order in file" IsCheckable="True" Command="{StaticResource SortByFileOrder}" InputGestureText="Ctrl+0" Tag="File"/>
@@ -252,6 +270,7 @@
                 <MenuItem Header="Pro_ject" IsCheckable="True" Command="{StaticResource SortByProject}" InputGestureText="Ctrl+7" Tag="Project"/>
             </MenuItem>
             <MenuItem Header="Filter" Name="filterMenu">
+                <MenuItem Header="Hide future tasks" Command="{StaticResource ApplyFilterFutureTasks}" InputGestureText="Ctrl+T" IsCheckable="True" Tag="FutureTasks" FontWeight="Normal" />
                 <MenuItem Header="Show hidden tasks" Command="{StaticResource ApplyShowHiddenTasks}" InputGestureText="Ctrl+H" IsCheckable="True" Tag="HiddenTasks" FontWeight="Normal" />
                 <Separator/>
                 <MenuItem Header="Define _Filters" Command="{StaticResource DefineFilters}" InputGestureText="F" IsCheckable="False" FontWeight="Normal" />
@@ -320,6 +339,12 @@
                 <KeyBinding Command="{StaticResource DecrementDueDate}" Key="Down" Modifiers="Control+Alt"/>
                 <KeyBinding Command="{StaticResource RemoveDueDate}" Key="Left" Modifiers="Control+Alt"/>
                 <KeyBinding Command="{StaticResource RemoveDueDate}" Key="Right" Modifiers="Control+Alt"/>
+                <KeyBinding Command="{StaticResource SetThresholdDate}" Key="S" Modifiers="Control" />
+                <KeyBinding Command="{StaticResource ThresholdTask}" Key="P" Modifiers="Control+Alt"/>
+                <KeyBinding Command="{StaticResource IncrementThresholdDate}" Key="Up" Modifiers="Control"/>
+                <KeyBinding Command="{StaticResource DecrementThresholdDate}" Key="Down" Modifiers="Control"/>
+                <KeyBinding Command="{StaticResource RemoveThresholdDate}" Key="Left" Modifiers="Control"/>
+                <KeyBinding Command="{StaticResource RemoveThresholdDate}" Key="Right" Modifiers="Control"/>
                 <KeyBinding Command="{StaticResource SetPriority}" Key="I" />
                 <KeyBinding Command="{StaticResource IncreasePriority}" Key="Up" Modifiers="Alt"/>
                 <KeyBinding Command="{StaticResource DecreasePriority}" Key="Down" Modifiers="Alt"/>
@@ -330,6 +355,7 @@
                 <KeyBinding Command="{StaticResource DefineFilters}" Key="F"/>
                 <KeyBinding Command="{StaticResource RemoveFilter}" Key="NumPad0"/>
                 <KeyBinding Command="{StaticResource RemoveFilter}" Key="D0"/>
+                <KeyBinding Command="{StaticResource ApplyFilterFutureTasks}" Key="T" Modifiers="Control"/>
                 <KeyBinding Command="{StaticResource ApplyFilterPreset1}" Key="NumPad1"/>
                 <KeyBinding Command="{StaticResource ApplyFilterPreset1}" Key="D1"/>
                 <KeyBinding Command="{StaticResource ApplyFilterPreset2}" Key="NumPad2"/>

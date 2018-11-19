@@ -5,6 +5,7 @@
 //
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
+
 // </auto-generated>
 //------------------------------------------------------------------------------
 
@@ -488,6 +489,18 @@ namespace Client {
             }
             set {
                 this["DisplayStatusBar"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FilterFutureTasks {
+            get {
+                return ((bool)(this["FilterFutureTasks"]));
+            }
+            set {
+                this["FilterFutureTasks"] = value;
             }
         }
         

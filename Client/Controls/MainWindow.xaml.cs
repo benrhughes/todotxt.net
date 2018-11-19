@@ -376,10 +376,35 @@ namespace Client
             ViewModel.RemoveDueDate();
         }
 
+        private void SetThresholdDateExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SetThresholdDate();
+        }
+
+        private void ThresholdTaskExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Threshold();
+        }
+
+        private void IncrementThresholdDateExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.IncrementThresholdDate();
+        }
+
+        private void DecrementThresholdDateExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DecrementThresholdDate();
+        }
+
+        private void RemoveThresholdDateExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.RemoveThresholdDate();
+        }
+
         #endregion
 
         #region sort menu
-        
+
         public void SetSelectedMenuItem(MenuItem menu, string selectedMenuItemTag)
         {
             foreach (var item in menu.Items)
@@ -395,7 +420,7 @@ namespace Client
         public void SetSelectionOfMenuItem(string selectedMenuItemTag, bool isChecked)
         {
             foreach (var item in filterMenu.Items)
-           {
+            {
                 if (item is MenuItem)
                 {
                     MenuItem menuItem = (MenuItem)item;
@@ -462,6 +487,12 @@ namespace Client
             ViewModel.ApplyFilterPreset0();
             SetSelectedMenuItem(filterMenu, "None");
         }
+
+        private void ApplyFilterFutureTasksExecuted(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ApplyHideFutureTasks();
+            SetSelectionOfMenuItem("FutureTasks", User.Default.FilterFutureTasks);
+        }     
 
         private void ApplyFilterPreset1Executed(object sender, RoutedEventArgs e)
         {

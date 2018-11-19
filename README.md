@@ -52,6 +52,11 @@ Please send your pull requests to the 'dev' branch. If you forget it's not a maj
  	- Ctrl+Alt+Up: increase due date by 1 day
 	- Ctrl+Alt+Down: decrease due date by 1 day
     - Ctrl+Alt+Left/Right: remove due date 
+    - Ctrl+Up: increase threshold date by 1 day
+	- Ctrl+Down: decrease threshold date by 1 day
+    - Ctrl+Left/Right: remove threshold date 
+	- Ctrl+S: set threshold date 
+	- Ctrl+Alt+P: add days to threshold date 
 	- Ctrl+C: copy task to clipboard
 	- Ctrl+Shift+C: copy task to edit field
 	- Ctrl+Alt+M: hide/unhide windows

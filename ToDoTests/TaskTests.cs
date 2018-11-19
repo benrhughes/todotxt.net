@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using ToDoLib;
 
 namespace ToDoTests
@@ -151,23 +152,24 @@ namespace ToDoTests
             var dueDate=DateTime.Now;
             do{
                 dueDate=dueDate.AddDays(1);
-            } while (!string.Equals(dueDate.ToString("dddd"), "thursday", StringComparison.CurrentCultureIgnoreCase));
+            } while (!string.Equals(dueDate.ToString("dddd", new CultureInfo("en-US")), "thursday", StringComparison.CurrentCultureIgnoreCase));
             string due = dueDate.ToString("yyyy-MM-dd");
 
             var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", due, false);
             AssertEquivalence(expectedTask, task);
-        }
+        }     
 
         [Test]
         public void Create_DueDayOfWeekToday()
         {
-            var dow = DateTime.Today.ToString("ddd");
+            var dow = DateTime.Today.ToString("ddd", new CultureInfo("en-US"));
             var task = new Task(string.Format("(A) due:{0} @work @home +test This is a test task", dow));
 
             var dueDate = DateTime.Now.AddDays(7);
             string due = dueDate.ToString("yyyy-MM-dd");
 
             var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", due, false);
+
             AssertEquivalence(expectedTask, task);
         }
 
@@ -196,10 +198,72 @@ namespace ToDoTests
             do
             {
                 dueDate = dueDate.AddDays(1);
-            } while (!string.Equals(dueDate.ToString("dddd"), "wednesday", StringComparison.CurrentCultureIgnoreCase));
+            } while (!string.Equals(dueDate.ToString("dddd", new CultureInfo("en-US")), "wednesday", StringComparison.CurrentCultureIgnoreCase));
             string due = dueDate.ToString("yyyy-MM-dd");
 
             var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", due, false);
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_ThresholdDate()
+        {
+            var task = new Task("(A) t:2011-05-08 @work @home +test This is a test task");
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task",
+                thresholdDate: "2011-05-08");
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_ThresholdToday()
+        {
+            var task = new Task("(A) t:today @work @home +test This is a test task");
+
+            string threshold = DateTime.Now.ToString("yyyy-MM-dd");
+
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task",
+                thresholdDate: threshold);
+
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_ThresholdTomorrow()
+        {
+            var task = new Task("(A) t:tOmORRoW @work @home +test This is a test task");
+
+            string threshold = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task",
+                thresholdDate: threshold);
+
+            AssertEquivalence(expectedTask, task);
+
+        }
+
+        [Test]
+        public void Create_ThresholdDayOfWeek()
+        {
+            var task = new Task("(A) t:thUrsday @work @home +test This is a test task");
+
+            var thresholdDate = DateTime.Now;
+            do
+            {
+                thresholdDate = thresholdDate.AddDays(1);
+            } while (!string.Equals(thresholdDate.ToString("dddd", new CultureInfo("en-US")), "thursday", StringComparison.CurrentCultureIgnoreCase));
+            string threshold = thresholdDate.ToString("yyyy-MM-dd");
+
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task", thresholdDate: threshold);
+            AssertEquivalence(expectedTask, task);
+        }
+
+        [Test]
+        public void Create_ThresholdAndDue()
+        {
+            var task = new Task("(A) t:2011-05-08 due:2017-11-02 @work @home +test This is a test task");
+
+            var expectedTask = new Task("(A)", _projects, new List<string>() { "@work", "@home" }, "This is a test task",
+                "2017-11-02", thresholdDate: "2011-05-08");
             AssertEquivalence(expectedTask, task);
         }
 

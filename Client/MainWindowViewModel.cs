@@ -5,18 +5,17 @@ using System.Text;
 using System.Windows.Controls;
 using System.Windows.Data;
 using ToDoLib;
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using System.IO;
 using ColorFont;
 using CommonExtensions;
-using Microsoft.Win32;
 using System.Reflection;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using Microsoft.Win32;
 using System.Windows.Threading;
 
 namespace Client
@@ -324,6 +323,7 @@ namespace Client
                 User.Default.Save();
                 EnableFileChangeObserver();
 				UpdateDisplayedTasks();
+                _window.SetSelectionOfMenuItem("FutureTasks", User.Default.FilterFutureTasks);
                 _window.SetSelectionOfMenuItem("HiddenTasks", User.Default.ShowHidenTasks);
             }
             catch (Exception ex)
@@ -588,6 +588,10 @@ namespace Client
                     include = !task.Raw.Contains("h:1");
 
                 if (include)
+                    if (User.Default.FilterFutureTasks)
+                        include = String.IsNullOrEmpty(task.ThresholdDate) || task.ThresholdDate.IsDateLessThan(DateTime.Now.AddDays(1));
+
+                if (include)
                 {
                     foreach (
                         var filter in
@@ -715,6 +719,15 @@ namespace Client
             ApplyFilterPreset(9);
         }
 
+        public void ApplyHideFutureTasks()
+        {
+            User.Default.FilterFutureTasks = !User.Default.FilterFutureTasks;
+            UpdateDisplayedTasks();
+            SetSelectedTasks();
+
+            User.Default.Save();
+        }
+
         public void ApplyShowHiddenTasks()
         {
             User.Default.ShowHidenTasks = !User.Default.ShowHidenTasks;
@@ -726,7 +739,8 @@ namespace Client
             User.Default.Save();
         }
 
-    private void ApplyFilterPreset(int filterPresetNumber)
+
+        private void ApplyFilterPreset(int filterPresetNumber)
         {
             switch (filterPresetNumber)
             {
@@ -1197,7 +1211,17 @@ namespace Client
 
         private Task IncrementTaskDueDate(Task task, dynamic newDueDate = null)
         {
-            return PostponeTask(task, 1);
+            return PostponeTask(task, new {Days = 1, DateType = "due" });
+        }
+
+        public void IncrementThresholdDate()
+        {
+            ModifySelectedTasks(IncrementTaskThresholdDate, null);
+        }
+
+        private Task IncrementTaskThresholdDate(Task task, dynamic newDueDate = null)
+        {
+            return PostponeTask(task, new { Days = 1, DateType = "t" });
         }
 
         public void DecrementDueDate()
@@ -1207,7 +1231,16 @@ namespace Client
 
         private Task DecrementTaskDueDate(Task task, dynamic newDueDate = null)
         {
-            return PostponeTask(task, -1);
+            return PostponeTask(task, new { Days = -1, DateType = "due" });
+        }
+        public void DecrementThresholdDate()
+        {
+            ModifySelectedTasks(DecrementTaskThresholdDate, null);
+        }
+
+        private Task DecrementTaskThresholdDate(Task task, dynamic newDueDate = null)
+        {
+            return PostponeTask(task, new { Days = -1, DateType = "t" });
         }
 
         public void RemoveDueDate()
@@ -1222,6 +1255,18 @@ namespace Client
             return newTask;
         }
 
+        public void RemoveThresholdDate()
+        {
+            ModifySelectedTasks(RemoveTaskThresholdDate, null);
+        }
+
+        private Task RemoveTaskThresholdDate(Task task, dynamic newDueDate = null)
+        {
+            Regex rgx = new Regex(@"(?i:(^|\s)t:(\d{4})-(\d{2})-(\d{2}))*");
+            Task newTask = new Task(rgx.Replace(task.Raw, "").TrimStart(' '));
+            return newTask;
+        }
+
         public void SetDueDate()
         {
             DateTime? newDueDate = ShowSetDueDateDialog();
@@ -1232,7 +1277,29 @@ namespace Client
             ModifySelectedTasks(SetTaskDueDate, newDueDate);
         }
 
+        public void SetThresholdDate()
+        {
+            DateTime? newDueDate = ShowSetThresholdDateDialog();
+            if (newDueDate == null) // reject bad input
+            {
+                return;
+            }
+            ModifySelectedTasks(SetTaskThresholdDate, newDueDate);
+        }
+
         private DateTime? ShowSetDueDateDialog()
+        {
+            Regex rgx = new Regex(@"(?<=\sdue:)(?<date>(\d{4})-(\d{2})-(\d{2}))");
+            return ShowDateDialog(rgx);
+        }
+
+        private DateTime? ShowSetThresholdDateDialog()
+        {
+            Regex rgx = new Regex(@"(?<=\st:)(?<date>(\d{4})-(\d{2})-(\d{2}))");
+            return ShowDateDialog(rgx);
+        }
+
+        private DateTime? ShowDateDialog(Regex rgx)
         {
             if (!AreTasksSelected())
             {
@@ -1242,7 +1309,6 @@ namespace Client
             // Get the default due date to show in the Set Due Date dialog.
             Task lastSelectedTask = (Task)_window.lbTasks.SelectedItem;
             string oldTaskRawText = lastSelectedTask.ToString();
-            Regex rgx = new Regex(@"(?<=\sdue:)(?<date>(\d{4})-(\d{2})-(\d{2}))");
             string oldDueDateText = rgx.Match(oldTaskRawText).Groups["date"].Value.Trim();
             DateTime defaultDate = (String.IsNullOrEmpty(oldDueDateText)) ? DateTime.Today : DateTime.Parse(oldDueDateText);
 
@@ -1258,13 +1324,22 @@ namespace Client
 
         private Task SetTaskDueDate(Task task, dynamic newDueDate)
         {
-            Regex rgx = new Regex(@"(?<=(^|\s)due:)(?<date>(\d{4})-(\d{2})-(\d{2}))");
-            string oldDueDateText = rgx.Match(task.Raw).Groups["date"].Value.Trim();
-            
+            return SetTaskDate(task, newDueDate, "due");
+        }
+        private Task SetTaskThresholdDate(Task task, dynamic newDueDate)
+        {
+            return SetTaskDate(task, newDueDate, "t");
+        }
+
+        private Task SetTaskDate(Task task, dynamic newDueDate, string dateType)
+        {
+            Regex rgx = dateType == "due" ? new Regex(@"(?<=(^|\s)due:)(?<date>(\d{4})-(\d{2})-(\d{2}))") : new Regex(@"(?<=(^|\s)t:)(?<date>(\d{4})-(\d{2})-(\d{2}))");
+            string oldDateText = rgx.Match(task.Raw).Groups["date"].Value.Trim();
+
             string oldTaskRawText = task.Raw;
-            oldDueDateText = rgx.Match(oldTaskRawText).Groups["date"].Value.Trim();
-            string newTaskRawText = (String.IsNullOrEmpty(oldDueDateText)) ?
-                oldTaskRawText + " due:" + ((DateTime)newDueDate).ToString("yyyy-MM-dd") :
+            oldDateText = rgx.Match(oldTaskRawText).Groups["date"].Value.Trim();
+            string newTaskRawText = (String.IsNullOrEmpty(oldDateText)) ?
+                oldTaskRawText + " " + dateType + ":" + ((DateTime)newDueDate).ToString("yyyy-MM-dd") :
                 rgx.Replace(oldTaskRawText, ((DateTime)newDueDate).ToString("yyyy-MM-dd"));
 
             return new Task(newTaskRawText);
@@ -1277,30 +1352,52 @@ namespace Client
             {
                 return;
             }
-            ModifySelectedTasks(PostponeTask, daysToPostpone);
+            ModifySelectedTasks(PostponeTask, new { Days = daysToPostpone, DateType = "due" });
         }
 
+        public void Threshold()
+        {
+            int daysToPostpone = ShowPostponeDialog();
+            if (daysToPostpone == 0)
+            {
+                return;
+            }
+            ModifySelectedTasks(PostponeTask, new { Days = daysToPostpone, DateType = "t"});
+        }
+        
         private Task PostponeTask(Task task, dynamic daysToPostpone)
         {
-            if (daysToPostpone == 0) // if user entered 0 or junk
+            if (daysToPostpone.Days == 0) // if user entered 0 or junk
             {
                 return task;
             }
 
             // Get due date of the selected task. 
             // If current item doesn't have a due date, use today as the due date.
-            DateTime oldDueDate = (task.DueDate.Length > 0) ?
-                Convert.ToDateTime(task.DueDate) :
-                DateTime.Today;
+            var oldDateTime = DateTime.Today;
+            if (daysToPostpone.DateType == "due" && !String.IsNullOrEmpty(task.DueDate)) 
+                oldDateTime = Convert.ToDateTime(task.DueDate);
+            else if (daysToPostpone.DateType == "t" && !String.IsNullOrEmpty(task.ThresholdDate))
+                oldDateTime = Convert.ToDateTime(task.ThresholdDate);          
 
             // Add days to that date to create the new due date.
-            DateTime newDueDate = oldDueDate.AddDays(daysToPostpone);
+            DateTime newDueDate = oldDateTime.AddDays(daysToPostpone.Days);
 
             // If the item has a due date, exchange the current due date with the new.
             // Else if the item does not have a due date, append the new due date to the task.
-            string updatedRaw = (task.DueDate.Length > 0) ?
+            string updatedRaw = task.Raw;
+            if (daysToPostpone.DateType == "due")
+            {
+                updatedRaw = (task.DueDate.Length > 0) ?
                 task.Raw.Replace("due:" + task.DueDate, "due:" + newDueDate.ToString("yyyy-MM-dd")) :
                 task.Raw.ToString() + " due:" + newDueDate.ToString("yyyy-MM-dd");
+            }
+            else if (daysToPostpone.DateType == "t")
+            {
+                 updatedRaw = (task.ThresholdDate.Length > 0) ?
+                task.Raw.Replace("t:" + task.ThresholdDate, "t:" + newDueDate.ToString("yyyy-MM-dd")) :
+                task.Raw.ToString() + " t:" + newDueDate.ToString("yyyy-MM-dd");
+            }
 
             return new Task(updatedRaw);
         }
