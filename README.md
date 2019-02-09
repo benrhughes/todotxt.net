@@ -2,13 +2,17 @@
 
 This is an implemention of [todo.txt](http://todotxt.com/) using the .NET framework. As far as I am aware, it is fully compliant with [Gina's spec](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format). 
 
-There is installer for the latest version available from the [the main site](http://benrhughes.github.io/todotxt.net/).
+There is installer for the latest version available from the [release page](https://github.com/benrhughes/todotxt.net/releases).
+
+#### Maintenence mode
+
+Please note that todotxt.net is now in maintenence mode. I'm am happy to receive bug reports and bug fixes, but no new features will be added at this stage.
 
 #### Contributors please note
 
 If you change any of the ToDoLib files, please make sure the current unit tests pass, and add new tests where appropriate.
 
-Please send your pull requests to the 'dev' branch. If you forget it's not a major deal: it's just a bit more work for me as I have to manually merge.
+Please send your pull requests to the 'dev' branch. 
 
 #### Goals
 
