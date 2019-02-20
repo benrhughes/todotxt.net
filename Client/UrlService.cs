@@ -55,20 +55,23 @@ namespace Client
 				// Create a hyperlink for the match
                 var uri = match.Value.StartsWith("www.") ? string.Format("http://{0}", match.Value) : match.Value;
 
-                // in case the regex fails
-			    if (!Uri.IsWellFormedUriString(uri, UriKind.Absolute)) 
-                    continue;
+			    if (Uri.IsWellFormedUriString(uri, UriKind.Absolute))
+                {
+                    var link = new Hyperlink(new Run(match.Value))
+                    {
+                        // If it starts with "www." add "http://" to make it a valid Uri
+                        NavigateUri = new Uri(uri),
+                        ToolTip = uri
+                    };
 
-				var link = new Hyperlink(new Run(match.Value))
-				{
-					// If it starts with "www." add "http://" to make it a valid Uri
-					NavigateUri = new Uri(uri),
-					ToolTip = uri
-				};
+                    link.Click += OnUrlClick;
 
-				link.Click += OnUrlClick;
-
-				textBlock.Inlines.Add(link);
+                    textBlock.Inlines.Add(link);
+                }
+                else
+                {
+                    textBlock.Inlines.Add(new Run(match.Value));
+                }
 
 				// Update the last matched position
 				lastPos = match.Index + match.Length;
