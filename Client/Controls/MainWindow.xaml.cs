@@ -70,7 +70,7 @@ namespace Client
 
         protected override void OnClosed(EventArgs e)
         {
-			if (ViewModel.HelpPage != null)
+			if (ViewModel?.HelpPage != null)
 				ViewModel.HelpPage.Close();
 
             base.OnClosed(e);
