@@ -247,6 +247,7 @@ namespace Client
             if (_selectedTasks == null || _selectedTasks.Count == 0)
             {
                 _window.lbTasks.SelectedIndex = 0;
+                _window.lbTasks.Focus();
                 return;
             }
 
