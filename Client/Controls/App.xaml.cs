@@ -47,9 +47,22 @@ namespace Client
             #endif
 
             MigrateUserSettings();
+            ParseArguments(e.Args);
 
             var mainWindow = new MainWindow();
             mainWindow.Show();
+        }
+
+        private static void ParseArguments(string[] args)
+        {
+            if (args.Length == 1)
+            {
+                var filePath = args[0];
+                if (File.Exists(filePath))
+                {
+                    User.Default.FilePath = filePath;
+                }
+            }
         }
 
         private static void MakePortable(ApplicationSettingsBase settings)
