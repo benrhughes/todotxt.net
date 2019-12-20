@@ -32,7 +32,7 @@ Please send your pull requests to the 'dev' branch.
  - Manual or automatic moving of completed tasks into an archive (done.txt) file
  - Free text filtering/search
  - Intellisense for projects and contexts
- - Minimize to tray icon - double-click the icon or Win-Alt-T to hide or show the app
+ - Minimize to tray icon - double-click the icon or Ctrl+Alt+M to hide or show the app
  - Keyboard shortcuts:
 	- O or Ctrl+O: open todo.txt file
 	- C or Ctrl+N: new todo.txt file
