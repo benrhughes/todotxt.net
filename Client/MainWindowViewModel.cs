@@ -597,6 +597,14 @@ namespace Client
                         var filter in
                         filters.Split(new string[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries))
                     {
+                        // get evaluated threshold string in format t:yyyy-MM-dd
+                        string thresholdString = Task.ParseDate(filter, Task.ThresholdRelativePattern);
+
+                        if(task.ThresholdDate == thresholdString.Replace("t:", ""))
+                        {
+                            continue;
+                        }
+
                         if (filter.Equals("due:today", StringComparison.OrdinalIgnoreCase)
                             && task.DueDate == DateTime.Now.ToString("yyyy-MM-dd"))
                             continue;

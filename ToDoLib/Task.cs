@@ -21,9 +21,9 @@ namespace ToDoLib
         private const string CreatedDatePattern = @"(?<date>(\d{4})-(\d{2})-(\d{2}))";
 
         private const string RelativeDatePatternBare =
-            @"(?<dateRelative>today|tomorrow|(?<weekday>mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?))";
+            @"(?<dateRelative>today|tomorrow|(?<dateRelativeOffset>(\d+[dwm]))|(?<weekday>mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?))";
         private const string DueRelativePattern = @"\bdue:" + RelativeDatePatternBare + @"\b";
-        private const string ThresholdRelativePattern = @"t:"+ RelativeDatePatternBare;
+        public const string ThresholdRelativePattern = @"t:"+ RelativeDatePatternBare;
 
         private const string DueDatePattern = @"due:(?<date>(\d{4})-(\d{2})-(\d{2}))";
         private const string ThresholdDatePattern = @"t:(?<date>(\d{4})-(\d{2})-(\d{2}))";
@@ -181,7 +181,7 @@ namespace ToDoLib
             Body = raw.Trim();
         }
 
-        private string ParseDate(string raw, string datePattern)
+        static public string ParseDate(string raw, string datePattern)
         {
 
             //Replace relative days with hard date
@@ -205,6 +205,28 @@ namespace ToDoLib
                 {
                     date = date.AddDays(1);
                     isValid = true;
+                }
+                // check if date has been specified in relative offset from today in [d]ays, [w]eeks or [m]onths
+                // - 1d -> one day from today
+                // - 2w -> two weeks from today
+                // - 3m -> three month from today
+                else if (regMatch.Groups["dateRelativeOffset"].Success)
+                {
+                    if(dateRelative.Contains("d"))
+                    {
+                        date = date.AddDays(Int32.Parse(dateRelative.Replace("d", "")));
+                        isValid = true;
+                    }
+                    else if(dateRelative.Contains("w"))
+                    {
+                        date = date.AddDays(Int32.Parse(dateRelative.Replace("w", "")) * 7);
+                        isValid = true;
+                    }
+                    else if(dateRelative.Contains("m"))
+                    {
+                        date = date.AddMonths(Int32.Parse(dateRelative.Replace("m", "")));
+                        isValid = true;
+                    }
                 }
                 else if (regMatch.Groups["weekday"].Success)
                 {
