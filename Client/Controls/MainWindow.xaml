@@ -207,7 +207,7 @@
         <KeyBinding Command="{StaticResource SortByFileOrder}" Key="D0" Modifiers="Control"/>
         <KeyBinding Command="{StaticResource SortByFileOrder}" Key="NumPad0" Modifiers="Control"/>
     </Window.InputBindings>
-    <Grid Name="stackPanel1" Margin="0,0,0,0" ShowGridLines="False" >
+    <Grid Name="grid" Margin="0,0,0,0" ShowGridLines="False" >
         <Grid.RowDefinitions>
             <RowDefinition Height="25"></RowDefinition>
             <RowDefinition Height="25"></RowDefinition>

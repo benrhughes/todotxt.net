@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using mshtml;
 
 namespace Client
 {
@@ -82,12 +81,23 @@ namespace Client
         /// </summary>
 		public void SetFont()
         {
+            SetFont(lbTasks);
+            SetFont(taskText, fontHeight =>
+            {
+                // We need to compensate for some internal vertical whitespace.
+                double height = fontHeight * 1.1;
+                taskText.Height = height;
+                grid.RowDefinitions[1].Height = new GridLength(height);
+            });
+        }
+
+        private void SetFont(Control control, Action<double> updateHeight = null)
+        {
             var family = new FontFamily(User.Default.TaskListFontFamily);
 
             double size = User.Default.TaskListFontSize;
 
             var styleConverter = new FontStyleConverter();
-
             FontStyle style = (FontStyle)styleConverter.ConvertFromString(User.Default.TaskListFontStyle);
 
             var stretchConverter = new FontStretchConverter();
@@ -98,12 +108,15 @@ namespace Client
 
             Color color = (Color)ColorConverter.ConvertFromString(User.Default.TaskListFontBrushColor);
 
-			lbTasks.FontFamily = family;
-			lbTasks.FontSize = size;
-			lbTasks.FontStyle = style;
-			lbTasks.FontStretch = stretch;
-			lbTasks.FontWeight = weight;
-			lbTasks.Foreground = new SolidColorBrush(color);
+            control.FontFamily = family;
+            control.FontSize = size;
+            control.FontStyle = style;
+            control.FontStretch = stretch;
+            control.FontWeight = weight;
+            control.Foreground = new SolidColorBrush(color);
+
+            double height = family.LineSpacing * size;
+            updateHeight?.Invoke(height);
         }
 
         void SetSelected(MenuItem item)
