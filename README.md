@@ -1,8 +1,8 @@
 # todotxt.net
 
-This is an implemention of [todo.txt](http://todotxt.com/) using the .NET framework. As far as I am aware, it is fully compliant with [Gina's spec](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format). 
+This is an implemention of [todo.txt](http://todotxt.org/) using the .NET framework. As far as I am aware, it is fully compliant with [Gina's spec](https://github.com/todotxt/todo.txt/blob/master/README.md). 
 
-There is installer for the latest version available from the [release page](https://github.com/benrhughes/todotxt.net/releases).
+There is installer for the latest version available from the [releases page](https://github.com/benrhughes/todotxt.net/releases).
 
 ## Maintenence mode
 
