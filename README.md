@@ -1,20 +1,20 @@
-### todotxt.net
+# todotxt.net
 
 This is an implemention of [todo.txt](http://todotxt.com/) using the .NET framework. As far as I am aware, it is fully compliant with [Gina's spec](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format). 
 
 There is installer for the latest version available from the [release page](https://github.com/benrhughes/todotxt.net/releases).
 
-#### Maintenence mode
+## Maintenence mode
 
 Please note that todotxt.net is now in maintenence mode. I'm am happy to receive bug reports and bug fixes, but no new features will be added at this stage.
 
-#### Contributors please note
+## Note for contributors
 
 If you change any of the ToDoLib files, please make sure the current unit tests pass, and add new tests where appropriate.
 
 Please send your pull requests to the 'dev' branch. 
 
-#### Goals
+## Goals
 
  - menu driven interface for novices
  - minimalist, keyboard-driven UI for expert users
@@ -24,7 +24,7 @@ Please send your pull requests to the 'dev' branch.
  - full compliance with Gina's specs
 
 
-#### Current features:
+## Features
 
  - Sorting by completed status, priority, project, context, alphabetically due date or the order in the file
  - Sorting respects multiple projects and contexts
