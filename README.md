@@ -6,13 +6,13 @@ There is installer for the latest version available from the [releases page](htt
 
 ## Maintenence mode
 
-Please note that todotxt.net is now in maintenence mode. I'm am happy to receive bug reports and bug fixes, but no new features will be added at this stage.
+Please note that todotxt.net is now in maintenence mode. I am happy to receive bug reports and bug fixes, but no new features will be added at this stage.
 
 ## Note for contributors
 
-If you change any of the ToDoLib files, please make sure the current unit tests pass, and add new tests where appropriate.
+If you change any of the files in the [`ToDoLib`](ToDoLib) folder, please make sure the current unit tests pass, and add new tests where appropriate.
 
-Please send your pull requests to the 'dev' branch. 
+Please send your pull requests to the `dev` branch. 
 
 ## Goals
 
