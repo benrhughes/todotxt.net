@@ -1112,6 +1112,13 @@ namespace Client
 
         private Task SetTaskCompletion(Task task, dynamic parameter = null)
         {
+            if (!task.Completed && !string.IsNullOrEmpty(task.Recur))
+            {
+                var addTask = new Task(task.ToString());
+                addTask.ApplyRecur();
+                TaskList.Add(addTask);
+            }
+
             task.Completed = !task.Completed;
             var newTask = new Task(task.ToString());
             return newTask;

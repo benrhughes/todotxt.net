@@ -30,6 +30,8 @@ namespace ToDoLib
         private const string ProjectPattern = @"(?<proj>(?<=^|\s)\+[^\s]+)";
         private const string ContextPattern = @"(^|\s)(?<context>\@[^\s]+)";
 
+        private const string RecurPattern = @"rec:(?<date>\+?\d+[dwmy])";
+
         public List<string> Projects { get; set; }
         public string PrimaryProject { get; private set; }
         public List<string> Contexts { get; set; }
@@ -142,6 +144,10 @@ namespace ToDoLib
             CreationDate = reg.Match(raw).Groups["date"].Value.Trim();
             raw = reg.Replace(raw, "");
             
+            reg = new Regex(RecurPattern);
+            Recur = reg.Match(raw).Groups["date"].Value.Trim();
+            raw = reg.Replace(raw, "");
+            
             var ProjectSet = new SortedSet<string>();
             reg = new Regex(ProjectPattern);
             var projects = reg.Matches(raw);
@@ -180,6 +186,8 @@ namespace ToDoLib
 
             Body = raw.Trim();
         }
+
+        public string Recur { get; set; }
 
         private string ParseDate(string raw, string datePattern)
         {
@@ -234,7 +242,7 @@ namespace ToDoLib
         }
 
         public Task(string priority, List<string> projects, List<string> contexts, string body, string dueDate = "",
-                    bool completed = false, string thresholdDate = "")
+                    bool completed = false, string thresholdDate = "", string recur = "")
         {
             Priority = priority;
             Projects = projects;
@@ -243,6 +251,7 @@ namespace ToDoLib
             Body = body;
             Completed = completed;
             ThresholdDate = thresholdDate;
+            Recur = recur;
         }
 
         public override string ToString()
@@ -330,6 +339,63 @@ namespace ToDoLib
 
                 if(Char.IsLetter(newPriority))
                     SetPriority(newPriority);
+            }
+        }
+
+        public void ApplyRecur()
+        {
+            // By default, task recurrence is based on completion date. (https://updatenotes.blog/todotxt-recurring-tasks/)
+            // the recurrence may be preceded by ‘+‘ to indicate that the task should repeat from due date.
+
+            if (Recur.Length > 0)
+            {
+                var pattern = Recur;
+                var isStrict = pattern[0] == '+';
+
+                if (isStrict)
+                    pattern = pattern.Substring(1);
+                
+                var period = int.Parse(pattern.Substring(0, pattern.Length-1));
+                var periodType = pattern[pattern.Length - 1];
+
+                if (!string.IsNullOrEmpty(DueDate))
+                {
+                    DueDate = AdvanceDate(DueDate);
+                    var dueDateReg = new Regex(DueDatePattern);
+                    Raw = dueDateReg.Replace(Raw, "due:" + DueDate);
+                }
+
+                if (!string.IsNullOrEmpty(ThresholdDate))
+                {
+                    ThresholdDate = AdvanceDate(ThresholdDate);
+                    var thresholdDateReg = new Regex(ThresholdDatePattern);
+                    Raw = thresholdDateReg.Replace(Raw, "t:" + ThresholdDate);
+                }
+
+                string AdvanceDate(string date)
+                {
+                    if (!isStrict) date = DateTime.Now.ToString("yyyy-MM-dd");
+
+                    var dateTime = Convert.ToDateTime(date);
+
+                    switch (periodType)
+                    {
+                        case 'd':
+                            dateTime = dateTime.AddDays(period);
+                            break;
+                        case 'w': 
+                            dateTime = dateTime.AddDays(period * 7);
+                            break;
+                        case 'm': 
+                            dateTime = dateTime.AddMonths(period);
+                            break;
+                        case 'y': 
+                            dateTime = dateTime.AddYears(period);
+                            break;
+                    }
+
+                    return dateTime.ToString("yyyy-MM-dd");
+                }
             }
         }
     }
